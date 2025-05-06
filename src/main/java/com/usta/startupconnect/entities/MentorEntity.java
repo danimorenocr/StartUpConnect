@@ -36,6 +36,6 @@ public class MentorEntity {
     private Short anosExperiencia;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "documento", referencedColumnName = "documento", insertable = false, updatable = false)
+    @JoinColumn(name = "idUsuario", referencedColumnName = "documento", insertable = false, updatable = false)
     private UsuarioEntity usuario;
 }

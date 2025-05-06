@@ -44,6 +44,6 @@ public class EventoEntity implements Serializable {
     private String color;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_calendario")
-    private CalendarioEntity calendario;
+    @JoinColumn(name = "id_convocatoria")
+    private ConvocatoriaEntity convocatoria;
 }

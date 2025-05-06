@@ -29,7 +29,7 @@ public class StartupEntity implements Serializable {
     @Column(name = "nombre", length = 100, nullable = false)
     private String nombreStartup;
 
-    @Size(min= 1, max = 50)
+    @Size(min = 1, max = 50)
     @Column(name = "sector", length = 50)
     private String sector;
 
@@ -62,9 +62,12 @@ public class StartupEntity implements Serializable {
     @Column(name = "fecha_creacion")
     private Date fechaCreacion;
 
-    @Size(min=1,max = 50)
+    @Size(min = 1, max = 50)
     @Column(name = "estado", length = 50)
     private String estado;
+
+    @Column(name = "cant_likes")
+    private Integer cantLikes = 0;
 
     @NotNull
     @JoinColumn(name = "id_emprendedor", referencedColumnName = "documento")
