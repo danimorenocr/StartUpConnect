@@ -65,4 +65,16 @@ public class ConvocatoriaEntity implements Serializable {
     @Size(min = 20, max = 100)
     @Column(name = "sector_objetivo")
     private String sectorObjetivo;
+
+    @ManyToOne
+    @JoinColumn(name = "id_startup", nullable = false)
+    private StartupEntity startup;
+
+    @ManyToOne
+    @JoinColumn(name = "id_usuario", nullable = false)
+    private UsuarioEntity usuario;
+
+    @OneToOne(mappedBy = "convocatoria")
+    private CalendarioEntity calendario;
+
 }

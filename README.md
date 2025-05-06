@@ -49,6 +49,7 @@ linkedin TEXT,
 instagram TEXT,
 fecha_creacion DATE,
 estado VARCHAR(50),
+cant_likes SMALLINT,
 id_emprendedor VARCHAR(20) REFERENCES Emprendedor(documento)
 );
 
@@ -157,5 +158,10 @@ id_tarea INTEGER REFERENCES Tarea(id),
 nombre_archivo TEXT,
 ruta_archivo TEXT,
 estado VARCHAR(50) CHECK (estado IN ('pendiente', 'aprobado', 'rechazado'))
+);
+-- Tabla: Comentarios
+CREATE TABLE Comentarios (
+id SERIAL PRIMARY KEY,
+comentario TEXT,
 );
 ´´´

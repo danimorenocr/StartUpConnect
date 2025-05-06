@@ -38,4 +38,9 @@ public class CalendarioEntity implements Serializable {
     @Temporal(TemporalType.DATE)
     @Column(name = "fecha_fin", nullable = false)
     private Date fechaFin;
+
+    @OneToOne
+    @JoinColumn(name = "idConvocatoria", unique = true)
+    private ConvocatoriaEntity convocatoria;
+
 }
