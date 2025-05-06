@@ -14,7 +14,7 @@ email VARCHAR(100) UNIQUE,
 contrasenna TEXT NOT NULL,
 fecha_creacion DATE,
 telefono VARCHAR(20),
-foto_url TEXT
+foto_url TEXT,
 id_rol INTEGER REFERENCES Rol(id)
 );
 
