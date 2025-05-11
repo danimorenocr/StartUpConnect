@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/layout :: head}"></head>
+<body>
+<h1>Listado de usuarios</h1>
+
+<!--// BOTON PARA CREAR EMPRENDEDORES-->
+
+<a href="/usuario">
+    <button>
+        Crear
+    </button>
+</a>
+
+<section>
+    <h1> [[${title}]]</h1>
+    <section>
+        <div th:each="usuario: ${usuarios}">
+<!--            <img th:src="@{${usuario.fotoUrl}}" alt="Foto del emprendedor" width="150">-->
+            <h2>Nombre: [[${usuario.nombreUsu}]]</h2>
+        </div>
+    </section>
+</section>
+
+</body>
+</html>
