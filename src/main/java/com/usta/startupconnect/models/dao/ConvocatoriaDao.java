@@ -14,26 +14,33 @@ public interface ConvocatoriaDao extends CrudRepository<ConvocatoriaEntity, Long
     @Transactional
     @Query("SELECT c FROM ConvocatoriaEntity c")
     public List<ConvocatoriaEntity> findAllConvocatorias();
-    
+
+    @Transactional(readOnly = true)
+    @Query("SELECT c FROM ConvocatoriaEntity c WHERE c.fechaInicio <= ?1 AND c.fechaFin >= ?1")
+    public List<ConvocatoriaEntity> findConvocatoriasActivas(Date fecha);
+
     @Transactional
-    @Query("SELECT c FROM ConvocatoriaEntity c WHERE c.fechaInicioConvocatoria <= ?1 AND c.fechaFinConvocatoria >= ?1")
-    public List<ConvocatoriaEntity> findConvocatoriasActivas(Date fechaActual);
-    
-    @Transactional
-    @Query("SELECT c FROM ConvocatoriaEntity c WHERE c.tituloConvocatoria LIKE %?1%")
+    @Query("SELECT c FROM ConvocatoriaEntity c WHERE c.titulo LIKE %?1%")
     public List<ConvocatoriaEntity> findByTitulo(String titulo);
-    
-    @Transactional
-    @Query("SELECT c FROM ConvocatoriaEntity c WHERE c.fechaFinConvocatoria < ?1")
+
+    @Transactional(readOnly = true)
+    @Query("SELECT c FROM ConvocatoriaEntity c WHERE c.fechaFin < ?1")
     public List<ConvocatoriaEntity> findConvocatoriasCerradas(Date fechaActual);
-    
+
+    @Transactional(readOnly = true)
+    @Query("SELECT c FROM ConvocatoriaEntity c WHERE c.sectorObjetivo = ?1")
+    List<ConvocatoriaEntity> findBySectorObjetivo(String sector);
+
+    @Transactional(readOnly = true)
+    @Query("SELECT c FROM ConvocatoriaEntity c WHERE c.organizador = ?1")
+    List<ConvocatoriaEntity> findByOrganizador(String organizador);
+
+    @Transactional(readOnly = true)
+    @Query("SELECT c FROM ConvocatoriaEntity c WHERE c.fechaFin < ?1")
+    List<ConvocatoriaEntity> findConvocatoriasVencidas(Date fecha);
+
     @Transactional
     @Modifying
-    @Query("UPDATE ConvocatoriaEntity c SET c.estadoConvocatoria = ?2 WHERE c.idConvocatoria = ?1")
-    public int actualizarEstadoConvocatoria(Long idConvocatoria, boolean estado);
-    
-    @Transactional
-    @Modifying
-    @Query("UPDATE ConvocatoriaEntity c SET c.tituloConvocatoria = ?2, c.descripcionConvocatoria = ?3, c.fechaInicioConvocatoria = ?4, c.fechaFinConvocatoria = ?5 WHERE c.idConvocatoria = ?1")
+    @Query("UPDATE ConvocatoriaEntity c SET c.titulo = ?2, c.descripcion = ?3, c.fechaInicio = ?4, c.fechaFin = ?5 WHERE c.id = ?1")
     public int actualizarDatosConvocatoria(Long idConvocatoria, String titulo, String descripcion, Date fechaInicio, Date fechaFin);
 }

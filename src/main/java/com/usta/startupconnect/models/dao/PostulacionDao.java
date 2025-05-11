@@ -1,6 +1,8 @@
 package com.usta.startupconnect.models.dao;
 
 import com.usta.startupconnect.entities.PostulacionEntity;
+import com.usta.startupconnect.entities.StartupEntity;
+import com.usta.startupconnect.entities.ConvocatoriaEntity;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -11,29 +13,32 @@ import java.util.List;
 
 public interface PostulacionDao extends CrudRepository<PostulacionEntity, Long> {
 
-    @Transactional
-    @Query("SELECT p FROM PostulacionEntity p WHERE p.convocatoria.idConvocatoria = ?1")
-    public List<PostulacionEntity> findByConvocatoriaId(Long idConvocatoria);
-    
-    @Transactional
-    @Query("SELECT p FROM PostulacionEntity p WHERE p.startup.idStartup = ?1")
-    public List<PostulacionEntity> findByStartupId(Long idStartup);
-    
-    @Transactional
-    @Query("SELECT p FROM PostulacionEntity p WHERE p.estadoPostulacion = ?1")
-    public List<PostulacionEntity> findByEstado(String estado);
-    
-    @Transactional
+    @Transactional(readOnly = true)
+    @Query("SELECT p FROM PostulacionEntity p WHERE p.startup = ?1")
+    List<PostulacionEntity> findByStartup(StartupEntity startup);
+
+    @Transactional(readOnly = true)
+    @Query("SELECT p FROM PostulacionEntity p WHERE p.convocatoria = ?1")
+    List<PostulacionEntity> findByConvocatoria(ConvocatoriaEntity convocatoria);
+
+    @Transactional(readOnly = true)
+    @Query("SELECT p FROM PostulacionEntity p WHERE p.estado = ?1")
+    List<PostulacionEntity> findByEstado(String estado);
+
+    @Transactional(readOnly = true)
     @Query("SELECT p FROM PostulacionEntity p WHERE p.fechaPostulacion BETWEEN ?1 AND ?2")
-    public List<PostulacionEntity> findByFechaBetween(Date fechaInicio, Date fechaFin);
-    
-    @Transactional
-    @Modifying
-    @Query("UPDATE PostulacionEntity p SET p.estadoPostulacion = ?2 WHERE p.idPostulacion = ?1")
-    public int actualizarEstadoPostulacion(Long idPostulacion, String estado);
-    
-    @Transactional
-    @Modifying
-    @Query("UPDATE PostulacionEntity p SET p.observacionesPostulacion = ?2 WHERE p.idPostulacion = ?1")
-    public int actualizarObservaciones(Long idPostulacion, String observaciones);
+    List<PostulacionEntity> findByFechaPostulacionBetween(Date fechaInicio, Date fechaFin);
+
+    @Transactional(readOnly = true)
+    @Query("SELECT p FROM PostulacionEntity p WHERE p.nombreProyecto LIKE %?1%")
+    List<PostulacionEntity> findByNombreProyectoContaining(String nombreProyecto);
+
+    @Transactional(readOnly = true)
+    @Query("SELECT p FROM PostulacionEntity p WHERE p.etapaProyecto = ?1")
+    List<PostulacionEntity> findByEtapaProyecto(String etapaProyecto);
+
+    @Transactional(readOnly = true)
+    @Query("SELECT p FROM PostulacionEntity p WHERE p.numeroIntegrantes >= ?1")
+    List<PostulacionEntity> findByNumeroIntegrantesGreaterThanEqual(Short numeroIntegrantes);
+
 }
