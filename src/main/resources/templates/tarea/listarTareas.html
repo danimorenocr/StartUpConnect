@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/layout :: head}"></head>
+<body>
+<h1>Listado de Tareas</h1>
+
+<!--// BOTON PARA CREAR EMPRENDEDORES-->
+
+<a href="/tarea">
+    <button>
+        Crear
+    </button>
+</a>
+
+<section>
+    <h1> [[${title}]]</h1>
+    <section>
+        <div th:each="tarea: ${tareas}">
+            <h2>tarea: [[${tarea.titulo}]]</h2>
+            <h2>etapa: [[${tarea.etapa.titulo}]]</h2>
+        </div>
+    </section>
+</section>
+
+</body>
+</html>

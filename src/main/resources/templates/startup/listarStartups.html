@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/layout :: head}"></head>
+<body>
+<h1>Listado de Startups</h1>
+
+<!--// BOTON PARA CREAR EMPRENDEDORES-->
+
+<a href="/startup">
+    <button>
+        Crear
+    </button>
+</a>
+
+<section>
+    <h1> [[${title}]]</h1>
+    <section>
+        <div th:each="startup: ${startups}">
+            <!--            <img th:src="@{${startup.logoUrl}}" alt="Logo" width="150">-->
+            <h2>Nombre: [[${startup.nombreStartup}]]</h2>
+            <h2>Sector: [[${startup.sector}]]</h2>
+            <h2>Emprendedor: [[${startup.emprendedor.usuario.nombreUsu}]]</h2>
+        </div>
+    </section>
+</section>
+
+</body>
+</html>

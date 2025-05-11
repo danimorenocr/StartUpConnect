@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/layout :: head}"></head>
+<body>
+<h1>Listado de evento</h1>
+
+<!--// BOTON PARA CREAR EMPRENDEDORES-->
+
+<a href="/crearEvento">
+    <button>
+        Crear
+    </button>
+</a>
+
+<section>
+    <h1> [[${title}]]</h1>
+    <section>
+        <div th:each="evento: ${eventos}">
+            <h2>titulo: [[${evento.titulo}]]</h2>
+            <h2>color: [[${evento.color}]]</h2>
+            <h2>convocatoria: [[${evento.convocatoria.titulo}]]</h2>
+        </div>
+    </section>
+</section>
+
+</body>
+</html>
