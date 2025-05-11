@@ -1,27 +1,26 @@
 package com.usta.startupconnect.models.services;
 
-import com.usta.startupconnect.entities.ConvocatoriaEntity;
+import com.usta.startupconnect.entities.ComentariosEntity;
 import com.usta.startupconnect.entities.StartupEntity;
 import com.usta.startupconnect.entities.UsuarioEntity;
-import com.usta.startupconnect.models.dao.ConvocatoriaDao;
-
+import com.usta.startupconnect.models.dao.ComentariosDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Date;
 import java.util.List;
-import java.util.ArrayList;
-import java.util.Optional;
 
 @Service
-public class ConvocatoriaServiceImplement implements ConvocatoriaService {
+public class ComentariosServiceImplement implements ComentariosService {
+
     @Autowired
-    private ConvocatoriaDao convocatoriaDAO;
+    private ComentariosDao comentariosDao;
 
     @Override
     @Transactional(readOnly = true)
-    public List<ConvocatoriaEntity> findAll() {
-        return (List<ConvocatoriaEntity>) convocatoriaDAO.findAll();
+    public List<ComentariosEntity> findAll() {
+        return (List<ComentariosEntity>) comentariosDao.findAll();
     }
-}
+
+
+} 

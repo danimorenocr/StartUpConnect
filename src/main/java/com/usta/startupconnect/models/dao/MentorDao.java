@@ -8,31 +8,26 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-public interface MentorDao extends CrudRepository<MentorEntity, Long> {
+public interface MentorDao extends CrudRepository<MentorEntity, String> {
 
-    @Transactional
-    @Query("SELECT m FROM MentorEntity m")
-    public List<MentorEntity> findAllMentores();
-    
-    @Transactional
-    @Query("SELECT m FROM MentorEntity m WHERE m.usuario.idUsu = ?1")
-    public MentorEntity findByUsuarioId(Long idUsuario);
-    
-    @Transactional
-    @Query("SELECT m FROM MentorEntity m WHERE m.especialidadMentor = ?1")
-    public List<MentorEntity> findByEspecialidad(String especialidad);
-    
-    @Transactional
-    @Query("SELECT m FROM MentorEntity m WHERE m.estadoMentor = ?1")
-    public List<MentorEntity> findByEstado(boolean estado);
-    
-    @Transactional
-    @Modifying
-    @Query("UPDATE MentorEntity m SET m.estadoMentor = ?2 WHERE m.idMentor = ?1")
-    public int actualizarEstadoMentor(Long idMentor, boolean estado);
-    
-    @Transactional
-    @Modifying
-    @Query("UPDATE MentorEntity m SET m.especialidadMentor = ?2, m.experienciaMentor = ?3 WHERE m.idMentor = ?1")
-    public int actualizarDatosMentor(Long idMentor, String especialidad, String experiencia);
+    @Transactional(readOnly = true)
+    @Query("SELECT m FROM MentorEntity m WHERE m.especialidad = ?1")
+    List<MentorEntity> findByEspecialidad(String especialidad);
+
+    @Transactional(readOnly = true)
+    @Query("SELECT m FROM MentorEntity m WHERE m.anosExperiencia >= ?1")
+    List<MentorEntity> findByAnosExperienciaGreaterThanEqual(Short anosExperiencia);
+
+    @Transactional(readOnly = true)
+    @Query("SELECT m FROM MentorEntity m WHERE m.biografia LIKE %?1%")
+    List<MentorEntity> findByBiografiaContaining(String biografia);
+
+    @Transactional(readOnly = true)
+    @Query("SELECT m FROM MentorEntity m WHERE m.linkedin LIKE %?1%")
+    List<MentorEntity> findByLinkedinContaining(String linkedin);
+
+    @Transactional(readOnly = true)
+    @Query("SELECT m FROM MentorEntity m WHERE m.usuario.documento = ?1")
+    MentorEntity findByUsuarioDocumento(String documento);
+
 }

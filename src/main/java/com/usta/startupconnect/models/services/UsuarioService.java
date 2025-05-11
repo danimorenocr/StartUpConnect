@@ -1,20 +1,12 @@
 package com.usta.startupconnect.models.services;
 
+import com.usta.startupconnect.entities.UsuarioEntity;
+import com.usta.startupconnect.entities.RolEntity;
+
+import java.util.Date;
 import java.util.List;
 
-import com.usta.startupconnect.entities.UsuarioEntity;
-
 public interface UsuarioService {
+    List<UsuarioEntity> findAll();
 
-    public List<UsuarioEntity> findAll();
-
-    public void save(UsuarioEntity usuario);
-
-    public UsuarioEntity findById(Long cedula);
-
-    public void deletebyId(Long cedula);
-
-    public UsuarioEntity actualizar(UsuarioEntity usuario);
-
-    public UsuarioEntity findByEmail(String email);
 }
