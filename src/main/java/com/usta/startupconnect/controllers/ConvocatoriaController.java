@@ -1,4 +1,27 @@
 package com.usta.startupconnect.controllers;
 
+import com.usta.startupconnect.entities.ConvocatoriaEntity;
+import com.usta.startupconnect.models.services.ConvocatoriaService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+
+import java.util.Comparator;
+import java.util.List;
+
+@Controller
 public class ConvocatoriaController {
+    @Autowired
+    ConvocatoriaService convocatoriaService;
+
+    @GetMapping(value = "/convocatoria")
+    public String listarConvocatorias(Model model) {
+        model.addAttribute("title", "Convocatorias");
+        model.addAttribute("urlRegistro", "/crearConvocatoria");
+        List<ConvocatoriaEntity> lista = convocatoriaService.findAll();
+        lista.sort(Comparator.comparing(ConvocatoriaEntity::getId));
+        model.addAttribute("convocatorias", lista);
+        return "/convocatoria/listarConvocatorias";
+    }
 }

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/layout :: head}"></head>
+<body>
+<h1>Listado de Convoca</h1>
+
+<!--// BOTON PARA CREAR EMPRENDEDORES-->
+
+<a href="/convocatoria">
+    <button>
+        Crear
+    </button>
+</a>
+
+<section>
+    <h1> [[${title}]]</h1>
+    <section>
+        <div th:each="convocatoria: ${convocatorias}">
+            <h2>Titulo: [[${convocatoria.titulo}]]</h2>
+            <h2>Sector: [[${convocatoria.sectorObjetivo}]]</h2>
+        </div>
+    </section>
+</section>
+
+</body>
+</html>
