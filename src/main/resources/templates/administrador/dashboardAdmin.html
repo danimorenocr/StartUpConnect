@@ -4,7 +4,11 @@
     <meta charset="UTF-8">
     <title>StartUp Connect Admin</title>
 </head>
-<body>
+<body class="bg-stone-100 text-gray-900 h-screen w-screen flex justify-center items-center"
+      th:style="'background-image: url('+@{/images/hotel.jpg}+');background-size: cover;
+      background-position: center; backdrop-filter:blur(1px)'">
+
+<header th:replace="~{layout/layout :: header}"></header>
 <h1>Welcome Nombre Usuario</h1>
 // BOTON PARA CRUD usuario
 <a href="/usuario">
