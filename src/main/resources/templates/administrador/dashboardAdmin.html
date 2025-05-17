@@ -1,85 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>StartUp Connect Admin</title>
-</head>
-<body class="bg-stone-100 text-gray-900 h-screen w-screen flex justify-center items-center"
-      th:style="'background-image: url('+@{/images/hotel.jpg}+');background-size: cover;
-      background-position: center; backdrop-filter:blur(1px)'">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/layout :: head}"></head>
+<body class="bg-stone-100 text-gray-900 h-screen w-screen flex justify-center items-center">
 
 <header th:replace="~{layout/layout :: header}"></header>
 <h1>Welcome Nombre Usuario</h1>
-// BOTON PARA CRUD usuario
-<a href="/usuario">
 
-    <button >
-        usuario
-    </button>
-</a>
-
-
-// BOTON PARA CRUD EMPRENDEDORES
-<a href="/emprendedor">
-
-    <button >
-        emprendedores
-    </button>
-</a>
-
-// BOTON PARA CRUD Mentores
-<a href="/mentor">
-
-    <button >
-        mentor
-    </button>
-</a>
-
-// BOTON PARA CRUD sTARTUPS
-<a href="/startup">
-
-    <button >
-        startup
-    </button>
-</a>
-
-// BOTON PARA CRUD Convocatoria
-<a href="/convocatoria">
-
-    <button >
-        Convocatoria
-    </button>
-</a>
-
-// BOTON PARA CRUD evento
-<a href="/evento">
-
-    <button >
-        evento
-    </button>
-</a>
-
-// BOTON PARA CRUD etapas
-<a href="/etapa">
-
-    <button >
-        etapas
-    </button>
-</a>
-
-// BOTON PARA CRUD tarea
-<a href="/tarea">
-
-    <button >
-        tarea
-    </button>
-</a>
-// BOTON PARA CRUD entregable
-<a href="/entregable">
-
-    <button >
-        entregable
-    </button>
-</a>
 </body>
 </html>

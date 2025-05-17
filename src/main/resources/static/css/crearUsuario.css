@@ -1,0 +1,222 @@
+
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+}
+
+.container {
+    width: 1280px;
+    height: 832px;
+    position: relative;
+    background: #FBFBFB;
+    overflow: hidden;
+}
+
+
+.main-box {
+    width: 1192px;
+    height: 797px;
+    background: white;
+    border-radius: 30px;
+    position: absolute;
+    left: 88px;
+    top: 7px;
+}
+
+.profile-card {
+    width: 321.38px;
+    height: 414px;
+    background: #F3F6FB;
+    box-shadow: 0 4px 4px rgba(0,0,0,0.25);
+    border-radius: 20px;
+    position: absolute;
+    left: 798.62px;
+    top: 77px;
+}
+
+.user-name, .user-email, .user-phone, .user-id {
+    position: absolute;
+    width: 321px;
+    text-align: center;
+    color: black;
+    font-family: 'Poppins', sans-serif;
+}
+
+.user-name {
+    top: 347px;
+    left: 799px;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.user-email, .user-phone, .user-id {
+    font-size: 16px;
+    font-weight: 300;
+}
+
+.user-email { top: 378px; left: 799px; }
+.user-phone { top: 408px; left: 799px; }
+.user-id    { top: 302px; left: 799px; }
+
+.profile-image {
+    width: 131.69px;
+    height: 143.16px;
+    position: absolute;
+    top: 141.49px;
+    left: 892.86px;
+    border-radius: 9999px;
+    box-shadow: 0 4px 4px rgba(0,0,0,0.25);
+}
+
+.badge-bg {
+    width: 164px;
+    height: 40px;
+    background: #043A68;
+    border-top-right-radius: 30px;
+    border-bottom-right-radius: 30px;
+    position: absolute;
+    top: 83px;
+    left: 795px;
+}
+
+.badge-text {
+    position: absolute;
+    top: 90px;
+    left: 805px;
+    width: 134px;
+    height: 31px;
+    color: white;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.title {
+    position: absolute;
+    top: 47px;
+    left: 127px;
+    font-size: 40px;
+    font-weight: 700;
+    color: #043A68;
+}
+
+.input {
+    position: absolute;
+    width: 568px;
+    height: 69px;
+    background: #F3F6FB;
+    border-radius: 20px;
+}
+
+.label {
+    position: absolute;
+    color: rgba(4, 58, 104, 0.51);
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.input-doc { top: 211px; left: 127px; }
+.label-doc { top: 217px; left: 154.79px; }
+
+.input-nombre { top: 292px; left: 127px; }
+.label-nombre { top: 298px; left: 154.79px; }
+
+.input-email { top: 373px; left: 127px; }
+.label-email { top: 379px; left: 154.79px; }
+
+.input-pass { top: 454px; left: 127px; }
+.label-pass { top: 460px; left: 154.79px; }
+
+.input-tel { top: 540px; left: 127px; }
+.label-tel { top: 546px; left: 154.79px; }
+
+.input-uni { top: 621px; left: 127px; }
+.label-uni { top: 627px; left: 154.79px; }
+
+.input-prog { top: 702px; left: 127px; }
+.label-prog { top: 708px; left: 154.79px; }
+
+.image-upload-box {
+    width: 315px;
+    height: 127px;
+    background: #F3F6FB;
+    border-radius: 20px;
+    position: absolute;
+    top: 563px;
+    left: 805px;
+}
+
+.label-img {
+    position: absolute;
+    top: 574.04px;
+    left: 820.41px;
+    color: rgba(4, 58, 104, 0.51);
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.role-selector {
+    position: absolute;
+    top: 119px;
+    left: 127px;
+    width: 568px;
+    height: 53px;
+    background: #F3F6FB;
+    border-radius: 20px;
+}
+
+.role-btn {
+    position: absolute;
+    width: 165px;
+    height: 43px;
+    background: #F3F6FB;
+    box-shadow: 0 4px 4px rgba(0,0,0,0.25);
+    border-radius: 20px;
+}
+
+.role-text {
+    position: absolute;
+    font-size: 20px;
+    font-weight: 700;
+    color: #043A68;
+}
+
+.role-emprendedor { top: 122px; left: 139px; background: white; }
+.role-mentor { top: 122px; left: 328px; }
+.role-visitante { top: 122px; left: 517px; }
+
+.role-text-emprendedor { top: 129px; left: 151px; }
+.role-text-mentor { top: 129px; left: 328px; width: 165px; text-align: center; }
+.role-text-visitante { top: 129px; left: 517px; width: 165px; text-align: center; }
+
+.btn {
+    position: absolute;
+    width: 235px;
+    height: 40px;
+    background: #3CB6D7;
+    border-radius: 20px;
+}
+
+.btn-guardar { top: 731px; left: 842px; }
+.btn-imagen { top: 621px; left: 841px; }
+
+.btn-text {
+    position: absolute;
+    color: white;
+    font-family: Poppins;
+    font-weight: 700;
+}
+
+.btn-text-guardar {
+    top: 734px;
+    left: 908px;
+    font-size: 24px;
+}
+
+.btn-text-imagen {
+    top: 629px;
+    left: 842px;
+    width: 234px;
+    text-align: center;
+    font-size: 15px;
+}

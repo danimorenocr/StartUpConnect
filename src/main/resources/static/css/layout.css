@@ -1,0 +1,116 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f9fa;
+}
+
+.sidebar {
+    width: 18rem;
+    height: 100vh;
+    background-color: #fff;
+    position: fixed;
+    left: 0;
+    top: 0;
+    box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-title {
+    padding: 1.5rem 1.5rem 1.5rem 2rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #111;
+    border-bottom: 1px solid #eaeaea;
+    user-select: none;
+}
+
+.sidebar-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex-grow: 1;
+}
+
+.sidebar-menu li {
+    margin: 0;
+}
+
+.sidebar-menu li a {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 2rem;
+    color: #222;
+    font-weight: 500;
+    font-size: 1rem;
+    text-decoration: none;
+    border-left: 4px solid transparent;
+    transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+}
+
+.sidebar-menu li a i {
+    font-size: 1.4rem;
+    min-width: 24px;
+    color: #666;
+}
+
+.sidebar-menu li a:hover,
+.sidebar-menu li a.active {
+    background-color: #f0f4ff;
+    border-left-color: #4f46e5; /* un azul violeta suave */
+    color: #4f46e5;
+}
+
+.sidebar-menu li a:hover i,
+.sidebar-menu li a.active i {
+    color: #4f46e5;
+}
+
+main.content {
+    margin-left: 18rem;
+    padding: 2rem;
+    background-color: #fff;
+    min-height: 100vh;
+}
+
+/* Botón del menú */
+.menu-toggle {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #333;
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 1100;
+    cursor: pointer;
+}
+
+/* Ocultar el sidebar */
+.sidebar.hidden {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+}
+
+/* Animación del sidebar por defecto */
+.sidebar {
+    transition: transform 0.3s ease;
+}
+
+
+/* Contenido principal con sidebar visible */
+main.content {
+    margin-left: 18rem;
+    padding: 2rem;
+    background-color: #fff;
+    min-height: 100vh;
+    transition: margin-left 0.3s ease;
+}
+
+/* Contenido principal cuando el sidebar está oculto */
+main.content.expanded {
+    margin-left: 0;
+}

@@ -4,67 +4,71 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>[[${title}]]</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" th:href="@{/css/layout.css}">
+    <link rel="stylesheet" th:href="@{/css/listarUsuarios.css}">
+    <link rel="stylesheet" th:href="@{/css/crearUsuario.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
-    <!--    Estilos para carrusel    -->
-
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
 </head>
-<body class="bg-amber-800 text-white h-screen w-screen flex justify-center items-center"
-      th:style="'background-image: url('+@{/images/hotel.jpg}+');background-size: cover;
-      background-position: center; backdrop-filter:blur(1px)'">
+<body>
+
 
 <header th:fragment="header">
+    <!-- Botón de menú -->
+    <button id="menuButton" class="menu-toggle">
+        <i class="fa-solid fa-bars"></i>
+    </button>
 
-    <nav class="absolute top-0 left-0 right-0 flex justify-between items-center
-    bg-white/10 py-4 px-20 w-screen h-[70px] backdrop-blur-lg shadow-md">
-        <div class="flex flex-col items-center text-white">
-            <a th:href="@{/}"
-               class="text-2x1 font-serif tracking-wide drop-shadow-md transition-all hover:text-amber-400 hover:scale-105 ">
-                Luxury
-            </a>
-            <span class="text-lg font-serif text-gray-300 tracking-wide drop-shadow-sm"> Hotel </span>
-        </div>
-        <ul class="flex gap-8 text-lg font-medium items-center">
-            <li class="hover:text-gray-300 hover:underline transition-all underline-offset-4">
-                <a th:href="@{/habitacion}">Accomodations</a>
-            </li>
-            <li class="hover:text-gray-300 hover:underline transition-all underline-offset-4">
-                <a th:href="@{/reserva}">Room Reservations</a>
-            </li>
-        </ul>
+    <!-- Sidebar -->
+    <div id="sidebar" class="sidebar">
+        <h2 class="sidebar-title">StartUp Connect</h2>
+        <nav>
+            <ul class="sidebar-menu">
+                <li><a href="/"><i class="fa-solid fa-house"></i> Inicio</a></li>
+                <li><a href="/usuario"><i class="fa-solid fa-users"></i> Usuario</a></li>
+                <li><a href="/emprendedor"><i class="fa-solid fa-briefcase"></i> Emprendedores</a></li>
+                <li><a href="/mentor"><i class="fa-solid fa-user-tie"></i> Mentores</a></li>
+                <li><a href="/startup"><i class="fa-solid fa-rocket"></i> StartUps</a></li>
+                <li><a href="/convocatoria"><i class="fa-solid fa-file-alt"></i> Convocatorias</a></li>
+                <li><a href="/evento"><i class="fa-solid fa-calendar-alt"></i> Eventos</a></li>
+                <li><a href="/etapa"><i class="fa-solid fa-layer-group"></i> Etapas</a></li>
+                <li><a href="/tarea"><i class="fa-solid fa-tasks"></i> Tareas</a></li>
+                <li><a href="/entregable"><i class="fa-solid fa-tasks"></i> Entregable</a></li>
+            </ul>
+        </nav>
+    </div>
 
-        <ul class="flex gap-6 items-center font-medium">
-            <li class="border border-white text-white px-4 py-2 rounded-lg hover:bg-white
-            hover:text-gray-800 transition-all hover:scale-105 hover:ring-2 hover:ring-white">
-                <a th:href="@{/register}">Sign Up</a>
-            </li>
+    <script>
+        const menuButton = document.getElementById('menuButton');
+        const sidebar = document.getElementById('sidebar');
+        const content = document.querySelector('main.content');
 
-            <li class="border border-white bg-white text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-200
-            transition-all hover:scale-105 hover:ring-2 hover:ring-white">
-                <a th:href="@{/login}">Sign In</a>
-            </li>
+        menuButton.addEventListener('click', () => {
+            sidebar.classList.toggle('hidden');
+            content.classList.toggle('expanded');
+        });
 
-            <li class="border border-white bg-white text-gray-800 px-4 py-2 rounded-lg hover:bg-amber-500
-            transition-all hover:text-white hover:scale-105 hover:ring-2 hover:ring-amber-400">
-                <form th:action="@{/logout}" method="post">
-                    <a class="nav-link" onclick="this.parentNode.submit();" href="#">Log Out</a>
-                </form>
-            </li>
+        document.querySelectorAll('.sidebar-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                sidebar.classList.add('hidden');
+                content.classList.add('expanded');
+            });
+        });
+    </script>
 
-
-        </ul>
-    </nav>
 </header>
+
+
+
+
 <footer th:fragment="footer">
-    <div class="fixed text-center text-white bottom-0 left-0 right-0">
+    <div>
         &copy 2025. All rights reserved for Luxury Hotel.
     </div>
 </footer>
+
 </body>
 </html>
