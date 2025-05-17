@@ -1,62 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>StartUp Connect</title>
+<head th:replace="~{layout/layout :: head}">
+    <title>StartUp Connect - Inicio</title>
 </head>
-<body class="bg-amber-800 text-white h-screen w-screen flex justify-center items-center"
-      th:style="'background-image: url('+@{/images/hotel.jpg}+');background-size: cover;
-      background-position: center; backdrop-filter:blur(1px)'">
-
-<header th:fragment="header">
-
-    <nav class="absolute top-0 left-0 right-0 flex justify-between items-center
-    bg-white/10 py-4 px-20 w-screen h-[70px] backdrop-blur-lg shadow-md">
-        <div class="flex flex-col items-center text-white">
-            <a th:href="@{/}"
-               class="text-2x1 font-serif tracking-wide drop-shadow-md transition-all hover:text-amber-400 hover:scale-105 ">
-                Luxury
-            </a>
-            <span class="text-lg font-serif text-gray-300 tracking-wide drop-shadow-sm"> Hotel </span>
+<body class="main-bg">
+    <div th:replace="~{layout/layout :: header}"></div>
+    
+    <main class="content">
+        <div class="welcome-section">
+            <h1>Bienvenido a StartUp Connect</h1>
+            <p>Tu plataforma para conectar emprendedores y mentores</p>
+            
+            <div class="action-buttons">
+                <a href="/administrador" class="btn btn-primary">
+                    Panel de Administración
+                </a>
+            </div>
         </div>
-        <ul class="flex gap-8 text-lg font-medium items-center">
-            <li class="hover:text-gray-300 hover:underline transition-all underline-offset-4">
-                <a th:href="@{/habitacion}">Accomodations</a>
-            </li>
-            <li class="hover:text-gray-300 hover:underline transition-all underline-offset-4">
-                <a th:href="@{/reserva}">Room Reservations</a>
-            </li>
-        </ul>
+    </main>
 
-        <ul class="flex gap-6 items-center font-medium">
-            <li class="border border-white text-white px-4 py-2 rounded-lg hover:bg-white
-            hover:text-gray-800 transition-all hover:scale-105 hover:ring-2 hover:ring-white">
-                <a th:href="@{/register}">Sign Up</a>
-            </li>
-
-            <li class="border border-white bg-white text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-200
-            transition-all hover:scale-105 hover:ring-2 hover:ring-white">
-                <a th:href="@{/login}">Sign In</a>
-            </li>
-
-            <li class="border border-white bg-white text-gray-800 px-4 py-2 rounded-lg hover:bg-amber-500
-            transition-all hover:text-white hover:scale-105 hover:ring-2 hover:ring-amber-400">
-                <form th:action="@{/logout}" method="post">
-                    <a class="nav-link" onclick="this.parentNode.submit();" href="#">Log Out</a>
-                </form>
-            </li>
-
-
-        </ul>
-    </nav>
-</header>
-
-<a href="/administrador">
-
-
-    <button >
-        admin
-    </button>
-</a>
 </body>
 </html>

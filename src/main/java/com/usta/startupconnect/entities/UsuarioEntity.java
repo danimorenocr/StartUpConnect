@@ -8,6 +8,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Data
@@ -39,7 +40,7 @@ public class UsuarioEntity {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Temporal(TemporalType.DATE)
     @Column(name = "fecha_creacion", nullable = false)
-    private Date fecha_creacion;
+    private LocalDate fecha_creacion;
 
     @NotNull
     @Size(min = 1, max = 20)
@@ -56,4 +57,36 @@ public class UsuarioEntity {
     @ManyToOne(fetch = FetchType.EAGER)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private RolEntity rol;
+
+    public String getDocumento() {
+        return documento;
+    }
+
+    public String getNombreUsu() {
+        return nombreUsu;
+    }
+
+    public String getEmailUsu() {
+        return emailUsu;
+    }
+
+    public String getContrasenna() {
+        return contrasenna;
+    }
+
+    public LocalDate getFecha_creacion() {
+        return fecha_creacion;
+    }
+
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public String getFotoUrl() {
+        return fotoUrl;
+    }
+
+    public RolEntity getRol() {
+        return rol;
+    }
 }

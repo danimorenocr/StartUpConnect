@@ -10,11 +10,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Date;
 import java.util.List;
 
-public interface UsuarioDao extends CrudRepository<UsuarioEntity, String> {
+public interface UsuarioDao extends CrudRepository<UsuarioEntity, Long> {
 
     @Transactional(readOnly = true)
     @Query("SELECT u FROM UsuarioEntity u WHERE u.rol = ?1")
     List<UsuarioEntity> findByRol(RolEntity rol);
+
 
     @Transactional(readOnly = true)
     @Query("SELECT u FROM UsuarioEntity u WHERE u.emailUsu = ?1")
@@ -35,5 +36,7 @@ public interface UsuarioDao extends CrudRepository<UsuarioEntity, String> {
     @Transactional(readOnly = true)
     @Query("SELECT u FROM UsuarioEntity u WHERE u.emailUsu = ?1 AND u.contrasenna = ?2")
     UsuarioEntity findByEmailAndContrasenna(String email, String contrasenna);
+
+
 
 }
