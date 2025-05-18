@@ -1,8 +1,6 @@
 package com.usta.startupconnect.models.services;
 
 import com.usta.startupconnect.entities.ComentariosEntity;
-import com.usta.startupconnect.entities.StartupEntity;
-import com.usta.startupconnect.entities.UsuarioEntity;
 import com.usta.startupconnect.models.dao.ComentariosDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

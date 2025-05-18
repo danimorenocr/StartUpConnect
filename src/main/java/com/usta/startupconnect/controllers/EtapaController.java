@@ -1,6 +1,5 @@
 package com.usta.startupconnect.controllers;
 
-import com.usta.startupconnect.entities.ConvocatoriaEntity;
 import com.usta.startupconnect.entities.EtapaEntity;
 import com.usta.startupconnect.models.services.EtapaService;
 import org.springframework.beans.factory.annotation.Autowired;

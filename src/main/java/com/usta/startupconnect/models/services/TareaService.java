@@ -1,9 +1,7 @@
 package com.usta.startupconnect.models.services;
 
-import java.sql.Date;
 import java.util.List;
 
-import com.usta.startupconnect.entities.EtapaEntity;
 import com.usta.startupconnect.entities.TareaEntity;
 
 public interface TareaService {

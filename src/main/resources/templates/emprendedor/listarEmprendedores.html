@@ -14,6 +14,10 @@
 
     <section>
         <div th:each="emprendedor : ${emprendedores}">
+            <div class="mentor-foto">
+                <img th:src="${emprendedor.usuario != null && emprendedor.usuario.fotoUrl != null ? emprendedor.usuario.fotoUrl : '/images/default-profile.jpg'}"
+                    alt="Foto del mentor" class="foto-perfil">
+            </div>
             <h2>Nombre: <span
                     th:text="${emprendedor.usuario != null ? emprendedor.usuario.nombreUsu : 'Sin usuario'}"></span>
             </h2>
@@ -22,7 +26,7 @@
 
             <div class="botones-accion">
                 <a th:href="@{/verEmprendedor/{documento}(documento=${emprendedor.documento})}"
-                            class="ver-perfil-btn">Ver perfil</a>
+                    class="ver-perfil-btn">Ver perfil</a>
                 <a th:href="@{/editarEmprendedor/{documento}(documento=${emprendedor.documento})}" class="editar"
                     title="Editar">&#9998;</a>
                 <form th:action="@{/eliminarEmprendedor/{id}(id=${emprendedor.documento})}" method="post"
