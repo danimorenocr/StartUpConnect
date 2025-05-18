@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/layout :: head}"></head>
+<body>
+
+<div class="detalle-emprendedor">
+    <h1>Detalles del Emprendedor</h1>
+
+    <div class="campo">
+        <label>Documento:</label>
+        <span th:text="${emprendedorDetalle.documento}"></span>
+    </div>
+
+    <div class="campo">
+        <label>Nombre:</label>
+        <span th:text="${emprendedorDetalle.usuario != null ? emprendedorDetalle.usuario.nombreUsu : 'No asignado'}"></span>
+    </div>
+
+    <div class="campo">
+        <label>Universidad:</label>
+        <span th:text="${emprendedorDetalle.universidad}"></span>
+    </div>
+
+    <div class="campo">
+        <label>Programa Educativo:</label>
+        <span th:text="${emprendedorDetalle.programaEducativo}"></span>
+    </div>
+
+    <div class="acciones">
+        <a th:href="@{/emprendedor}">
+            <button type="button" class="btn-volver">Volver</button>
+        </a>
+    </div>
+</div>
+
+</body>
+</html>

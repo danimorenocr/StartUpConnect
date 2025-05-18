@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/layout :: head}"></head>
+<body>
+
+<form th:action="@{/editarEmprendedor/{id}(id=${emprendedorEditar.documento})}" method="post" enctype="multipart/form-data"
+      th:object="${emprendedorEditar}">
+
+    <label for="documento">Documento:</label><br>
+    <input th:field="*{documento}" type="text" id="documento" name="documento" readonly><br><br>
+    
+    <label for="nombre">Nombre:</label><br>
+    <input type="text" id="nombre" name="nombre" th:value="${emprendedorEditar.usuario != null ? emprendedorEditar.usuario.nombreUsu : ''}" readonly><br><br>
+    
+    <label for="universidad">Universidad:</label><br>
+    <input th:field="*{universidad}" type="text" id="universidad" name="universidad" required><br><br>
+    
+    <label for="programaEducativo">Programa Educativo:</label><br>
+    <input th:field="*{programaEducativo}" type="text" id="programaEducativo" name="programaEducativo" required><br><br>
+
+    <button type="submit">Guardar Cambios</button>
+</form>
+
+</body>
+</html>

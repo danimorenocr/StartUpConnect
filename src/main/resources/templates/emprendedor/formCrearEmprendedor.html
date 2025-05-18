@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/layout :: head}"></head>
+<body>
+
+
+<form th:action="@{/crearEmprendedor}" method="post" enctype="multipart/form-data" th:object="${emprendedor}">
+
+
+    <label for="documento">Documento:</label><br>
+    <input th:field="*{documento}" type="text" id="documento" name="documento"><br><br>
+
+    <label for="universidad">Universidad:</label><br>
+    <input th:field="*{universidad}" type="text" id="universidad" name="universidad"><br><br>
+
+    <label for="programa">Programa:</label><br>
+    <input th:field="*{programaEducativo}" type="text" id="programa" name="programa"><br><br>
+
+
+    <button type="submit">Enviar</button>
+</form>
+
+
+</body>
+</html>

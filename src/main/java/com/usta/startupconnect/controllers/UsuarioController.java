@@ -61,7 +61,8 @@ public class UsuarioController {
     }
 
     @PostMapping(value = "/crearUsuario")
-    public String guardarUsuario(@Valid UsuarioEntity usuario, @RequestParam(value = "foto") MultipartFile foto, BindingResult result, RedirectAttributes redirectAttributes) {
+    public String guardarUsuario(@Valid UsuarioEntity usuario, @RequestParam(value = "foto") MultipartFile foto,
+            BindingResult result, RedirectAttributes redirectAttributes) {
         String urlImagen = guardarImagen(foto);
         if (result.hasErrors()) {
             System.out.println(result.getAllErrors());
@@ -72,6 +73,15 @@ public class UsuarioController {
         usuario.setFotoUrl(urlImagen);
         usuario.setFecha_creacion(LocalDate.now());
         usuarioService.save(usuario);
+
+        // Redirige según el rol
+        Long rolId = usuario.getRol().getIdRol();
+        if (rolId == 2L) {
+            return "redirect:/crearEmprendedor";
+        } else if (rolId == 3L) {
+            return "redirect:/crearEmprendedor";
+        }
+
         redirectAttributes.addFlashAttribute("mensajeExito", "Room Saved Successfully");
         return "redirect:/usuario";
     }
@@ -84,7 +94,8 @@ public class UsuarioController {
             MultipartEntityBuilder builder = MultipartEntityBuilder.create();
             builder.addTextBody("key", "dc172a14793a0bf9b87a96f1f2e5b4be", ContentType.TEXT_PLAIN);
 
-            builder.addBinaryBody("image", imagen.getInputStream(), ContentType.DEFAULT_BINARY, imagen.getOriginalFilename());
+            builder.addBinaryBody("image", imagen.getInputStream(), ContentType.DEFAULT_BINARY,
+                    imagen.getOriginalFilename());
 
             HttpEntity multipart = builder.build();
             httpPost.setEntity(multipart);
@@ -100,17 +111,16 @@ public class UsuarioController {
                 if (success) {
                     JSONObject data = jsonResponse.getJSONObject("data");
                     return data.getString("url");
-                }else{
+                } else {
                     System.err.println("Error loading image: " + jsonResponse.optString("error", "Unknown Error"));
                 }
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
 
     }
-
 
     @PostMapping(value = "/eliminarUsuario/{id}")
     public String eliminarHabitacion(@PathVariable(value = "id") Long id, RedirectAttributes redirectAttributes) {
@@ -120,8 +130,6 @@ public class UsuarioController {
             UsuarioEntity usuario = usuarioService.findById(id);
             if (usuario != null) {
                 System.out.println("usuario encontrada: " + usuario.getDocumento());
-
-
 
                 usuarioService.deleteById(id);
                 System.out.println("usuario eliminada correctamente.");
@@ -149,36 +157,47 @@ public class UsuarioController {
         return "usuario/editarUsuario";
     }
 
-//    @PostMapping("/editarUsuario")
-//    public String actualizarUsuario(@Valid UsuarioEntity usuario,
-//                                    @RequestParam(value = "foto", required = false) MultipartFile foto,
-//                                    BindingResult result,
-//                                    RedirectAttributes redirectAttributes) {
-//
-//        if (result.hasErrors()) {
-//            System.out.println(result.getAllErrors());
-//            return "usuario/editarUsuario";
-//        }
-//
-//        // Si hay una nueva foto, la procesamos
-//        if (foto != null && !foto.isEmpty()) {
-//            String urlImagen = guardarImagen(foto);
-//            usuario.setFotoUrl(urlImagen);
-//        } else {
-//            // Mantener la foto anterior si no se envió una nueva
-//            UsuarioEntity usuarioExistente = usuarioService.findById(usuario.);
-//            if (usuarioExistente != null) {
-//                usuario.setFotoUrl(usuarioExistente.getFotoUrl());
-//                usuario.setFecha_creacion(usuarioExistente.getFecha_creacion()); // preservar fecha original
-//            }
-//        }
-//
-//        usuarioService.save(usuario);
-//        redirectAttributes.addFlashAttribute("mensajeExito", "Usuario actualizado exitosamente");
-//        return "redirect:/usuario";
-//    }
+    @PostMapping("/editarUsuario/{id}")
+    public String actualizarUsuario(@Valid UsuarioEntity usuario,
+            @RequestParam(value = "foto", required = false) MultipartFile foto,
+            BindingResult result,
+            RedirectAttributes redirectAttributes) {
 
+        if (result.hasErrors()) {
+            System.out.println(result.getAllErrors());
+            return "usuario/editarUsuario";
+        }
 
+        Long documento = Long.parseLong(usuario.getDocumento());
+        UsuarioEntity usuarioExistente = usuarioService.findById(documento);
 
+        if (usuarioExistente != null) {
+            usuario.setFecha_creacion(usuarioExistente.getFecha_creacion());
+        } else {
+            usuario.setFecha_creacion(LocalDate.now());
+        }
+
+        if (foto != null && !foto.isEmpty()) {
+            String urlImagen = guardarImagen(foto);
+            usuario.setFotoUrl(urlImagen);
+        } else if (usuarioExistente != null) {
+            usuario.setFotoUrl(usuarioExistente.getFotoUrl());
+        }
+
+        usuarioService.save(usuario);
+        redirectAttributes.addFlashAttribute("mensajeExito", "Usuario actualizado exitosamente");
+        return "redirect:/usuario";
+    }
+
+    @GetMapping(value = "/verUsuario/{id}")
+    public String verUsuario(Model model, @PathVariable(value = "id") Long id) {
+        UsuarioEntity usuario = usuarioService.findById(id);
+        List<RolEntity> roles = rolService.findAll();
+        model.addAttribute("roles", roles);
+        model.addAttribute("title", "Editar Usuario");
+        model.addAttribute("usuarioEditar", usuario);
+        model.addAttribute("imagen", usuario.getFotoUrl());
+        return "usuario/detalleUsuario";
+    }
 
 }
