@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{layout/layout :: head}"></head>
+
+<body>
+
+
+    <h1>Crear Nuevo Mentor</h1>
+
+    <form th:action="@{/crearMentor}" method="post" enctype="multipart/form-data" th:object="${mentor}">
+        <div class="form-group">
+            <label for="documento">Documento:</label>
+            <input th:field="*{documento}" type="text" id="documento" name="documento" required>
+        </div>
+
+
+        <div class="form-group">
+            <label for="biografia">Biografía:</label>
+            <textarea th:field="*{biografia}" id="biografia" name="biografia" rows="4" required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="especialidad">Especialidad:</label>
+            <input th:field="*{especialidad}" type="text" id="especialidad" name="especialidad" required>
+        </div>
+
+        <div class="form-group">
+            <label for="aniosExperiencia">Años de Experiencia:</label>
+            <input th:field="*{anosExperiencia}" type="number" id="aniosExperiencia" name="aniosExperiencia" min="0"
+                required>
+        </div>
+
+        <div class="form-group">
+            <label for="linkedinUrl">Perfil de LinkedIn:</label>
+            <input th:field="*{linkedin}" type="url" id="linkedinUrl" name="linkedinUrl"
+                placeholder="https://www.linkedin.com/in/tu-perfil">
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn-submit">Guardar Mentor</button>
+        </div>
+    </form>
+
+
+</body>
+
+</html>
