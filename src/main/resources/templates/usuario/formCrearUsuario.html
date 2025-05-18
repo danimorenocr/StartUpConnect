@@ -4,7 +4,7 @@
 <body>
 
 
-<form th:action="@{/crearUsuario}" method="post" enctype="multipart/form-data" th:object="${usuario}">
+<form th:action="@{/crearUsuario}" method="post" enctype="multipart/form-data" th:object="${usuario}" id="formUsuario">
 
     <label for="documento">Documento:</label><br>
     <input th:field="*{documento}" type="text" id="documento" name="documento"><br><br>
@@ -22,14 +22,14 @@
     <input th:field="*{telefono}" type="tel" id="telefono" name="telefono"><br><br>
 
     <label for="rol">Rol:</label><br>
-    <select th:field="*{rol}" id="rol" name="rol">
+    <select id="rol" name="rol" onchange="redirigirPorRol(this.value)">
         <option value="">Seleccione un rol</option>
         <option th:each="r : ${roles}"
                 th:value="${r.idRol}"
+                th:data-rol="${r.rol}"
                 th:text="${r.rol}">
         </option>
     </select><br><br>
-
 
 
     <label for="foto">Seleccionar imagen:</label><br>
@@ -59,8 +59,6 @@
         }
     });
 </script>
-
-
 
 </body>
 </html>

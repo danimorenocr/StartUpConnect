@@ -1,67 +1,70 @@
 <!DOCTYPE html>
+
 <head th:replace="~{layout/layout :: head}">
+
 <body>
-<header th:replace="~{layout/layout :: header}"></header>
-<main class="main-content">
-    <!-- Banner superior -->
-    <div class="banner">
-        <div class="banner-content">
-            <h1 class="banner-title">¡Impulsa el futuro,<br>crea nuevos líderes!</h1>
-            <a th:href="@{${crearUsuario}}" class="banner-btn">Crear Usuario</a>
-        </div>
-        <img src="/images/bannerListar.jpg" alt="Motivational image" class="banner-img"/>
-    </div>
-
-    <div class="main-content-cards">
-        <div id="usuarios-header-container">
-            <span id="usuarios-header">Usuarios</span>
-            <input id="buscar-usuario" type="text" placeholder="Buscar usuario...">
+    <header th:replace="~{layout/layout :: header}"></header>
+    <main class="main-content">
+        <!-- Banner superior -->
+        <div class="banner">
+            <div class="banner-content">
+                <h1 class="banner-title">¡Impulsa el futuro,<br>crea nuevos líderes!</h1>
+                <a th:href="@{${crearUsuario}}" class="banner-btn">Crear Usuario</a>
+            </div>
+            <img src="/images/bannerListar.jpg" alt="Motivational image" class="banner-img" />
         </div>
 
-        <div class="usuarios-list">
-            <div th:each="usuario: ${usuarios}" class="usuario-card">
-                <input type="hidden" th:value="${usuario.documento}" class="doc-usuario"/>
-                <span class="usuario-rol" >[[${usuario.rol.rol}]]</span>
-                <img th:src="@{${usuario.fotoUrl}}" alt="Foto del usuario" class="usuario-foto"
-                     >
-                <div class="usuario-nombre" >[[${usuario.nombreUsu}]]</div>
-                <div class="usuario-email" >[[${usuario.emailUsu}]]</div>
-                <div class="usuario-actions" >
-                    <form th:action="@{/eliminarUsuario/{id}(id=${usuario.documento})}" method="post"
-                          onsubmit="return confirmarEliminacion(event, this);"
-                          style="display: inline;">
-                        <button type="submit" class="eliminar" title="Eliminar">&#10060;</button>
-                    </form>
-                    <a th:href="@{/editarUsuario/{documento}(documento=${usuario.documento})}" class="editar" title="Editar" >&#9998;</a>
-                    <a class="ver-perfil-btn" >Ver perfil</a>
+        <div class="main-content-cards">
+            <div id="usuarios-header-container">
+                <span id="usuarios-header">Usuarios</span>
+                <input id="buscar-usuario" type="text" placeholder="Buscar usuario...">
+            </div>
+
+            <div class="usuarios-list">
+                <div th:each="usuario: ${usuarios}" class="usuario-card">
+                    <input type="hidden" th:value="${usuario.documento}" class="doc-usuario" />
+                    <span class="usuario-rol">[[${usuario.rol.rol}]]</span>
+                    <img th:src="@{${usuario.fotoUrl}}" alt="Foto del usuario" class="usuario-foto">
+                    <div class="usuario-nombre">[[${usuario.nombreUsu}]]</div>
+                    <div class="usuario-email">[[${usuario.emailUsu}]]</div>
+                    <div class="usuario-actions">
+                        <form th:action="@{/eliminarUsuario/{id}(id=${usuario.documento})}" method="post"
+                            onsubmit="return confirmarEliminacion(event, this);" style="display: inline;">
+                            <button type="submit" class="eliminar" title="Eliminar">&#10060;</button>
+                        </form>
+                        <a th:href="@{/editarUsuario/{documento}(documento=${usuario.documento})}" class="editar"
+                            title="Editar">&#9998;</a>
+                        <a th:href="@{/verUsuario/{documento}(documento=${usuario.documento})}"
+                            class="ver-perfil-btn">Ver perfil</a>
+                    </div>
                 </div>
             </div>
+
+
         </div>
 
+    </main>
 
-    </div>
-
-</main>
-
-<script>
-    function confirmarEliminacion(event, form) {
-        event.preventDefault();
-        Swal.fire({
-            title: "Are you sure?",
-            text: "This action cannot be undone",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#991b1b",
-            cancelButtonColor: "#f59e0b",
-            confirmButtonText: "Yes, delete",
-            cancelButtonText: "Cancel"
-        }).then((result) => {
-            if (result.isConfirmed) {
-                console.log("Deleting...");
-                form.submit();
-            }
-        });
-    }
-</script>
+    <script>
+        function confirmarEliminacion(event, form) {
+            event.preventDefault();
+            Swal.fire({
+                title: "Are you sure?",
+                text: "This action cannot be undone",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#991b1b",
+                cancelButtonColor: "#f59e0b",
+                confirmButtonText: "Yes, delete",
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    console.log("Deleting...");
+                    form.submit();
+                }
+            });
+        }
+    </script>
 </body>
+
 </html>

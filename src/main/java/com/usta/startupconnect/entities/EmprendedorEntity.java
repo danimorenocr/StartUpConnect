@@ -27,6 +27,8 @@ public class EmprendedorEntity {
     private String programaEducativo;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "idUsuario", referencedColumnName = "documento", insertable = false, updatable = false)
+    @JoinColumn(name = "idUsuario", referencedColumnName = "documento")
     private UsuarioEntity usuario;
+
+    
 }
