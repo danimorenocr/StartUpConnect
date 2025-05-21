@@ -8,4 +8,10 @@ public interface StartupService {
     
     public List<StartupEntity> findAll();
 
+    public void save(StartupEntity startup);
+
+    public StartupEntity findById(Long id);
+
+    public void deleteById(Long id);
+
 }

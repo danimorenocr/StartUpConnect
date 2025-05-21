@@ -40,6 +40,8 @@ public class ConvocatoriaEntity implements Serializable {
     private Date fechaInicio;
 
     @NotNull
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Temporal(TemporalType.DATE)
     @Column(name = "fecha_fin")
     private Date fechaFin;
 
@@ -68,7 +70,6 @@ public class ConvocatoriaEntity implements Serializable {
 
     @OneToOne(mappedBy = "convocatoria")
     private PostulacionEntity postulacion;
-
 
     @OneToOne(mappedBy = "convocatoria")
     private CalendarioEntity calendario;

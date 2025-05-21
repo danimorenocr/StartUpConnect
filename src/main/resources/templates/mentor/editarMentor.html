@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/layout :: head}"></head>
+<body>
+
+<div class="editar-mentor">
+    <h1>Editar Mentor</h1>
+
+    <form th:action="@{/editarMentor/{id}(id=${mentorEditar.documento})}" method="post" enctype="multipart/form-data"
+          th:object="${mentorEditar}">
+          
+        <div class="form-group">
+            <label for="documento">Documento:</label>
+            <input th:field="*{documento}" type="text" id="documento" name="documento" readonly>
+        </div>
+        
+        <div class="form-group">
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" name="nombre" th:value="${mentorEditar.usuario != null ? mentorEditar.usuario.nombreUsu : ''}" readonly>
+        </div>
+        
+        <div class="form-group">
+            <label for="biografia">Biografía:</label>
+            <textarea th:field="*{biografia}" id="biografia" name="biografia" rows="4" required></textarea>
+        </div>
+        
+        <div class="form-group">
+            <label for="especialidad">Especialidad:</label>
+            <input th:field="*{especialidad}" type="text" id="especialidad" name="especialidad" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="anosExperiencia">Años de Experiencia:</label>
+            <input th:field="*{anosExperiencia}" type="number" id="anosExperiencia" name="anosExperiencia" min="0" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="linkedin">Perfil de LinkedIn:</label>
+            <input th:field="*{linkedin}" type="url" id="linkedin" name="linkedin" placeholder="https://www.linkedin.com/in/tu-perfil">
+        </div>
+        
+        <div class="form-actions">
+            <button type="submit" class="btn-guardar">Guardar Cambios</button>
+            <a th:href="@{/mentor}" class="btn-cancelar">
+                <button type="button">Cancelar</button>
+            </a>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>
