@@ -1,6 +1,7 @@
 package com.usta.startupconnect.models.services;
 
 import com.usta.startupconnect.entities.ConvocatoriaEntity;
+import com.usta.startupconnect.entities.MentorEntity;
 import com.usta.startupconnect.models.dao.ConvocatoriaDao;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +13,30 @@ import java.util.List;
 @Service
 public class ConvocatoriaServiceImplement implements ConvocatoriaService {
     @Autowired
-    private ConvocatoriaDao convocatoriaDAO;
+    private ConvocatoriaDao convocatoriaDao;
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional()
     public List<ConvocatoriaEntity> findAll() {
-        return (List<ConvocatoriaEntity>) convocatoriaDAO.findAll();
+        return (List<ConvocatoriaEntity>) convocatoriaDao.findAll();
     }
+
+    @Override
+    @jakarta.transaction.Transactional
+    public void save(ConvocatoriaEntity convocatoria) {
+        convocatoriaDao.save(convocatoria);
+    }
+
+    @Override
+    @Transactional
+    public ConvocatoriaEntity findById(Long id) {
+        return convocatoriaDao.findById(id).orElse(null);
+    }
+
+    @Override
+    @Transactional
+    public void deleteById(Long id) {
+        convocatoriaDao.deleteById(id);
+    }
+
 }

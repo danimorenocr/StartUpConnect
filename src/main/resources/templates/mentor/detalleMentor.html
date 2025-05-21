@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/layout :: head}"></head>
+<body>
+
+<div class="detalle-mentor">
+    <h1>Detalles del Mentor</h1>
+
+    <div class="form-group">
+        <label>Documento:</label>
+        <span th:text="${mentorDetalle.documento}"></span>
+    </div>
+
+    <div class="form-group">
+        <label>Nombre:</label>
+        <span th:text="${mentorDetalle.usuario != null ? mentorDetalle.usuario.nombreUsu : 'No asignado'}"></span>
+    </div>
+
+    <div class="form-group">
+        <label>Biografía:</label>
+        <p th:text="${mentorDetalle.biografia}"></p>
+    </div>
+
+    <div class="form-group">
+        <label>Especialidad:</label>
+        <span th:text="${mentorDetalle.especialidad}"></span>
+    </div>
+
+    <div class="form-group">
+        <label>Años de Experiencia:</label>
+        <span th:text="${mentorDetalle.anosExperiencia}"></span>
+    </div>
+
+    <div class="form-group">
+        <label>Perfil de LinkedIn:</label>
+        <a th:if="${mentorDetalle.linkedin != null}" th:href="${mentorDetalle.linkedin}" target="_blank">
+            <span th:text="${mentorDetalle.linkedin}"></span>
+        </a>
+        <span th:if="${mentorDetalle.linkedin == null}">No disponible</span>
+    </div>
+
+    <div class="form-actions">
+        <a th:href="@{/mentor}">
+            <button type="button" class="btn-volver">Volver</button>
+        </a>
+    </div>
+</div>
+
+
+</body>
+</html>

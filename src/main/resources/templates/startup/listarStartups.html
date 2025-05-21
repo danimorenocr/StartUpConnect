@@ -1,28 +1,219 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
+
 <head th:replace="~{layout/layout :: head}"></head>
+
 <body>
-<h1>Listado de Startups</h1>
+    <div class="container">
+        <h1 class="main-title">Listado de Startups</h1>
 
-<!--// BOTON PARA CREAR EMPRENDEDORES-->
-
-<a href="/startup">
-    <button>
-        Crear
-    </button>
-</a>
-
-<section>
-    <h1> [[${title}]]</h1>
-    <section>
-        <div th:each="startup: ${startups}">
-            <!--            <img th:src="@{${startup.logoUrl}}" alt="Logo" width="150">-->
-            <h2>Nombre: [[${startup.nombreStartup}]]</h2>
-            <h2>Sector: [[${startup.sector}]]</h2>
-            <h2>Emprendedor: [[${startup.emprendedor.usuario.nombreUsu}]]</h2>
+        <div class="actions">
+            <a th:href="@{/crearStartup}">
+                <button>
+                    Crear Nueva Startup
+                </button>
+            </a>
         </div>
-    </section>
-</section>
+
+        <section class="startups-list">
+            <div th:each="startup: ${startups}" class="startup-card">
+                <!-- Logo de la startup - Corregido manejo de URLs -->
+                <div class="startup-logo">
+                    <img th:src="${startup.logoUrl != null && !startup.logoUrl.isEmpty() ? startup.logoUrl : '/images/default-logo.png'}"
+                        alt="Logo" class="logo-image" onerror="this.src='/images/default-logo.png'">
+                </div>
+
+                <div class="startup-info">
+                    <h2 class="startup-name" th:text="${startup.nombreStartup}"></h2>
+                    <p class="info-item"><strong>Sector:</strong> <span
+                            th:text="${startup.sector != null ? startup.sector : 'No especificado'}"></span></p>
+                    <p class="info-item"><strong>Estado:</strong> <span
+                            th:text="${startup.estado != null ? startup.estado : 'No especificado'}"></span></p>
+                    <p class="info-item"><strong>Emprendedor:</strong>
+                        <span th:text="${startup.emprendedor != null && startup.emprendedor.usuario != null ? 
+                           startup.emprendedor.usuario.nombreUsu : 'No asignado'}"></span>
+                    </p>
+                </div>
+
+                <!-- Botones de acción -->
+                <div class="action-buttons">
+                    <!-- Botón Ver -->
+                    <a th:href="@{'/verStartup/' + ${startup.id}}" class="btn-ver">
+                        <button type="button">Ver</button>
+                    </a>
+
+                    <!-- Botón Editar -->
+                    <a th:href="@{'/editarStartup/' + ${startup.id}}" class="btn-editar">
+                        <button type="button">Editar</button>
+                    </a>
+
+                    <!-- Botón Eliminar -->
+                    <form th:action="@{/eliminarStartup/{id}(id=${startup.id})}" method="post"
+                        onsubmit="return confirmarEliminacion(event, this);" style="display: inline;">
+                        <button type="submit" class="eliminar" title="Eliminar">&#10060;</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Mensaje si no hay startups -->
+            <div th:if="${#lists.isEmpty(startups)}" class="empty-message">
+                No hay startups registradas en el sistema.
+            </div>
+        </section>
+    </div>
+    <script>
+        function confirmarEliminacion(event, form) {
+            event.preventDefault();
+            Swal.fire({
+                title: "Are you sure?",
+                text: "This action cannot be undone",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#991b1b",
+                cancelButtonColor: "#f59e0b",
+                confirmButtonText: "Yes, delete",
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    console.log("Deleting...");
+                    form.submit();
+                }
+            });
+        }
+    </script>
+    <style>
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .main-title {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        .actions {
+            margin-bottom: 20px;
+            text-align: right;
+        }
+
+        .actions button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .startups-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .startup-card {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            background-color: white;
+        }
+
+        .startup-logo {
+            flex: 0 0 100px;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-image {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        .startup-info {
+            flex: 1;
+            padding: 0 20px;
+        }
+
+        .startup-name {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .info-item {
+            margin: 5px 0;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .btn-ver button,
+        .btn-editar button,
+        .btn-eliminar {
+            width: 100%;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-bottom: 5px;
+        }
+
+        .btn-ver button {
+            background-color: #2196F3;
+            color: white;
+        }
+
+        .btn-editar button {
+            background-color: #FFC107;
+            color: #333;
+        }
+
+        .btn-eliminar {
+            background-color: #F44336;
+            color: white;
+        }
+
+        .empty-message {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .btn-eliminar-form {
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .startup-card {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .startup-logo {
+                margin-bottom: 15px;
+            }
+
+            .action-buttons {
+                flex-direction: row;
+                margin-top: 15px;
+            }
+        }
+    </style>
 
 </body>
+
 </html>

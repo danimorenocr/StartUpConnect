@@ -1,49 +1,74 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
+
 <head th:replace="~{layout/layout :: head}"></head>
+
 <body>
-<h1>Listado de Mentores</h1>
+    <h1>Listado de Mentores</h1>
 
-   <a th:href="@{/crearMentor}">
-    <button>
-        Crear
-    </button>
-</a>
+    <a th:href="@{/crearMentor}">
+        <button>
+            Crear
+        </button>
+    </a>
 
-<section>
-    <div th:each="mentor: ${mentores}" class="mentor-card">
-        <!-- Foto del mentor -->
-        <div class="mentor-foto">
-            <img th:src="${mentor.usuario != null && mentor.usuario.fotoUrl != null ? mentor.usuario.fotoUrl : '/images/default-profile.jpg'}"
-                 alt="Foto del mentor" class="foto-perfil">
+    <section>
+        <div th:each="mentor: ${mentores}" class="mentor-card">
+            <!-- Foto del mentor -->
+            <div class="mentor-foto">
+                <img th:src="${mentor.usuario != null && mentor.usuario.fotoUrl != null ? mentor.usuario.fotoUrl : '/images/default-profile.jpg'}"
+                    alt="Foto del mentor" class="foto-perfil">
+            </div>
+
+            <div class="mentor-info">
+                <h2>Nombre: <span th:text="${mentor.usuario != null ? mentor.usuario.nombreUsu : 'Sin nombre'}"></span>
+                </h2>
+                <h2>Documento: <span th:text="${mentor.documento}"></span></h2>
+            </div>
+
+            <!-- Botones de acción -->
+            <div class="botones-accion">
+                <!-- Botón Ver -->
+                <a th:href="@{/verMentor/{documento}(documento=${mentor.documento})}">
+                    <button class="btn-ver">Ver</button>
+                </a>
+
+                <!-- Botón Editar -->
+                <a th:href="@{/editarMentor/{documento}(documento=${mentor.documento})}">
+                    <button class="btn-editar">Editar</button>
+                </a>
+
+                <!-- Botón Eliminar -->
+                <form th:action="@{/eliminarMentor/{id}(id=${mentor.documento})}" method="post"
+                    onsubmit="return confirmarEliminacion(event, this);" style="display: inline;">
+                    <button type="submit" class="eliminar" title="Eliminar">&#10060;</button>
+                </form>
+            </div>
+
+            <hr> <!-- Separador entre mentores -->
         </div>
-        
-        <div class="mentor-info">
-            <h2>Nombre: <span th:text="${mentor.usuario != null ? mentor.usuario.nombreUsu : 'Sin nombre'}"></span></h2>
-            <h2>Documento: <span th:text="${mentor.documento}"></span></h2>
-        </div>
-        
-        <!-- Botones de acción -->
-        <div class="botones-accion">
-            <!-- Botón Ver -->
-            <a th:href="@{'/verMentor/' + ${mentor.documento}}">
-                <button class="btn-ver">Ver</button>
-            </a>
-            
-            <!-- Botón Editar -->
-            <a th:href="@{'/editarMentor/' + ${mentor.documento}}">
-                <button class="btn-editar">Editar</button>
-            </a>
-            
-            <!-- Botón Eliminar -->
-            <form th:action="@{'/eliminarMentor/' + ${mentor.documento}}" method="post" 
-                  onsubmit="return confirm('¿Está seguro que desea eliminar este mentor?');" style="display:inline;">
-                <button type="submit" class="btn-eliminar">Eliminar</button>
-            </form>
-        </div>
-        
-        <hr> <!-- Separador entre mentores -->
-    </div>
+
+        <script>
+            function confirmarEliminacion(event, form) {
+                event.preventDefault();
+                Swal.fire({
+                    title: "Are you sure?",
+                    text: "This action cannot be undone",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#991b1b",
+                    cancelButtonColor: "#f59e0b",
+                    confirmButtonText: "Yes, delete",
+                    cancelButtonText: "Cancel"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        console.log("Deleting...");
+                        form.submit();
+                    }
+                });
+            }
+        </script>
 
 </body>
+
 </html>

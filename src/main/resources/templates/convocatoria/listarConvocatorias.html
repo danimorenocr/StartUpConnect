@@ -2,11 +2,11 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{layout/layout :: head}"></head>
 <body>
-<h1>Listado de Convoca</h1>
+<h1>Listado de Convocatorias</h1>
 
-<!--// BOTON PARA CREAR EMPRENDEDORES-->
+<!--// BOTON PARA CREAR CONVOCATORIAS-->
 
-<a href="/convocatoria">
+<a th:href="@{/crearConvocatoria}">
     <button>
         Crear
     </button>
@@ -18,6 +18,20 @@
         <div th:each="convocatoria: ${convocatorias}">
             <h2>Titulo: [[${convocatoria.titulo}]]</h2>
             <h2>Sector: [[${convocatoria.sectorObjetivo}]]</h2>
+            <h2>Organizador: [[${convocatoria.organizador}]]</h2>
+            
+            <div class="botones-accion">
+                <a th:href="@{/convocatoria/ver/} + ${convocatoria.id}">
+                    <button>Ver</button>
+                </a>
+                <a th:href="@{/convocatoria/editar/} + ${convocatoria.id}">
+                    <button>Editar</button>
+                </a>
+                <a th:href="@{/convocatoria/eliminar/} + ${convocatoria.id}" 
+                   onclick="return confirm('¿Estás seguro de eliminar esta convocatoria?')">
+                    <button>Eliminar</button>
+                </a>
+            </div>
         </div>
     </section>
 </section>

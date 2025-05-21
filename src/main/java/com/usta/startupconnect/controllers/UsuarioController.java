@@ -77,7 +77,7 @@ public class UsuarioController {
         // Redirige según el rol
         Long rolId = usuario.getRol().getIdRol();
         if (rolId == 2L) {
-            return "redirect:/crearEmprendedor";
+            return "redirect:/crearMentor";
         } else if (rolId == 3L) {
             return "redirect:/crearEmprendedor";
         }

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{layout/layout :: head}"></head>
+
+<body>
+
+    <div class="login-container">
+        <h1>Iniciar Sesión</h1>
+
+        <div th:if="${param.error}" class="alert alert-danger">
+            Usuario o contraseña incorrectos
+        </div>
+
+        <div th:if="${param.logout}" class="alert alert-success">
+            Has cerrado sesión correctamente
+        </div>
+
+        <form th:action="@{/login}" method="post">
+            <div>
+                <label for="username" class="block text-lg font-semibold text-black">Correo:</label>
+                <input type="text" id="username" name="username" th:value="${emailUsuario}" required
+                    placeholder="Ingresa tu correo"
+                    class="w-full mt-2 p-2 bg-transparent border-b border-sky-400 focus:outline-none focus:border-sky-500 transition-all"
+                    pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" maxlength="100"
+                    title="Debe ser un correo válido con un máximo de 100 caracteres">
+            </div>
+
+            <!-- Campo de contraseña -->
+            <div class="relative">
+                <label for="password" class="block text-lg font-semibold text-black">Contraseña:</label>
+                <input type="password" id="password" name="password" th:value="${passwordUsuario}" required
+                    placeholder="Ingresa tu contraseña"
+                    class="w-full mt-2 p-2 bg-transparent border-b border-sky-400 focus:outline-none focus:border-sky-500 transition-all">
+                <button type="button" onclick="VerPassword()"
+                    class="absolute right-2 bottom-2 text-sky-400 hover:text-sky-500 focus:outline-none">Ver</button>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-login">Iniciar Sesión</button>
+            </div>
+
+            <div class="form-links">
+                <a th:href="@{/registro}">Registrarse</a>
+                <span>|</span>
+                <a th:href="@{/recuperarContrasena}">Olvidé mi contraseña</a>
+            </div>
+        </form>
+    </div>
+
+
+</body>
+
+</html>

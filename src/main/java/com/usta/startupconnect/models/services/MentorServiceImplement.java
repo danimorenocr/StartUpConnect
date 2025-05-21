@@ -19,4 +19,22 @@ public class MentorServiceImplement implements MentorService {
     public List<MentorEntity> findAll() {
         return (List<MentorEntity>) mentorDao.findAll();
     }
+
+    @Override
+    @jakarta.transaction.Transactional
+    public void save(MentorEntity usuario) {
+        mentorDao.save(usuario);
+    }
+
+    @Override
+    @Transactional
+    public MentorEntity findById(Long id) {
+        return mentorDao.findById(id).orElse(null);
+    }
+
+    @Override
+    @Transactional
+    public void deleteById(Long id) {
+        mentorDao.deleteById(id);
+    }
 }
