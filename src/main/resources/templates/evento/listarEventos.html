@@ -1,27 +1,57 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
+
 <head th:replace="~{layout/layout :: head}"></head>
+
 <body>
-<h1>Listado de evento</h1>
+    <h1>Listado de evento</h1>
 
-<!--// BOTON PARA CREAR EMPRENDEDORES-->
+    <a th:href="@{/crearEvento}">
+        <button>Crear</button>
+    </a>
 
-<a href="/crearEvento">
-    <button>
-        Crear
-    </button>
-</a>
-
-<section>
-    <h1> [[${title}]]</h1>
     <section>
-        <div th:each="evento: ${eventos}">
-            <h2>titulo: [[${evento.titulo}]]</h2>
-            <h2>color: [[${evento.color}]]</h2>
-            <h2>convocatoria: [[${evento.convocatoria.titulo}]]</h2>
-        </div>
+        <h1> [[${title}]]</h1>
+        <section>
+            <div th:each="evento: ${eventos}">
+                <h2>titulo: [[${evento.titulo}]]</h2>
+                <h2>color: [[${evento.color}]]</h2>
+
+                <!-- Botones de acción -->
+                <div>
+                   <a th:href="@{/verEvento/{id}(id=${evento.id})}">Ver</a>
+                    <a th:href="@{/editarEvento/{id}(id=${evento.id})}">Editar</a>
+                    <!-- Botón Eliminar -->
+                    <form th:action="@{/eliminarEvento/{id}(id=${evento.id})}" method="post"
+                        onsubmit="return confirmarEliminacion(event, this);" style="display: inline;">
+                        <button type="submit" class="eliminar" title="Eliminar">&#10060;</button>
+                    </form>
+                </div>
+            </div>
+        </section>
     </section>
-</section>
+
+    <script>
+        function confirmarEliminacion(event, form) {
+            event.preventDefault();
+            Swal.fire({
+                title: "Are you sure?",
+                text: "This action cannot be undone",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#991b1b",
+                cancelButtonColor: "#f59e0b",
+                confirmButtonText: "Yes, delete",
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    console.log("Deleting...");
+                    form.submit();
+                }
+            });
+        }
+    </script>
 
 </body>
+
 </html>

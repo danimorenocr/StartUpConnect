@@ -37,4 +37,10 @@ public class EmprendedorServiceImplement implements EmprendedorService {
     public void deleteById(Long id) {
         emprendedorDao.deleteById(id);
     }
+
+    @Override
+    @Transactional
+    public EmprendedorEntity findByDocumento(Long documento) {
+        return emprendedorDao.findByDocumento(documento);
+    }
 }

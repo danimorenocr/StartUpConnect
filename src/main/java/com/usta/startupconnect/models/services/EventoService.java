@@ -7,4 +7,10 @@ public interface EventoService {
 
     public List<EventoEntity> findAll();
 
+    public void save(EventoEntity usuario);
+
+    public EventoEntity findById(Long id);
+
+    public void deleteById(Long id);
+
 }

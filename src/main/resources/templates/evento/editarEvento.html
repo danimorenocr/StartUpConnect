@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Evento</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .color-preview {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            margin-left: 10px;
+            border: 1px solid #ccc;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="mb-0">Editar Evento</h3>
+                    </div>
+                    <div class="card-body">
+                        <form th:action="@{/editarEvento/{id}(id=${eventoEditar.id})}" method="post"
+                            enctype="multipart/form-data" th:object="${eventoEditar}">
+
+                            <div class="mb-3">
+                                <label for="titulo" class="form-label">Título del Evento</label>
+                                <input type="text" class="form-control" id="titulo" th:field="*{titulo}" required>
+                                <div class="text-danger" th:if="${#fields.hasErrors('titulo')}" th:errors="*{titulo}">
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="descripcion" class="form-label">Descripción</label>
+                                <textarea class="form-control" id="descripcion" th:field="*{descripcion}"
+                                    rows="3"></textarea>
+                                <div class="text-danger" th:if="${#fields.hasErrors('descripcion')}"
+                                    th:errors="*{descripcion}"></div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="convocatorias">Convocatoria:</label><br>
+                                <select id="convocatorias" name="convocatoriaId" class="form-select">
+                                    <option value="">Seleccione una Convocatoria</option>
+                                    <option th:each="c : ${convocatorias}" th:value="${c.id}" th:data-rol="${c.titulo}"
+                                        th:text="${c.titulo}"
+                                        th:selected="${eventoEditar.convocatoria != null && eventoEditar.convocatoria.id == c.id}">
+                                    </option>
+                                </select><br>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="fecha" class="form-label">Fecha del Evento</label>
+                                <input type="date" class="form-control" id="fecha" th:field="*{fecha}" required>
+                                <div class="text-danger" th:if="${#fields.hasErrors('fecha')}" th:errors="*{fecha}">
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="color" class="form-label">Color del Evento</label>
+                                <div class="d-flex align-items-center">
+                                    <input type="color" class="form-control form-control-color" id="colorPicker"
+                                        th:field="*{color}" value="#3788d8">
+                                    <input type="text" class="form-control ms-2" id="colorHex" readonly>
+                                    <div class="color-preview ms-2" id="colorPreview"></div>
+                                </div>
+                                <div class="text-danger" th:if="${#fields.hasErrors('color')}" th:errors="*{color}">
+                                </div>
+                            </div>
+
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <a th:href="@{/eventos}" class="btn btn-secondary me-md-2">Cancelar</a>
+                                <button type="submit" class="btn btn-primary">Guardar Evento</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const colorInput = document.getElementById('colorPicker');
+            const colorHexInput = document.getElementById('colorHex');
+            const colorPreview = document.getElementById('colorPreview');
+
+            // Actualizar el valor hexadecimal y la vista previa cuando cambia el color
+            colorInput.addEventListener('input', function () {
+                const selectedColor = colorInput.value;
+                colorHexInput.value = selectedColor;
+                colorPreview.style.backgroundColor = selectedColor;
+            });
+
+            // Inicializar con el valor actual
+            colorPreview.style.backgroundColor = colorInput.value;
+            colorHexInput.value = colorInput.value;
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
