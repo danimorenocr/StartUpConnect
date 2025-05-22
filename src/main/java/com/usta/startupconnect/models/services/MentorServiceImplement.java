@@ -15,7 +15,7 @@ public class MentorServiceImplement implements MentorService {
     private MentorDao mentorDao;
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public List<MentorEntity> findAll() {
         return (List<MentorEntity>) mentorDao.findAll();
     }
@@ -28,13 +28,13 @@ public class MentorServiceImplement implements MentorService {
 
     @Override
     @Transactional
-    public MentorEntity findById(Long id) {
+    public MentorEntity findById(String id) {
         return mentorDao.findById(id).orElse(null);
     }
 
     @Override
     @Transactional
-    public void deleteById(Long id) {
+    public void deleteById(String id) {
         mentorDao.deleteById(id);
     }
 }

@@ -52,9 +52,8 @@ public class MentorController {
             return "mentor/crearMentor";
         }
 
-        Long documentoUsuario = null;
         try {
-            documentoUsuario = Long.parseLong(mentor.getDocumento());
+            String documentoUsuario = mentor.getDocumento();
 
             UsuarioEntity usuario = usuarioService.findById(documentoUsuario);
 
@@ -78,26 +77,32 @@ public class MentorController {
     }
 
     @PostMapping(value = "/eliminarMentor/{id}")
-    public String eliminarMentor(@PathVariable(value = "id") Long id, RedirectAttributes redirectAttributes) {
-        if (id <= 0) {
-            redirectAttributes.addFlashAttribute("error", "ID inválido");
+    public String eliminarMentor(@PathVariable(value = "id") String id, RedirectAttributes redirectAttributes) {
+        try {
+            if (id == null || id.trim().isEmpty()) {
+                redirectAttributes.addFlashAttribute("error", "ID inválido");
+                return "redirect:/mentor";
+            }
+
+            MentorEntity mentor = mentorService.findById(id);
+
+            if (mentor == null) {
+                redirectAttributes.addFlashAttribute("error", "Mentor no encontrado");
+                return "redirect:/mentor";
+            }
+
+            mentorService.deleteById(id);
+            redirectAttributes.addFlashAttribute("success", "Mentor eliminado correctamente");
+
+            return "redirect:/mentor";
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Error al eliminar el mentor: " + e.getMessage());
             return "redirect:/mentor";
         }
-
-        MentorEntity mentor = mentorService.findById(id);
-        if (mentor == null) {
-            redirectAttributes.addFlashAttribute("error", "mentor no encontrado");
-            return "redirect:/mentor";
-        }
-
-        mentorService.deleteById(id);
-        redirectAttributes.addFlashAttribute("success", "mentor eliminado correctamente");
-
-        return "redirect:/mentor";
     }
 
     @GetMapping(value = "/verMentor/{id}")
-    public String verEmprendedor(Model model, @PathVariable(value = "id") Long id) {
+    public String verEmprendedor(Model model, @PathVariable(value = "id") String id) {
         MentorEntity mentor = mentorService.findById(id);
         model.addAttribute("title", "Ver Mentor");
         model.addAttribute("mentorDetalle", mentor);
@@ -105,7 +110,7 @@ public class MentorController {
     }
 
     @GetMapping(value = "/editarMentor/{id}")
-    public String editarMentor(Model model, @PathVariable(value = "id") Long id) {
+    public String editarMentor(Model model, @PathVariable(value = "id") String id) {
         MentorEntity mentor = mentorService.findById(id);
         model.addAttribute("title", "Editar mentor");
         model.addAttribute("mentorEditar", mentor);
@@ -115,7 +120,7 @@ public class MentorController {
     @PostMapping("/editarMentor/{id}")
     public String actualizarMentor(@Valid MentorEntity mentor,
             BindingResult result,
-            @PathVariable("id") Long id,
+            @PathVariable("id") String id,
             RedirectAttributes redirectAttributes) {
 
         if (result.hasErrors()) {

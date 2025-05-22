@@ -2,7 +2,6 @@ package com.usta.startupconnect.controllers;
 
 import com.usta.startupconnect.entities.ConvocatoriaEntity;
 import com.usta.startupconnect.entities.EventoEntity;
-import com.usta.startupconnect.entities.MentorEntity;
 import com.usta.startupconnect.models.services.ConvocatoriaService;
 import com.usta.startupconnect.models.services.EventoService;
 import org.springframework.beans.factory.annotation.Autowired;
