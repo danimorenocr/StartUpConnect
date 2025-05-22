@@ -1,7 +1,6 @@
 package com.usta.startupconnect.models.services;
 
 import com.usta.startupconnect.entities.EventoEntity;
-import com.usta.startupconnect.entities.UsuarioEntity;
 import com.usta.startupconnect.models.dao.EventoDao;
 
 import org.springframework.beans.factory.annotation.Autowired;

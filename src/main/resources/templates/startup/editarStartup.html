@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{layout/layout :: head}"></head>
+
+<body>
+
+    <div class="crear-startup-container">
+        <h1>Editar Startup</h1>
+
+        <form th:action="@{/editarStartup/{id}(id=${startupEditar.id})}" method="post" enctype="multipart/form-data"
+            th:object="${startupEditar}">
+            <!-- Información básica -->
+            <div class="section-title">Información Básica</div>
+
+            <div class="form-group">
+                <label for="nombreStartup">Nombre:</label>
+                <input th:field="*{nombreStartup}" type="text" id="nombreStartup" name="nombreStartup" required>
+            </div>
+
+            <div class="form-group">
+                <label for="sector">Sector:</label>
+                <input th:field="*{sector}" type="text" id="sector" name="sector" required>
+            </div>
+
+            <div class="form-group">
+                <label for="descripcion">Descripción:</label>
+                <textarea th:field="*{descripcion}" id="descripcion" name="descripcion" rows="4" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="estado">Estado:</label>
+                <select th:field="*{estado}" id="estado" name="estado" required>
+                    <option value="">Seleccione un estado</option>
+                    <option value="Idea">Idea</option>
+                    <option value="Validación">Validación</option>
+                    <option value="Desarrollo">Desarrollo</option>
+                    <option value="Crecimiento">Crecimiento</option>
+                    <option value="Expansión">Expansión</option>
+                </select>
+            </div>
+
+            <!-- Información del emprendedor -->
+            <div class="section-title">Emprendedor</div>
+
+            <div class="form-group">
+                <label for="emprendedor">Documento del Emprendedor:</label>
+                <input th:field="*{emprendedor.documento}" type="text" id="emprendedor" name="emprendedor.documento"
+                    required>
+            </div>
+
+            <!-- Contenido multimedia -->
+            <div class="section-title">Contenido Multimedia</div>
+
+            <div class="form-group">
+                <label for="foto">Logo de la Startup:</label>
+                <input type="file" id="foto" name="foto" accept="image/*">
+                <img id="preview" th:src="${startupEditar.logoUrl != null ? startupEditar.logoUrl : ''}"
+                    alt="Previsualización"
+                    th:style="'max-width: 200px; display: ' + (${startupEditar.logoUrl != null} ? 'block' : 'none') + ';'">
+                <small class="form-text text-muted">Seleccione una nueva imagen para cambiar el logo actual</small>
+            </div>
+
+            <div class="form-group">
+                <label for="pitchUrl">URL del Pitch Deck:</label>
+                <input th:field="*{pitchUrl}" type="url" id="pitchUrl" name="pitchUrl"
+                    placeholder="https://example.com/pitch.pdf">
+            </div>
+
+            <div class="form-group">
+                <label for="videoPresentacion">URL del Video de Presentación:</label>
+                <input th:field="*{videoPresentacion}" type="url" id="videoPresentacion" name="videoPresentacion"
+                    placeholder="https://youtube.com/watch?v=example">
+            </div>
+
+            <!-- Enlaces web -->
+            <div class="section-title">Enlaces Web</div>
+
+            <div class="form-group">
+                <label for="paginaWeb">Página Web:</label>
+                <input th:field="*{paginaWeb}" type="url" id="paginaWeb" name="paginaWeb"
+                    placeholder="https://tuempresa.com">
+            </div>
+
+            <div class="form-group">
+                <label for="github">GitHub:</label>
+                <input th:field="*{github}" type="url" id="github" name="github"
+                    placeholder="https://github.com/tuempresa">
+            </div>
+
+            <div class="form-group">
+                <label for="linkedin">LinkedIn:</label>
+                <input th:field="*{linkedin}" type="url" id="linkedin" name="linkedin"
+                    placeholder="https://linkedin.com/company/tuempresa">
+            </div>
+
+            <div class="form-group">
+                <label for="instagram">Instagram:</label>
+                <input th:field="*{instagram}" type="url" id="instagram" name="instagram"
+                    placeholder="https://instagram.com/tuempresa">
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-submit">Guardar Startup</button>
+                <a th:href="@{/startup}" class="btn-cancel">Cancelar</a>
+            </div>
+        </form>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const imagenInput = document.getElementById('foto');
+            const preview = document.getElementById('preview');
+
+            // Mostrar la imagen existente si hay una
+            if ('[[${startupEditar.logoUrl}]]' !== 'null' && '[[${startupEditar.logoUrl}]]' !== '') {
+                preview.src = '[[${startupEditar.logoUrl}]]';
+                preview.style.display = 'block';
+            }
+
+            imagenInput.addEventListener('change', function () {
+                const file = this.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        preview.src = e.target.result;
+                        preview.style.display = 'block';
+                    }
+                    reader.readAsDataURL(file);
+                } else {
+                    // Si no se selecciona una nueva imagen, volver a la imagen existente o nada
+                    if ('[[${startupEditar.logoUrl}]]' !== 'null' && '[[${startupEditar.logoUrl}]]' !== '') {
+                        preview.src = '[[${startupEditar.logoUrl}]]';
+                        preview.style.display = 'block';
+                    } else {
+                        preview.src = '';
+                        preview.style.display = 'none';
+                    }
+                }
+            });
+        });
+
+        function updateFileName(input) {
+            const label = document.getElementById('file-name');
+            if (input.files && input.files.length > 0) {
+                label.textContent = input.files[0].name;
+            } else {
+                label.textContent = "No files selected";
+            }
+        }
+    </script>
+
+</body>
+
+</html>

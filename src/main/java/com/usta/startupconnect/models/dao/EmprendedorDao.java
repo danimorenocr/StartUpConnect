@@ -19,6 +19,6 @@ public interface EmprendedorDao extends CrudRepository<EmprendedorEntity, String
 
   @Transactional
   @Query("SELECT e FROM EmprendedorEntity e WHERE e.documento = ?1")
-  public EmprendedorEntity findByDocumento(Long documento);
+  public EmprendedorEntity findByDocumento(String documento);
 
 }

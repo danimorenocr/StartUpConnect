@@ -38,7 +38,7 @@
                 <!-- Botones de acción -->
                 <div class="action-buttons">
                     <!-- Botón Ver -->
-                    <a th:href="@{'/verStartup/' + ${startup.id}}" class="btn-ver">
+                   <a th:href="@{/verStartup/{id}(id=${startup.id})}">
                         <button type="button">Ver</button>
                     </a>
 
@@ -81,6 +81,7 @@
             });
         }
     </script>
+
     <style>
         .container {
             max-width: 1200px;
