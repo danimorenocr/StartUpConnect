@@ -8,7 +8,10 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
 import java.util.Comparator;
 import java.util.List;
 
@@ -46,6 +49,32 @@ public class ConvocatoriaController {
         }
         convocatoriaService.save(convocatoria);
         System.out.println("SHDFNKSDKFJSDJFSDJFKSKJDF YS FUNCIONA");
+        return "redirect:/convocatoria";
+    }
+
+    @GetMapping("/editarConvocatoria/{id}")
+    public String editarConvocatoria(@PathVariable("id") Long idConvocatoria, Model model) {
+        ConvocatoriaEntity convocatoria = convocatoriaService.findById(idConvocatoria);
+        model.addAttribute("title", "Editar Convocatoria");
+        model.addAttribute("convocatoriaEditar", convocatoria);
+        return "convocatoria/editarConvocatoria";
+    }
+
+    @PostMapping("/editarConvocatoria/{id}")
+    public String actualizarArtista(@PathVariable("id") Long idConvocatoria,
+            @Valid @ModelAttribute("convocatoria") ConvocatoriaEntity convocatoria,
+            BindingResult result) {
+        if (result.hasErrors()) {
+            return "convocatoria/editarConvocatoria";
+        }
+        convocatoria.setId(idConvocatoria);
+        convocatoriaService.save(convocatoria);
+        return "redirect:/convocatoria";
+    }
+
+    @RequestMapping("/eliminarConvocatoria/{id}")
+    public String eliminarConvocatoria(@PathVariable("id") Long idConvocatoria) {
+        convocatoriaService.deleteById(idConvocatoria);
         return "redirect:/convocatoria";
     }
 }

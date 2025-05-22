@@ -1,40 +1,65 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
+
 <head th:replace="~{layout/layout :: head}"></head>
+
 <body>
-<h1>Listado de Convocatorias</h1>
+    <h1>Listado de Convocatorias</h1>
 
-<!--// BOTON PARA CREAR CONVOCATORIAS-->
+    <!--// BOTON PARA CREAR CONVOCATORIAS-->
 
-<a th:href="@{/crearConvocatoria}">
-    <button>
-        Crear
-    </button>
-</a>
+    <a th:href="@{/crearConvocatoria}">
+        <button>
+            Crear
+        </button>
+    </a>
 
-<section>
-    <h1> [[${title}]]</h1>
     <section>
-        <div th:each="convocatoria: ${convocatorias}">
-            <h2>Titulo: [[${convocatoria.titulo}]]</h2>
-            <h2>Sector: [[${convocatoria.sectorObjetivo}]]</h2>
-            <h2>Organizador: [[${convocatoria.organizador}]]</h2>
-            
-            <div class="botones-accion">
-                <a th:href="@{/convocatoria/ver/} + ${convocatoria.id}">
-                    <button>Ver</button>
-                </a>
-                <a th:href="@{/convocatoria/editar/} + ${convocatoria.id}">
-                    <button>Editar</button>
-                </a>
-                <a th:href="@{/convocatoria/eliminar/} + ${convocatoria.id}" 
-                   onclick="return confirm('¿Estás seguro de eliminar esta convocatoria?')">
-                    <button>Eliminar</button>
-                </a>
+        <h1> [[${title}]]</h1>
+        <section>
+            <div th:each="convocatoria: ${convocatorias}">
+                <h2>Titulo: [[${convocatoria.titulo}]]</h2>
+                <h2>Sector: [[${convocatoria.sectorObjetivo}]]</h2>
+                <h2>Organizador: [[${convocatoria.organizador}]]</h2>
+
+                <div class="botones-accion">
+                    <a th:href="@{/convocatoria/ver/} + ${convocatoria.id}">
+                        <button>Ver</button>
+                    </a>
+                    <!-- Botón Editar -->
+                    <a th:href="@{/editarConvocatoria/{id}(id=${convocatoria.id})}">
+                        <button class="btn-editar">Editar</button>
+                    </a>
+
+                    <form th:action="@{/eliminarConvocatoria/{id}(id=${convocatoria.id})}" method="post"
+                        onsubmit="return confirmarEliminacion(event, this);" style="display: inline;">
+                        <button type="submit" class="eliminar" title="Eliminar">&#10060;</button>
+                    </form>
+                </div>
             </div>
-        </div>
+        </section>
     </section>
-</section>
+    <script>
+        function confirmarEliminacion(event, form) {
+            event.preventDefault();
+            Swal.fire({
+                title: "Are you sure?",
+                text: "This action cannot be undone",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#991b1b",
+                cancelButtonColor: "#f59e0b",
+                confirmButtonText: "Yes, delete",
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    console.log("Deleting...");
+                    form.submit();
+                }
+            });
+        }
+    </script>
 
 </body>
+
 </html>
