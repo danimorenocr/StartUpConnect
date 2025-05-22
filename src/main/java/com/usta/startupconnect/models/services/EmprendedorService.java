@@ -13,4 +13,6 @@ public interface EmprendedorService {
     public EmprendedorEntity findById(Long id);
 
     public void deleteById(Long id);
+    
+    public EmprendedorEntity findByDocumento(Long documento);
 }

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{layout/layout :: head}"></head>
+
+<body>
+
+    <div class="detalle-evento">
+        <h1>Detalles del Evento</h1>
+
+        <div class="form-group">
+            <label>Título:</label>
+            <span th:text="${eventoDetalle.titulo}"></span>
+        </div>
+
+        <div class="form-group">
+            <label>Descripción:</label>
+            <p th:text="${eventoDetalle.descripcion}"></p>
+        </div>
+
+        <div class="form-group">
+            <label>Convocatoria:</label>
+            <span
+                th:text="${eventoDetalle.convocatoria != null ? eventoDetalle.convocatoria.titulo : 'No asignada'}"></span>
+        </div>
+        <div class="form-group">
+            <label>Fecha:</label>
+            <!-- Use #dates helper if fecha is java.util.Date -->
+            <span th:text="${#dates.format(eventoDetalle.fecha, 'dd/MM/yyyy')}"></span>
+        </div>
+
+        <div class="form-group">
+            <label>Color:</label>
+            <span th:text="${eventoDetalle.color}"></span>
+            <span class="color-muestra" th:style="'background-color: ' + ${eventoDetalle.color} + ';'"></span>
+        </div>
+
+        <div class="form-actions">
+            <a th:href="@{/evento}">
+                <button type="button" class="btn-volver">Volver</button>
+            </a>
+        </div>
+    </div>
+
+</body>
+
+</html>
