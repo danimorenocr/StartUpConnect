@@ -14,5 +14,5 @@ public interface EmprendedorService {
 
     public void deleteById(String id);
     
-    public EmprendedorEntity findByDocumento(Long documento);
+    public EmprendedorEntity findByDocumento(String documento);
 }

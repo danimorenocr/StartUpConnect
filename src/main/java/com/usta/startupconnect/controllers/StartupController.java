@@ -20,9 +20,13 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
@@ -67,14 +71,13 @@ public class StartupController {
         }
 
         String documentoEmprendedor = startup.getEmprendedor().getDocumento();
-        Long documentoEmprendedorLong = Long.parseLong(documentoEmprendedor);
 
-        EmprendedorEntity emprendedor = emprendedorService.findByDocumento(documentoEmprendedorLong);
+        EmprendedorEntity emprendedor = emprendedorService.findById(documentoEmprendedor);
 
         if (emprendedor == null) {
 
             System.out.println("Emprendedor no encontrado");
-            System.out.println("Documento: " + documentoEmprendedorLong);
+            System.out.println("Documento: " + documentoEmprendedor);
             System.out.println(emprendedor);
             return "redirect:/crearStartup?error=emprendedor_no_encontrado";
         }
@@ -119,6 +122,53 @@ public class StartupController {
         }
         return null;
 
+    }
+
+    @GetMapping(value = "/editarStartup/{id}")
+    public String editarStartup(Model model, @PathVariable(value = "id") Long id) {
+        StartupEntity startup = startupService.findById(id);
+        model.addAttribute("title", "Editar startup");
+        model.addAttribute("startupEditar", startup);
+        return "startup/editarStartup";
+    }
+
+    @PostMapping("/editarStartup/{id}")
+    public String editarStartup(@Valid StartupEntity startup,
+            @RequestParam(value = "foto", required = false) MultipartFile foto,
+            BindingResult result,
+            RedirectAttributes redirectAttributes) {
+
+        if (result.hasErrors()) {
+            System.out.println(result.getAllErrors());
+            return "startup/editarStartup";
+        }
+        Long id = startup.getId();
+        StartupEntity startupExistente = startupService.findById(id);
+
+        if (foto != null && !foto.isEmpty()) {
+            String urlImagen = guardarImagen(foto);
+            startup.setLogoUrl(urlImagen);
+        } else if (startupExistente != null) {
+            startup.setLogoUrl(startupExistente.getLogoUrl());
+        }
+
+        startupService.save(startup);
+        redirectAttributes.addFlashAttribute("mensajeExito", "Evento actualizado exitosamente");
+        return "redirect:/startup";
+    }
+
+    @GetMapping(value = "/verStartup/{id}")
+    public String verStartup(Model model, @PathVariable(value = "id") Long id) {
+        StartupEntity startup = startupService.findById(id);
+        model.addAttribute("title", "Ver startup");
+        model.addAttribute("startupDetalle", startup);
+        return "startup/detalleStartup";
+    }
+
+    @RequestMapping("/eliminarStartup/{id}")
+    public String eliminarStratup(@PathVariable("id") Long idStartup) {
+        startupService.deleteById(idStartup);
+        return "redirect:/startup";
     }
 
 }

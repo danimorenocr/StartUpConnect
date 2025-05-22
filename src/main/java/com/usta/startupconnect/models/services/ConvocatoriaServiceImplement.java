@@ -1,7 +1,6 @@
 package com.usta.startupconnect.models.services;
 
 import com.usta.startupconnect.entities.ConvocatoriaEntity;
-import com.usta.startupconnect.entities.MentorEntity;
 import com.usta.startupconnect.models.dao.ConvocatoriaDao;
 
 import org.springframework.beans.factory.annotation.Autowired;

@@ -40,7 +40,7 @@ public class EmprendedorServiceImplement implements EmprendedorService {
 
     @Override
     @Transactional
-    public EmprendedorEntity findByDocumento(Long documento) {
+    public EmprendedorEntity findByDocumento(String documento) {
         return emprendedorDao.findByDocumento(documento);
     }
 }

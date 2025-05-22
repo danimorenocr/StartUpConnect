@@ -5,9 +5,7 @@ import com.usta.startupconnect.entities.RolEntity;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.event.TransactionalEventListener;
 
-import java.util.Date;
 import java.util.List;
 
 public interface UsuarioDao extends CrudRepository<UsuarioEntity, String> {
