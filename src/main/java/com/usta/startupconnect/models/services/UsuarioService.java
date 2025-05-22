@@ -9,7 +9,7 @@ public interface UsuarioService {
 
     public void save(UsuarioEntity usuario);
 
-    public UsuarioEntity findById(Long id);
+    public UsuarioEntity findById(String id);
 
-    public void deleteById(Long id);
+    public void deleteById(String id);
 }

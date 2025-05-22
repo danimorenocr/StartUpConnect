@@ -10,9 +10,9 @@ public interface MentorService {
     
     public void save(MentorEntity mentor);
 
-    public MentorEntity findById(Long id);
+    public MentorEntity findById(String id);
 
-    public void deleteById(Long id);
+    public void deleteById(String id);
 
 
 }

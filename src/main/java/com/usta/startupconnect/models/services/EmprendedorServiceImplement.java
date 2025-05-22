@@ -28,13 +28,13 @@ public class EmprendedorServiceImplement implements EmprendedorService {
 
     @Override
     @Transactional
-    public EmprendedorEntity findById(Long id) {
+    public EmprendedorEntity findById(String id) {
         return emprendedorDao.findById(id).orElse(null);
     }
 
     @Override
     @Transactional
-    public void deleteById(Long id) {
+    public void deleteById(String id) {
         emprendedorDao.deleteById(id);
     }
 

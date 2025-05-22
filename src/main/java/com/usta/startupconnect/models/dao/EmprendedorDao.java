@@ -7,19 +7,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-public interface EmprendedorDao extends CrudRepository<EmprendedorEntity, Long> {
+public interface EmprendedorDao extends CrudRepository<EmprendedorEntity, String> {
 
-    @Transactional
-    @Query("SELECT e FROM EmprendedorEntity e")
-    public List<EmprendedorEntity> findAllEmprendedores();
+  @Transactional
+  @Query("SELECT e FROM EmprendedorEntity e")
+  public List<EmprendedorEntity> findAllEmprendedores();
 
-    @Transactional
-    @Query("SELECT e FROM EmprendedorEntity e WHERE e.usuario = ?1")
-    public EmprendedorEntity findByUsuarioId(Long idUsuario);
+  @Transactional
+  @Query("SELECT e FROM EmprendedorEntity e WHERE e.usuario = ?1")
+  public EmprendedorEntity findByUsuarioId(Long idUsuario);
 
-      @Transactional
-    @Query("SELECT e FROM EmprendedorEntity e WHERE e.id = ?1")
-    public EmprendedorEntity findByDocumento(Long documento);
-
+  @Transactional
+  @Query("SELECT e FROM EmprendedorEntity e WHERE e.documento = ?1")
+  public EmprendedorEntity findByDocumento(Long documento);
 
 }

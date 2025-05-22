@@ -51,8 +51,7 @@ public class EmprendedorController {
             return "emprendedor/formCrearEmprendedor";
         }
 
-        Long documentoUsuario = null;
-        documentoUsuario = Long.parseLong(emprendedor.getDocumento());
+        String documentoUsuario = emprendedor.getDocumento();
         UsuarioEntity usuario = usuarioService.findById(documentoUsuario);
 
         emprendedor.setUsuario(usuario);
@@ -63,26 +62,27 @@ public class EmprendedorController {
     }
 
     @PostMapping(value = "/eliminarEmprendedor/{id}")
-    public String eliminarEmprendedor(@PathVariable(value = "id") Long id, RedirectAttributes redirectAttributes) {
-        if (id <= 0) {
-            redirectAttributes.addFlashAttribute("error", "ID inválido");
+    public String eliminarEmprendedor(@PathVariable(value = "id") String id, RedirectAttributes redirectAttributes) {
+        try {
+
+            EmprendedorEntity emprendedor = emprendedorService.findById(id);
+
+            if (emprendedor == null) {
+                redirectAttributes.addFlashAttribute("error", "Emprendedor no encontrado");
+                return "redirect:/emprendedor";
+            }
+
+            emprendedorService.deleteById(id);
+            redirectAttributes.addFlashAttribute("success", "Emprendedor eliminado correctamente");
+            return "redirect:/emprendedor";
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Error al eliminar el emprendedor: " + e.getMessage());
             return "redirect:/emprendedor";
         }
-
-        EmprendedorEntity emprendedor = emprendedorService.findById(id);
-        if (emprendedor == null) {
-            redirectAttributes.addFlashAttribute("error", "emprendedor no encontrado");
-            return "redirect:/emprendedor";
-        }
-
-        emprendedorService.deleteById(id);
-        redirectAttributes.addFlashAttribute("success", "emprendedor eliminado correctamente");
-
-        return "redirect:/emprendedor";
     }
 
     @GetMapping(value = "/verEmprendedor/{id}")
-    public String verEmprendedor(Model model, @PathVariable(value = "id") Long id) {
+    public String verEmprendedor(Model model, @PathVariable(value = "id") String id) {
         EmprendedorEntity emprendedor = emprendedorService.findById(id);
         model.addAttribute("title", "Ver Emprendedor");
         model.addAttribute("emprendedorDetalle", emprendedor);
@@ -90,7 +90,7 @@ public class EmprendedorController {
     }
 
     @GetMapping(value = "/editarEmprendedor/{id}")
-    public String editarUsuario(Model model, @PathVariable(value = "id") Long id) {
+    public String editarUsuario(Model model, @PathVariable(value = "id") String id) {
         EmprendedorEntity emprendedor = emprendedorService.findById(id);
         model.addAttribute("title", "Editar Emprendedor");
         model.addAttribute("emprendedorEditar", emprendedor);
@@ -100,7 +100,7 @@ public class EmprendedorController {
     @PostMapping("/editarEmprendedor/{id}")
     public String actualizarEmprendedor(@Valid EmprendedorEntity emprendedor,
             BindingResult result,
-            @PathVariable("id") Long id,
+            @PathVariable("id") String id,
             RedirectAttributes redirectAttributes) {
 
         if (result.hasErrors()) {

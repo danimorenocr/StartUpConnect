@@ -123,31 +123,26 @@ public class UsuarioController {
     }
 
     @PostMapping(value = "/eliminarUsuario/{id}")
-    public String eliminarHabitacion(@PathVariable(value = "id") Long id, RedirectAttributes redirectAttributes) {
+    public String eliminarHabitacion(@PathVariable(value = "id") String id, RedirectAttributes redirectAttributes) {
         System.out.println("Intentando eliminar habitación con ID: " + id);
 
-        if (id > 0) {
-            UsuarioEntity usuario = usuarioService.findById(id);
-            if (usuario != null) {
-                System.out.println("usuario encontrada: " + usuario.getDocumento());
+        UsuarioEntity usuario = usuarioService.findById(id);
+        if (usuario != null) {
+            System.out.println("usuario encontrada: " + usuario.getDocumento());
 
-                usuarioService.deleteById(id);
-                System.out.println("usuario eliminada correctamente.");
-                redirectAttributes.addFlashAttribute("success", "user deleted successfully");
-            } else {
-                System.out.println("Error: No se encontró la usuario con ID: " + id);
-                redirectAttributes.addFlashAttribute("error", "user not found");
-            }
+            usuarioService.deleteById(id);
+            System.out.println("usuario eliminada correctamente.");
+            redirectAttributes.addFlashAttribute("success", "user deleted successfully");
         } else {
-            System.out.println("Error: ID inválido.");
-            redirectAttributes.addFlashAttribute("error", "Invalid ID");
+            System.out.println("Error: No se encontró la usuario con ID: " + id);
+            redirectAttributes.addFlashAttribute("error", "user not found");
         }
 
         return "redirect:/usuario";
     }
 
     @GetMapping(value = "/editarUsuario/{id}")
-    public String editarUsuario(Model model, @PathVariable(value = "id") Long id) {
+    public String editarUsuario(Model model, @PathVariable(value = "id") String id) {
         UsuarioEntity usuario = usuarioService.findById(id);
         List<RolEntity> roles = rolService.findAll();
         model.addAttribute("roles", roles);
@@ -168,7 +163,7 @@ public class UsuarioController {
             return "usuario/editarUsuario";
         }
 
-        Long documento = Long.parseLong(usuario.getDocumento());
+        String documento =usuario.getDocumento();
         UsuarioEntity usuarioExistente = usuarioService.findById(documento);
 
         if (usuarioExistente != null) {
@@ -190,7 +185,7 @@ public class UsuarioController {
     }
 
     @GetMapping(value = "/verUsuario/{id}")
-    public String verUsuario(Model model, @PathVariable(value = "id") Long id) {
+    public String verUsuario(Model model, @PathVariable(value = "id") String id) {
         UsuarioEntity usuario = usuarioService.findById(id);
         List<RolEntity> roles = rolService.findAll();
         model.addAttribute("roles", roles);
