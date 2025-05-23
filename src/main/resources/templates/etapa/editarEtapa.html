@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{layout/layout :: head}"></head>
+
+<body>
+
+    <div class="container mt-4">
+        <h1>Crear Nueva Etapa</h1>
+
+        <form th:action="@{/editarEtapa/{id}(id=${etapaEditar.id})}" method="post" enctype="multipart/form-data"
+            th:object="${etapaEditar}">
+            <!-- Título -->
+            <div class="form-group mb-3">
+                <label for="titulo">Título:</label>
+                <input type="text" class="form-control" id="titulo" name="titulo" th:field="*{titulo}" required>
+                <div class="text-danger" th:if="${#fields.hasErrors('titulo')}" th:errors="*{titulo}"></div>
+            </div>
+
+            <!-- Descripción -->
+            <div class="form-group mb-3">
+                <label for="descripcion">Descripción:</label>
+                <textarea class="form-control" id="descripcion" name="descripcion" th:field="*{descripcion}"
+                    rows="4"></textarea>
+                <div class="text-danger" th:if="${#fields.hasErrors('descripcion')}" th:errors="*{descripcion}"></div>
+            </div>
+
+            <!-- Fecha de Inicio -->
+            <div class="form-group mb-3">
+                <label for="fechaInicio">Fecha de Inicio:</label>
+                <input type="date" class="form-control" id="fechaInicio" name="fechaInicio" th:field="*{fechaInicio}"
+                    required>
+                <div class="text-danger" th:if="${#fields.hasErrors('fechaInicio')}" th:errors="*{fechaInicio}"></div>
+            </div>
+
+            <!-- Fecha de Fin -->
+            <div class="form-group mb-3">
+                <label for="fechaFin">Fecha de Fin:</label>
+                <input type="date" class="form-control" id="fechaFin" name="fechaFin" th:field="*{fechaFin}" required>
+                <div class="text-danger" th:if="${#fields.hasErrors('fechaFin')}" th:errors="*{fechaFin}"></div>
+            </div>
+            <!-- Mentor -->
+            <div class="form-group mb-3">
+                <label for="mentorId">ID del Mentor:</label>
+                <input type="text" class="form-control" id="mentorId" name="mentorId"
+                    th:value="${etapaEditar.mentor != null ? etapaEditar.mentor.documento : ''}" required>
+                <div class="text-danger" th:if="${#fields.hasErrors('mentor')}" th:errors="*{mentor}"></div>
+            </div>
+            
+            <!-- Botones -->
+            <div class="form-group">
+                <button type="submit">Guardar Etapa</button>
+                <a th:href="@{/etapa}">Cancelar</a>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Validación de fechas
+        document.addEventListener('DOMContentLoaded', function () {
+            const fechaInicioInput = document.getElementById('fechaInicio');
+            const fechaFinInput = document.getElementById('fechaFin');
+
+            // Al cambiar la fecha de inicio, actualiza la fecha mínima para la fecha de fin
+            fechaInicioInput.addEventListener('change', function () {
+                fechaFinInput.min = fechaInicioInput.value;
+
+                // Si la fecha de fin es anterior a la fecha de inicio, actualiza la fecha de fin
+                if (fechaFinInput.value && fechaFinInput.value < fechaInicioInput.value) {
+                    fechaFinInput.value = fechaInicioInput.value;
+                }
+            });
+
+            // Establece la fecha mínima inicial al cargar la página
+            if (fechaInicioInput.value) {
+                fechaFinInput.min = fechaInicioInput.value;
+            }
+        });
+    </script>
+
+</body>
+
+</html>

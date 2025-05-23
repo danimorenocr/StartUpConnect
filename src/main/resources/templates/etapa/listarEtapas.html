@@ -1,26 +1,64 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
+
 <head th:replace="~{layout/layout :: head}"></head>
+
 <body>
-<h1>Listado de etapas</h1>
+    <h1>Listado de etapas</h1>
 
-<!--// BOTON PARA CREAR EMPRENDEDORES-->
+    <!--// BOTON PARA CREAR ETAPAS-->
+    <a th:href="@{/crearEtapa}">Crear Nueva Etapa</a>
 
-<a href="/">
-    <button>
-        Crear
-    </button>
-</a>
-
-<section>
-    <h1> [[${title}]]</h1>
     <section>
-        <div th:each="etapa: ${etapas}">
-            <h2>titulo: [[${etapa.titulo}]]</h2>
-            <h2>convocatoria: [[${etapa.mentor.usuario.nombreUsu}]]</h2>
-        </div>
+        <h1> [[${title}]]</h1>
+        <section>
+            <div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Título</th>
+                            <th>Mentor</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="etapa: ${etapas}">
+                            <td>[[${etapa.titulo}]]</td>
+                            <td>[[${etapa.mentor.usuario.nombreUsu}]]</td>
+                            <td>
+                                <a th:href="@{/verEtapa/{id}(id=${etapa.id})}">Ver</a> |
+                                <a th:href="@{/editarEtapa/{id}(id=${etapa.id})}">Editar</a> |
+                                <form th:action="@{/eliminarEtapa/{id}(id=${etapa.id})}" method="post"
+                                    onsubmit="return confirmarEliminacion(event, this);" style="display: inline;">
+                                    <button type="submit" class="eliminar" title="Eliminar">&#10060;</button>
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
     </section>
-</section>
-
+    <script>
+        function confirmarEliminacion(event, form) {
+            event.preventDefault();
+            Swal.fire({
+                title: "Are you sure?",
+                text: "This action cannot be undone",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#991b1b",
+                cancelButtonColor: "#f59e0b",
+                confirmButtonText: "Yes, delete",
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    console.log("Deleting...");
+                    form.submit();
+                }
+            });
+        }
+    </script>
 </body>
+
 </html>
