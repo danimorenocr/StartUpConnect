@@ -2,23 +2,41 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{layout/layout :: head}"></head>
 <body>
-<h1>Listado de entregable</h1>
+<h1>Listado de entregables</h1>
 
-<!--// BOTON PARA CREAR EMPRENDEDORES-->
-
-<a href="/">
+<!--// BOTON PARA CREAR ENTREGABLES-->
+<a th:href="@{/crearEntregable}">
     <button>
-        Crear
+        Crear Nuevo Entregable
     </button>
 </a>
 
 <section>
     <h1> [[${title}]]</h1>
     <section>
-        <div th:each="entregable: ${entregables}">
-            <h2>nombreArchivo: [[${entregable.nombreArchivo}]]</h2>
-            <h2>tarea: [[${entregable.tarea.titulo}]]</h2>
-        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre del Archivo</th>
+                    <th>Tarea</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="entregable: ${entregables}">
+                    <td>[[${entregable.nombreArchivo}]]</td>
+                    <td>[[${entregable.tarea.titulo}]]</td>
+                    <td>
+                        <a th:href="@{/verEntregable/{id}(id=${entregable.id})}">Ver</a> |
+                        <a th:href="@{/editarEntregable/{id}(id=${entregable.id})}">Editar</a> |
+                        <a th:href="@{/eliminarEntregable/{id}(id=${entregable.id})}" 
+                           onclick="return confirm('¿Estás seguro de que deseas eliminar este entregable?')">
+                            Eliminar
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </section>
 </section>
 

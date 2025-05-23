@@ -23,7 +23,8 @@
                 <h2>Organizador: [[${convocatoria.organizador}]]</h2>
 
                 <div class="botones-accion">
-                    <a th:href="@{/convocatoria/ver/} + ${convocatoria.id}">
+                   <a th:href="@{/verConvocatoria/{id}(id=${convocatoria.id})}"
+                    class="ver-perfil-btn">
                         <button>Ver</button>
                     </a>
                     <!-- Botón Editar -->

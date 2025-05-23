@@ -1,6 +1,7 @@
 package com.usta.startupconnect.controllers;
 
 import com.usta.startupconnect.entities.ConvocatoriaEntity;
+import com.usta.startupconnect.entities.EmprendedorEntity;
 import com.usta.startupconnect.models.services.ConvocatoriaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -76,5 +77,14 @@ public class ConvocatoriaController {
     public String eliminarConvocatoria(@PathVariable("id") Long idConvocatoria) {
         convocatoriaService.deleteById(idConvocatoria);
         return "redirect:/convocatoria";
+    }
+
+    @GetMapping(value = "/verConvocatoria/{id}")
+    public String verConvocatoria(Model model, @PathVariable(value = "id") Long id) {
+        ConvocatoriaEntity convocatoria = convocatoriaService.findById(id);
+        model.addAttribute("title", "Ver Convocatoria");
+        model.addAttribute("convocatoriaDetalle", convocatoria);
+        return "convocatoria/detalleConvocatoria";
+
     }
 }
