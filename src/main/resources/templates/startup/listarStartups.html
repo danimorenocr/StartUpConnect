@@ -38,7 +38,7 @@
                 <!-- Botones de acción -->
                 <div class="action-buttons">
                     <!-- Botón Ver -->
-                   <a th:href="@{/verStartup/{id}(id=${startup.id})}">
+                    <a th:href="@{/verStartup/{id}(id=${startup.id})}">
                         <button type="button">Ver</button>
                     </a>
 
@@ -46,6 +46,12 @@
                     <a th:href="@{'/editarStartup/' + ${startup.id}}" class="btn-editar">
                         <button type="button">Editar</button>
                     </a>
+
+                    <!-- Botón Feedback -->
+                    <a th:href="@{'/feedbackStartup/' + ${startup.id}}" class="btn-feedback">
+                        <button type="button">Feedback</button>
+                    </a>
+
 
                     <!-- Botón Eliminar -->
                     <form th:action="@{/eliminarStartup/{id}(id=${startup.id})}" method="post"

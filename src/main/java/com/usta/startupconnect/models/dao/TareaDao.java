@@ -2,7 +2,6 @@ package com.usta.startupconnect.models.dao;
 
 import com.usta.startupconnect.entities.TareaEntity;
 import com.usta.startupconnect.entities.EtapaEntity;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.transaction.annotation.Transactional;

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/layout :: head}"></head>
+<body>
+
+<div class="container mt-4">
+    <h1>Crear Nuevo Entregable</h1>
+    
+    <form th:action="@{/crearEntregable}" method="post" enctype="multipart/form-data" th:object="${entregable}">
+        <!-- Nombre del archivo -->
+        <div class="form-group mb-3">
+            <label for="nombreArchivo">Nombre del archivo:</label>
+            <input type="text" class="form-control" id="nombreArchivo" name="nombreArchivo" th:field="*{nombreArchivo}" required>
+            <div class="text-danger" th:if="${#fields.hasErrors('nombreArchivo')}" th:errors="*{nombreArchivo}"></div>
+        </div>
+        
+        <!-- Ruta -->
+        <div class="form-group mb-3">
+            <label for="ruta">Ruta:</label>
+            <input type="text" class="form-control" id="ruta" name="ruta" th:field="*{ruta}">
+            <div class="text-danger" th:if="${#fields.hasErrors('ruta')}" th:errors="*{ruta}"></div>
+            <small class="form-text text-muted">Ruta donde se guardará el archivo (opcional)</small>
+        </div>
+        
+        <!-- Archivo -->
+        <div class="form-group mb-3">
+            <label for="archivo">Archivo:</label>
+            <input type="file" class="form-control" id="archivo" name="archivo" required>
+            <small class="form-text text-muted">Seleccione un archivo para subir</small>
+        </div>
+        
+        <!-- Estado -->
+        <div class="form-group mb-3">
+            <label for="estado">Estado:</label>
+            <select class="form-control" id="estado" name="estado" th:field="*{estado}" required>
+                <option value="">Seleccionar estado</option>
+                <option value="Pendiente">Pendiente</option>
+                <option value="En revisión">En revisión</option>
+                <option value="Aprobado">Aprobado</option>
+                <option value="Rechazado">Rechazado</option>
+            </select>
+            <div class="text-danger" th:if="${#fields.hasErrors('estado')}" th:errors="*{estado}"></div>
+        </div>
+        
+        <!-- Tarea asociada -->
+        <div class="form-group mb-3">
+            <label for="tarea">Tarea asociada:</label>
+            <select class="form-control" id="tarea" name="tarea.id" required>
+                <option value="">Seleccione una Tarea</option>
+                <option th:each="tarea : ${tareas}" 
+                        th:value="${tarea.id}" 
+                        th:text="${tarea.titulo}">
+                </option>
+            </select>
+            <div class="text-danger" th:if="${#fields.hasErrors('tarea')}" th:errors="*{tarea}"></div>
+        </div>
+        
+        <!-- Botones -->
+        <div class="form-group">
+            <button type="submit">Guardar Entregable</button>
+            <a th:href="@{/entregable}">Cancelar</a>
+        </div>
+    </form>
+</div>
+
+<script>
+    // Script para mostrar nombre del archivo seleccionado
+    document.getElementById('archivo').addEventListener('change', function() {
+        const fileName = this.files[0] ? this.files[0].name : 'Ningún archivo seleccionado';
+        const fileNameField = document.getElementById('nombreArchivo');
+        
+        if (fileNameField.value === '') {
+            fileNameField.value = fileName;
+        }
+    });
+</script>
+
+</body>
+</html>

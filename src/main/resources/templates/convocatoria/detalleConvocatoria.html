@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{layout/layout :: head}"></head>
+
+<body>
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-header">
+                <h1>Detalle de Convocatoria</h1>
+            </div>
+            <div class="card-body">
+                <!-- Título -->
+                <div class="row mb-3">
+                    <div class="col-md-3 fw-bold">Título:</div>
+                    <div class="col-md-9" th:text="${convocatoriaDetalle.titulo}"></div>
+                </div>
+
+                <!-- Descripción -->
+                <div class="row mb-3">
+                    <div class="col-md-3 fw-bold">Descripción:</div>
+                    <div class="col-md-9" th:text="${convocatoriaDetalle.descripcion}"></div>
+                </div>
+
+                <!-- Fechas -->
+                <div class="row mb-3">
+                    <div class="col-md-3 fw-bold">Fecha de inicio:</div>
+                    <div class="col-md-9" th:text="${#dates.format(convocatoriaDetalle.fechaInicio, 'dd/MM/yyyy')}">
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-3 fw-bold">Fecha de fin:</div>
+                    <div class="col-md-9" th:text="${#dates.format(convocatoriaDetalle.fechaFin, 'dd/MM/yyyy')}"></div>
+                </div>
+
+                <!-- Beneficios -->
+                <div class="row mb-3">
+                    <div class="col-md-3 fw-bold">Beneficios:</div>
+                    <div class="col-md-9" th:text="${convocatoriaDetalle.beneficios}"></div>
+                </div>
+
+                <!-- Requisitos -->
+                <div class="row mb-3">
+                    <div class="col-md-3 fw-bold">Requisitos:</div>
+                    <div class="col-md-9" th:text="${convocatoriaDetalle.requisitos}"></div>
+                </div>
+
+                <!-- Contacto -->
+                <div class="row mb-3">
+                    <div class="col-md-3 fw-bold">Contacto:</div>
+                    <div class="col-md-9" th:text="${convocatoriaDetalle.contacto}"></div>
+                </div>
+
+                <!-- Sector Objetivo -->
+                <div class="row mb-3">
+                    <div class="col-md-3 fw-bold">Sector Objetivo:</div>
+                    <div class="col-md-9" th:text="${convocatoriaDetalle.sectorObjetivo}"></div>
+                </div>
+
+                <!-- Organizador -->
+                <div class="row mb-3">
+                    <div class="col-md-3 fw-bold">Organizador:</div>
+                    <div class="col-md-9" th:text="${convocatoriaDetalle.organizador}"></div>
+                </div>
+            </div>
+
+            <a th:href="@{/listarpostulaciones/{id}(id=${convocatoriaDetalle.id})}">
+                Postulaciones
+            </a>
+        </div>
+    </div>
+</body>
+
+</html>

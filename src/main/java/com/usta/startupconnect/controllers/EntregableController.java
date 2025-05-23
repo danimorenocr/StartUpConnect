@@ -24,4 +24,13 @@ public class EntregableController {
         model.addAttribute("entregables", lista);
         return "/entregable/listarEntregables";
     }
+
+    @GetMapping(value = "/crearEntregable")
+    public String crearEntregable(Model model) {
+        model.addAttribute("title", "Crear Entregable");
+        EntregableEntity entregable = new EntregableEntity();
+        model.addAttribute("entregable", entregable);
+        return "/entregable/crearEntregable";
+    }
+
 }
