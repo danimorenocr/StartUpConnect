@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{layout/layout :: head}"></head>
+
+<body>
+
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-header">
+                <h1>Detalle de Tarea</h1>
+            </div>
+
+            <div class="card-body">
+                <!-- Título -->
+                <div class="row mb-3">
+                    <div class="col-md-3 fw-bold">Título:</div>
+                    <div class="col-md-9" th:text="${tareaDetalle.titulo}"></div>
+                </div>
+
+                <!-- Descripción -->
+                <div class="row mb-3">
+                    <div class="col-md-3 fw-bold">Descripción:</div>
+                    <div class="col-md-9" th:text="${tareaDetalle.descripcion}"></div>
+                </div>
+
+                <!-- Fecha de Entrega -->
+                <div class="row mb-3">
+                    <div class="col-md-3 fw-bold">Fecha de Entrega:</div>
+                    <div class="col-md-9" th:text="${#dates.format(tareaDetalle.fechaEntrega, 'dd/MM/yyyy')}"></div>
+                </div>
+
+                <!-- Etapa -->
+                <div class="row mb-3">
+                    <div class="col-md-3 fw-bold">Etapa:</div>
+                    <div class="col-md-9"
+                        th:text="${tareaDetalle.etapa != null ? tareaDetalle.etapa.titulo : 'No asignada'}"></div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+</body>
+
+</html>

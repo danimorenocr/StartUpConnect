@@ -7,6 +7,10 @@ import com.usta.startupconnect.entities.TareaEntity;
 public interface TareaService {
     public List<TareaEntity> findAll();
 
-    
-    
+    public void save(TareaEntity tarea);
+
+    public TareaEntity findById(Long id);
+
+    public void deleteById(Long id);
+
 }

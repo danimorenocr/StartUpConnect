@@ -12,11 +12,29 @@ import java.util.List;
 @Service
 public class TareaServiceImplement implements TareaService {
     @Autowired
-    private TareaDao tareaDAO;
+    private TareaDao tareaDao;
 
     @Override
     @Transactional
     public List<TareaEntity> findAll() {
-        return (List<TareaEntity>) tareaDAO.findAll();
+        return (List<TareaEntity>) tareaDao.findAll();
+    }
+
+    @Override
+    @jakarta.transaction.Transactional
+    public void save(TareaEntity usuario) {
+        tareaDao.save(usuario);
+    }
+
+    @Override
+    @Transactional
+    public TareaEntity findById(Long id) {
+        return tareaDao.findById(id).orElse(null);
+    }
+
+    @Override
+    @Transactional
+    public void deleteById(Long id) {
+        tareaDao.deleteById(id);
     }
 }

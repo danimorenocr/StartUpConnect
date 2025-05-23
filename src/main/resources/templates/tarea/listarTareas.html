@@ -1,26 +1,67 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
+
 <head th:replace="~{layout/layout :: head}"></head>
+
 <body>
-<h1>Listado de Tareas</h1>
+    <h1>Listado de Tareas</h1>
 
-<!--// BOTON PARA CREAR EMPRENDEDORES-->
+    <!--// BOTON PARA CREAR TAREAS-->
+    <a th:href="@{/crearTarea}">
+        <button>
+            Crear Nueva Tarea
+        </button>
+    </a>
 
-<a href="/tarea">
-    <button>
-        Crear
-    </button>
-</a>
-
-<section>
-    <h1> [[${title}]]</h1>
     <section>
-        <div th:each="tarea: ${tareas}">
-            <h2>tarea: [[${tarea.titulo}]]</h2>
-            <h2>etapa: [[${tarea.etapa.titulo}]]</h2>
-        </div>
+        <h1> [[${title}]]</h1>
+        <section>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Título</th>
+                        <th>Etapa</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="tarea: ${tareas}">
+                        <td>[[${tarea.titulo}]]</td>
+                        <td>[[${tarea.etapa.titulo}]]</td>
+                        <td>
+                            <a th:href="@{/verTarea/{id}(id=${tarea.id})}">Ver</a> |
+                            <a th:href="@{/editarTarea/{id}(id=${tarea.id})}">Editar</a> |
+                            <form th:action="@{/eliminarTarea/{id}(id=${tarea.id})}" method="post"
+                                onsubmit="return confirmarEliminacion(event, this);" style="display: inline;">
+                                <button type="submit" class="eliminar" title="Eliminar">&#10060;</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
     </section>
-</section>
+    <script>
+        function confirmarEliminacion(event, form) {
+            event.preventDefault();
+            Swal.fire({
+                title: "Are you sure?",
+                text: "This action cannot be undone",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#991b1b",
+                cancelButtonColor: "#f59e0b",
+                confirmButtonText: "Yes, delete",
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    console.log("Deleting...");
+                    form.submit();
+                }
+            });
+        }
+    </script>
 
 </body>
+
 </html>

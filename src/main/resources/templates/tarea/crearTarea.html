@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/layout :: head}"></head>
+<body>
+
+<div class="container mt-4">
+    <h1>Crear Nueva Tarea</h1>
+    
+    <form th:action="@{/crearTarea}" method="post" th:object="${tarea}">
+        <!-- Título -->
+        <div class="form-group mb-3">
+            <label for="titulo">Título:</label>
+            <input type="text" class="form-control" id="titulo" name="titulo" th:field="*{titulo}" required>
+            <div class="text-danger" th:if="${#fields.hasErrors('titulo')}" th:errors="*{titulo}"></div>
+        </div>
+        
+        <!-- Descripción -->
+        <div class="form-group mb-3">
+            <label for="descripcion">Descripción:</label>
+            <textarea class="form-control" id="descripcion" name="descripcion" th:field="*{descripcion}" rows="4"></textarea>
+            <div class="text-danger" th:if="${#fields.hasErrors('descripcion')}" th:errors="*{descripcion}"></div>
+        </div>
+        
+        <!-- Fecha de Entrega -->
+        <div class="form-group mb-3">
+            <label for="fechaEntrega">Fecha de Entrega:</label>
+            <input type="date" class="form-control" id="fechaEntrega" name="fechaEntrega" th:field="*{fechaEntrega}" required>
+            <div class="text-danger" th:if="${#fields.hasErrors('fechaEntrega')}" th:errors="*{fechaEntrega}"></div>
+        </div>
+        
+        <!-- Etapa (combo box) -->
+        <div class="form-group mb-3">
+            <label for="etapa">Etapa:</label>
+            <select class="form-control" id="etapa" name="etapa.id" required>
+                <option value="">Seleccione una Etapa</option>
+                <option th:each="etapa : ${etapas}" 
+                        th:value="${etapa.id}" 
+                        th:text="${etapa.titulo}">
+                </option>
+            </select>
+            <div class="text-danger" th:if="${#fields.hasErrors('etapa')}" th:errors="*{etapa}"></div>
+        </div>
+        
+        <!-- Botones -->
+        <div class="form-group">
+            <button type="submit">Guardar Tarea</button>
+            <a th:href="@{/tarea}">Cancelar</a>
+        </div>
+    </form>
+</div>
+
+<script>
+    // Establecer la fecha mínima como hoy para evitar fechas pasadas
+    document.addEventListener('DOMContentLoaded', function() {
+        const today = new Date();
+        const dd = String(today.getDate()).padStart(2, '0');
+        const mm = String(today.getMonth() + 1).padStart(2, '0'); // Enero es 0
+        const yyyy = today.getFullYear();
+        
+        const todayFormatted = yyyy + '-' + mm + '-' + dd;
+        document.getElementById('fechaEntrega').min = todayFormatted;
+    });
+</script>
+
+</body>
+</html>
