@@ -1,0 +1,422 @@
+/* Importar la fuente Poppins de Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* Estilos generales */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    color: #333;
+    background-color: #f8f9fa;
+    line-height: 1.6;
+}
+
+.main-bg {
+    background-color: #ffffff;
+}
+
+.content {
+    max-width: 1300px; /* Aumentar ancho máximo */
+    margin: 0 auto;
+    padding: 0 20px;
+    padding-top: 100px; /* Reducir espacio para el header */
+}
+
+/* Header y navegación */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: rgba(0, 0, 0, 0.7); /* Header semi-transparente */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    position: fixed;
+    top: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    width: 90%;
+    max-width: 1400px;
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    height: 40px;
+}
+
+.header-buttons {
+    display: flex;
+    gap: 1rem;
+}
+
+.btn {
+    padding: 0.5rem 1.5rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 500;
+    font-family: 'Poppins', sans-serif;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.btn-primary {
+    background-color: #FF6B00; /* Botón naranja */
+    color: white;
+    border: 1px solid #FF6B00;
+}
+
+.btn-primary:hover {
+    background-color: #E25D00;
+    border-color: #E25D00;
+}
+
+.btn-outline {
+    border: 1px solid #FF6B00; /* Borde naranja */
+    color: #FF6B00; /* Texto naranja */
+    background-color: transparent;
+}
+
+.btn-outline:hover {
+    background-color: rgba(255, 107, 0, 0.1);
+}
+
+/* Estilos específicos para la vitrina */
+.vitrina-container {
+    display: flex;
+    gap: 2rem;
+    margin-top: 2rem;
+    height: 320px; /* Altura fija mucho menor */
+    min-height: 320px; /* Altura mínima menor */
+}
+
+.banner-container {
+    flex: 3.5; /* Aumentar proporción para hacerlo más ancho */
+    overflow: hidden;
+    border-radius: 15px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.banner-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.banner-container:hover .banner-image {
+    transform: scale(1.03);
+}
+
+.emprendedores-container {
+    flex: 0.8; /* Reducir para hacerlo más estrecho */
+    background-color: white;
+    border-radius: 15px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
+}
+
+.emprendedores-title {
+    font-size: 1.4rem;
+    margin-bottom: 0.7rem;
+    color: #333;
+    position: relative;
+}
+
+.emprendedores-title:after {
+    content: '';
+    position: absolute;
+    width: 40px;
+    height: 2px;
+    background-color: #FF6B00;
+    bottom: -5px;
+    left: 0;
+}
+
+.emprendedores-description {
+    margin-bottom: 1rem;
+    color: #666;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.emprendedores-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 180px;
+    overflow-y: auto;
+}
+
+.emprendedor-item {
+    font-size: 0.85rem;
+    padding: 6px 0;
+    border-bottom: 1px solid #f0f0f0;
+    color: #444;
+}
+
+.emprendedor-item:last-child {
+    border-bottom: none;
+}
+
+.emprendedor-item:hover {
+    background-color: #f9f9f9;
+}
+
+.emprendedor-card {
+    display: flex;
+    align-items: center;
+    padding: 4px;
+    transition: all 0.3s ease;
+}
+
+.emprendedor-foto {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 10px;
+    border: 2px solid #FF6B00;
+}
+
+.emprendedor-nombre {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #333;
+}
+
+/* Estilo para los enlaces de emprendedores */
+.emprendedor-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    width: 100%;
+}
+
+.emprendedor-link:hover .emprendedor-card {
+    background-color: rgba(255, 107, 0, 0.05);
+    transform: translateX(5px);
+}
+
+/* Estilizando la barra de desplazamiento para la lista */
+.emprendedores-list::-webkit-scrollbar {
+    width: 5px;
+}
+
+.emprendedores-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.emprendedores-list::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 10px;
+}
+
+.emprendedores-list::-webkit-scrollbar-thumb:hover {
+    background: #FF6B00;
+}
+
+/* Estilo para el mensaje cuando no hay emprendedores */
+.empty-state {
+    text-align: center;
+    padding: 20px 0;
+}
+
+.empty-state p {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.btn-sm {
+    font-size: 0.8rem;
+    padding: 5px 10px;
+}
+
+
+
+/* Responsive para dispositivos móviles */
+@media (max-width: 768px) {
+    .vitrina-container {
+        flex-direction: column;
+        height: auto;
+    }
+    
+    .banner-container, .emprendedores-container {
+        flex: none;
+        width: 100%;
+    }
+    
+    .banner-container {
+        height: 200px; /* Reducir altura en móvil */
+    }
+    
+    .emprendedores-container {
+        padding: 1.5rem;
+        min-height: auto; /* Eliminar altura mínima */
+    }
+    
+    .emprendedores-title {
+        text-align: center;
+    }
+    
+    .emprendedores-title:after {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    
+    .emprendedores-list {
+        max-height: 150px;
+    }
+      /* Responsivo para la sección de startups */
+    .startups-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .startup-card {
+        height: 180px;
+    }
+    
+    .glass-overlay {
+        padding: 12px;
+    }
+    
+    .startup-name {
+        font-size: 1rem;
+    }
+}
+
+/* Estilos para la sección de Startups */
+.startups-section {
+    margin-top: 3rem;
+    padding: 2rem 0;
+}
+
+.section-title {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #333;
+    position: relative;
+    display: inline-block;
+}
+
+.section-title:after {
+    content: '';
+    position: absolute;
+    width: 60px;
+    height: 3px;
+    background-color: #FF6B00;
+    bottom: -8px;
+    left: 0;
+}
+
+.section-description {
+    color: #666;
+    font-size: 1rem;
+    margin-bottom: 2rem;
+    max-width: 600px;
+}
+
+.startups-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.startup-card {
+    height: 200px;
+    border-radius: 15px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    background-size: cover;
+    background-position: center;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: flex-end;
+}
+
+.startup-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 100%);
+    z-index: 1;
+}
+
+.startup-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+}
+
+.glass-overlay {
+    width: 100%;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 2;
+}
+
+.startup-card:hover .glass-overlay {
+    background: rgba(255, 255, 255, 0.2);
+    padding-bottom: 20px;
+}
+
+.startup-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: white;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+    margin: 0;
+    max-width: 80%;
+}
+
+.startup-details-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 36px;
+    width: 36px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.9);
+    color: #FF6B00;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.startup-details-link:hover {
+    background-color: white;
+    transform: scale(1.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}

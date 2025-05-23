@@ -1,8 +1,10 @@
 package com.usta.startupconnect.controllers;
 
 import com.usta.startupconnect.entities.EmprendedorEntity;
+import com.usta.startupconnect.entities.StartupEntity;
 import com.usta.startupconnect.entities.UsuarioEntity;
 import com.usta.startupconnect.models.services.EmprendedorService;
+import com.usta.startupconnect.models.services.StartupService;
 import com.usta.startupconnect.models.services.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,8 +25,23 @@ public class EmprendedorController {
 
     @Autowired
     private EmprendedorService emprendedorService;
+    
     @Autowired
     private UsuarioService usuarioService;
+    
+    @Autowired
+    private StartupService startupService;
+
+    @GetMapping("/vitrina")
+    public String mostrarVitrina(Model model) {
+        List<EmprendedorEntity> emprendedores = emprendedorService.findAll();
+        List<StartupEntity> startups = startupService.findAll();
+        
+        model.addAttribute("emprendedores", emprendedores);
+        model.addAttribute("startups", startups);
+        
+        return "vitrina";
+    }
 
     @GetMapping(value = "/emprendedor")
     public String listarEmprendedores(Model model) {
@@ -88,6 +105,7 @@ public class EmprendedorController {
         model.addAttribute("emprendedorDetalle", emprendedor);
         return "emprendedor/detalleEmprendedor";
     }
+
 
     @GetMapping(value = "/editarEmprendedor/{id}")
     public String editarUsuario(Model model, @PathVariable(value = "id") String id) {

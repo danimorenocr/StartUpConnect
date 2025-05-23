@@ -1,26 +1,196 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{layout/layout :: head}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StartUp Connect - Inicio</title>
+    <link rel="stylesheet" href="/css/landingPage.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="main-bg">
-    <div th:replace="~{layout/layout :: header}"></div>
-    
-    <main class="content">
-        <div class="welcome-section">
-            <h1>Bienvenido a StartUp Connect</h1>
-            <p>Tu plataforma para conectar emprendedores y mentores</p>
-            
-            <div class="action-buttons">
-                <a href="/administrador" class="btn btn-primary">
-                    Panel de Administración
-                </a>
-                <a href="/login" class="btn btn-success">
-                    Iniciar Sesión
-                </a>
-            </div>
+<body class="main-bg">    <header class="header">
+        <div class="logo-container">
+            <img src="/images/logo.png" alt="StartUp Connect Logo" class="logo">
         </div>
+        <div class="header-buttons">
+            <a th:href="@{/vitrina}" class="btn btn-primary">Vitrina</a>
+            <a href="/login" class="btn btn-outline">Iniciar Sesión</a>
+            <a href="/register" class="btn btn-primary">Registrarse</a>
+        </div>
+    </header>
+    
+    <main class="content">        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-content">
+                <h1>Descubre <span class="highlight">Startups Innovadoras</span> en Nuestra Vitrina</h1>
+                <p>StartUp Connect te conecta con los emprendimientos más prometedores. Explora nuestra vitrina de proyectos y encuentra oportunidades de colaboración.</p>
+                <div class="hero-buttons">
+                    <a href="/vitrina" class="btn btn-primary btn-large">Explorar Vitrina</a>
+                    <a href="#como-funciona" class="btn btn-outline btn-large">Cómo Funciona</a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="/images/hero-image.jpg" alt="Emprendedores colaborando" class="hero-img">
+            </div>
+        </section>
+
+        <!-- Featured Startups Preview -->
+        <section class="featured-startups-preview">
+            <h2 class="section-title">Startups Destacadas</h2>
+            <p class="section-subtitle">Un vistazo a los proyectos innovadores en nuestra plataforma</p>
+            
+            <div class="startup-preview-container">
+                <div class="startup-preview-card">
+                    <div class="startup-preview-image">
+                        <img src="/images/sinfoto.jpg" alt="EcoTech Solutions">
+                    </div>
+                    <h3>EcoTech Solutions</h3>
+                    <p>Soluciones sostenibles para reducir el impacto ambiental</p>
+                </div>
+                <div class="startup-preview-card">
+                    <div class="startup-preview-image">
+                        <img src="/images/sinfoto.jpg" alt="FinTech Pro">
+                    </div>
+                    <h3>FinTech Pro</h3>
+                    <p>Democratizando el acceso a servicios financieros</p>
+                </div>
+                <div class="startup-preview-card">
+                    <div class="startup-preview-image">
+                        <img src="/images/sinfoto.jpg" alt="HealthAI">
+                    </div>
+                    <h3>HealthAI</h3>
+                    <p>Inteligencia artificial para diagnósticos médicos precisos</p>
+                </div>
+            </div>
+            
+            <div class="view-all-container">
+                <a href="/vitrina" class="btn btn-outline">Ver Todos los Proyectos</a>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="caracteristicas" class="features-section">
+            <h2 class="section-title">¿Qué Ofrecemos?</h2>
+            <div class="features-container">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-handshake"></i>
+                    </div>
+                    <h3>Conexiones Valiosas</h3>
+                    <p>Conectamos emprendedores con mentores experimentados que comparten conocimientos y contactos en la industria.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <h3>Impulso de Ideas</h3>
+                    <p>Proporcionamos herramientas y recursos para transformar ideas innovadoras en modelos de negocio viables.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Crecimiento Acelerado</h3>
+                    <p>Facilitamos programas y convocatorias para acelerar el crecimiento de startups prometedoras.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- How it Works Section -->
+        <section id="como-funciona" class="how-section">
+            <h2 class="section-title">Cómo Funciona</h2>
+            <div class="steps-container">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Regístrate</h3>
+                    <p>Crea tu perfil como emprendedor o mentor completando información básica sobre tu experiencia e intereses.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Conecta</h3>
+                    <p>Encuentra mentores o emprendedores que se alineen con tus intereses y objetivos de negocio.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Colabora</h3>
+                    <p>Participa en convocatorias, eventos y programas diseñados para impulsar tu startup al siguiente nivel.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>Crece</h3>
+                    <p>Aprovecha los recursos y conexiones para escalar tu negocio y alcanzar nuevos mercados.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials Section -->
+        <section class="testimonials-section">
+            <h2 class="section-title">Testimonios de Éxito</h2>
+            <div class="testimonials-container">
+                <div class="testimonial-card">
+                    <div class="testimonial-image">
+                        <img src="/images/isabela.jpg" alt="Isabela Rodríguez" class="testimonial-img">
+                    </div>
+                    <div class="testimonial-content">
+                        <p class="testimonial-text">"StartUp Connect me permitió encontrar un mentor que entendía exactamente mi visión. En sólo 6 meses, mi startup creció un 200% y ahora estamos expandiendo a nuevos mercados."</p>
+                        <h4 class="testimonial-name">Isabela Rodríguez</h4>
+                        <p class="testimonial-role">CEO de EcoTech Solutions</p>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-image">
+                        <img src="/images/nick.jpg" alt="Nicolás Mendoza" class="testimonial-img">
+                    </div>
+                    <div class="testimonial-content">
+                        <p class="testimonial-text">"Como mentor, he tenido la oportunidad de trabajar con emprendedores increíblemente talentosos. Ver cómo sus ideas se convierten en empresas exitosas es extremadamente gratificante."</p>
+                        <h4 class="testimonial-name">Nicolás Mendoza</h4>
+                        <p class="testimonial-role">Mentor en Tecnología Financiera</p>
+                    </div>
+                </div>
+            </div>
+        </section>        <!-- Call to Action Section -->
+        <section class="cta-section">
+            <div class="cta-content">
+                <h2>¿Quieres conocer más proyectos innovadores?</h2>
+                <p>Descubre nuestro catálogo completo de startups y conecta con el ecosistema emprendedor</p>
+                <div class="cta-buttons">
+                    <a href="/vitrina" class="btn btn-primary btn-large">Explorar Vitrina Completa</a>
+                    <a href="/register" class="btn btn-outline btn-large">Registra tu Startup</a>
+                </div>
+            </div>
+        </section>
     </main>
 
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <img src="/images/logo.png" alt="StartUp Connect Logo" class="footer-logo-img">
+                <p>Conectando el talento emprendedor con las mejores oportunidades.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Enlaces Rápidos</h4>
+                <ul>
+                    <li><a href="#caracteristicas">Características</a></li>
+                    <li><a href="#como-funciona">Cómo Funciona</a></li>
+                    <li><a href="/login">Iniciar Sesión</a></li>
+                    <li><a href="/register">Registrarse</a></li>
+                </ul>
+            </div>
+            <div class="footer-contact">
+                <h4>Contacto</h4>
+                <p><i class="fas fa-envelope"></i> info@startupconnect.com</p>
+                <p><i class="fas fa-phone"></i> +57 300 123 4567</p>
+                <div class="social-icons">
+                    <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 StartUp Connect. Todos los derechos reservados.</p>
+        </div>
+    </footer>
 </body>
 </html>
