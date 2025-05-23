@@ -41,6 +41,16 @@ public class StartupController {
     @Autowired
     private EmprendedorService emprendedorService;
 
+    // @GetMapping(value = "/vitrina")
+    // public String vitrina(Model model) {
+    //     model.addAttribute("title", "Startups");
+    //     model.addAttribute("urlRegistro", "/crearStartup");
+    //     List<StartupEntity> lista = startupService.findAll();
+    //     lista.sort(Comparator.comparing(StartupEntity::getId));
+    //     model.addAttribute("startups", lista);
+    //     return "/vitrina";
+    // }
+
     @GetMapping(value = "/startup")
     public String listarStartups(Model model) {
         model.addAttribute("title", "Startups");

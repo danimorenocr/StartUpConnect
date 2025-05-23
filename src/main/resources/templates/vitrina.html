@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StartUp Connect - Vitrina de Startups</title>
+    <link rel="stylesheet" href="/css/vitrina.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="main-bg">
+    <header class="header">
+        <div class="logo-container">
+            <img src="/images/logo.png" alt="StartUp Connect Logo" class="logo">
+        </div>
+        <div class="header-buttons">
+            <a href="/login" class="btn btn-outline">Iniciar Sesión</a>
+            <a href="/register" class="btn btn-primary">Registrarse</a>
+        </div>
+    </header>    <main class="content">
+        <div class="vitrina-container">
+            <div class="banner-container">
+                <img src="/images/bannerVitrina.jpg" alt="Banner de Startups" class="banner-image">
+            </div>
+            <div class="emprendedores-container">
+                <h2 class="emprendedores-title">Nuestros Emprendedores</h2>
+                <p class="emprendedores-description">Conoce a los innovadores detrás de nuestras startups.</p>
+
+                <!-- Mensaje para cuando no hay emprendedores -->
+                <div class="empty-state" th:if="${emprendedores == null || emprendedores.isEmpty()}">
+                    <p>Aún no hay emprendedores registrados.</p>
+                    <a href="/register" class="btn btn-outline btn-sm">¡Regístrate y sé el primero!</a>
+                </div> <!-- Lista de emprendedores cuando sí hay datos -->
+                <ul class="emprendedores-list" th:if="${emprendedores != null && !emprendedores.isEmpty()}">
+                    <li class="emprendedor-item" th:each="emprendedor : ${emprendedores}">
+                        <a th:href="@{/verEmprendedor/{id}(id=${emprendedor.documento})}" class="emprendedor-link">
+                            <div class="emprendedor-card">
+                                <img class="emprendedor-foto"
+                                    th:src="${emprendedor.usuario != null && emprendedor.usuario.fotoUrl != null ? emprendedor.usuario.fotoUrl : '/images/sinfoto.jpg'}"
+                                    alt="Foto del emprendedor">
+                                <span class="emprendedor-nombre"
+                                    th:text="${emprendedor.usuario != null ? emprendedor.usuario.nombreUsu : 'Sin usuario'}"></span>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Nueva sección de Startups -->
+        <div class="startups-section">
+            <h2 class="section-title">Startups Destacadas</h2>
+            <p class="section-description">Descubre proyectos innovadores y conecta con ellos.</p>
+            
+            <!-- Mensaje para cuando no hay startups -->
+            <div class="empty-state" th:if="${startups == null || startups.isEmpty()}">
+                <p>Aún no hay startups registradas.</p>
+                <a href="/register" class="btn btn-outline btn-sm">¡Regístrate y crea la primera!</a>
+            </div>
+              <!-- Grid de startups cuando sí hay datos -->
+            <div class="startups-grid" th:if="${startups != null && !startups.isEmpty()}">
+                <div class="startup-card" th:each="startup : ${startups}" 
+                     th:style="'background-image: url(' + ${startup.logoUrl != null ? startup.logoUrl : '/images/startup-default.jpg'} + ');'">
+                    <div class="glass-overlay">
+                        <h3 class="startup-name" th:text="${startup.nombreStartup}">Nombre de la Startup</h3>
+                        <a th:href="@{/verStartup/{id}(id=${startup.id})}" class="startup-details-link">
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>
