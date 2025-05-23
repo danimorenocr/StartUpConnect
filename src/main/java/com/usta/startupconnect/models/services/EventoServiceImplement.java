@@ -20,8 +20,7 @@ public class EventoServiceImplement implements EventoService {
         return (List<EventoEntity>) eventoDao.findAll();
     }
 
-
-        @Override
+    @Override
     @jakarta.transaction.Transactional
     public void save(EventoEntity usuario) {
         eventoDao.save(usuario);

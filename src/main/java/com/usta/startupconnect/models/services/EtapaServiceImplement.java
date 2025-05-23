@@ -20,4 +20,22 @@ public class EtapaServiceImplement implements EtapaService {
         return (List<EtapaEntity>) etapaDao.findAll();
     }
 
+    @Override
+    @jakarta.transaction.Transactional
+    public void save(EtapaEntity etapa) {
+        etapaDao.save(etapa);
+    }
+
+    @Override
+    @Transactional
+    public EtapaEntity findById(Long id) {
+        return etapaDao.findById(id).orElse(null);
+    }
+
+    @Override
+    @Transactional
+    public void deleteById(Long id) {
+        etapaDao.deleteById(id);
+    }
+
 }
