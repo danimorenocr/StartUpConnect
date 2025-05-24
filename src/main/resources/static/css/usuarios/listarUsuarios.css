@@ -1,0 +1,383 @@
+body {
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f8f9fa;
+}
+
+.create-user-container {
+  display: flex;
+  justify-content: flex-end;
+  padding: 20px 32px;
+  margin-left: 18rem;
+}
+
+.banner-container {
+  width: calc(100% - 18rem);
+  margin-left: 18rem;
+  height: 320px;
+  overflow: hidden;
+  border-radius: 15px;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.banner-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.banner-container:hover .banner-image {
+  transform: scale(1.03);
+}
+
+.banner-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0) 100%);
+  display: flex;
+  align-items: center;
+  padding: 0 40px;
+}
+
+.banner-title {
+  color: #fff;
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin: 0;
+  line-height: 1.3;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.banner-btn {
+  background: #fff;
+  color: #1e6e8c;
+  border: none;
+  border-radius: 24px;
+  padding: 10px 28px;
+  font-size: 1rem;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(30, 110, 140, 0.08);
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.banner-btn:hover {
+  background: #1e6e8c;
+  color: #fff;
+}
+
+.banner-img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(30, 110, 140, 0.10);
+}
+
+.main-content {
+  margin-left: 18rem;
+}
+.main-content-cards {
+  margin-left: 10rem;
+  padding-right: 2rem;
+}
+
+.section-header {
+  margin: 2rem 0 1rem;
+  padding: 0 1rem;
+}
+
+#usuarios-header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+#usuarios-header {
+  color: #333;
+  font-weight: 700;
+  font-size: 2rem;
+  position: relative;
+  display: inline-block;
+}
+
+#usuarios-header:after {
+  content: '';
+  position: absolute;
+  width: 60px;
+  height: 3px;
+  background-color: #FF6B00;
+  bottom: -8px;
+  left: 0;
+}
+
+.search-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  color: #777;
+  font-size: 1rem;
+  pointer-events: none;
+}
+
+#buscar-usuario {
+  padding: 10px 15px 10px 40px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  width: 300px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+#buscar-usuario {
+  padding: 10px 15px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  width: 250px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+#buscar-usuario:focus {
+  border-color: #FF6B00;
+  box-shadow: 0 2px 8px rgba(255, 107, 0, 0.2);
+}
+
+.usuarios-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+  padding: 0 1rem;
+}
+
+.usuario-card {
+  background: #fff;
+  border-radius: 15px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+  height: auto;
+  padding-bottom: 15px;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.usuario-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.95);
+}
+
+/* Etiqueta del rol en la esquina superior derecha con colores por rol */
+.usuario-rol {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  color: white;
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 4px 12px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  z-index: 3;
+}
+
+/* Colores para diferentes roles - simplificado a 3 colores */
+.rol-administrador {
+  background-color: #3498db; /* Azul */
+}
+
+.rol-emprendedor {
+  background-color: #2ecc71; /* Verde */
+}
+
+.rol-mentor {
+  background-color: #9b59b6; /* Morado */
+}
+
+.rol-inversionista {
+  background-color: #9b59b6; /* Morado */
+}
+
+.rol-estudiante {
+  background-color: #3498db; /* Azul */
+}
+
+/* Color por defecto para otros roles no especificados */
+.usuario-rol:not(.rol-administrador):not(.rol-emprendedor):not(.rol-mentor):not(.rol-inversionista):not(.rol-estudiante) {
+  background-color: #3498db; /* Azul por defecto */
+}
+
+.usuario-card-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  padding-top: 30px;
+}
+
+/* Foto redonda, centrada arriba con borde dinámico basado en el rol */
+.usuario-foto {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  /* El borde se establecerá dinámicamente según el color del rol */
+}
+
+/* Definir bordes de fotos según roles */
+.rol-administrador ~ .usuario-card-content .usuario-foto {
+  border: 3px solid #3498db; /* Azul */
+}
+
+.rol-emprendedor ~ .usuario-card-content .usuario-foto {
+  border: 3px solid #2ecc71; /* Verde */
+}
+
+.rol-mentor ~ .usuario-card-content .usuario-foto,
+.rol-inversionista ~ .usuario-card-content .usuario-foto {
+  border: 3px solid #9b59b6; /* Morado */
+}
+
+.rol-estudiante ~ .usuario-card-content .usuario-foto {
+  border: 3px solid #3498db; /* Azul */
+}
+
+.usuario-info {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+/* Nombre debajo de la foto, centrado y negrita */
+.usuario-nombre {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #333;
+  margin-bottom: 4px;
+}
+
+/* Email debajo del nombre, centrado */
+.usuario-email {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+/* Contenedor de botones: eliminar, editar y ver perfil */
+.usuario-actions {
+  width: 100%;
+  padding: 0 15px;
+  margin-top: auto;
+  position: relative;
+}
+
+/* Contenedor de efectos glassmorphism */
+.glass-actions-container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: space-between;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 4px 12px 0 rgba(31, 38, 135, 0.05);
+  padding: 10px 15px;
+  transition: all 0.3s ease;
+}
+
+.usuario-card:hover .glass-actions-container {
+  background: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 16px 0 rgba(31, 38, 135, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Botones redondos eliminar y editar */
+.glass-actions-container button.eliminar,
+.glass-actions-container a.editar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  cursor: pointer;
+  text-decoration: none;
+  user-select: none;
+  transition: all 0.3s ease;
+  border: none;
+  background-color: transparent;
+  color: #555;
+  border: 1px solid rgba(200, 200, 200, 0.4);
+}
+
+.glass-actions-container button.eliminar {
+  color: #e74c3c; /* Color rojo para el icono */
+}
+
+.glass-actions-container button.eliminar:hover {
+  background-color: rgba(231, 76, 60, 0.1);
+  transform: scale(1.1);
+  border-color: rgba(231, 76, 60, 0.3);
+}
+
+.glass-actions-container a.editar {
+  color: #3498db; /* Color azul para el icono */
+}
+
+.glass-actions-container a.editar:hover {
+  background-color: rgba(52, 152, 219, 0.1);
+  transform: scale(1.1);
+  border-color: rgba(52, 152, 219, 0.3);
+}
+
+/* Botón "Ver perfil" */
+.glass-actions-container a.ver-perfil-btn {
+  background-color: transparent;
+  color: #52ACC4;
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  text-decoration: none;
+  user-select: none;
+  transition: all 0.3s ease;
+  text-align: center;
+  margin-left: auto;
+  border: 1px solid rgba(82, 172, 196, 0.4);
+}
+
+.glass-actions-container a.ver-perfil-btn:hover {
+  background-color: rgba(82, 172, 196, 0.1);
+  transform: scale(1.05);
+  border-color: rgba(82, 172, 196, 0.7);
+  color: #3a8ca3;
+}

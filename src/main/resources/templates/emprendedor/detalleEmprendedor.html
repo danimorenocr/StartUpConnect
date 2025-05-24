@@ -1,35 +1,196 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{layout/layout :: head}"></head>
-<body>
+<link rel="stylesheet" th:href="@{/css/emprendedor/detalleEmprendedor.css}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<body class="main-bg">
 
-<div class="detalle-emprendedor">
-    <h1>Detalles del Emprendedor</h1>
 
-    <div class="campo">
-        <label>Documento:</label>
-        <span th:text="${emprendedorDetalle.documento}"></span>
+
+<div class="hero-section">
+    <div class="overlay"></div>
+    <div class="hero-content">
+        <h1 class="hero-title">Perfil Emprendedor</h1>
+        <p class="hero-subtitle">Innovación y talento en la comunidad StartUp Connect</p>
     </div>
+</div>
 
-    <div class="campo">
-        <label>Nombre:</label>
-        <span th:text="${emprendedorDetalle.usuario != null ? emprendedorDetalle.usuario.nombreUsu : 'No asignado'}"></span>
-    </div>
+<div class="container">
+    <div class="page-description">
+        <h2 class="section-title">Conoce a nuestro emprendedor</h2>
+        <p class="section-description">Los emprendedores son el corazón de nuestro ecosistema de innovación. Conecta con ellos para explorar colaboraciones y oportunidades de crecimiento conjunto.</p>
+    </div>    <div class="emprendedor-content">
+        <!-- Diseño innovador con tarjetas -->
+        <div class="profile-container">
+            <div class="profile-header">
+                <div class="profile-avatar">
+                    <img th:src="${emprendedorDetalle.usuario != null && emprendedorDetalle.usuario.fotoUrl != null ? emprendedorDetalle.usuario.fotoUrl : '/images/sinfoto.jpg'}" 
+                         alt="Foto del emprendedor" class="avatar-img">
+                    <div class="status-indicator online"></div>
+                </div>
+                <div class="profile-title">
+                    <h2 class="profile-name" th:text="${emprendedorDetalle.usuario != null ? emprendedorDetalle.usuario.nombreUsu : 'No asignado'}"></h2>
+                    <span class="profile-badge">Emprendedor Activo</span>
+                </div>
+            </div>
+              <div class="profile-bio">
+                <div class="bio-header">
+                    <i class="fas fa-rocket"></i>
+                    <span>Emprendedor Innovador</span>
+                </div>
+                <p class="bio-text">Miembro activo de StartUp Connect, impulsando proyectos con visión innovadora y un fuerte compromiso con el desarrollo tecnológico en nuestra comunidad.</p>
+            </div>
+            
+            <div class="stats-container">
+                <div class="stat-item">
+                    <span class="stat-number" th:text="${startups != null ? startups.size() : '0'}">0</span>
+                    <span class="stat-label">Startups</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">15</span>
+                    <span class="stat-label">Conexiones</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">3</span>
+                    <span class="stat-label">Eventos</span>
+                </div>
+            </div>
+            
+            <div class="contact-action">
+                <a th:if="${emprendedorDetalle.usuario != null && emprendedorDetalle.usuario.emailUsu != null}" 
+                   th:href="@{'mailto:' + ${emprendedorDetalle.usuario.emailUsu} + '?subject=Contacto con emprendedor'}" 
+                   class="btn-contactar primary">
+                   <i class="fas fa-envelope"></i> Contactar
+                </a>
+                <button class="btn-contactar secondary">
+                    <i class="fas fa-user-plus"></i> Conectar
+                </button>
+            </div>
+        </div>
+        
+        <div class="info-cards-container">            <!-- Tarjeta de Información Personal -->
+            <div class="info-card personal-info">
+                <div class="card-header">
+                    <div class="header-icon">
+                        <i class="fas fa-id-card"></i>
+                    </div>
+                    <h3>Información Personal</h3>
+                </div>
+                <div class="card-body">
+                    <div class="info-row">
+                        <div class="info-label">Documento:</div>
+                        <div class="info-value" th:text="${emprendedorDetalle.documento}"></div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Email:</div>
+                        <div class="info-value" th:text="${emprendedorDetalle.usuario != null && emprendedorDetalle.usuario.emailUsu != null ? emprendedorDetalle.usuario.emailUsu : 'No disponible'}"></div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Teléfono:</div>
+                        <div class="info-value" th:text="${emprendedorDetalle.usuario != null && emprendedorDetalle.usuario.telefono != null ? emprendedorDetalle.usuario.telefono : 'No disponible'}"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tarjeta de Formación -->
+            <div class="info-card education-info">
+                <div class="card-header">
+                    <div class="header-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h3>Formación Académica</h3>
+                </div>
+                <div class="card-body">
+                    <div class="info-row">
+                        <div class="info-label">Universidad:</div>
+                        <div class="info-value" th:text="${emprendedorDetalle.universidad}"></div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Programa:</div>
+                        <div class="info-value" th:text="${emprendedorDetalle.programaEducativo}"></div>
+                    </div>
+                    <div class="education-badge">
+                        <i class="fas fa-award"></i>
+                        <span>Graduado</span>
+                    </div>
+                </div>
+            </div>
+              </div>
+        </div>    </div>
 
-    <div class="campo">
-        <label>Universidad:</label>
-        <span th:text="${emprendedorDetalle.universidad}"></span>
-    </div>
-
-    <div class="campo">
-        <label>Programa Educativo:</label>
-        <span th:text="${emprendedorDetalle.programaEducativo}"></span>
-    </div>
-
-    <div class="acciones">
-        <a th:href="@{/emprendedor}">
-            <button type="button" class="btn-volver">Volver</button>
+    <!-- Sección de Startups Asociadas - A ancho completo y con scroll horizontal -->
+    <div class="container">
+        <div class="startups-section-wrapper">
+            <div class="startups-section-header">
+                <div class="header-icon">
+                    <i class="fas fa-rocket"></i>
+                </div>
+                <h3>Startups Asociadas</h3>
+            </div>
+            
+            <!-- Si no hay startups asociadas -->
+            <div class="empty-startups-fullwidth" th:if="${startups == null || startups.isEmpty()}">
+                <i class="fas fa-lightbulb empty-icon-medium"></i>
+                <p>Aún no hay startups asociadas a este emprendedor.</p>
+            </div>
+            
+            <!-- Si hay startups asociadas - Scroll horizontal -->
+            <div class="startups-scroll-container" th:if="${startups != null && !startups.isEmpty()}">
+                <div class="startups-horizontal-grid">
+                    <div class="startup-card-horizontal" th:each="startup : ${startups}">
+                        <div class="startup-logo-horizontal">
+                            <img th:src="${startup.logoUrl != null ? startup.logoUrl : '/images/sinfoto.jpg'}" alt="Logo startup">
+                        </div>
+                        <div class="startup-info-horizontal">
+                            <h4 th:text="${startup.nombreStartup}">Nombre Startup</h4>
+                            <p class="startup-sector" th:text="${startup.sector}">Sector</p>
+                            <a th:href="@{/verStartup/{id}(id=${startup.id})}" class="ver-startup-btn">
+                                <i class="fas fa-eye"></i> Ver detalles
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <div class="acciones">
+            <a th:href="@{/emprendedor}">
+                <button type="button" class="btn-volver">
+                    <i class="fas fa-arrow-left"></i> Volver
+            </button>
         </a>
+    </div>
+</div>
+
+<div class="footer">
+    <div class="footer-content">
+        <div class="footer-brand">
+            <img src="/images/logo.png" alt="StartUp Connect Logo" class="footer-logo">
+            <p>Conectando talento e innovación</p>
+        </div>
+        <div class="footer-links">
+            <h4>Explora</h4>
+            <ul>
+                <li><a href="/">Inicio</a></li>
+                <li><a href="/startup">Startups</a></li>
+                <li><a href="/emprendedor">Emprendedores</a></li>
+                <li><a href="/evento">Eventos</a></li>
+            </ul>
+        </div>
+        <div class="footer-contact">
+            <h4>Contacto</h4>
+            <p><i class="fas fa-envelope"></i> info@startupconnect.com</p>
+            <p><i class="fas fa-phone"></i> +57 300 123 4567</p>
+            <div class="social-links">
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-linkedin"></i></a>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; 2025 StartUp Connect. Todos los derechos reservados.</p>
     </div>
 </div>
 
