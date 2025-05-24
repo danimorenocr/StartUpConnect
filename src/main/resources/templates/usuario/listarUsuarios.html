@@ -5,37 +5,50 @@
 <body>
     <header th:replace="~{layout/layout :: header}"></header>
     <main class="main-content">
-        <!-- Banner superior -->
-        <div class="banner">
-            <div class="banner-content">
-                <h1 class="banner-title">¡Impulsa el futuro,<br>crea nuevos líderes!</h1>
-                <a th:href="@{${crearUsuario}}" class="banner-btn">Crear Usuario</a>
-            </div>
-            <img src="/images/bannerListar.jpg" alt="Motivational image" class="banner-img" />
+        <!-- Botón Crear Usuario -->
+        <div class="create-user-container">
+            <a th:href="@{${crearUsuario}}" class="banner-btn">Crear Usuario</a>
         </div>
-
-        <div class="main-content-cards">
-            <div id="usuarios-header-container">
-                <span id="usuarios-header">Usuarios</span>
-                <input id="buscar-usuario" type="text" placeholder="Buscar usuario...">
+        <!-- Banner superior -->
+        <div class="banner-container">
+            <img src="/images/bannerUsuarios.jpg" alt="Banner de Usuarios" class="banner-image">
+            <div class="banner-overlay">
+                <h1 class="banner-title">¡Impulsa el futuro,<br>crea nuevos líderes!</h1>
             </div>
-
-            <div class="usuarios-list">
-                <div th:each="usuario: ${usuarios}" class="usuario-card">
+        </div>
+        <div class="main-content-cards">
+            <div class="section-header">
+                <div id="usuarios-header-container">
+                    <span id="usuarios-header">Usuarios</span>
+                    <div class="search-container">
+                        <i class="search-icon">🔍</i>
+                        <input id="buscar-usuario" type="text" placeholder="Buscar por nombre, email o rol...">
+                    </div>
+                </div>
+            </div>
+            <div class="usuarios-grid">
+                <div th:each="usuario: ${usuarios}" class="usuario-card" th:data-nombre="${usuario.nombreUsu}"
+                    th:data-email="${usuario.emailUsu}" th:data-rol="${usuario.rol.rol}">
                     <input type="hidden" th:value="${usuario.documento}" class="doc-usuario" />
-                    <span class="usuario-rol">[[${usuario.rol.rol}]]</span>
-                    <img th:src="@{${usuario.fotoUrl}}" alt="Foto del usuario" class="usuario-foto">
-                    <div class="usuario-nombre">[[${usuario.nombreUsu}]]</div>
-                    <div class="usuario-email">[[${usuario.emailUsu}]]</div>
-                    <div class="usuario-actions">
-                        <form th:action="@{/eliminarUsuario/{id}(id=${usuario.documento})}" method="post"
-                            onsubmit="return confirmarEliminacion(event, this);" style="display: inline;">
-                            <button type="submit" class="eliminar" title="Eliminar">&#10060;</button>
-                        </form>
-                        <a th:href="@{/editarUsuario/{documento}(documento=${usuario.documento})}" class="editar"
-                            title="Editar">&#9998;</a>
-                        <a th:href="@{/verUsuario/{documento}(documento=${usuario.documento})}"
-                            class="ver-perfil-btn">Ver perfil</a>
+                    <div class="usuario-rol" th:classappend="${'rol-' + #strings.toLowerCase(usuario.rol.rol)}">
+                        [[${usuario.rol.rol}]]</div>
+                    <div class="usuario-card-content">
+                        <img th:src="@{${usuario.fotoUrl}}" alt="Foto del usuario" class="usuario-foto">
+                        <div class="usuario-info">
+                            <div class="usuario-nombre">[[${usuario.nombreUsu}]]</div>
+                            <div class="usuario-email">[[${usuario.emailUsu}]]</div>
+                        </div>
+                    </div>                    <div class="usuario-actions">
+                        <div class="glass-actions-container">
+                            <form th:action="@{/eliminarUsuario/{id}(id=${usuario.documento})}" method="post"
+                                onsubmit="return confirmarEliminacion(event, this);" style="display: inline;">
+                                <button type="submit" class="eliminar" title="Eliminar">&#128465;</button>
+                            </form>
+                            <a th:href="@{/editarUsuario/{documento}(documento=${usuario.documento})}" class="editar"
+                                title="Editar">&#9999;&#65039;</a>
+                            <a th:href="@{/verUsuario/{documento}(documento=${usuario.documento})}"
+                                class="ver-perfil-btn">Ver perfil</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -44,7 +57,6 @@
         </div>
 
     </main>
-
     <script>
         function confirmarEliminacion(event, form) {
             event.preventDefault();
@@ -64,6 +76,31 @@
                 }
             });
         }
+
+        // Funcionalidad del buscador de usuarios
+        document.addEventListener('DOMContentLoaded', function () {
+            const searchInput = document.getElementById('buscar-usuario');
+            const usuarioCards = document.querySelectorAll('.usuario-card');
+
+            searchInput.addEventListener('input', function () {
+                const searchTerm = this.value.toLowerCase().trim();
+
+                usuarioCards.forEach(card => {
+                    const nombre = card.getAttribute('data-nombre').toLowerCase();
+                    const email = card.getAttribute('data-email').toLowerCase();
+                    const rol = card.getAttribute('data-rol').toLowerCase();
+
+                    // Buscar en nombre, email y rol
+                    if (nombre.includes(searchTerm) ||
+                        email.includes(searchTerm) ||
+                        rol.includes(searchTerm)) {
+                        card.style.display = 'flex';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
     </script>
 </body>
 

@@ -96,13 +96,17 @@ public class EmprendedorController {
             redirectAttributes.addFlashAttribute("error", "Error al eliminar el emprendedor: " + e.getMessage());
             return "redirect:/emprendedor";
         }
-    }
-
-    @GetMapping(value = "/verEmprendedor/{id}")
+    }    @GetMapping(value = "/verEmprendedor/{id}")
     public String verEmprendedor(Model model, @PathVariable(value = "id") String id) {
         EmprendedorEntity emprendedor = emprendedorService.findById(id);
+        
+        // Buscar startups asociadas a este emprendedor
+        List<StartupEntity> startups = startupService.findByEmprendedor(emprendedor);
+        
         model.addAttribute("title", "Ver Emprendedor");
         model.addAttribute("emprendedorDetalle", emprendedor);
+        model.addAttribute("startups", startups);
+        
         return "emprendedor/detalleEmprendedor";
     }
 

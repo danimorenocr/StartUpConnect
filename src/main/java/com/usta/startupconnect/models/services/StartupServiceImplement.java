@@ -1,5 +1,6 @@
 package com.usta.startupconnect.models.services;
 
+import com.usta.startupconnect.entities.EmprendedorEntity;
 import com.usta.startupconnect.entities.StartupEntity;
 import com.usta.startupconnect.models.dao.StartupDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ public class StartupServiceImplement implements StartupService {
         return (List<StartupEntity>) startupDao.findAll();
     }
 
-        @Override
+    @Override
     @jakarta.transaction.Transactional
     public void save(StartupEntity startup) {
         startupDao.save(startup);
@@ -35,6 +36,12 @@ public class StartupServiceImplement implements StartupService {
     @Transactional
     public void deleteById(Long id) {
         startupDao.deleteById(id);
+    }
+    
+    @Override
+    @Transactional(readOnly = true)
+    public List<StartupEntity> findByEmprendedor(EmprendedorEntity emprendedor) {
+        return startupDao.findByEmprendedor(emprendedor);
     }
 
 }
