@@ -1,85 +1,108 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-<head th:replace="~{layout/layout :: head}">
-    <!-- Importar la fuente Poppins -->
+<head>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="icon" type="image/png" href="/images/StartUpConnect.png">
+
+    <!-- Font Awesome 6 (correcta) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-DZ+M3e2Gp3+O7IBktg6X53MJw7dGzjIV3U9JGFA3oRY9FgPPk9XfOzNf+6b5iTh3t+8l4vhVp8REVOgkx1Xt+A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     <style>
-        /* Aplicar Poppins globalmente */
         body {
             font-family: 'Poppins', sans-serif;
         }
     </style>
 </head>
 
-<body class="bg-white flex flex-col justify-center items-center h-screen w-screen">
-    <!-- Contenedor principal -->
-    <div class="bg-white p-10 rounded-xl w-3/4 shadow-xl flex flex-row gap-8 text-black">
-        <!-- Sección izquierda: imagen -->
-        <div class="w-1/2">
-            <img src="/images/registroimg.jpeg" alt="Galería de Arte"
-                class="w-full h-full object-cover rounded shadow-lg">
+
+<body class="bg-white h-screen w-screen flex items-center justify-center overflow-hidden">
+
+<a href="/" 
+   class="fixed top-4 right-4 w-12 h-12 bg-[#E79938] rounded-full flex items-center justify-center text-white shadow-lg hover:bg-[#E25D00] transition"
+   aria-label="Volver al inicio" 
+   title="Volver al inicio">
+   🏠
+</a>
+
+
+
+    <div class="w-full h-full flex flex-col md:flex-row items-center justify-center">
+        <!-- Imagen -->
+        <div class="w-full md:w-1/2 h-1/2 md:h-full">
+            <img src="/images/login.png" alt="Galería de Arte" class="w-full h-full object-cover">
         </div>
 
-        <!-- Sección derecha: formulario -->
-        <div class="w-1/2 flex flex-col justify-center">
-            <!-- Título actualizado -->
-            <h1 class="text-4xl font-bold text-black">¡Bienvenido de vuelta!</h1>
-            <p class="text-lg text-gray-600 mt-4">Inicia sesión para seguir explorando el arte que tanto te encanta.</p>
+        <!-- Formulario -->
+        <div class="w-full md:w-1/2 h-full flex items-center justify-center px-6">
+            <div class="w-full max-w-md">
+               <h1 class="text-3xl md:text-4xl font-bold">
+    <span style="color: #52ACC4;">¡Bienvenido de </span>
+    <span style="color: #043A68;">vuelta!</span>
+</h1>
 
-            <!-- Mensajes de error o éxito -->
-            <div th:if="${error}" class="bg-red-600 text-white text-sm p-2 rounded mt-4">
-                <p th:text="${error}"></p>
-            </div>
-            <div th:if="${success}" class="bg-green-600 text-white text-sm p-2 rounded mt-4">
-                <p th:text="${success}"></p>
-            </div>
+<p class="text-base md:text-lg text-gray-600 mt-2 text-right ">
+Alcanza tus grandes sueños
+y no pares de aprende</p>
 
-            <!-- Formulario -->
-            <form th:action="@{/login}" method="post" class="mt-8 flex flex-col gap-6">
-                <!-- Campo de correo -->
-                <div>
-                    <label for="username" class="block text-lg font-semibold text-black">Correo:</label>
-                    <input type="text" id="username" name="username" th:value="${emailUsuario}" required
-                        placeholder="Ingresa tu correo"
-                        class="w-full mt-2 p-2 bg-transparent border-b border-sky-400 focus:outline-none focus:border-sky-500 transition-all"
-                        pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" maxlength="100"
-                        title="Debe ser un correo válido con un máximo de 100 caracteres">
+
+                <!-- Mensajes -->
+                <div th:if="${error}" class="bg-red-600 text-white text-sm p-2 rounded mt-4">
+                    <p th:text="${error}"></p>
+                </div>
+                <div th:if="${success}" class="bg-green-600 text-white text-sm p-2 rounded mt-4">
+                    <p th:text="${success}"></p>
                 </div>
 
-                <!-- Campo de contraseña -->
+                <!-- Formulario -->
+                <form th:action="@{/login}" method="post" class="mt-6 flex flex-col gap-5">
+                    <!-- Correo -->
+                    <div>
+                        <label for="username" class="block text-base font-semibold">Email:</label>
+                        <input type="text" id="username" name="username" th:value="${emailUsuario}" required
+                            placeholder="Ingresa tu correo"
+                            class="w-full mt-2 p-2 bg-transparent border-b border-sky-400 focus:outline-none focus:border-sky-500 transition-all"
+                            pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" maxlength="100"
+                            title="Debe ser un correo válido con un máximo de 100 caracteres">
+                    </div>
+                <!-- Contraseña -->
                 <div class="relative">
-                    <label for="password" class="block text-lg font-semibold text-black">Contraseña:</label>
+                    <label for="password" class="block text-base font-semibold text-black">Contraseña:</label>
                     <input type="password" id="password" name="password" th:value="${passwordUsuario}" required
                         placeholder="Ingresa tu contraseña"
-                        class="w-full mt-2 p-2 bg-transparent border-b border-sky-400 focus:outline-none focus:border-sky-500 transition-all">
-                    <button type="button" onclick="VerPassword()"
-                        class="absolute right-2 bottom-2 text-sky-400 hover:text-sky-500 focus:outline-none">Ver</button>
+                        class="w-full mt-2 p-2 bg-transparent border-b border-sky-400 focus:outline-none focus:border-sky-500 transition-all pr-10">
+                    <button type="button" onclick="togglePassword()" class="absolute right-2 bottom-3 text-xl text-sky-400 hover:text-sky-500">
+                        <span id="icon-eye">👁️</span>
+                    </button>
                 </div>
 
-                <!-- Enlace para registrarse -->
-                <div class="text-sm text-gray-600">
-                    <span>¿No tienes cuenta? <a th:href="@{/register}"
-                            class="hover:text-sky-400 hover:underline transition">Regístrate ahora</a></span>
-                </div>
+                    <!-- Registro -->
+                    <div class="text-sm text-gray-600">
+                        <span>¿No tienes cuenta? <a th:href="@{/registro}" class="text-sky-400 hover:text-sky-600 hover:underline transition">Regístrate ahora</a>
+</span>
+                    </div>
 
-                <!-- Botón de inicio de sesión -->
-                <button type="submit"
-                    class="bg-black text-white py-2 px-4 rounded font-bold hover:bg-gray-800 hover:scale-105 active:scale-95 transition">
-                    Iniciar Sesión
-                </button>
-            </form>
+                    <!-- Botón -->
+                    <button type="submit"
+    class="bg-[#E79938] text-white py-2 px-4 rounded font-bold hover:bg-[#E25D00] hover:scale-105 active:scale-95 transition">
+    Iniciar Sesión
+</button>
+
+                </form>
+            </div>
         </div>
     </div>
 
-    <!-- Pie de página -->
-    <footer th:replace="~{layout/layout :: footer}" class="mt-8"></footer>
-
-    <!-- Script para mostrar/ocultar contraseña -->
+    <!-- Script -->
     <script>
-        function VerPassword() {
+        function togglePassword() {
             const passwordField = document.getElementById("password");
-            passwordField.type = passwordField.type === "password" ? "text" : "password";
+            const icon = document.getElementById("icon-eye");
+            const isHidden = passwordField.type === "password";
+            passwordField.type = isHidden ? "text" : "password";
+            icon.textContent = isHidden ? "🙈" : "👁️";
         }
     </script>
 </body>

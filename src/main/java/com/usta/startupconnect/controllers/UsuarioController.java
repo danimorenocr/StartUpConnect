@@ -37,7 +37,18 @@ public class UsuarioController {
     private RolService rolService;
 
     @GetMapping(value = "/administrador")
-    public String administrador(Model model) {
+    public String administrador(Model model, org.springframework.security.core.Authentication authentication) {
+        if (authentication != null) {
+            String email = authentication.getName();
+            UsuarioEntity usuario = usuarioService.findByEmail(email);
+            if (usuario != null) {
+                model.addAttribute("nombreCompleto", usuario.getNombreUsu());
+            } else {
+                model.addAttribute("nombreCompleto", "Usuario");
+            }
+        } else {
+            model.addAttribute("nombreCompleto", "Usuario");
+        }
         return "/administrador/dashboardAdmin";
     }
 
@@ -85,6 +96,32 @@ public class UsuarioController {
         redirectAttributes.addFlashAttribute("mensajeExito", "Room Saved Successfully");
         return "redirect:/usuario";
     }
+
+@GetMapping(value = "/registro")
+public String registroUsuario(Model model) {
+    List<RolEntity> roles = rolService.findAll();
+    model.addAttribute("roles", roles);
+    model.addAttribute("title", "Registro de usuario");
+    model.addAttribute("usuario", new UsuarioEntity());
+    return "registro"; 
+}
+
+@PostMapping(value = "/registro")
+public String guardarRegistroUsuario(@Valid UsuarioEntity usuario, @RequestParam(value = "foto", required = false) MultipartFile foto,
+        BindingResult result, RedirectAttributes redirectAttributes) {
+    String urlImagen = guardarImagen(foto);
+    if (result.hasErrors()) {
+        System.out.println(result.getAllErrors());
+        return "registro";
+    }
+
+    usuario.setFotoUrl(urlImagen);
+    usuario.setFecha_creacion(LocalDate.now());
+    usuarioService.save(usuario);
+
+    redirectAttributes.addFlashAttribute("mensajeExito", "Usuario registrado exitosamente");
+    return "redirect:/login";
+}
 
     private String guardarImagen(MultipartFile imagen) {
         try {

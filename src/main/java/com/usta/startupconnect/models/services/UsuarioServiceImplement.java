@@ -38,4 +38,9 @@ public class UsuarioServiceImplement implements UsuarioService {
         usuarioDao.deleteById(id);
     }
 
+    @Override
+    public UsuarioEntity findByEmail(String email) {
+        return usuarioDao.findByEmail(email);
+    }
+
 }

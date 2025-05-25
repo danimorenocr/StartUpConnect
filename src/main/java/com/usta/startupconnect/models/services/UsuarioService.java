@@ -12,4 +12,6 @@ public interface UsuarioService {
     public UsuarioEntity findById(String id);
 
     public void deleteById(String id);
+
+    UsuarioEntity findByEmail(String email);
 }

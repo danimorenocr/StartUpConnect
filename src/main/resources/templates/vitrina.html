@@ -6,18 +6,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StartUp Connect - Vitrina de Startups</title>
     <link rel="stylesheet" href="/css/vitrina.css">
+        <link rel="icon" type="image/png" href="/images/StartUpConnect.png">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
 <body class="main-bg">
     <header class="header">
         <div class="logo-container">
-            <img src="/images/logo.png" alt="StartUp Connect Logo" class="logo">
+            <img src="/images/StartUpConnect.png" alt="StartUp Connect Logo" class="logo">
         </div>        <div class="header-buttons">
+            <a th:href="@{/}" class="btn btn-primary">Volver</a>
             <a th:href="@{/login}" class="btn btn-outline">Iniciar Sesión</a>
-            <a href="/register" class="btn btn-primary">Registrarse</a>
-        </div>
-    </header>    <main class="content">
+<a th:href="@{/registro}" class="btn btn-primary">Registrarse</a>        </div>
+    </header>    
+    <main id="emprendedores" class="content">
         <div class="vitrina-container">
             <div class="banner-container">
                 <img src="/images/bannerVitrina.jpg" alt="Banner de Startups" class="banner-image">
@@ -48,7 +51,7 @@
         </div>
         
         <!-- Nueva sección de Startups -->
-        <div class="startups-section">
+        <div id="startups" class="startups-section">
             <h2 class="section-title">Startups Destacadas</h2>
             <p class="section-description">Descubre proyectos innovadores y conecta con ellos.</p>
             
@@ -71,6 +74,35 @@
             </div>
         </div>
     </main>
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <img src="/images/StartUpConnect.png" alt="StartUp Connect Logo" class="footer-logo-img">
+            </div>
+            <div class="footer-links">
+                <h4>Enlaces</h4>
+                <ul>
+                    <li><a href="#startups" class="footer-link">Vitrina</a></li>
+                    <li><a href="#emprendedores" class="footer-link">Emprendedores</a></li>  
+                    <li><a href="/" class="footer-link">Inicio</a></li>                   
+                    <li><a href="/register" class="footer-link">Registro</a></li>
+                </ul>
+            </div>
+            <div class="footer-contact">
+                <h4>Contacto</h4>
+                <p><i class="fas fa-envelope"></i> contacto@startupconnect.com</p>
+                <p><i class="fas fa-phone"></i> +57 300 123 4567</p>
+                <div class="social-icons">
+                    <a href="#" class="social-icon" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social-icon" title="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-icon" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 StartUp Connect. Todos los derechos reservados.</p>
+        </div>
+    </footer>
 </body>
 
 </html>

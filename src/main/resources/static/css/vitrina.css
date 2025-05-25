@@ -25,7 +25,7 @@ body {
     max-width: 1300px; /* Aumentar ancho máximo */
     margin: 0 auto;
     padding: 0 20px;
-    padding-top: 100px; /* Reducir espacio para el header */
+    padding-top: 30px; /* Reducir espacio para el header */
 }
 
 /* Header y navegación */
@@ -34,19 +34,22 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 1rem 2rem;
-    background-color: rgba(0, 0, 0, 0.7); /* Header semi-transparente */
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-    position: fixed;
-    top: 15px;
-    left: 50%;
-    transform: translateX(-50%);
+    background-color: #3d66be; /* Azul moderno (igual que index) */
+    box-shadow: 0 4px 20px rgba(37, 99, 235, 0.08); /* Sombra azul suave */
+    position: relative;
+    top: 0;
+    left: 0;
+    transform: none;
     z-index: 1000;
     width: 90%;
     max-width: 1400px;
     border-radius: 15px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid #21448f;
+   margin: 0.5rem auto  auto; //* Menor margen superior para acercar el contenido al header */
+}
+
+.header, .header * {
+    color: #fff !important; /* Texto blanco para header y sus hijos */
 }
 
 .logo-container {
@@ -74,24 +77,27 @@ body {
 }
 
 .btn-primary {
-    background-color: #FF6B00; /* Botón naranja */
-    color: white;
+    background-color: #e79938;
+    color: #fff !important;
     border: 1px solid #FF6B00;
 }
 
 .btn-primary:hover {
     background-color: #E25D00;
     border-color: #E25D00;
+    color: #fff !important;
 }
 
 .btn-outline {
-    border: 1px solid #FF6B00; /* Borde naranja */
-    color: #FF6B00; /* Texto naranja */
+    border: 1px solid #fff;
+    color: #fff !important;
     background-color: transparent;
 }
 
 .btn-outline:hover {
-    background-color: rgba(255, 107, 0, 0.1);
+    background-color: rgba(255,255,255,0.12);
+    color: #FF6B00 !important;
+    border-color: #FF6B00;
 }
 
 /* Estilos específicos para la vitrina */
@@ -251,60 +257,6 @@ body {
     padding: 5px 10px;
 }
 
-
-
-/* Responsive para dispositivos móviles */
-@media (max-width: 768px) {
-    .vitrina-container {
-        flex-direction: column;
-        height: auto;
-    }
-    
-    .banner-container, .emprendedores-container {
-        flex: none;
-        width: 100%;
-    }
-    
-    .banner-container {
-        height: 200px; /* Reducir altura en móvil */
-    }
-    
-    .emprendedores-container {
-        padding: 1.5rem;
-        min-height: auto; /* Eliminar altura mínima */
-    }
-    
-    .emprendedores-title {
-        text-align: center;
-    }
-    
-    .emprendedores-title:after {
-        left: 50%;
-        transform: translateX(-50%);
-    }
-    
-    .emprendedores-list {
-        max-height: 150px;
-    }
-      /* Responsivo para la sección de startups */
-    .startups-grid {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-    }
-    
-    .startup-card {
-        height: 180px;
-    }
-    
-    .glass-overlay {
-        padding: 12px;
-    }
-    
-    .startup-name {
-        font-size: 1rem;
-    }
-}
-
 /* Estilos para la sección de Startups */
 .startups-section {
     margin-top: 3rem;
@@ -419,4 +371,135 @@ body {
     background-color: white;
     transform: scale(1.1);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Estilos para el footer */
+.footer {
+    background-color: #3d66be;
+    color: #fff;
+    padding-top: 3rem;
+    border-top: 4px solid #e79938;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 2rem;
+    padding: 0 20px;
+}
+
+.footer-logo {
+    flex: 1;
+    min-width: 300px;
+}
+
+.footer-logo-img {
+    height: 48px;
+    margin-bottom: 1rem;
+    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.10));
+}
+
+.footer-links {
+    flex: 1;
+    min-width: 200px;
+}
+
+.footer-links h4, .footer-contact h4 {
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+    color: #e79938;
+}
+
+.footer-links ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-links li {
+    margin-bottom: 0.8rem;
+}
+
+.footer-link {
+    color: #fff;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.footer-link:hover {
+    color: #e79938;
+}
+
+.footer-contact {
+    flex: 1;
+    min-width: 300px;
+}
+
+.footer-contact p {
+    margin-bottom: 1rem;
+    color: #ddd;
+}
+
+.footer-contact i {
+    margin-right: 0.5rem;
+    color: #e79938;
+}
+
+.social-icons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.social-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background-color: #fff;
+    color: #3d66be;
+    border-radius: 50%;
+    text-decoration: none;
+    transition: all 0.3s;
+    font-size: 1.2rem;
+    border: 1.5px solid #e79938;
+}
+
+.social-icon:hover {
+    background-color: #e79938;
+    color: #fff;
+    border-color: #fff;
+    transform: translateY(-3px);
+}
+
+.footer-bottom {
+    background-color: #21448f;
+    text-align: center;
+    padding: 1.5rem 0;
+    margin-top: 3rem;
+    color: #fff;
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
+}
+
+.footer-bottom p {
+    color: #fff;
+    font-size: 0.95rem;
+}
+
+@media (max-width: 992px) {
+    .footer-content {
+        flex-direction: column;
+        gap: 2rem;
+        align-items: center;
+    }
+    .footer-logo, .footer-links, .footer-contact {
+        min-width: 0;
+        width: 100%;
+        text-align: center;
+    }
 }
