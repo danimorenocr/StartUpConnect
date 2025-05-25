@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{layout/layout :: head}"></head>
+
 <body>
 
-
+<header th:replace="~{layout/layout :: header}"></header>
 <form th:action="@{/editarUsuario/{id}(id=${usuarioEditar.documento})}" method="post" enctype="multipart/form-data"
       th:object="${usuarioEditar}">
 

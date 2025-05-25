@@ -5,6 +5,8 @@
 
 <body>
 
+    <header th:replace="~{layout/layout :: header}"></header>
+
     <h1>Crear Nueva Convocatoria</h1>
 
     <form th:action="@{/crearConvocatoria}" method="post" th:object="${convocatoria}">
