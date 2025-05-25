@@ -3,6 +3,7 @@
 <head th:replace="~{layout/layout :: head}"></head>
 <body>
 
+<header th:replace="~{layout/layout :: header}"></header>
 
 <form th:action="@{/crearEmprendedor}" method="post" enctype="multipart/form-data" th:object="${emprendedor}">
 

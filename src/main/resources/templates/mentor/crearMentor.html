@@ -5,7 +5,7 @@
 
 <body>
 
-
+<header th:replace="~{layout/layout :: header}"></header>
     <h1>Crear Nuevo Mentor</h1>
 
     <form th:action="@{/crearMentor}" method="post" enctype="multipart/form-data" th:object="${mentor}">

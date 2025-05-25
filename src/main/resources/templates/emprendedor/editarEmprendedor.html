@@ -3,6 +3,8 @@
 <head th:replace="~{layout/layout :: head}"></head>
 <body>
 
+<header th:replace="~{layout/layout :: header}"></header>
+
 <form th:action="@{/editarEmprendedor/{id}(id=${emprendedorEditar.documento})}" method="post" enctype="multipart/form-data"
       th:object="${emprendedorEditar}">
 
