@@ -3,6 +3,7 @@
 <head th:replace="~{layout/layout :: head}"></head>
 <link rel="stylesheet" th:href="@{/css/usuarios/detalleUsuario.css}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
 <body class="main-bg">
 
 <header th:replace="~{layout/layout :: header}"></header>
@@ -18,7 +19,6 @@
 <div class="container">
     <div class="page-description">
         <h2 class="section-title">Detalles del Usuario</h2>
-        <p class="section-description">La información completa del usuario en nuestro sistema StartUp Connect.</p>
     </div>
     
     <div class="usuario-content">
@@ -50,14 +50,6 @@
                 <div class="stat-item">
                     <span class="stat-number">0</span>
                     <span class="stat-label">Proyectos</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-number">0</span>
-                    <span class="stat-label">Conexiones</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-number">0</span>
-                    <span class="stat-label">Eventos</span>
                 </div>
             </div>
             
@@ -119,15 +111,10 @@
                         <div class="info-label">Estado:</div>
                         <div class="info-value">Activo</div>
                     </div>
-                    <div class="info-row">
-                        <div class="info-label">Fecha registro:</div>
-                        <div class="info-value">No disponible</div>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 </body>
 </html>
