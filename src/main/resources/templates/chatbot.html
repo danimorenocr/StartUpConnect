@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/layout :: head}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title}">Chatbot</title>
+</head>
+<body>
+    <header th:replace="~{layout/layout :: header}"></header>
+    
+    <!-- Ensure CSS is loaded -->
+    <link rel="stylesheet" th:href="@{/css/chatbot.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <div class="container">
+        <div class="chat-container">
+            <div class="chat-header">
+                <h1 th:text="${title}">Chatbot de StartUpConnect</h1>
+                <button id="clearChatBtn" class="clear-chat-btn" title="Borrar historial de chat">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+              <div class="chat-messages" id="chatMessages">
+                <!-- Mensaje inicial del bot -->
+                <div class="message bot-message">
+                    <p th:text="${description}">Bienvenido al chatbot de StartUp Connect. Aquí puedes hacer preguntas y obtener respuestas sobre nuestros servicios.</p>
+                    <div class="message-time">12:00</div>
+                </div>
+                
+                <!-- Typing indicator -->
+                <div class="typing-indicator" id="typingIndicator">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+            
+            <div class="chat-quick-replies">
+                <div th:each="pregunta : ${preguntasFrecuentes}" class="quick-reply">
+                    <button class="quick-reply-button" th:text="${pregunta}" onclick="sendMessage(this.textContent)">Pregunta</button>
+                </div>
+            </div>
+            
+            <div class="chat-input-container">
+                <form id="chatForm" class="chat-input-form" onsubmit="return sendForm(event)">
+                    <input type="text" id="userInput" class="chat-input" placeholder="Escribe tu mensaje aquí...">
+                    <button type="submit" class="send-button">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Inline styles as a fallback -->
+    <style>
+        .chat-container {
+            max-width: 800px;
+            margin: 30px auto;
+            border-radius: 15px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 75vh;
+        }
+
+        .chat-header {
+            background: linear-gradient(45deg, #4e73df, #36b9cc);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .chat-header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            text-align: center;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background-color: #f5f7fb;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .message {
+            max-width: 70%;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            border-radius: 20px;
+            position: relative;
+        }
+
+        .user-message {
+            align-self: flex-end;
+            background-color: #4e73df;
+            color: white;
+            border-bottom-right-radius: 5px;
+            margin-left: auto;
+        }
+
+        .bot-message {
+            align-self: flex-start;
+            background-color: #e9ecef;
+            color: #333;
+            border-bottom-left-radius: 5px;
+            margin-right: auto;
+        }        .message p {
+            margin: 0;
+            word-wrap: break-word;
+            line-height: 1.5;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .markdown-header {
+            font-weight: bold;
+            color: #043A68;
+            margin: 12px 0 8px 0;
+            display: block;
+            border-bottom: 1px solid rgba(4, 58, 104, 0.2);
+            padding-bottom: 3px;
+            font-size: 1.2em;
+        }
+
+        .markdown-subheader {
+            font-weight: bold;
+            color: #4e73df;
+            margin: 10px 0 6px 0;
+            display: block;
+            font-size: 1.1em;
+        }
+
+        .numbered-item {
+            font-weight: bold;
+            margin: 8px 0;
+            display: block;
+            color: #043A68;
+        }
+
+        .important-point {
+            background-color: rgba(78, 115, 223, 0.08);
+            padding: 5px;
+            border-left: 3px solid #4e73df;
+            margin: 5px 0;
+            border-radius: 0 3px 3px 0;
+        }
+        
+        .keyword {
+            color: #4e73df;
+            font-weight: bold;
+            background-color: rgba(78, 115, 223, 0.1);
+            padding: 0 3px;
+            border-radius: 3px;
+        }
+        
+        code {
+            font-family: monospace;
+            background-color: #f0f0f0;
+            padding: 2px 4px;
+            border-radius: 3px;
+            color: #d63384;
+            font-size: 0.9em;
+        }
+        
+        pre {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            border-left: 3px solid #4e73df;
+            margin: 10px 0;
+            overflow-x: auto;
+            max-width: 100%;
+        }
+        
+        pre code {
+            background-color: transparent;
+            padding: 0;
+            color: #333;
+            display: block;
+            line-height: 1.4;
+        }
+        
+        .bot-message p {
+            font-size: 1rem;
+        }
+        
+        .bot-message strong {
+            color: #043A68;
+            display: block;
+            margin-top: 5px;
+        }
+        
+        .bot-message .keyword {
+            color: #3CB6D7;
+            font-weight: 600;
+        }
+        
+        .bot-message a {
+            color: #4e73df;
+            text-decoration: underline;
+        }
+
+        .message-time {
+            font-size: 0.7rem;
+            color: #888;
+            text-align: right;
+            margin-top: 5px;
+        }
+
+        .user-message .message-time {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .chat-quick-replies {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 15px;
+            background-color: #f5f7fb;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .quick-reply-button {
+            background-color: #fff;
+            border: 1px solid #4e73df;
+            color: #4e73df;
+            padding: 8px 15px;
+            border-radius: 18px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .quick-reply-button:hover {
+            background-color: #4e73df;
+            color: white;
+        }
+
+        .chat-input-container {
+            padding: 15px;
+            border-top: 1px solid #e0e0e0;
+            background-color: #fff;
+        }
+
+        .chat-input-form {
+            display: flex;
+            align-items: center;
+        }
+
+        .chat-input {
+            flex: 1;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            padding: 10px 15px;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .chat-input:focus {
+            border-color: #4e73df;
+        }
+
+        .typing-indicator {
+            display: none;
+            align-self: flex-start;
+            background-color: #e9ecef;
+            color: #333;
+            border-radius: 20px;
+            border-bottom-left-radius: 5px;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            margin-right: auto;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .typing-indicator span {
+            height: 8px;
+            width: 8px;
+            float: left;
+            margin: 0 1px;
+            background-color: #9E9EA1;
+            display: block;
+            border-radius: 50%;
+            opacity: 0.4;
+        }
+
+        .typing-indicator span:nth-of-type(1) {
+            animation: 1s blink infinite 0.3333s;
+        }
+
+        .typing-indicator span:nth-of-type(2) {
+            animation: 1s blink infinite 0.6666s;
+        }
+
+        .typing-indicator span:nth-of-type(3) {
+            animation: 1s blink infinite 0.9999s;
+        }
+
+        @keyframes blink {
+            50% {
+                opacity: 1;
+            }
+        }
+
+        .send-button {
+            background-color: #4e73df;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            margin-left: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .clear-chat-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 0.9rem;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 50%;
+            transition: background-color 0.2s;
+        }
+        
+        .clear-chat-btn:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+    </style>
+
+    <script>
+        function getCurrentTime() {
+            const now = new Date();
+            return now.getHours() + ':' + (now.getMinutes() < 10 ? '0' : '') + now.getMinutes();
+        }
+
+        function sendForm(event) {
+            event.preventDefault();
+            const userInput = document.getElementById('userInput');
+            sendMessage(userInput.value);
+            userInput.value = '';
+            return false;
+        }        function sendMessage(message) {
+            if (!message.trim()) return;
+
+            addUserMessage(message);
+
+            // Mostrar indicador de escribiendo
+            const typingIndicator = document.getElementById('typingIndicator');
+            typingIndicator.style.display = 'block';
+            scrollToBottom();
+
+            // Hacer petición al backend
+            fetch(`/chat?prompt=${encodeURIComponent(message)}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error en la respuesta del servidor');
+                    }
+                    return response.text();
+                })                .then(data => {
+                    // Mostrar tipeo progresivo
+                    let delay = 500 + Math.random() * 500; // Retraso aleatorio entre 0.5 y 1 segundo
+                    
+                    // Añadir un efecto de "pensando" proporcional a la longitud del mensaje
+                    delay += Math.min(data.length * 5, 1500); // Máximo 1.5 segundos adicionales
+                    
+                    setTimeout(() => {
+                        typingIndicator.style.display = 'none';
+                        
+                        // Añadir respuesta del bot
+                        addBotMessage(data);
+                        scrollToBottom();
+                    }, delay);
+                }).catch(error => {
+                    // Ocultar indicador de escribiendo
+                    typingIndicator.style.display = 'none';
+                    
+                    console.error('Error:', error);
+                    
+                    // Mensaje de error amigable
+                    const errorMessage = `
+                        <div class="important-point">
+                            Lo siento, ocurrió un error al procesar tu solicitud. Puedes intentar:
+                            <br>• Reformular tu pregunta
+                            <br>• Verificar tu conexión a internet
+                            <br>• Intentarlo más tarde
+                        </div>
+                        <br>Error técnico: ${error.message}
+                    `;
+                    
+                    addBotMessage(errorMessage);
+                    scrollToBottom();
+                });
+        }
+
+        // Funciones para manejar el historial de chat
+        function saveMessageToHistory(message, isUser) {
+            try {
+                // Obtener historial existente o crear uno nuevo
+                let chatHistory = JSON.parse(localStorage.getItem('chatHistory')) || [];
+                
+                // Añadir nuevo mensaje al historial
+                chatHistory.push({
+                    message: message,
+                    isUser: isUser,
+                    timestamp: new Date().toISOString()
+                });
+                
+                // Limitar el historial a 50 mensajes (25 conversaciones)
+                if (chatHistory.length > 50) {
+                    chatHistory = chatHistory.slice(chatHistory.length - 50);
+                }
+                
+                // Guardar en localStorage
+                localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
+            } catch (error) {
+                console.error('Error al guardar historial:', error);
+            }
+        }
+        
+        function loadChatHistory() {
+            try {
+                const chatHistory = JSON.parse(localStorage.getItem('chatHistory'));
+                
+                if (chatHistory && chatHistory.length > 0) {
+                    // Mostrar mensaje de bienvenida para usuarios que regresan
+                    const lastVisit = new Date(chatHistory[chatHistory.length - 1].timestamp);
+                    const today = new Date();
+                    const timeDiff = Math.floor((today - lastVisit) / (1000 * 60 * 60 * 24)); // diferencia en días
+                    
+                    // Reemplazar el primer mensaje con un saludo personalizado
+                    const welcomeMessage = document.querySelector('.bot-message p');
+                    if (welcomeMessage) {
+                        let greeting = "Hola de nuevo! ";
+                        
+                        if (timeDiff === 0) {
+                            greeting += "¿En qué más puedo ayudarte hoy?";
+                        } else if (timeDiff === 1) {
+                            greeting += "¡Qué bueno verte otra vez! Ha pasado 1 día desde tu última visita.";
+                        } else if (timeDiff > 1) {
+                            greeting += `¡Bienvenido de vuelta! Han pasado ${timeDiff} días desde tu última conversación.`;
+                        }
+                        
+                        welcomeMessage.textContent = greeting;
+                    }
+                    
+                    // Limitar a las últimas 10 interacciones para no sobrecargar
+                    const recentHistory = chatHistory.slice(Math.max(0, chatHistory.length - 10));
+                    
+                    recentHistory.forEach(item => {
+                        if (item.isUser) {
+                            addUserMessage(item.message, false); // false = no guardar en historial
+                        } else {
+                            addBotMessage(item.message, false); // false = no guardar en historial
+                        }
+                    });
+                    
+                    scrollToBottom();
+                }
+            } catch (error) {
+                console.error('Error al cargar historial:', error);
+            }
+        }
+        
+        // Modificar funciones existentes para guardar mensajes
+        function addUserMessage(message, saveToHistory = true) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageElement = document.createElement('div');
+            messageElement.className = 'message user-message';
+            messageElement.innerHTML = `
+                <p>${message}</p>
+                <div class="message-time">${getCurrentTime()}</div>
+            `;
+            chatMessages.appendChild(messageElement);
+            
+            if (saveToHistory) {
+                saveMessageToHistory(message, true);
+            }
+            
+            scrollToBottom();
+        }
+        
+        function addBotMessage(message, saveToHistory = true) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageElement = document.createElement('div');
+            messageElement.className = 'message bot-message';
+            
+            // Formatear el mensaje para mejor legibilidad
+            const formattedMessage = formatMessage(message);
+            
+            messageElement.innerHTML = `
+                <p>${formattedMessage}</p>
+                <div class="message-time">${getCurrentTime()}</div>
+            `;
+            chatMessages.appendChild(messageElement);
+            
+            if (saveToHistory) {
+                saveMessageToHistory(message, false);
+            }
+            
+            scrollToBottom();
+        }
+        
+        function formatMessage(text) {
+            let formatted = text;
+            
+            // Formatear encabezados markdown (### Título)
+            formatted = formatted.replace(/^#{3,6}\s+(.*?)$/gm, '<div class="markdown-header">$1</div>');
+            formatted = formatted.replace(/^#{1,2}\s+(.*?)$/gm, '<div class="markdown-subheader">$1</div>');
+            
+            // Formatear listas numeradas (1. Item)
+            formatted = formatted.replace(/^(\d+\.\s+)(.*?)$/gm, '<div class="numbered-item">$1$2</div>');
+            
+            // Formatear listas con viñetas (* Item)
+            formatted = formatted.replace(/^(\*\s+)(.*?)$/gm, '<div class="important-point">$2</div>');
+            
+            // Detectar bloques de código (texto entre backticks o comillas simples)
+            formatted = formatted.replace(/`([^`]+)`/g, '<code>$1</code>');
+            
+            // Detectar bloques de código más grandes (texto entre tres backticks)
+            formatted = formatted.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
+            
+            // Reemplazar saltos de línea with etiquetas <br>
+            formatted = formatted.replace(/\n/g, '<br>');
+            
+            // Convertir URLs en enlaces clicables
+            formatted = formatted.replace(/https?:\/\/[^\s<]+/g, '<a href="$&" target="_blank">$&</a>');
+            
+            // Añadir formato a palabras clave
+            const keywords = [
+                'StartUpConnect', 'emprendedor', 'mentor', 'startup', 'convocatoria', 'evento', 
+                'inversor', 'innovación', 'financiación', 'capital', 'emprendimiento', 'incubadora',
+                'aceleradora', 'pitching', 'networking'
+            ];
+            
+            keywords.forEach(keyword => {
+                const regex = new RegExp(`\\b${keyword}\\b`, 'gi');
+                formatted = formatted.replace(regex, match => `<span class="keyword">${match}</span>`);
+            });
+            
+            return formatted;
+        }
+
+        function scrollToBottom() {
+            const chatMessages = document.getElementById('chatMessages');
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            scrollToBottom();
+            
+            // Cargar historial de chat al iniciar
+            loadChatHistory();
+            
+            // Configurar el botón de limpiar historial
+            document.getElementById('clearChatBtn').addEventListener('click', clearChatHistory);
+            
+            // Debug CSS loading
+            console.log('DOM loaded, checking styles...');
+            const linkElements = document.querySelectorAll('link[rel="stylesheet"]');
+            linkElements.forEach(link => {
+                console.log('CSS link found:', link.href);
+            });
+        });
+        
+        // Nueva función para limpiar el historial de chat
+        function clearChatHistory() {
+            // Eliminar historial del localStorage
+            localStorage.removeItem('chatHistory');
+            
+            // Limpiar el chat actual, manteniendo solo el mensaje de bienvenida
+            const chatMessages = document.getElementById('chatMessages');
+            const welcomeMessage = chatMessages.querySelector('.bot-message');
+            
+            // Limpiar todos los mensajes
+            chatMessages.innerHTML = '';
+            
+            // Volver a añadir el mensaje de bienvenida y el indicador de escritura
+            chatMessages.appendChild(welcomeMessage);
+            
+            const typingIndicator = document.createElement('div');
+            typingIndicator.className = 'typing-indicator';
+            typingIndicator.id = 'typingIndicator';
+            typingIndicator.innerHTML = '<span></span><span></span><span></span>';
+            chatMessages.appendChild(typingIndicator);
+            
+            // Mostrar notificación
+            addBotMessage('El historial de chat ha sido borrado.', false);
+        }
+    </script>
+</body>
+</html>
