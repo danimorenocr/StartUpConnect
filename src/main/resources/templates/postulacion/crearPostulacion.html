@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{layout/layout :: head}">
+    <title>Crear Postulación</title>
+</head>
+
+<body>    <header th:replace="~{layout/layout :: header}"></header>
+    
+    <main class="main-content">
+        <div class="container-fluid py-4">
+            <div class="card card-body shadow mx-4">
+                <div class="row">                    <div class="col-12">
+                        <h1 class="text-center mb-5">Postular mi Startup</h1>
+                        
+                        <!-- Mensajes de error/validación -->
+                        <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger mb-4">
+                            <i class="fas fa-exclamation-circle me-2"></i>
+                            <span>Por favor corrige los errores en el formulario antes de continuar.</span>
+                            <ul>
+                                <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="progress-container"><div class="progress-step">
+                                <div class="step">1<span class="step-label">Convocatoria</span></div>
+                                <div class="step">2<span class="step-label">Proyecto</span></div>
+                                <div class="step">3<span class="step-label">Equipo</span></div>
+                                <div class="step">4<span class="step-label">Estado</span></div>
+                                <div class="step">5<span class="step-label">Documentos</span></div>
+                            </div>
+                        </div>
+                        
+                        <form th:action="@{/crearPostulacion}" th:object="${postulacion}" method="post" class="needs-validation" novalidate>
+                            <input type="hidden" th:field="*{id}" />
+                              <!-- Sección: Información de la convocatoria -->
+                            <div class="section-card mb-5">
+                                <h3 class="section-title">Información de la Convocatoria</h3>
+                                <div class="row">
+                                    <div class="col-md-12 mb-4">
+                                        <div class="convocatoria-titulo">
+                                            <h4 th:text="${convocatoriaSeleccionada.titulo}" class="mb-3"></h4>
+                                            <p th:text="${convocatoriaSeleccionada.descripcion}" class="text-muted"></p>
+                                            <div class="convocatoria-info mt-3">
+                                                <span class="badge bg-primary me-2">
+                                                    <i class="fas fa-calendar me-1"></i>
+                                                    <span th:text="${#dates.format(convocatoriaSeleccionada.fechaFin, 'dd/MM/yyyy')}"></span>
+                                                </span>
+                                                <span class="badge bg-info">
+                                                    <i class="fas fa-tag me-1"></i>
+                                                    <span th:text="${convocatoriaSeleccionada.sectorObjetivo}"></span>
+                                                </span>                                            </div>
+                                        </div>
+                                        <!-- Campo oculto para el ID de la convocatoria -->
+                                        <input type="hidden" th:field="*{convocatoria}" />
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Sección: Información del Proyecto -->
+                            <div class="section-card mb-5">
+                                <h3 class="section-title">Información del Proyecto</h3>
+                                <div class="row">
+                                    <div class="col-md-12 mb-4">
+                                        <label for="nombreProyecto" class="form-label">Nombre del Proyecto</label>
+                                        <input type="text" class="form-control" id="nombreProyecto" th:field="*{nombreProyecto}" required maxlength="100">
+                                        <div class="invalid-feedback">Por favor ingresa el nombre del proyecto.</div>
+                                    </div>
+                                      <div class="col-md-12 mb-4">
+                                        <label for="startup" class="form-label">Tu Startup</label>
+                                        <select class="form-select" id="startup" th:field="*{startup}" required>
+                                            <option value="">Selecciona tu startup</option>
+                                            <option th:each="startup : ${startups}" 
+                                                    th:value="${startup.id}" 
+                                                    th:text="${startup.nombreStartup}"></option>
+                                        </select>
+                                        <div class="invalid-feedback">Por favor selecciona tu startup.</div>
+                                        
+                                        <!-- Mensaje cuando no hay startups disponibles -->
+                                        <div th:if="${#lists.isEmpty(startups)}" class="alert alert-warning mt-3">
+                                            <i class="fas fa-exclamation-triangle me-2"></i>
+                                            No tienes startups registradas. Debes crear una startup primero.
+                                            <a th:href="@{/crearStartup}" class="btn btn-sm btn-outline-primary ms-2">
+                                                <i class="fas fa-plus-circle me-1"></i>Crear Startup
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12 mb-4">
+                                        <label for="problemaASolucionar" class="form-label">¿Qué problema soluciona tu proyecto?</label>
+                                        <textarea class="form-control" id="problemaASolucionar" th:field="*{problemaASolucionar}" rows="4" required></textarea>
+                                        <div class="invalid-feedback">Por favor describe el problema que soluciona tu proyecto.</div>
+                                    </div>
+                                    
+                                    <div class="col-md-12 mb-4">
+                                        <label for="solucion" class="form-label">¿Cuál es tu solución?</label>
+                                        <textarea class="form-control" id="solucion" th:field="*{solucion}" rows="4" required></textarea>
+                                        <div class="invalid-feedback">Por favor describe la solución propuesta.</div>
+                                    </div>
+                                    
+                                    <div class="col-md-12 mb-4">
+                                        <label for="clientesObjetivo" class="form-label">¿Quiénes son tus clientes objetivo?</label>
+                                        <textarea class="form-control" id="clientesObjetivo" th:field="*{clientesObjetivo}" rows="3" required></textarea>
+                                        <div class="invalid-feedback">Por favor describe tus clientes objetivo.</div>
+                                    </div>
+                                    
+                                    <div class="col-md-12 mb-4">
+                                        <label for="diferenciador" class="form-label">¿Qué hace diferente tu solución?</label>
+                                        <textarea class="form-control" id="diferenciador" th:field="*{diferenciador}" rows="3" required></textarea>
+                                        <div class="invalid-feedback">Por favor describe qué hace diferente tu solución.</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Sección: Información del Equipo -->
+                            <div class="section-card mb-5">
+                                <h3 class="section-title">Información del Equipo</h3>
+                                <div class="row">
+                                    <div class="col-md-6 mb-4">
+                                        <label for="numeroIntegrantes" class="form-label">Número de Integrantes</label>
+                                        <input type="number" class="form-control" id="numeroIntegrantes" th:field="*{numeroIntegrantes}" required min="1">
+                                        <div class="invalid-feedback">Por favor ingresa el número de integrantes.</div>
+                                    </div>
+                                    
+                                    <div class="col-md-6 mb-4">
+                                        <label for="dineroVentas" class="form-label">Dinero en Ventas (USD)</label>
+                                        <input type="number" class="form-control" id="dineroVentas" th:field="*{dineroVentas}" required step="0.01" min="0">
+                                        <div class="invalid-feedback">Por favor ingresa el monto de ventas.</div>
+                                    </div>
+                                    
+                                    <div class="col-md-12 mb-4">
+                                        <label for="rolesIntegrantes" class="form-label">Roles de los Integrantes</label>
+                                        <textarea class="form-control" id="rolesIntegrantes" th:field="*{rolesIntegrantes}" rows="3" required
+                                                  placeholder="Ej: CEO, CTO, CMO, Desarrollador, Diseñador, etc."></textarea>
+                                        <div class="invalid-feedback">Por favor describe los roles de los integrantes.</div>
+                                    </div>
+                                    
+                                    <div class="col-md-12 mb-4">
+                                        <label for="habilidadesEquipo" class="form-label">Habilidades del Equipo</label>
+                                        <textarea class="form-control" id="habilidadesEquipo" th:field="*{habilidadesEquipo}" rows="3" required></textarea>
+                                        <div class="invalid-feedback">Por favor describe las habilidades del equipo.</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Sección: Estado del Proyecto -->
+                            <div class="section-card mb-5">
+                                <h3 class="section-title">Estado del Proyecto</h3>
+                                <div class="row">
+                                    <div class="col-md-6 mb-4">
+                                        <label for="etapaProyecto" class="form-label">Etapa del Proyecto</label>
+                                        <select class="form-select" id="etapaProyecto" th:field="*{etapaProyecto}" required>
+                                            <option value="">Selecciona una etapa</option>
+                                            <option value="Idea">Idea</option>
+                                            <option value="Prototipo">Prototipo</option>
+                                            <option value="MVP">MVP</option>
+                                            <option value="Tracción Inicial">Tracción Inicial</option>
+                                            <option value="Crecimiento">Crecimiento</option>
+                                            <option value="Expansión">Expansión</option>
+                                        </select>
+                                        <div class="invalid-feedback">Por favor selecciona la etapa del proyecto.</div>
+                                    </div>
+                                    
+                                    <div class="col-md-6 mb-4">
+                                        <label for="fechaPostulacion" class="form-label">Fecha de Postulación</label>
+                                        <input type="date" class="form-control" id="fechaPostulacion" th:field="*{fechaPostulacion}" required>
+                                        <div class="invalid-feedback">Por favor selecciona la fecha de postulación.</div>
+                                    </div>
+                                    
+                                    <div class="col-md-12 mb-4">
+                                        <label for="necesidadesActuales" class="form-label">Necesidades Actuales</label>
+                                        <textarea class="form-control" id="necesidadesActuales" th:field="*{necesidadesActuales}" rows="3" required
+                                                  placeholder="Ej: financiamiento, mentorías, conexiones, etc."></textarea>                                        <div class="invalid-feedback">Por favor describe las necesidades actuales.</div>
+                                    </div>
+
+                                    <!-- Estado se establece automáticamente en el controlador -->
+                                </div>
+                            </div>
+                            
+                            <!-- Sección: Enlaces y Documentos -->
+                            <div class="section-card mb-5">
+                                <h3 class="section-title">Enlaces y Documentos</h3>
+                                <div class="row">
+                                    <div class="col-md-6 mb-4">
+                                        <label for="fotoUrl" class="form-label">URL de la Foto</label>
+                                        <input type="url" class="form-control" id="fotoUrl" th:field="*{fotoUrl}">
+                                    </div>
+                                    
+                                    <div class="col-md-6 mb-4">
+                                        <label for="enlacePaginaWeb" class="form-label">Enlace a Página Web</label>
+                                        <input type="url" class="form-control" id="enlacePaginaWeb" th:field="*{enlacePaginaWeb}">
+                                    </div>
+                                    
+                                    <div class="col-md-12 mb-4">
+                                        <label for="pitch" class="form-label">Pitch (URL)</label>
+                                        <input type="url" class="form-control" id="pitch" th:field="*{pitch}">
+                                    </div>
+                                    
+                                    <div class="col-md-12 mb-4">
+                                        <label for="documentoPropuesta" class="form-label">Documento de Propuesta (URL)</label>
+                                        <input type="url" class="form-control" id="documentoPropuesta" th:field="*{documentoPropuesta}">
+                                    </div>
+                                    
+                                    <div class="col-md-12 mb-4">
+                                        <label for="videoPitch" class="form-label">Video Pitch (URL)</label>
+                                        <input type="url" class="form-control" id="videoPitch" th:field="*{videoPitch}">
+                                    </div>
+                                    
+                                    <div class="col-md-12 mb-4">
+                                        <label for="enlacesAdicionales" class="form-label">Enlaces Adicionales</label>
+                                        <textarea class="form-control" id="enlacesAdicionales" th:field="*{enlacesAdicionales}" rows="3"
+                                                  placeholder="Ej: GitHub, LinkedIn, presentaciones, etc."></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Botones de acción -->
+                            <div class="d-flex justify-content-between mt-5">
+                                <a th:href="@{/listarConvocatorias}" class="btn btn-secondary">Cancelar</a>
+                                <button type="submit" class="btn btn-primary">Enviar Postulación</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Script para validación del formulario -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Fetch all forms to which we want to apply validation
+            var forms = document.querySelectorAll('.needs-validation');
+            
+            // Loop over them and prevent submission
+            Array.prototype.slice.call(forms).forEach(function(form) {
+                form.addEventListener('submit', function(event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });        });
+    </script>    <!-- Estilos CSS para mejorar la apariencia del formulario -->
+    <style>
+        .section-card {
+            background-color: rgba(255, 255, 255, 1); /* Cambiado de 0.8 a 1 para quitar transparencia */
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            margin-bottom: 30px;
+        }
+
+        .alert-danger {
+            background-color: rgba(244, 67, 54, 0.1);
+            border: 1px solid rgba(244, 67, 54, 0.5);
+            color: #d32f2f;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .alert-danger ul {
+            margin-top: 10px;
+            margin-bottom: 0;
+            padding-left: 20px;
+        }
+
+        .alert-danger i {
+            margin-right: 10px;
+        }
+
+        .section-card:hover {
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .section-title {
+            color: #3a3a3a;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .form-control, .form-select {
+            border-radius: 8px;
+            padding: 10px 15px;
+            border: 1px solid #e0e0e0;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #4e73df;
+            box-shadow: 0 0 0 0.25rem rgba(78, 115, 223, 0.25);
+        }
+
+        textarea.form-control {
+            min-height: 100px;
+        }
+
+        .btn {
+            border-radius: 8px;
+            padding: 10px 25px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: #4e73df;
+            border-color: #4e73df;
+        }
+
+        .btn-primary:hover {
+            background-color: #2e59d9;
+            border-color: #2e59d9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(46, 89, 217, 0.3);
+        }
+
+        .btn-secondary {
+            background-color: #858796;
+            border-color: #858796;
+        }
+
+        .btn-secondary:hover {
+            background-color: #717384;
+            border-color: #717384;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(133, 135, 150, 0.3);
+        }
+
+        .form-label {
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #4a4a4a;
+        }
+
+        .invalid-feedback {
+            font-size: 0.85rem;
+        }
+        
+        /* Estilos para el indicador de progreso */
+        .progress-container {
+            margin-bottom: 30px;
+            padding: 15px;
+            border-radius: 10px;
+            background-color: #f8f9fa;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .progress-step {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+        }
+        
+        .progress-step::before {
+            content: '';
+            position: absolute;
+            height: 2px;
+            width: 100%;
+            background-color: #e0e0e0;
+            top: 15px;
+            z-index: 0;
+        }
+        
+        .step {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #4e73df;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            z-index: 1;
+            position: relative;
+        }
+        
+        .step-label {
+            position: absolute;
+            top: 35px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.8rem;
+            color: #4a4a4a;
+            white-space: nowrap;
+        }
+        
+        /* Mejorar aspecto en dispositivos móviles */
+        @media (max-width: 768px) {
+            .section-card {
+                padding: 20px;
+            }
+            
+            .step-label {
+                font-size: 0.7rem;
+            }
+        }
+
+        /* Asegúrate de que el fondo del cuerpo no tenga efecto blur */
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .main-content {
+            padding-top: 70px; /* Para dar espacio al header */
+        }
+
+        .card {
+            background-color: white;
+            border: none;
+        }
+    </style>
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{layout/layout :: head}"></head>
+<link rel="stylesheet" th:href="@{/css/postulacion/listarPostulaciones.css}">
+<style>
+    .alert {
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+    }
+    
+    .alert-success {
+        background-color: rgba(76, 175, 80, 0.1);
+        border: 1px solid rgba(76, 175, 80, 0.5);
+        color: #2e7d32;
+    }
+    
+    .alert-danger {
+        background-color: rgba(244, 67, 54, 0.1);
+        border: 1px solid rgba(244, 67, 54, 0.5);
+        color: #d32f2f;
+    }
+    
+    .alert i {
+        margin-right: 10px;
+        font-size: 18px;
+    }
+</style>
+<body>
+
+    <header th:replace="~{layout/layout :: header}"></header>
+      <div class="banner">
+        <div class="banner-content">
+            <h1 class="main-title">Postulaciones</h1>
+            <p class="banner-subtitle">Revisa y gestiona las postulaciones de proyectos</p>
+        </div>
+        <a th:href="@{/crearPostulacion}" class="btn-crear">
+            <button type="button">Crear Postulación</button>
+        </a>
+    </div>
+
+    <div class="container">
+        <!-- Mensajes de éxito y error -->
+        <div class="alert alert-success" th:if="${mensajeExito}" role="alert">
+            <i class="fas fa-check-circle me-2"></i>
+            <span th:text="${mensajeExito}"></span>
+        </div>
+        
+        <div class="alert alert-danger" th:if="${error}" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i>
+            <span th:text="${error}"></span>
+        </div>
+        
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Buscar postulación por nombre, estado o etapa..." class="search-input">
+            <i class="fas fa-search search-icon"></i>
+        </div>
+        
+        <div class="postulaciones-grid">
+            <div th:each="postulacion: ${postulaciones}" class="postulacion-card" 
+                 th:data-nombre="${postulacion.nombreProyecto}"
+                 th:data-estado="${postulacion.estado}"
+                 th:data-etapa="${postulacion.etapaProyecto}">
+                
+                <div class="card-header">
+                    <div class="img-container">
+                        <img th:src="${postulacion.fotoUrl != null ? postulacion.fotoUrl : '/images/sinfoto.jpg'}" 
+                             alt="Imagen del proyecto" class="project-img">
+                    </div>
+                    <div class="status-badge" th:classappend="${
+                        postulacion.estado == 'Aprobada' ? 'status-approved' : 
+                        postulacion.estado == 'Rechazada' ? 'status-rejected' : 
+                        postulacion.estado == 'En revisión' ? 'status-review' : 'status-pending'
+                    }" th:text="${postulacion.estado}">
+                    </div>
+                </div>
+                
+                <div class="card-body">
+                    <h3 class="project-name" th:text="${postulacion.nombreProyecto}"></h3>
+                    
+                    <div class="project-info">
+                        <div class="info-row">
+                            <span class="info-label">Startup:</span>
+                            <span class="info-value" th:text="${postulacion.startup != null ? postulacion.startup.nombreStartup : 'No asignada'}"></span>
+                        </div>
+                        
+                        <div class="info-row">
+                            <span class="info-label">Etapa:</span>
+                            <span class="info-value" th:text="${postulacion.etapaProyecto}"></span>
+                        </div>
+                        
+                        <div class="info-row">
+                            <span class="info-label">Fecha:</span>
+                            <span class="info-value" th:text="${#dates.format(postulacion.fechaPostulacion, 'dd/MM/yyyy')}"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="card-actions">
+                        <a th:href="@{/verPostulacion/{id}(id=${postulacion.id})}" class="btn-action view">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                        <a th:href="@{/editarPostulacion/{id}(id=${postulacion.id})}" class="btn-action edit">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a th:href="@{/eliminarPostulacion/{id}(id=${postulacion.id})}" class="btn-action delete"
+                           onclick="return confirm('¿Estás seguro de que deseas eliminar esta postulación?')">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="no-results" class="no-results hidden">
+            <i class="fas fa-search"></i>
+            <p>No se encontraron postulaciones que coincidan con tu búsqueda</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('searchInput');
+            const postulacionCards = document.querySelectorAll('.postulacion-card');
+            const noResults = document.getElementById('no-results');
+            
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase().trim();
+                let hasVisibleCards = false;
+                
+                postulacionCards.forEach(card => {
+                    const nombre = card.getAttribute('data-nombre').toLowerCase();
+                    const estado = card.getAttribute('data-estado').toLowerCase();
+                    const etapa = card.getAttribute('data-etapa').toLowerCase();
+                    
+                    if (nombre.includes(searchTerm) || estado.includes(searchTerm) || etapa.includes(searchTerm)) {
+                        card.style.display = 'flex';
+                        hasVisibleCards = true;
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+                
+                if (hasVisibleCards) {
+                    noResults.classList.add('hidden');
+                } else {
+                    noResults.classList.remove('hidden');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
