@@ -1,52 +1,131 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{layout/layout :: head}"></head>
-<body>
+<link rel="stylesheet" th:href="@{/css/usuarios/detalleUsuario.css}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<body class="main-bg">
 
-    <header th:replace="~{layout/layout :: header}"></header>
-<div class="detalle-usuario">
-    <h1>Detalles del Usuario</h1>
+<header th:replace="~{layout/layout :: header}"></header>
 
-    <div class="campo">
-        <label>Documento:</label>
-        <span th:text="${usuarioEditar.documento}"></span>
+<div class="hero-section">
+    <div class="overlay"></div>
+    <div class="hero-content">
+        <h1 class="hero-title">Perfil de Usuario</h1>
+        <p class="hero-subtitle">Miembro de la comunidad StartUp Connect</p>
     </div>
+</div>
 
-    <div class="campo">
-        <label>Nombre:</label>
-        <span th:text="${usuarioEditar.nombreUsu}"></span>
+<div class="container">
+    <div class="page-description">
+        <h2 class="section-title">Detalles del Usuario</h2>
+        <p class="section-description">La información completa del usuario en nuestro sistema StartUp Connect.</p>
     </div>
-
-    <div class="campo">
-        <label>Email:</label>
-        <span th:text="${usuarioEditar.emailUsu}"></span>
-    </div>
-
-    <div class="campo">
-        <label>Teléfono:</label>
-        <span th:text="${usuarioEditar.telefono}"></span>
-    </div>
-
-    <div class="campo">
-        <label>Rol:</label>
-        <span th:text="${usuarioEditar.rol != null ? usuarioEditar.rol.rol : 'No asignado'}"></span>
-    </div>
-
-    <!-- Foto del usuario -->
-    <div class="foto-usuario">
-        <label>Foto:</label>
-        <div class="imagen-container">
-            <img id="preview" alt="Foto del usuario"
-                 class="foto-perfil w-48 h-48 object-cover rounded-xl border-4 border-stone-300 shadow-xl bg-white/70"
-                 th:src="${usuarioEditar.fotoUrl != null ? usuarioEditar.fotoUrl : '/images/isabela.jpg'}">
+    
+    <div class="usuario-content">
+        <!-- Tarjeta de perfil del usuario -->
+        <div class="profile-container" th:classappend="${usuarioEditar.rol != null && usuarioEditar.rol.rol == 'Admin' ? 'admin-role' : (usuarioEditar.rol != null && usuarioEditar.rol.rol == 'Emprendedor' ? 'emprendedor-role' : (usuarioEditar.rol != null && usuarioEditar.rol.rol == 'Inversor' ? 'inversor-role' : ''))}">
+            <div class="profile-header">
+                <div class="profile-avatar">
+                    <img th:src="${usuarioEditar.fotoUrl != null ? usuarioEditar.fotoUrl : '/images/sinfoto.jpg'}" 
+                         alt="Foto del usuario" class="avatar-img">
+                    <div class="status-indicator online"></div>
+                </div>
+                <div class="profile-title">
+                    <h2 class="profile-name" th:text="${usuarioEditar.nombreUsu}"></h2>
+                    <span class="profile-badge" 
+                          th:classappend="${usuarioEditar.rol != null && usuarioEditar.rol.rol == 'Admin' ? 'role-admin' : (usuarioEditar.rol != null && usuarioEditar.rol.rol == 'Emprendedor' ? 'role-emprendedor' : (usuarioEditar.rol != null && usuarioEditar.rol.rol == 'Inversor' ? 'role-inversor' : ''))}"
+                          th:text="${usuarioEditar.rol != null ? usuarioEditar.rol.rol : 'Usuario'}"></span>
+                </div>
+            </div>
+            
+            <div class="profile-bio">
+                <div class="bio-header">
+                    <i class="fas fa-user-circle"></i>
+                    <span th:text="${usuarioEditar.rol != null ? 'Usuario ' + usuarioEditar.rol.rol : 'Usuario'}"></span>
+                </div>
+                <p class="bio-text">Miembro activo de StartUp Connect, contribuyendo al ecosistema de emprendimiento e innovación de nuestra plataforma.</p>
+            </div>
+            
+            <div class="stats-container">
+                <div class="stat-item">
+                    <span class="stat-number">0</span>
+                    <span class="stat-label">Proyectos</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">0</span>
+                    <span class="stat-label">Conexiones</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">0</span>
+                    <span class="stat-label">Eventos</span>
+                </div>
+            </div>
+            
+            <div class="contact-action">
+                <a th:if="${usuarioEditar.emailUsu != null}" 
+                   th:href="@{'mailto:' + ${usuarioEditar.emailUsu}}" 
+                   class="btn-contactar primary">
+                   <i class="fas fa-envelope"></i> Contactar
+                </a>
+                <a th:href="@{/usuario}" class="btn-contactar secondary">
+                    <i class="fas fa-arrow-left"></i> Volver
+                </a>
+            </div>
         </div>
-    </div>
-
-    <!-- Botón para volver -->
-    <div class="acciones">
-        <a th:href="@{/usuario}">
-            <button type="button" class="btn-volver">Volver</button>
-        </a>
+        
+        <div class="info-cards-container">
+            <!-- Tarjeta de Información Personal -->
+            <div class="info-card personal-info">
+                <div class="card-header">
+                    <div class="header-icon">
+                        <i class="fas fa-id-card"></i>
+                    </div>
+                    <h3>Información Personal</h3>
+                </div>
+                <div class="card-body">
+                    <div class="info-row">
+                        <div class="info-label">Documento:</div>
+                        <div class="info-value" th:text="${usuarioEditar.documento}"></div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Nombre:</div>
+                        <div class="info-value" th:text="${usuarioEditar.nombreUsu}"></div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Email:</div>
+                        <div class="info-value" th:text="${usuarioEditar.emailUsu != null ? usuarioEditar.emailUsu : 'No disponible'}"></div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Teléfono:</div>
+                        <div class="info-value" th:text="${usuarioEditar.telefono != null ? usuarioEditar.telefono : 'No disponible'}"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tarjeta de Información del Sistema -->
+            <div class="info-card system-info">
+                <div class="card-header">
+                    <div class="header-icon">
+                        <i class="fas fa-cog"></i>
+                    </div>
+                    <h3>Información del Sistema</h3>
+                </div>
+                <div class="card-body">
+                    <div class="info-row">
+                        <div class="info-label">Rol:</div>
+                        <div class="info-value" th:text="${usuarioEditar.rol != null ? usuarioEditar.rol.rol : 'No asignado'}"></div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Estado:</div>
+                        <div class="info-value">Activo</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Fecha registro:</div>
+                        <div class="info-value">No disponible</div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 

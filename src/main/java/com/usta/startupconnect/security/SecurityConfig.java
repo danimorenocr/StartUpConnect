@@ -18,7 +18,7 @@ public class SecurityConfig {
         http
             .authorizeHttpRequests(authorize -> authorize
                 // Rutas públicas
-                .requestMatchers("/", "/css/**", "/js/**", "/images/**", "/login", "/vitrina", "/register", "/registro").permitAll()
+                .requestMatchers("/", "/css/**", "/js/**", "/images/**", "/login", "/vitrina", "/registro", "/verStartup/**").permitAll()
                 
                 // Rutas para administradores
                 .requestMatchers("/administrador/**", "/usuario/**").hasRole("ADMIN")
@@ -28,7 +28,7 @@ public class SecurityConfig {
                 
                 // Rutas para emprendedores
                 .requestMatchers("/emprendedor/**", "/startup/**", "/postulacion/**").hasAnyRole("ADMIN", "EMPRENDEDOR")
-                
+                //ROL_ADMIN
                 // Rutas compartidas
                 .requestMatchers("/convocatoria/**", "/evento/**").hasAnyRole("ADMIN", "MENTOR", "EMPRENDEDOR")
                 

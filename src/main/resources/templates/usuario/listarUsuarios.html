@@ -4,17 +4,16 @@
     
 
 <body>
-    <header th:replace="~{layout/layout :: header}"></header>
-    <main class="main-content">
-        <!-- Botón Crear Usuario -->
-        <div class="create-user-container">
-            <a th:href="@{${crearUsuario}}" class="banner-btn">Crear Usuario</a>
-        </div>
-        <!-- Banner superior -->
+    <header th:replace="~{layout/layout :: header}"></header>    <main class="main-content">
+        <!-- Banner superior con botón crear usuario -->
         <div class="banner-container">
             <img src="/images/bannerUsuarios.jpg" alt="Banner de Usuarios" class="banner-image">
             <div class="banner-overlay">
                 <h1 class="banner-title">¡Impulsa el futuro,<br>crea nuevos líderes!</h1>
+            </div>
+            <!-- Botón Crear Usuario posicionado sobre el banner -->
+            <div class="create-user-container">
+                <a th:href="@{${crearUsuario}}" class="banner-btn">Crear Usuario</a>
             </div>
         </div>
         <div class="main-content-cards">
@@ -43,10 +42,10 @@
                         <div class="glass-actions-container">
                             <form th:action="@{/eliminarUsuario/{id}(id=${usuario.documento})}" method="post"
                                 onsubmit="return confirmarEliminacion(event, this);" style="display: inline;">
-                                <button type="submit" class="eliminar" title="Eliminar">&#128465;</button>
+                                <button type="submit" class="eliminar" title="Eliminar">✖</button>
                             </form>
                             <a th:href="@{/editarUsuario/{documento}(documento=${usuario.documento})}" class="editar"
-                                title="Editar">&#9999;&#65039;</a>
+                                title="Editar">✎</a>
                             <a th:href="@{/verUsuario/{documento}(documento=${usuario.documento})}"
                                 class="ver-perfil-btn">Ver perfil</a>
                         </div>

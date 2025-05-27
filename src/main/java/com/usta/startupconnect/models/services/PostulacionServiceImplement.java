@@ -20,4 +20,19 @@ public class PostulacionServiceImplement implements PostulacionService {
         return (List<PostulacionEntity>) postulacionDao.findAll();
     }
 
+    @Override
+    @Transactional
+    public void save(PostulacionEntity postulacion) {
+        postulacionDao.save(postulacion);
+    }
+
+    @Override
+    @Transactional
+    public PostulacionEntity findById(Long id) {
+        return postulacionDao.findById(id).orElse(null);
+    }    @Override
+    @Transactional
+    public void deleteById(Long id) {
+        postulacionDao.deleteById(id);
+    }
 }

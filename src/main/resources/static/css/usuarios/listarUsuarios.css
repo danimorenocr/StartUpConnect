@@ -6,20 +6,21 @@ body {
 }
 
 .create-user-container {
-  display: flex;
-  justify-content: flex-end;
-  padding: 20px 32px;
-  margin-left: 18rem;
+  position: absolute;
+  bottom: 20px;
+  left: 40px;
+  z-index: 10;
 }
 
 .banner-container {
-  width: calc(100% - 18rem);
-  margin-left: 18rem;
+  width: calc(100% - 5rem);
+  margin-left: 5rem;
   height: 320px;
   overflow: hidden;
   border-radius: 15px;
   box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
   position: relative;
+  margin-bottom: 2rem;
 }
 
 .banner-image {
@@ -59,16 +60,21 @@ body {
   color: #1e6e8c;
   border: none;
   border-radius: 24px;
-  padding: 10px 28px;
+  padding: 12px 28px;
   font-size: 1rem;
   font-weight: 600;
-  box-shadow: 0 2px 8px rgba(30, 110, 140, 0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   cursor: pointer;
-  transition: background 0.2s, color 0.2s;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
 }
+
 .banner-btn:hover {
   background: #1e6e8c;
   color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
 }
 
 .banner-img {
@@ -80,15 +86,16 @@ body {
 }
 
 .main-content {
-  margin-left: 18rem;
+  margin-left: 5rem;
 }
+
 .main-content-cards {
-  margin-left: 10rem;
-  padding-right: 2rem;
+  margin-left: 0;
+  padding: 0 2rem;
 }
 
 .section-header {
-  margin: 2rem 0 1rem;
+  margin: 0 0 1.5rem;
   padding: 0 1rem;
 }
 
@@ -233,20 +240,21 @@ body {
 .usuario-card-content {
   flex: 1;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   padding: 20px;
   padding-top: 30px;
 }
 
-/* Foto redonda, centrada arriba con borde dinámico basado en el rol */
+/* Foto redonda, ahora ubicada a la izquierda */
 .usuario-foto {
-  width: 90px;
-  height: 90px;
+  width: 80px;
+  height: 80px;
   border-radius: 50%;
   object-fit: cover;
-  margin-bottom: 15px;
+  margin-right: 15px;
+  margin-bottom: 0;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   /* El borde se establecerá dinámicamente según el color del rol */
 }
@@ -270,8 +278,8 @@ body {
 }
 
 .usuario-info {
-  text-align: center;
-  margin-bottom: 15px;
+  text-align: left;
+  margin-bottom: 0;
 }
 
 /* Nombre debajo de la foto, centrado y negrita */
@@ -324,8 +332,8 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   font-size: 1.2rem;
   cursor: pointer;
@@ -340,6 +348,7 @@ body {
 
 .glass-actions-container button.eliminar {
   color: #e74c3c; /* Color rojo para el icono */
+  font-weight: bold;
 }
 
 .glass-actions-container button.eliminar:hover {
@@ -350,6 +359,7 @@ body {
 
 .glass-actions-container a.editar {
   color: #3498db; /* Color azul para el icono */
+  font-size: 1.3rem;
 }
 
 .glass-actions-container a.editar:hover {
