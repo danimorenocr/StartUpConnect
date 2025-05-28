@@ -1,9 +1,9 @@
 package com.usta.startupconnect.controllers;
 
 import com.google.api.services.calendar.model.Event;
-import com.usta.startupconnect.services.GoogleMeetService;
 import com.usta.startupconnect.dto.MeetingResponse;
 import com.usta.startupconnect.exception.MeetingCreationException;
+import com.usta.startupconnect.models.services.GoogleMeetService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
