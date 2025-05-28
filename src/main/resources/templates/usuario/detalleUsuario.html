@@ -33,10 +33,21 @@
                 <div class="profile-title">
                     <h2 class="profile-name" th:text="${usuarioEditar.nombreUsu}"></h2>
                     <span class="profile-badge" 
+<<<<<<< HEAD
                           th:classappend="${usuarioEditar.rol != null && usuarioEditar.rol.rol == 'Admin' ? 'role-admin' : (usuarioEditar.rol != null && usuarioEditar.rol.rol == 'Emprendedor' ? 'role-emprendedor' : (usuarioEditar.rol != null && usuarioEditar.rol.rol == 'Inversor' ? 'role-inversor' : ''))}"
                           th:text="${usuarioEditar.rol != null ? usuarioEditar.rol.rol : 'Usuario'}"></span>
                 </div>
             </div>
+=======
+      th:classappend="${usuarioEditar.rol != null && usuarioEditar.rol.rol == 'Admin' ? 'role-admin' : 
+                     (usuarioEditar.rol.rol == 'Emprendedor' ? 'role-emprendedor' : 
+                     (usuarioEditar.rol.rol == 'Inversor' ? 'role-inversor' : ''))}"
+      th:text="${usuarioEditar.rol != null ? usuarioEditar.rol.rol : 'Usuario'}">
+</span>
+                </div>
+            </div>
+       
+>>>>>>> a20539b8149cf573a45b2872111562637ed9f2d6
             
             <div class="profile-bio">
                 <div class="bio-header">
@@ -106,6 +117,7 @@
                     <div class="info-row">
                         <div class="info-label">Rol:</div>
                         <div class="info-value" th:text="${usuarioEditar.rol != null ? usuarioEditar.rol.rol : 'No asignado'}"></div>
+<<<<<<< HEAD
                     </div>                    <div class="info-row">
                         <div class="info-label">Estado:</div>
                         <div class="info-value">Activo</div>
@@ -114,6 +126,13 @@
                         <div class="info-label">Fecha de creación:</div>
                         <div class="info-value" th:text="${usuarioEditar.fecha_creacion != null ? #temporals.format(usuarioEditar.fecha_creacion, 'dd/MM/yyyy') : 'No disponible'}"></div>
                     </div>
+=======
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Estado:</div>
+                        <div class="info-value">Activo</div>
+                    </div>
+>>>>>>> a20539b8149cf573a45b2872111562637ed9f2d6
                 </div>
             </div>
         </div>

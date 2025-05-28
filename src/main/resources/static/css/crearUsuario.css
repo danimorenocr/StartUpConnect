@@ -1,4 +1,3 @@
-
 body {
     margin: 0;
     font-family: 'Poppins', sans-serif;
@@ -163,15 +162,32 @@ body {
     height: 53px;
     background: #F3F6FB;
     border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
 }
 
 .role-btn {
-    position: absolute;
-    width: 165px;
-    height: 43px;
-    background: #F3F6FB;
-    box-shadow: 0 4px 4px rgba(0,0,0,0.25);
-    border-radius: 20px;
+    position: static !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 160px !important;
+    min-height: 48px;
+    font-size: 1.08rem;
+    padding: 0.5rem 1.7rem;
+    margin: 0 !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.10);
+    border-radius: 2rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+    flex-shrink: 0;
+    white-space: nowrap;
+    outline: none;
+    /* Para evitar que el borde de selección se corte */
+    box-sizing: border-box;
 }
 
 .role-text {
@@ -219,4 +235,35 @@ body {
     width: 234px;
     text-align: center;
     font-size: 15px;
+}
+
+@media (min-width: 768px) {
+  #roleSelectorContainer {
+    flex-direction: row;
+    gap: 5rem !important; /* separación horizontal exagerada en desktop */
+  }
+}
+
+/*
+  Mostrar los botones de rol siempre en una sola línea horizontal, incluso en mobile.
+  Se fuerza flex-direction: row y se mantiene el gap exagerado.
+*/
+#roleSelectorContainer {
+  display: flex;
+  flex-direction: row !important;
+  gap: 1.2rem !important; /* menos espacio entre botones */
+  justify-content: center;
+  align-items: center;
+  flex-wrap: nowrap !important;
+  width: 100%;
+  overflow-x: auto;
+  padding-bottom: 0.2rem; /* menos espacio inferior */
+  margin-bottom: 0.5rem; /* menos separación con el siguiente bloque */
+  margin-top: 1.2rem; /* baja el grupo de botones */
+}
+
+.role-btn:active, .role-btn:focus, .role-btn.ring-4 {
+  outline: none !important;
+  box-shadow: 0 0 0 4px #ff9800 !important;
+  z-index: 1;
 }
