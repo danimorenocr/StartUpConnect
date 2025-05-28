@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/layout :: head}">
+    <title>Crear Servicio en Render</title>
+</head>
+<body>
+    <header th:replace="~{layout/layout :: header}"></header>    <div class="container mx-auto px-4 sm:px-6 py-8">
+        <div class="text-center mb-10">
+            <h1 class="text-3xl font-bold text-blue-600 mb-3">Crear Nuevo Servicio en Render</h1>
+            <p class="text-gray-600">Crea y despliega un nuevo servicio en la plataforma Render</p>
+        </div>
+        
+        <!-- Alerta de mensaje (éxito/error) -->
+        <div th:if="${mensaje}" class="mb-6 p-4 rounded-lg shadow-md" th:classappend="${alertClass}">
+            <p th:text="${mensaje}" class="font-medium"></p>
+        </div>        <!-- Formulario de creación -->
+        <div class="bg-white bg-opacity-70 backdrop-blur-lg rounded-lg shadow-xl p-6 max-w-4xl mx-auto">
+            <form th:action="@{/render/crear-servicio}" th:object="${serviceCreateDTO}" method="post" class="space-y-6">                <!-- Información básica -->
+                <div class="border-b border-gray-300 pb-5 mb-5">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Información Básica</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">                        <div>
+                            <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Nombre del Servicio*</label>
+                            <input type="text" id="name" th:field="*{name}" required
+                                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                                placeholder="my-awesome-app">
+                        </div>
+                        
+                        <div>
+                            <label for="type" class="block text-sm font-medium text-gray-700 mb-2">Tipo de Servicio*</label>
+                            <select id="type" th:field="*{type}" required
+                                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                                <option value="">Seleccionar tipo...</option>
+                                <option value="web_service">Servicio Web</option>
+                                <option value="static_site">Sitio Estático</option>
+                                <option value="background_worker">Worker en Segundo Plano</option>
+                                <option value="cron_job">Tarea Programada (Cron)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>                  <!-- Repositorio -->
+                <div class="border-b border-gray-300 pb-5 mb-5">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Repositorio</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">                        <div>
+                            <label for="repo" class="block text-sm font-medium text-gray-700 mb-2">URL del Repositorio*</label>
+                            <input type="text" id="repo" th:field="*{repo}" required
+                                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                                placeholder="https://github.com/usuario/repositorio">
+                        </div>
+                        
+                        <div>
+                            <label for="branch" class="block text-sm font-medium text-gray-700 mb-2">Rama</label>
+                            <input type="text" id="branch" th:field="*{branch}"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                                placeholder="main">
+                        </div>
+                        
+                        <div class="md:col-span-2">
+                            <div class="flex items-center">
+                                <input type="checkbox" id="autoDeploy" th:field="*{autoDeploy}" class="h-4 w-4 text-blue-600 border-gray-300 rounded">
+                                <label for="autoDeploy" class="ml-2 block text-sm text-gray-700">
+                                    Despliegue automático (cuando se detecten cambios en el repositorio)
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>                  <!-- Configuración -->
+                <div class="border-b border-gray-300 pb-5 mb-5">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Configuración</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div>
+                            <label for="plan" class="block text-sm font-medium text-gray-700 mb-1">Plan</label>
+                            <select id="plan" th:field="*{plan}"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                                <option value="free">Gratuito</option>
+                                <option value="starter">Starter</option>
+                                <option value="standard">Standard</option>
+                                <option value="pro">Pro</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label for="region" class="block text-sm font-medium text-gray-700 mb-1">Región</label>
+                            <select id="region" th:field="*{region}"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                                <option value="oregon">Oregon (us-west)</option>
+                                <option value="ohio">Ohio (us-east)</option>
+                                <option value="frankfurt">Frankfurt (eu-central)</option>
+                                <option value="singapore">Singapore (ap-southeast)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>                  <!-- Comandos (condicional según el tipo) -->
+                <div class="border-b border-gray-300 pb-5 mb-5">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Comandos de Construcción y Ejecución</h2>
+                    
+                    <div class="grid grid-cols-1 gap-5">                        <div>
+                            <label for="buildCommand" class="block text-sm font-medium text-gray-700 mb-2">Comando de Construcción</label>
+                            <input type="text" id="buildCommand" th:field="*{buildCommand}"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                                placeholder="npm install && npm run build">
+                        </div>
+                        
+                        <div>
+                            <label for="startCommand" class="block text-sm font-medium text-gray-700 mb-2">Comando de Inicio</label>
+                            <input type="text" id="startCommand" th:field="*{startCommand}"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                                placeholder="npm start">
+                        </div>
+                        
+                        <div id="publishDirContainer" style="display: none;">
+                            <label for="publishDirectory" class="block text-sm font-medium text-gray-700 mb-2">Directorio de Publicación (para sitios estáticos)</label>
+                            <input type="text" id="publishDirectory" th:field="*{publishDirectory}"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                                placeholder="dist">
+                        </div>
+                    </div>
+                </div>                  <!-- Variables de entorno -->
+                <div class="border-b border-gray-300 pb-5 mb-5">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-semibold text-gray-800">Variables de Entorno</h2>
+                        <button type="button" id="add-env-var" class="inline-flex items-center px-4 py-2 border border-blue-500 text-blue-500 rounded-md hover:bg-blue-500 hover:text-white transition-colors duration-300">
+                            <i class="fas fa-plus mr-2"></i>
+                            Añadir Variable
+                        </button>
+                    </div>
+                    
+                    <div id="env-vars-container" class="space-y-4">
+                        <!-- Las variables de entorno se añadirán aquí dinámicamente -->
+                    </div>
+                    
+                    <div class="mt-4 text-sm text-gray-600 italic">
+                        <p>Las variables de entorno son pares clave-valor que permiten configurar tu aplicación.</p>
+                    </div>
+                </div>
+                  <!-- Botones de acción -->
+                <div class="flex justify-end space-x-5 pt-2">
+                    <a th:href="@{/render/services}" class="px-6 py-3 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
+                        Cancelar
+                    </a>
+                    <button type="submit" class="px-6 py-3 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
+                        Crear Servicio
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Spinner de envío del formulario -->
+    <div id="form-submitting" class="hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div class="bg-white p-8 rounded-lg shadow-xl flex flex-col items-center">
+            <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500 mb-4"></div>
+            <p class="text-lg text-gray-700">Creando servicio en Render...</p>
+            <p class="text-sm text-gray-500 mt-2">Esto puede tomar unos momentos</p>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const typeSelect = document.getElementById('type');
+            const publishDirContainer = document.getElementById('publishDirContainer');
+            const envVarsContainer = document.getElementById('env-vars-container');
+            
+            // Mostrar/ocultar campos según el tipo de servicio seleccionado
+            typeSelect.addEventListener('change', function() {
+                if (this.value === 'static_site') {
+                    publishDirContainer.style.display = 'block';
+                } else {
+                    publishDirContainer.style.display = 'none';
+                }
+            });
+            
+            // Inicializar estado
+            if (typeSelect.value === 'static_site') {
+                publishDirContainer.style.display = 'block';
+            }
+            
+            // Manejo de variables de entorno
+            const addEnvVarButton = document.getElementById('add-env-var');
+            let envVarCount = 0;
+              addEnvVarButton.addEventListener('click', function() {
+                const envVarRow = document.createElement('div');
+                envVarRow.className = 'grid grid-cols-1 md:grid-cols-2 gap-4 items-center relative pb-4 mb-4 border-b border-gray-200';
+                envVarRow.innerHTML = `
+                    <div class="env-var-key">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Nombre de Variable</label>
+                        <input type="text" name="environmentVariables[${envVarCount}].key" 
+                            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                            placeholder="NOMBRE_VARIABLE">
+                    </div>
+                    <div class="env-var-value-container flex items-center">
+                        <div class="flex-grow mr-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Valor</label>
+                            <input type="text" name="environmentVariables[${envVarCount}].value" 
+                                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                                placeholder="valor">
+                        </div>
+                        <button type="button" class="remove-env-var h-10 w-10 flex items-center justify-center text-red-500 hover:text-red-700 mt-6">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                
+                envVarsContainer.appendChild(envVarRow);
+                
+                // Agregar event listener para eliminar variable
+                envVarRow.querySelector('.remove-env-var').addEventListener('click', function() {
+                    envVarRow.remove();
+                });
+                
+                envVarCount++;
+            });
+            
+            // Añadir una variable por defecto para facilitar la entrada
+            addEnvVarButton.click();
+        });
+        
+        // Mostrar el spinner y deshabilitar el formulario al enviar
+        document.querySelector('form').addEventListener('submit', function() {
+            document.getElementById('form-submitting').classList.remove('hidden');
+            // Deshabilitar todos los campos del formulario
+            this.querySelectorAll('input, select, button').forEach(function(el) {
+                el.setAttribute('disabled', 'true');
+            });
+        });
+    </script>
+      <!-- Estilos adicionales específicos para esta página -->
+    <style>
+        body {
+            background-color: #f9fafb;
+        }
+        .container {
+            max-width: 1200px;
+        }
+        .alert-success {
+            background-color: #d1fae5;
+            border-color: #10b981;
+            color: #065f46;
+        }
+        .alert-danger {
+            background-color: #fee2e2;
+            border-color: #ef4444;
+            color: #b91c1c;
+        }        /* Mejoras para evitar que los campos se recorten */
+        input, select {
+            width: 100%;
+            box-sizing: border-box;
+            min-height: 42px;
+            padding: 10px 14px;
+            border-radius: 6px;
+            border: 1px solid #d1d5db;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            margin-bottom: 8px;
+            font-size: 14px;
+            display: block;
+        }
+        input:focus, select:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+        .space-y-4 > * {
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+        }
+        .space-y-6 > * {
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        /* Ensure form containers have proper spacing */
+        .form-group {
+            margin-bottom: 16px;
+        }        /* Ajuste para dispositivos móviles */
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr !important;
+                gap: 12px !important;
+            }
+            .flex.items-center.space-x-4 {
+                flex-direction: column;
+                align-items: flex-start;
+                margin-bottom: 1rem;
+            }
+            .flex.items-center.space-x-4 > * {
+                margin-bottom: 0.5rem;
+                width: 100%;
+            }
+            .flex.items-center.space-x-4 > button {
+                align-self: center;
+                width: auto;
+                margin-top: 0.5rem;
+            }
+            h2 {
+                font-size: 1.1rem;
+            }
+            .px-4 {
+                padding-left: 0.75rem;
+                padding-right: 0.75rem;
+            }
+            .py-2 {
+                padding-top: 0.5rem;
+                padding-bottom: 0.5rem;
+            }
+            .container {
+                padding-left: 0.75rem;
+                padding-right: 0.75rem;
+            }
+            .p-4, .p-6 {
+                padding: 1rem;
+            }
+            .space-y-6 > * {
+                margin-top: 1rem;
+                margin-bottom: 1rem;
+            }
+            /* Improve form inputs on mobile */
+            input, select {
+                font-size: 16px; /* Prevent iOS zoom on focus */
+                padding: 12px;
+            }
+            /* Adjust env vars container on mobile */
+            #env-vars-container .grid {
+                grid-template-columns: 1fr !important;
+            }
+            .remove-env-var {
+                position: absolute;
+                right: 0;
+                top: 0;
+            }
+        }        /* Mejorar la visibilidad de los campos */
+        input, select {
+            background-color: #ffffff;
+        }
+        input::placeholder {
+            color: #9ca3af;
+        }
+        /* Destacar campos obligatorios */
+        label[for="name"]::after,
+        label[for="type"]::after,
+        label[for="repo"]::after {
+            content: " *";
+            color: #ef4444;
+        }
+        /* Mejorar márgenes y espaciados */
+        .grid {
+            gap: 20px;
+        }
+        .border-b {
+            padding-bottom: 24px;
+            margin-bottom: 24px;
+        }
+        /* Corregir problemas de espaciado en el contenedor de variables de entorno */
+        #env-vars-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        #env-vars-container .grid {
+            margin-bottom: 0;
+        }
+        /* Mejorar la apariencia de botones */
+        button[type="submit"], button[type="button"], a.px-6 {
+            height: auto;
+            min-height: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.5;
+        }
+        /* Evitar overflow en campos de texto largo */
+        input[type="text"] {
+            word-break: break-word;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    </style>
+</body>
+</html>

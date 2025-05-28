@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/layout :: head}">
+    <title>Servicios de Render</title>
+</head>
+<body>
+    <header th:replace="~{layout/layout :: header}"></header>
+
+    <div class="container mx-auto px-4 py-8">
+        <div class="text-center mb-10">
+            <h1 class="text-3xl font-bold text-blue-600 mb-2">Servicios de Render</h1>
+            <p class="text-gray-600 mb-4">Monitorea y administra todos tus servicios en la plataforma Render</p>
+            
+            <div class="flex flex-wrap justify-center gap-4 mt-6">
+                <div class="bg-white bg-opacity-60 backdrop-blur-sm p-3 rounded-lg shadow-sm flex items-center">
+                    <i class="fas fa-server text-blue-500 mr-2"></i>
+                    <span>Servicios Web</span>
+                </div>
+                <div class="bg-white bg-opacity-60 backdrop-blur-sm p-3 rounded-lg shadow-sm flex items-center">
+                    <i class="fas fa-file-code text-blue-500 mr-2"></i>
+                    <span>Sitios Estáticos</span>
+                </div>
+                <div class="bg-white bg-opacity-60 backdrop-blur-sm p-3 rounded-lg shadow-sm flex items-center">
+                    <i class="fas fa-cogs text-blue-500 mr-2"></i>
+                    <span>Workers</span>
+                </div>
+                <div class="bg-white bg-opacity-60 backdrop-blur-sm p-3 rounded-lg shadow-sm flex items-center">
+                    <i class="fas fa-database text-blue-500 mr-2"></i>
+                    <span>Bases de Datos</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Spinner de carga -->
+        <div id="loading" class="flex justify-center items-center py-10">
+            <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500"></div>
+            <p class="ml-4 text-lg text-gray-600">Cargando servicios...</p>
+        </div>
+
+        <!-- Contenedor de servicios -->
+        <div id="services-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 hidden">
+            <!-- Los servicios se cargarán aquí dinámicamente -->
+        </div>        <!-- Mensaje de error -->
+        <div id="error-message" class="hidden bg-red-100 border border-red-400 text-red-700 px-6 py-4 rounded-lg shadow-md" role="alert">
+            <div class="flex items-start">
+                <div class="flex-shrink-0">
+                    <i class="fas fa-exclamation-circle text-red-500 text-xl mr-3"></i>
+                </div>
+                <div>
+                    <h3 class="font-bold text-lg mb-2">Error al cargar los servicios</h3>
+                    <p class="text-md" id="error-text">Hubo un problema al comunicarse con la API de Render.</p>
+                    <div class="mt-4 text-sm text-red-600">
+                        <p>Posibles causas:</p>
+                        <ul class="list-disc list-inside ml-2 mt-1">
+                            <li>La API key de Render puede ser inválida o haber expirado</li>
+                            <li>El servidor de Render podría estar experimentando problemas</li>
+                            <li>Su conexión a internet podría estar teniendo problemas</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Botón para crear nuevo servicio -->
+        <div class="flex justify-end mb-6">
+            <a href="/render/crear-servicio" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                <i class="fas fa-plus mr-2"></i>
+                Crear nuevo servicio
+            </a>
+        </div>
+        
+        <!-- Mensaje de éxito -->
+        <div th:if="${mensaje}" class="mb-6 p-4 rounded-lg shadow-md" th:classappend="${alertClass}">
+            <p th:text="${mensaje}" class="font-medium"></p>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+            const loadingElement = document.getElementById('loading');
+            const servicesContainer = document.getElementById('services-container');
+            const errorMessage = document.getElementById('error-message');
+            const errorText = document.getElementById('error-text');            // Función para formatear fecha con manejo de errores
+            function formatDate(dateString) {
+                try {
+                    if (!dateString) return 'Fecha no disponible';
+                    
+                    const date = new Date(dateString);
+                    
+                    // Verificar si la fecha es válida (evitar 1969/1970)
+                    if (isNaN(date.getTime()) || date.getFullYear() < 2000) {
+                        return 'Fecha no disponible';
+                    }
+                    
+                    return date.toLocaleDateString('es-ES', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                } catch (e) {
+                    console.error('Error al formatear fecha:', e, dateString);
+                    return 'Fecha no disponible';
+                }
+            }
+
+            // Función para obtener el color de estado
+            function getStatusColor(status) {
+                switch(status) {
+                    case 'live':
+                        return 'bg-green-100 text-green-800 border-green-300';
+                    case 'building':
+                        return 'bg-yellow-100 text-yellow-800 border-yellow-300';
+                    case 'deploying':
+                        return 'bg-blue-100 text-blue-800 border-blue-300';
+                    case 'crashed':
+                        return 'bg-red-100 text-red-800 border-red-300';
+                    default:
+                        return 'bg-gray-100 text-gray-800 border-gray-300';
+                }
+            }
+
+            // Función para obtener un icono para cada tipo de servicio
+            function getServiceTypeIcon(type) {
+                switch(type) {
+                    case 'web_service':
+                        return 'fa-globe';
+                    case 'static_site':
+                        return 'fa-file-code';
+                    case 'background_worker':
+                        return 'fa-cogs';
+                    case 'cron_job':
+                        return 'fa-clock';
+                    case 'redis':
+                        return 'fa-database';
+                    case 'postgresql':
+                        return 'fa-database';
+                    default:
+                        return 'fa-server';
+                }
+            }            // Cargar los servicios
+            fetch('/render/api/services')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error al cargar los servicios: ' + response.statusText + ' (' + response.status + ')');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    loadingElement.classList.add('hidden');
+                    servicesContainer.classList.remove('hidden');
+                      console.log('Datos recibidos:', data);
+                    
+                    // Verificar la estructura del objeto de datos
+                    let servicesList = [];
+                    if (Array.isArray(data)) {
+                        // Si la respuesta es directamente un array
+                        servicesList = data;
+                    } else if (data && data.services && Array.isArray(data.services)) {
+                        // Si la respuesta es un objeto con una propiedad services que es un array
+                        servicesList = data.services;
+                    } else if (data) {
+                        // Si la respuesta es un objeto pero no tiene un array services
+                        servicesList = [data]; // Tratar el objeto como un único servicio
+                    }
+                    
+                    // Verificar si hay servicios
+                    if (servicesList.length === 0) {
+                        servicesContainer.innerHTML = '<p class="text-center col-span-full text-gray-500">No se encontraron servicios activos.</p>';
+                        return;
+                    }
+                    
+                    console.log('Servicios procesados:', servicesList);
+
+                    // Ordenar servicios por actualización más reciente (si tienen fecha)
+                    servicesList.sort((a, b) => {
+                        const dateA = a.updatedAt ? new Date(a.updatedAt).getTime() : 0;
+                        const dateB = b.updatedAt ? new Date(b.updatedAt).getTime() : 0;
+                        return dateB - dateA;
+                    });
+
+                    // Renderizar cada servicio
+                    servicesList.forEach(service => {
+                        // Verificar si el servicio tiene datos válidos
+                        if (!service) return;
+                        
+                        const statusValue = service.status && service.status.status ? service.status.status : 'unknown';
+                        const statusColor = getStatusColor(statusValue);
+                        const typeIcon = getServiceTypeIcon(service.type || 'unknown');
+                          // Safecheck para valores posiblemente null o undefined
+                        const serviceName = service.name || 'Servicio sin nombre';
+                        const serviceId = service.id || 'ID no disponible';
+                        const serviceType = service.type || 'Tipo desconocido';
+                        const statusText = service.status && service.status.status ? service.status.status : 'Estado desconocido';
+                        const branch = service.branch || 'default';
+                        
+                        // Verificar las fechas para evitar 1969/1970 (timestamp 0 o negativo)
+                        let updatedDate = service.updatedAt;
+                        if (!updatedDate || new Date(updatedDate).getFullYear() < 2000) {
+                            updatedDate = new Date().toISOString(); // Usar fecha actual si es inválida
+                        }
+                        
+                        let createdDate = service.createdAt;
+                        if (!createdDate || new Date(createdDate).getFullYear() < 2000) {
+                            createdDate = new Date().toISOString(); // Usar fecha actual si es inválida
+                        }
+                        
+                        const serviceCard = document.createElement('div');
+                        serviceCard.className = 'bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow duration-300';
+                        serviceCard.innerHTML = `
+                            <div class="p-5">
+                                <div class="flex justify-between items-start mb-4">
+                                    <div>
+                                        <h2 class="text-xl font-semibold text-gray-800">${serviceName}</h2>
+                                        <p class="text-sm text-gray-500">ID: ${serviceId}</p>
+                                    </div>
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${statusColor}">
+                                        ${statusText}
+                                    </span>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <div class="flex items-center mb-2">
+                                        <i class="fas ${typeIcon} text-blue-500 mr-2"></i>
+                                        <p class="text-gray-700">${serviceType}</p>
+                                    </div>
+                                    ${service.repo ? `
+                                    <div class="flex items-center mb-2">
+                                        <i class="fas fa-code-branch text-blue-500 mr-2"></i>
+                                        <p class="text-gray-700">Rama: ${branch}</p>
+                                    </div>` : ''}
+                                    <div class="flex items-center">
+                                        <i class="fas fa-clock text-blue-500 mr-2"></i>
+                                        <p class="text-gray-700">Actualizado: ${formatDate(updatedDate)}</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex justify-between items-center pt-3 border-t border-gray-200">
+                                    <span class="inline-flex items-center text-xs font-medium">
+                                        <i class="fas fa-calendar-alt text-blue-500 mr-1"></i>
+                                        Creado: ${formatDate(createdDate)}
+                                    </span>
+                                    <a href="https://dashboard.render.com/web/${serviceId}" target="_blank" class="inline-flex items-center px-3 py-1 border border-blue-500 text-blue-500 rounded-md hover:bg-blue-500 hover:text-white transition-colors duration-300">
+                                        <i class="fas fa-external-link-alt mr-1"></i>
+                                        Ver en Render
+                                    </a>
+                                </div>
+                            </div>
+                        `;
+                        
+                        servicesContainer.appendChild(serviceCard);
+                    });                })
+                .catch(error => {
+                    loadingElement.classList.add('hidden');
+                    errorMessage.classList.remove('hidden');
+                    errorText.textContent = error.message;
+                    console.error('Error:', error);
+                    
+                    // Mostrar opción para ver el JSON crudo (ayuda a depurar)
+                    const debugButton = document.createElement('button');
+                    debugButton.className = 'mt-4 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded';
+                    debugButton.textContent = 'Ver respuesta JSON (depuración)';
+                    debugButton.onclick = function() {
+                        fetch('/render/api/services/raw')
+                            .then(response => response.text())
+                            .then(text => {
+                                const pre = document.createElement('pre');
+                                pre.className = 'mt-4 bg-gray-800 text-white p-4 rounded overflow-auto max-h-96';
+                                pre.textContent = text || 'No hay respuesta disponible';
+                                errorMessage.appendChild(pre);
+                                debugButton.disabled = true;
+                            })
+                            .catch(e => {
+                                alert('Error al obtener el JSON: ' + e.message);
+                            });
+                    };
+                    errorMessage.appendChild(debugButton);
+                    
+                    // Mostrar botón para reintentar
+                    const retryButton = document.createElement('button');
+                    retryButton.className = 'ml-4 mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded';
+                    retryButton.textContent = 'Reintentar';
+                    retryButton.onclick = function() {
+                        window.location.reload();
+                    };
+                    errorMessage.appendChild(retryButton);
+                });
+        });
+    </script>
+
+    <!-- Estilos adicionales específicos para esta página -->
+    <style>
+        body {
+            background-color: #f9fafb;
+        }
+        .container {
+            max-width: 1200px;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .grid > div {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        .grid > div:nth-child(1) { animation-delay: 0.1s; }
+        .grid > div:nth-child(2) { animation-delay: 0.2s; }
+        .grid > div:nth-child(3) { animation-delay: 0.3s; }
+        .grid > div:nth-child(4) { animation-delay: 0.4s; }
+        .grid > div:nth-child(5) { animation-delay: 0.5s; }
+        .grid > div:nth-child(6) { animation-delay: 0.6s; }
+    </style>
+</body>
+</html>

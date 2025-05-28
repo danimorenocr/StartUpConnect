@@ -4,6 +4,12 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+# Sensitive configuration and credentials
+src/main/resources/credentials/credentials.json
+*.env
+.env
+.env.*
+
 ### STS ###
 .apt_generated
 .classpath
