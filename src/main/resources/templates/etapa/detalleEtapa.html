@@ -2,7 +2,8 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{layout/layout :: head}"></head>
 <body>
-
+    <!-- Añadir la hoja de estilo después del head para que no sea reemplazada -->
+    <link rel="stylesheet" th:href="@{/css/etapa/detalleEtapa.css}">
     <header th:replace="~{layout/layout :: header}"></header>
 
 <div class="container mt-4">
@@ -29,15 +30,59 @@
                 <div class="col-md-9" th:text="${#dates.format(etapaDetalle.fechaInicio, 'dd/MM/yyyy')}"></div>
             </div>
             
-            <!-- Fecha de Fin -->
-            <div class="row mb-3">
+            <!-- Fecha de Fin -->            <div class="row mb-3">
                 <div class="col-md-3 fw-bold">Fecha de Fin:</div>
                 <div class="col-md-9" th:text="${#dates.format(etapaDetalle.fechaFin, 'dd/MM/yyyy')}"></div>
             </div>
-           
+            
+            <!-- Mentor -->
+            <div class="row mb-3">
+                <div class="col-md-3 fw-bold">Mentor:</div>
+                <div class="col-md-9" th:text="${etapaDetalle.mentor.usuario.nombreUsu}"></div>
+            </div>
         </div>
         
+        <!-- Sección de tareas asociadas -->
+        <div class="card-body tareas-section">
+            <h2 class="tareas-title">Tareas Asociadas</h2>
+            
+            <div th:if="${tareas != null && !tareas.empty}">
+                <table class="tareas-table">
+                    <thead>
+                        <tr>
+                            <th>Título</th>
+                            <th>Descripción</th>
+                            <th>Fecha de Entrega</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="tarea: ${tareas}">
+                            <td>[[${tarea.titulo}]]</td>
+                            <td class="descripcion-column">[[${tarea.descripcion}]]</td>
+                            <td>[[${#dates.format(tarea.fechaEntrega, 'dd/MM/yyyy')}]]</td>
+                            <td class="actions-column">
+                                <a th:href="@{/verTarea/{id}(id=${tarea.id})}" class="btn-view">Ver</a>
+                                <a th:href="@{/editarTarea/{id}(id=${tarea.id})}" class="btn-edit-task">Editar</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div th:if="${tareas == null || tareas.empty}" class="no-tareas-message">
+                No hay tareas asociadas a esta etapa.
+            </div>
+            <div class="add-task-container">
+                <a th:href="@{/crearTarea}" class="btn-add-task">Nueva Tarea</a>
+            </div>
+        </div>
         
+        <div class="card-footer">
+            <div class="actions-container">
+                <a th:href="@{/editarEtapa/{id}(id=${etapaDetalle.id})}" class="btn-edit">Editar</a>
+                <a th:href="@{/etapa}" class="btn-back">Volver</a>
+            </div>
+        </div>
     </div>
 </div>
 

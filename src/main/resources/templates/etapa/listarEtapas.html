@@ -4,7 +4,8 @@
 <head th:replace="~{layout/layout :: head}"></head>
 
 <body>
-
+    <!-- Añadir la hoja de estilo después del head para que no sea reemplazada -->
+    <link rel="stylesheet" th:href="@{/css/etapa/listarEtapa.css}">
     <header th:replace="~{layout/layout :: header}"></header>
     <h1>Listado de etapas</h1>
 

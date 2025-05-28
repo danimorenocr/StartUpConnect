@@ -1,5 +1,6 @@
 package com.usta.startupconnect.models.services;
 
+import com.usta.startupconnect.entities.EtapaEntity;
 import com.usta.startupconnect.entities.TareaEntity;
 import com.usta.startupconnect.models.dao.TareaDao;
 
@@ -36,5 +37,11 @@ public class TareaServiceImplement implements TareaService {
     @Transactional
     public void deleteById(Long id) {
         tareaDao.deleteById(id);
+    }
+    
+    @Override
+    @Transactional
+    public List<TareaEntity> findByEtapa(EtapaEntity etapa) {
+        return tareaDao.findByEtapa(etapa);
     }
 }

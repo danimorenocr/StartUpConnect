@@ -2,7 +2,8 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{layout/layout :: head}"></head>
 <body>
-
+    <!-- Añadir la hoja de estilo después del head para que no sea reemplazada -->
+    <link rel="stylesheet" th:href="@{/css/tarea/crearTarea.css}">
     <header th:replace="~{layout/layout :: header}"></header>
 
 <div class="container mt-4">

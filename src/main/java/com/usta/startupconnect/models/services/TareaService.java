@@ -2,6 +2,7 @@ package com.usta.startupconnect.models.services;
 
 import java.util.List;
 
+import com.usta.startupconnect.entities.EtapaEntity;
 import com.usta.startupconnect.entities.TareaEntity;
 
 public interface TareaService {
@@ -12,5 +13,6 @@ public interface TareaService {
     public TareaEntity findById(Long id);
 
     public void deleteById(Long id);
-
+    
+    public List<TareaEntity> findByEtapa(EtapaEntity etapa);
 }

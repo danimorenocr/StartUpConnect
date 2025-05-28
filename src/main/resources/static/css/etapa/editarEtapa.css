@@ -1,0 +1,124 @@
+/* Estilos para el formulario de edición de etapas */
+:root {
+  --primary-color: #3498db;
+  --secondary-color: #2980b9;
+  --accent-color: #f39c12;
+  --danger-color: #e74c3c;
+  --success-color: #2ecc71;
+  --text-color: #333;
+  --light-bg: #f8f9fa;
+  --border-color: #ddd;
+}
+
+body {
+  font-family: 'Segoe UI', 'Poppins', sans-serif;
+  line-height: 1.6;
+  color: var(--text-color);
+  background-color: #f5f7fa;
+}
+
+.container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  color: var(--primary-color);
+  margin-bottom: 1.5rem;
+  text-align: center;
+  font-weight: 600;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+}
+
+.form-control:focus {
+  border-color: var(--primary-color);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+textarea.form-control {
+  resize: vertical;
+  min-height: 120px;
+}
+
+input[type="date"].form-control {
+  padding: 0.65rem 0.75rem;
+}
+
+.text-danger {
+  color: var(--danger-color);
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+}
+
+/* Botones */
+button[type="submit"] {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.3s;
+}
+
+button[type="submit"]:hover {
+  background-color: var(--secondary-color);
+}
+
+a[href*="etapa"] {
+  display: inline-block;
+  margin-left: 1rem;
+  padding: 0.75rem 1.5rem;
+  background-color: var(--accent-color);
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  font-weight: 500;
+  transition: background-color 0.3s;
+}
+
+a[href*="etapa"]:hover {
+  background-color: #e67e22;
+}
+
+/* Estilos responsive */
+@media screen and (max-width: 768px) {
+  .container {
+    padding: 1.5rem;
+    margin: 1rem;
+    width: auto;
+  }
+  
+  button[type="submit"], 
+  a[href*="etapa"] {
+    display: block;
+    width: 100%;
+    margin: 0.5rem 0;
+    text-align: center;
+  }
+}

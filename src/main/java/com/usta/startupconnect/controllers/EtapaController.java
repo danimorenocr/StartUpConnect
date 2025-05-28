@@ -2,8 +2,10 @@ package com.usta.startupconnect.controllers;
 
 import com.usta.startupconnect.entities.EtapaEntity;
 import com.usta.startupconnect.entities.MentorEntity;
+import com.usta.startupconnect.entities.TareaEntity;
 import com.usta.startupconnect.models.services.EtapaService;
 import com.usta.startupconnect.models.services.MentorService;
+import com.usta.startupconnect.models.services.TareaService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,12 +25,14 @@ import java.util.List;
 import javax.validation.Valid;
 
 @Controller
-public class EtapaController {
-    @Autowired
+public class EtapaController {    @Autowired
     private EtapaService etapaService;
 
     @Autowired
     private MentorService mentorService;
+    
+    @Autowired
+    private TareaService tareaService;
 
     @GetMapping(value = "/etapa")
     public String listaEtapas(Model model) {
@@ -106,13 +110,16 @@ public class EtapaController {
     public String eliminarEtapa(@PathVariable("id") Long idEtapa) {
         etapaService.deleteById(idEtapa);
         return "redirect:/etapa";
-    }
-
-    @GetMapping(value = "/verEtapa/{id}")
+    }    @GetMapping(value = "/verEtapa/{id}")
     public String verEtapa(Model model, @PathVariable(value = "id") Long id) {
         EtapaEntity etapa = etapaService.findById(id);
         model.addAttribute("title", "Ver etapa");
         model.addAttribute("etapaDetalle", etapa);
+        
+        // Obtener las tareas asociadas a esta etapa
+        List<TareaEntity> tareasAsociadas = tareaService.findByEtapa(etapa);
+        model.addAttribute("tareas", tareasAsociadas);
+        
         return "etapa/detalleEtapa";
     }
 }

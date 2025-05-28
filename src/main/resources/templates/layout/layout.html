@@ -16,10 +16,13 @@
     <link rel="icon" type="image/png" href="/images/StartUpConnect.png">
 
             
-    <!-- 3) Tus estilos globales -->
-    <link rel="stylesheet" th:href="@{/css/layout.css}">
+    <!-- 3) Tus estilos globales -->    <link rel="stylesheet" th:href="@{/css/layout.css}">
     <link rel="stylesheet" th:href="@{/css/usuarios/listarUsuarios.css}">
     <link rel="stylesheet" th:href="@{/css/crearUsuario.css}">
+    <!-- CSS específico de la página (si existe) -->
+    <th:block th:if="${specificCss != null}">
+        <link rel="stylesheet" th:href="@{${specificCss}}">
+    </th:block>
     <!-- SweetAlert -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
