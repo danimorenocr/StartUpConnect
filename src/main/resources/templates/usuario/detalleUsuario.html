@@ -106,10 +106,13 @@
                     <div class="info-row">
                         <div class="info-label">Rol:</div>
                         <div class="info-value" th:text="${usuarioEditar.rol != null ? usuarioEditar.rol.rol : 'No asignado'}"></div>
-                    </div>
-                    <div class="info-row">
+                    </div>                    <div class="info-row">
                         <div class="info-label">Estado:</div>
                         <div class="info-value">Activo</div>
+                    </div>
+                    <div class="info-row date-creation">
+                        <div class="info-label">Fecha de creación:</div>
+                        <div class="info-value" th:text="${usuarioEditar.fecha_creacion != null ? #temporals.format(usuarioEditar.fecha_creacion, 'dd/MM/yyyy') : 'No disponible'}"></div>
                     </div>
                 </div>
             </div>
