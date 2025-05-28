@@ -33,10 +33,14 @@
                 <div class="profile-title">
                     <h2 class="profile-name" th:text="${usuarioEditar.nombreUsu}"></h2>
                     <span class="profile-badge" 
-                          th:classappend="${usuarioEditar.rol != null && usuarioEditar.rol.rol == 'Admin' ? 'role-admin' : (usuarioEditar.rol != null && usuarioEditar.rol.rol == 'Emprendedor' ? 'role-emprendedor' : (usuarioEditar.rol != null && usuarioEditar.rol.rol == 'Inversor' ? 'role-inversor' : ''))}"
-                          th:text="${usuarioEditar.rol != null ? usuarioEditar.rol.rol : 'Usuario'}"></span>
+      th:classappend="${usuarioEditar.rol != null && usuarioEditar.rol.rol == 'Admin' ? 'role-admin' : 
+                     (usuarioEditar.rol.rol == 'Emprendedor' ? 'role-emprendedor' : 
+                     (usuarioEditar.rol.rol == 'Inversor' ? 'role-inversor' : ''))}"
+      th:text="${usuarioEditar.rol != null ? usuarioEditar.rol.rol : 'Usuario'}">
+</span>
                 </div>
             </div>
+       
             
             <div class="profile-bio">
                 <div class="bio-header">
