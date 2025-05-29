@@ -2,10 +2,16 @@ package com.usta.startupconnect.controllers;
 
 import com.google.api.services.calendar.model.CalendarListEntry;
 import com.google.api.services.calendar.model.Event;
+import com.usta.startupconnect.entities.ConvocatoriaEntity;
+import com.usta.startupconnect.entities.MentorEntity;
 import com.usta.startupconnect.entities.RolEntity;
+import com.usta.startupconnect.entities.StartupEntity;
 import com.usta.startupconnect.entities.UsuarioEntity;
+import com.usta.startupconnect.models.services.ConvocatoriaService;
 import com.usta.startupconnect.models.services.GoogleMeetService;
+import com.usta.startupconnect.models.services.MentorService;
 import com.usta.startupconnect.models.services.RolService;
+import com.usta.startupconnect.models.services.StartupService;
 import com.usta.startupconnect.models.services.UsuarioService;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -29,8 +35,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 public class UsuarioController {
@@ -39,7 +50,13 @@ public class UsuarioController {
     @Autowired
     private RolService rolService;
     @Autowired
-    private GoogleMeetService googleMeetService;    @GetMapping(value = "/administrador")
+    private GoogleMeetService googleMeetService;
+    @Autowired
+    private StartupService startupService;
+    @Autowired
+    private MentorService mentorService;
+    @Autowired
+    private ConvocatoriaService convocatoriaService;    @GetMapping(value = "/administrador")
     public String administrador(Model model, org.springframework.security.core.Authentication authentication) {
         if (authentication != null) {
             String email = authentication.getName();
@@ -52,6 +69,67 @@ public class UsuarioController {
             }
         } else {
             model.addAttribute("nombreCompleto", "Usuario");
+        }
+        
+        // Obtener datos para el dashboard
+        
+        // 1. Total de usuarios
+        List<UsuarioEntity> usuarios = usuarioService.findAll();
+        model.addAttribute("totalUsers", usuarios.size());
+        
+        // 2. Startups - Total y distribución por sector
+        List<StartupEntity> startups = startupService.findAll();
+        model.addAttribute("totalStartups", startups.size());
+        
+        // Conteo de startups por sector
+        Map<String, Long> startupsPorSector = startups.stream()
+                .collect(Collectors.groupingBy(
+                        startup -> startup.getSector() != null ? startup.getSector() : "Otros", 
+                        Collectors.counting()));
+        model.addAttribute("startupsPorSector", startupsPorSector);
+        
+        // 3. Mentores - Total y distribución por especialidad
+        List<MentorEntity> mentores = mentorService.findAll();
+        model.addAttribute("totalMentors", mentores.size());
+        
+        // Conteo de mentores por especialidad
+        Map<String, Long> mentoresPorEspecialidad = mentores.stream()
+                .collect(Collectors.groupingBy(
+                        mentor -> mentor.getEspecialidad() != null ? mentor.getEspecialidad() : "Otros", 
+                        Collectors.counting()));
+        model.addAttribute("mentoresPorEspecialidad", mentoresPorEspecialidad);
+        
+        // 4. Convocatorias - Total y por estado
+        List<ConvocatoriaEntity> convocatorias = convocatoriaService.findAll();
+        model.addAttribute("totalConvocatorias", convocatorias.size());
+        
+        // Clasificar convocatorias por estado (activas, próximas a cerrar, en revisión)
+        Date hoy = new Date();
+        Date proximosSieteDias = sumarDiasAFecha(hoy, 7);
+        
+        long convocatoriasActivas = convocatorias.stream()
+                .filter(c -> c.getFechaInicio().before(hoy) && c.getFechaFin().after(hoy))
+                .count();
+        
+        long convocatoriasProximasACerrar = convocatorias.stream()
+                .filter(c -> c.getFechaInicio().before(hoy) && c.getFechaFin().after(hoy) && c.getFechaFin().before(proximosSieteDias))
+                .count();
+        
+        long convocatoriasEnRevision = convocatorias.stream()
+                .filter(c -> c.getFechaFin().before(hoy))
+                .count();
+        
+        model.addAttribute("convocatoriasActivas", convocatoriasActivas);
+        model.addAttribute("convocatoriasProximasACerrar", convocatoriasProximasACerrar);
+        model.addAttribute("convocatoriasEnRevision", convocatoriasEnRevision);
+        
+        // Obtener próxima convocatoria por cerrar
+        Optional<ConvocatoriaEntity> proximaConvocatoria = convocatorias.stream()
+                .filter(c -> c.getFechaFin().after(hoy))
+                .min(Comparator.comparing(ConvocatoriaEntity::getFechaFin));
+        
+        if (proximaConvocatoria.isPresent()) {
+            model.addAttribute("proximaConvocatoria", proximaConvocatoria.get());
         }
         
         // Obtener eventos próximos y configuración del calendario
@@ -74,6 +152,14 @@ public class UsuarioController {
         }
         
         return "/administrador/dashboardAdmin";
+    }
+    
+    // Método auxiliar para sumar días a una fecha
+    private Date sumarDiasAFecha(Date fecha, int dias) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(fecha);
+        calendar.add(Calendar.DAY_OF_YEAR, dias);
+        return calendar.getTime();
     }
 
     @GetMapping(value = "/usuario")

@@ -131,8 +131,68 @@ public class GoogleMeetService {
                 .build();
                 
         // Usando un puerto diferente (9090) para evitar conflictos con otros procesos
-        LocalServerReceiver receiver = new LocalServerReceiver.Builder().setPort(9090).build();
-        return new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
+        LocalServerReceiver receiver = new LocalServerReceiver.Builder()
+                .setPort(9090)
+                .build();
+                
+        // Usar el método que abre automáticamente el navegador
+        return new AuthorizationCodeInstalledApp(flow, receiver, new AuthorizationCodeInstalledApp.Browser() {
+            @Override
+            public void browse(String url) throws IOException {
+                logger.info("Abriendo navegador para autenticación de Google...");
+                try {
+                    // Intenta abrir el navegador predeterminado del sistema
+                    if (java.awt.Desktop.isDesktopSupported()) {
+                        java.awt.Desktop.getDesktop().browse(new java.net.URI(url));
+                    } else {
+                        // Alternativa en caso de que Desktop no esté soportado
+                        abrirNavegadorAlternativo(url);
+                    }
+                } catch (Exception e) {
+                    logger.error("Error al abrir el navegador", e);
+                    // Caer en la solución original si falla
+                    System.out.println("Por favor, abre este enlace en tu navegador: " + url);
+                }
+            }
+        }).authorize("user");
+    }
+    
+    /**
+     * Método alternativo para abrir el navegador en diferentes sistemas operativos
+     */
+    private void abrirNavegadorAlternativo(String url) {
+        try {
+            String os = System.getProperty("os.name").toLowerCase();
+            Process process = null;
+            
+            if (os.contains("win")) {
+                // Windows
+                process = Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + url);
+            } else if (os.contains("mac")) {
+                // macOS
+                process = Runtime.getRuntime().exec("open " + url);
+            } else if (os.contains("nix") || os.contains("nux")) {
+                // Linux
+                String[] browsers = {"google-chrome", "firefox", "mozilla", "epiphany", "konqueror", "netscape", "opera", "links", "lynx"};
+                
+                StringBuilder cmd = new StringBuilder();
+                for (int i = 0; i < browsers.length; i++) {
+                    if (i == 0) {
+                        cmd.append(String.format("%s \"%s\"", browsers[i], url));
+                    } else {
+                        cmd.append(String.format(" || %s \"%s\"", browsers[i], url));
+                    }
+                }
+                
+                process = Runtime.getRuntime().exec(new String[]{"sh", "-c", cmd.toString()});
+            }
+            
+            if (process != null) {
+                process.waitFor();
+            }
+        } catch (Exception e) {
+            logger.error("Error al abrir navegador alternativo", e);
+        }
     }
       /**
      * Lists upcoming events from the primary calendar.
