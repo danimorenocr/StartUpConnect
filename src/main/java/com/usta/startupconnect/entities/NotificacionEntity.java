@@ -1,9 +1,7 @@
 package com.usta.startupconnect.entities;
 
 import jakarta.persistence.*;
-
 import lombok.Data;
-
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
@@ -28,18 +26,31 @@ public class NotificacionEntity implements Serializable {
     @Column(name = "mensaje", columnDefinition = "TEXT")
     private String mensaje;
 
+    /**
+     * Ejemplo: 'tarea', 'evento', 'convocatoria'
+     */
     @NotNull
-    @Size(min = 5, max = 50)
-    @Column(name = "tipo")
-    private String tipo;
+    @Size(min = 3, max = 50)
+    @Column(name = "tipo_entidad")
+    private String tipoEntidad;
+
+    /**
+     * ID del objeto referenciado (en su tabla original)
+     */
+    @NotNull
+    @Column(name = "entidad_id")
+    private Long entidadId;
 
     @NotNull
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "fecha")
     private Date fecha;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_calendario")
-    private CalendarioEntity calendario;
+    @Column(name = "leido")
+    private Boolean leido = false;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_usuario", referencedColumnName = "id")
+    private UsuarioEntity usuario; // <-- Cambia esto según tu entidad de usuario real
 }

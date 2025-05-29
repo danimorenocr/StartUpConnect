@@ -1,11 +1,14 @@
 package com.usta.startupconnect.models.services;
 
-import java.util.List;
-
 import com.usta.startupconnect.entities.NotificacionEntity;
 
-public interface NotificacionService {
-    public List<NotificacionEntity> findAll();
+import java.util.List;
 
-    
+public interface NotificacionService {
+
+    NotificacionEntity crearNotificacion(String mensaje, String tipoEntidad, Long entidadId, String idUsuario);
+
+    List<NotificacionEntity> obtenerNotificacionesPorUsuario(String idUsuario);
+
+    void marcarComoLeida(Long idNotificacion);
 }

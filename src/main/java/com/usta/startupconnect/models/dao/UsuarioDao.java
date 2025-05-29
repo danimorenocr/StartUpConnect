@@ -14,6 +14,9 @@ public interface UsuarioDao extends CrudRepository<UsuarioEntity, String> {
     @Query("SELECT u FROM UsuarioEntity u WHERE u.rol = ?1")
     List<UsuarioEntity> findByRol(RolEntity rol);
 
+    @Transactional
+    @Query("SELECT u FROM UsuarioEntity u WHERE u.id = ?1")
+    UsuarioEntity findUsuarioById(String id);
 
     @Transactional
     @Query("SELECT u FROM UsuarioEntity u WHERE u.emailUsu = ?1")
@@ -30,7 +33,5 @@ public interface UsuarioDao extends CrudRepository<UsuarioEntity, String> {
     @Transactional
     @Query("SELECT u FROM UsuarioEntity u WHERE u.emailUsu = ?1 AND u.contrasenna = ?2")
     UsuarioEntity findByEmailAndContrasenna(String email, String contrasenna);
-
-
 
 }
