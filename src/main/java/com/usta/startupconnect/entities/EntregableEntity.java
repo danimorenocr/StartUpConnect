@@ -34,6 +34,10 @@ public class EntregableEntity implements Serializable {
     @Column(name = "estado", length = 50)
     private String estado;
 
+    // Campo para almacenar el ID de la tarea
+    @Column(name = "id_tarea")
+    private Long idTarea;
+
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_tarea", referencedColumnName = "id", insertable = false, updatable = false)

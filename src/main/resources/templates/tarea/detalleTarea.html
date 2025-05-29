@@ -69,6 +69,118 @@
         color: #555;
         white-space: pre-line;
     }
+    
+    /* Estilo para el botón de crear entrega */
+    .btn-crear-entrega {
+        background-color: #28a745;
+        color: white;
+        display: inline-flex;
+        align-items: center;
+        padding: 10px 20px;
+        border-radius: 4px;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        margin-top: 20px;
+        border: none;
+        cursor: pointer;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .btn-crear-entrega:hover {
+        background-color: #218838;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        color: white;
+    }
+    
+    .btn-crear-entrega i {
+        margin-right: 8px;
+    }
+    
+    /* Estilos para la sección de entregables */
+    .entregables-section {
+        margin-top: 30px;
+    }
+    
+    .entregables-title {
+        font-size: 1.4rem;
+        margin-bottom: 15px;
+        color: #333;
+        border-bottom: 2px solid #f0f0f0;
+        padding-bottom: 8px;
+    }
+    
+    .entregables-table {
+        width: 100%;
+        border-collapse: collapse;
+        box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+    }
+    
+    .entregables-table th {
+        background-color: #f8f9fa;
+        padding: 12px 15px;
+        text-align: left;
+        font-weight: 600;
+        color: #495057;
+        border-bottom: 2px solid #e9ecef;
+    }
+    
+    .entregables-table td {
+        padding: 10px 15px;
+        border-bottom: 1px solid #e9ecef;
+        vertical-align: middle;
+    }
+    
+    .entregables-table tr:hover {
+        background-color: #f8f9fa;
+    }
+    
+    .no-entregables-message {
+        padding: 20px;
+        text-align: center;
+        background-color: #f8f9fa;
+        border-radius: 4px;
+        color: #6c757d;
+        font-style: italic;
+    }
+    
+    .entregable-actions a {
+        margin-right: 10px;
+        color: #007bff;
+        text-decoration: none;
+    }
+    
+    .entregable-actions a:hover {
+        text-decoration: underline;
+    }
+    
+    .entregable-estado {
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.85rem;
+    }
+    
+    .estado-pendiente {
+        background-color: #ffeeba;
+        color: #856404;
+    }
+    
+    .estado-revisión {
+        background-color: #bee5eb;
+        color: #0c5460;
+    }
+    
+    .estado-aprobado {
+        background-color: #c3e6cb;
+        color: #155724;
+    }
+    
+    .estado-rechazado {
+        background-color: #f5c6cb;
+        color: #721c24;
+    }
 </style>
 
 <body>
@@ -107,6 +219,58 @@
                     <div class="col-md-3 fw-bold">Etapa:</div>
                     <div class="col-md-9"
                         th:text="${tareaDetalle.etapa != null ? tareaDetalle.etapa.titulo : 'No asignada'}"></div>
+                </div>
+                
+                <!-- Botón Crear Entrega -->
+                <div class="row mb-3">
+                    <div class="col-12 text-center">
+                        <a th:href="@{/crearEntregable(idTarea=${tareaDetalle.id})}" class="btn-crear-entrega">
+                            <i class="fas fa-upload"></i> Crear Entrega
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Sección de entregables asociados -->
+                <div class="entregables-section">
+                    <h3 class="entregables-title">Entregas Asociadas</h3>
+                    
+                    <div th:if="${entregables != null && !entregables.empty}">
+                        <table class="entregables-table">
+                            <thead>
+                                <tr>
+                                    <th>Nombre del Archivo</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="entregable : ${entregables}">
+                                    <td th:text="${entregable.nombreArchivo}"></td>
+                                    <td>
+                                        <span class="entregable-estado"
+                                              th:classappend="${entregable.estado == 'Pendiente' ? 'estado-pendiente' : 
+                                                               (entregable.estado == 'En revisión' ? 'estado-revisión' : 
+                                                               (entregable.estado == 'Aprobado' ? 'estado-aprobado' : 
+                                                               (entregable.estado == 'Rechazado' ? 'estado-rechazado' : '')))}">
+                                            [[${entregable.estado}]]
+                                        </span>
+                                    </td>
+                                    <td class="entregable-actions">
+                                        <a th:href="@{/previewEntregable/{id}(id=${entregable.id})}" target="_blank" class="btn btn-info btn-sm" title="Vista previa">
+                                            <i class="fas fa-eye"></i> Vista previa
+                                        </a>
+                                        {% comment %} <a th:href="@{/descargarEntregable/{id}(id=${entregable.id})}" class="btn btn-success btn-sm" title="Descargar">
+                                            <i class="fas fa-download"></i> Descargar
+                                        </a> {% endcomment %}
+                                     
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div th:if="${entregables == null || entregables.empty}" class="no-entregables-message">
+                        No hay entregas asociadas a esta tarea.
+                    </div>
                 </div>
             </div>
 

@@ -2,9 +2,11 @@ package com.usta.startupconnect.controllers;
 
 import com.usta.startupconnect.entities.EtapaEntity;
 import com.usta.startupconnect.entities.TareaEntity;
+import com.usta.startupconnect.entities.EntregableEntity;
 import com.usta.startupconnect.models.services.EtapaService;
 import com.usta.startupconnect.models.services.GoogleMeetService;
 import com.usta.startupconnect.models.services.TareaService;
+import com.usta.startupconnect.models.services.EntregablesService;
 import com.google.api.services.calendar.model.Event;
 import com.usta.startupconnect.dto.MeetingResponse;
 
@@ -37,6 +39,8 @@ public class TareaController {
     private EtapaService etapaService;
     @Autowired
     private GoogleMeetService googleMeetService;
+    @Autowired
+    private com.usta.startupconnect.models.services.EntregablesService entregablesService;
 
     @GetMapping(value = "/tarea")
     public String listaTareas(Model model) {
@@ -359,6 +363,11 @@ public class TareaController {
         TareaEntity tarea = tareaService.findById(id);
         model.addAttribute("title", "Ver tarea");
         model.addAttribute("tareaDetalle", tarea);
+        
+        // Obtener las entregas asociadas a esta tarea
+        List<com.usta.startupconnect.entities.EntregableEntity> entregables = entregablesService.findByIdTarea(id);
+        model.addAttribute("entregables", entregables);
+        
         return "tarea/detalleTarea";
     }
 }
