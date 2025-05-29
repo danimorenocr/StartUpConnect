@@ -6,6 +6,7 @@ target/
 
 # Sensitive configuration and credentials
 src/main/resources/credentials/credentials.json
+tokens/
 *.env
 .env
 .env.*

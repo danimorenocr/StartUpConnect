@@ -1,7 +1,10 @@
 package com.usta.startupconnect.controllers;
 
+import com.google.api.services.calendar.model.CalendarListEntry;
+import com.google.api.services.calendar.model.Event;
 import com.usta.startupconnect.entities.RolEntity;
 import com.usta.startupconnect.entities.UsuarioEntity;
+import com.usta.startupconnect.models.services.GoogleMeetService;
 import com.usta.startupconnect.models.services.RolService;
 import com.usta.startupconnect.models.services.UsuarioService;
 import org.apache.http.HttpEntity;
@@ -35,20 +38,41 @@ public class UsuarioController {
     private UsuarioService usuarioService;
     @Autowired
     private RolService rolService;
-
-    @GetMapping(value = "/administrador")
+    @Autowired
+    private GoogleMeetService googleMeetService;    @GetMapping(value = "/administrador")
     public String administrador(Model model, org.springframework.security.core.Authentication authentication) {
         if (authentication != null) {
             String email = authentication.getName();
             UsuarioEntity usuario = usuarioService.findByEmail(email);
             if (usuario != null) {
                 model.addAttribute("nombreCompleto", usuario.getNombreUsu());
+                model.addAttribute("userEmail", email);
             } else {
                 model.addAttribute("nombreCompleto", "Usuario");
             }
         } else {
             model.addAttribute("nombreCompleto", "Usuario");
         }
+        
+        // Obtener eventos próximos y configuración del calendario
+        try {
+            // Obtener eventos próximos
+            List<Event> upcomingEvents = googleMeetService.listUpcomingEvents(5);
+            model.addAttribute("upcomingEvents", upcomingEvents);
+            
+            // Obtener URL del calendario con autenticación
+            String calendarEmbedUrl = googleMeetService.getCalendarEmbedUrl();
+            model.addAttribute("calendarEmbedUrl", calendarEmbedUrl);
+            
+            // Obtener lista de calendarios disponibles (opcional, para futuras mejoras)
+            List<CalendarListEntry> calendars = googleMeetService.getCalendars();
+            model.addAttribute("calendars", calendars);
+            
+        } catch (Exception e) {
+            model.addAttribute("calendarError", "No se pudieron cargar los eventos: " + e.getMessage());
+            e.printStackTrace();
+        }
+        
         return "/administrador/dashboardAdmin";
     }
 

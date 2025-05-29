@@ -4,14 +4,14 @@
 <head th:replace="~{layout/layout :: head}"></head>
 
 <body>
-
+    <!-- Añadir la hoja de estilo después del head para que no sea reemplazada -->
+    <link rel="stylesheet" th:href="@{/css/tarea/crearTarea.css}">
     <header th:replace="~{layout/layout :: header}"></header>
 
     <div class="container mt-4">
-        <h1>Crear Nueva Tarea</h1>
+        <h1>Editar Tarea</h1>
 
-        <form th:action="@{/editarTarea/{id}(id=${tareaEditar.id})}" method="post" enctype="multipart/form-data"
-            th:object="${tareaEditar}">
+        <form th:action="@{/editarTarea/{id}(id=${tareaEditar.id})}" method="post" th:object="${tareaEditar}">
             <!-- Título -->
             <div class="form-group mb-3">
                 <label for="titulo">Título:</label>
@@ -33,9 +33,7 @@
                 <input type="date" class="form-control" id="fechaEntrega" name="fechaEntrega" th:field="*{fechaEntrega}"
                     required>
                 <div class="text-danger" th:if="${#fields.hasErrors('fechaEntrega')}" th:errors="*{fechaEntrega}"></div>
-            </div>
-
-            <!-- Etapa (combo box) -->
+            </div>            <!-- Etapa (combo box) -->
             <div class="form-group mb-3">
                 <label for="etapa">Etapa:</label>
                 <select class="form-control" id="etapa" name="etapa.id" required>
@@ -46,14 +44,73 @@
                 </select>
                 <div class="text-danger" th:if="${#fields.hasErrors('etapa')}" th:errors="*{etapa}"></div>
             </div>
+            
+            <!-- Sección para editar reunión de Google Meet -->
+            <div style="border: 1px solid #ddd; border-radius: 8px; overflow: visible; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);">
+                <div style="background-color: #f8f9fa; padding: 15px; border-bottom: 1px solid #ddd;">
+                    <div style="display: flex; align-items: center;">
+                        <input style="margin-right: 10px;" type="checkbox" id="editarReunion" name="editarReunion" 
+                               th:checked="${meetingInfo != null}">
+                        <label style="margin-bottom: 0;" for="editarReunion">
+                            <span th:if="${meetingInfo != null}">Editar reunión de Google Meet existente</span>
+                            <span th:unless="${meetingInfo != null}">Crear nueva reunión de Google Meet para esta tarea</span>
+                        </label>
+                    </div>
+                </div>
+                <div id="reunionDetails" th:style="${meetingInfo != null ? 'display: block; padding: 20px; background-color: white;' : 'display: none; padding: 20px; background-color: white;'}">
+                    <!-- ID del evento (hidden) -->
+                    <input type="hidden" id="eventId" name="eventId" th:value="${meetingInfo != null ? meetingInfo.eventId : ''}">
+                    
+                    <!-- Fecha de la reunión -->
+                    <div class="form-group mb-3">
+                        <label for="fechaReunion">Fecha de la reunión:</label>
+                        <input type="date" class="form-control" id="fechaReunion" name="fechaReunion" th:value="${meetingInfo != null ? meetingInfo.fecha : ''}">
+                    </div>
+                    
+                    <!-- Hora de la reunión -->
+                    <div class="form-group mb-3">
+                        <label for="horaReunion">Hora de la reunión:</label>
+                        <input type="time" class="form-control" id="horaReunion" name="horaReunion" th:value="${meetingInfo != null ? meetingInfo.hora : ''}">
+                    </div>
+                    
+                    <!-- Duración de la reunión -->
+                    <div class="form-group mb-3">
+                        <label for="duracionReunion">Duración (minutos):</label>
+                        <select class="form-control" id="duracionReunion" name="duracionReunion">
+                            <option value="15" th:selected="${meetingInfo != null && meetingInfo.duracion == 15}">15 minutos</option>
+                            <option value="30" th:selected="${meetingInfo == null || meetingInfo.duracion == 30}">30 minutos</option>
+                            <option value="45" th:selected="${meetingInfo != null && meetingInfo.duracion == 45}">45 minutos</option>
+                            <option value="60" th:selected="${meetingInfo != null && meetingInfo.duracion == 60}">1 hora</option>
+                            <option value="90" th:selected="${meetingInfo != null && meetingInfo.duracion == 90}">1 hora 30 minutos</option>
+                            <option value="120" th:selected="${meetingInfo != null && meetingInfo.duracion == 120}">2 horas</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Enlace de la reunión (generado automáticamente) -->
+                    <div class="form-group mb-3">
+                        <label for="enlaceReunion">Enlace de la reunión:</label>
+                        <div style="display: flex; width: 100%;">
+                            <input type="text" class="form-control" id="enlaceReunion" name="enlaceReunion" readonly
+                                   th:value="${meetingInfo != null ? meetingInfo.enlace : ''}" style="flex: 1;">
+                            <div style="margin-left: 10px;">
+                                <a th:if="${meetingInfo != null && meetingInfo.enlace != null}" 
+                                   th:href="${meetingInfo.enlace}" target="_blank" 
+                                   class="btn btn-primary">Abrir enlace</a>
+                            </div>
+                        </div>
+                        <small style="font-size: 0.85rem; color: #6c757d; margin-top: 5px; display: block;">
+                            <span th:if="${meetingInfo == null}">Se generará un nuevo enlace al guardar los cambios.</span>
+                            <span th:unless="${meetingInfo == null}">Se actualizará la reunión existente al guardar los cambios.</span>
+                        </small>
+                    </div>
+                </div>
+            </div>
 
             <!-- Botones -->
             <div class="form-group">
-                <button type="submit">Guardar Tarea</button>
-                <a th:href="@{/tarea}">Cancelar</a>
+                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
             </div>
-        </form>
-    </div>
+        </form>    </div>
 
     <script>
         // Establecer la fecha mínima como hoy para evitar fechas pasadas
@@ -65,6 +122,34 @@
 
             const todayFormatted = yyyy + '-' + mm + '-' + dd;
             document.getElementById('fechaEntrega').min = todayFormatted;
+            
+            // Para la reunión
+            if (document.getElementById('fechaReunion')) {
+                document.getElementById('fechaReunion').min = todayFormatted;
+            }
+            
+            // Mostrar/ocultar detalles de la reunión según el checkbox
+            const editarReunionCheckbox = document.getElementById('editarReunion');
+            const reunionDetails = document.getElementById('reunionDetails');
+            
+            if (editarReunionCheckbox && reunionDetails) {
+                editarReunionCheckbox.addEventListener('change', function() {
+                    reunionDetails.style.display = this.checked ? 'block' : 'none';
+                    
+                    // Si se marca y no hay fecha/hora establecida, establece valores por defecto
+                    if (this.checked && (!document.getElementById('fechaReunion').value || !document.getElementById('horaReunion').value)) {
+                        // Establecer fecha por defecto como la fecha actual
+                        document.getElementById('fechaReunion').value = todayFormatted;
+                        
+                        // Establecer hora por defecto (por ejemplo, hora actual + 1 hora)
+                        const nextHour = new Date();
+                        nextHour.setHours(nextHour.getHours() + 1, 0, 0); // Próxima hora en punto
+                        const hours = String(nextHour.getHours()).padStart(2, '0');
+                        const minutes = String(nextHour.getMinutes()).padStart(2, '0');
+                        document.getElementById('horaReunion').value = `${hours}:${minutes}`;
+                    }
+                });
+            }
         });
     </script>
 

@@ -2,8 +2,7 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{layout/layout :: head}"></head>
 <body>
-    <!-- Añadir la hoja de estilo después del head para que no sea reemplazada -->
-    <link rel="stylesheet" th:href="@{/css/tarea/crearTarea.css}">
+    <!-- Añadir la hoja de estilo después del head para que no sea reemplazada -->    <link rel="stylesheet" th:href="@{/css/tarea/crearTarea.css}">
     <header th:replace="~{layout/layout :: header}"></header>
 
 <div class="container mt-4">
@@ -30,8 +29,7 @@
             <input type="date" class="form-control" id="fechaEntrega" name="fechaEntrega" th:field="*{fechaEntrega}" required>
             <div class="text-danger" th:if="${#fields.hasErrors('fechaEntrega')}" th:errors="*{fechaEntrega}"></div>
         </div>
-        
-        <!-- Etapa (combo box) -->
+          <!-- Etapa (combo box) -->
         <div class="form-group mb-3">
             <label for="etapa">Etapa:</label>
             <select class="form-control" id="etapa" name="etapa.id" required>
@@ -44,10 +42,82 @@
             <div class="text-danger" th:if="${#fields.hasErrors('etapa')}" th:errors="*{etapa}"></div>
         </div>
         
+        <!-- Sección para crear reunión de Google Meet -->
+        <div style="border: 1px solid #ddd; border-radius: 8px; overflow: visible; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);">
+            <div style="background-color: #f8f9fa; padding: 15px; border-bottom: 1px solid #ddd;">
+                <div style="display: flex; align-items: center;">
+                    <input style="margin-right: 10px;" type="checkbox" id="crearReunion" name="crearReunion">
+                    <label style="margin-bottom: 0;" for="crearReunion">
+                        Crear reunión de Google Meet para esta tarea
+                    </label>
+                </div>
+            </div>
+            <div id="reunionDetails" style="display: none; padding: 20px; background-color: white;">
+                <!-- Fecha de la reunión -->
+                <div class="form-group mb-3">
+                    <label for="fechaReunion">Fecha de la reunión:</label>
+                    <input type="date" class="form-control" id="fechaReunion" name="fechaReunion">
+                </div>
+                
+                <!-- Hora de la reunión -->
+                <div class="form-group mb-3">
+                    <label for="horaReunion">Hora de la reunión:</label>
+                    <input type="time" class="form-control" id="horaReunion" name="horaReunion">
+                </div>
+                
+                <!-- Duración de la reunión -->
+                <div class="form-group mb-3">
+                    <label for="duracionReunion">Duración (minutos):</label>
+                    <select class="form-control" id="duracionReunion" name="duracionReunion">
+                        <option value="15">15 minutos</option>
+                        <option value="30" selected>30 minutos</option>
+                        <option value="45">45 minutos</option>
+                        <option value="60">1 hora</option>
+                        <option value="90">1 hora 30 minutos</option>
+                        <option value="120">2 horas</option>
+                    </select>
+                </div>
+                
+                <!-- Participantes (asumiendo que hay una lista de miembros del equipo) -->
+                <div class="form-group mb-3">
+                    <label>Participantes:</label>
+                    <div style="max-height: 200px; overflow-y: auto; border: 1px solid #ddd; border-radius: 4px; padding: 10px; background-color: white;">
+                        <div th:if="${miembrosEquipo != null}">
+                            <div style="display: flex; align-items: center; margin-bottom: 8px;" th:each="miembro : ${miembrosEquipo}">
+                                <input style="margin-right: 10px;" type="checkbox" 
+                                       th:id="${'miembro_' + miembro.id}" 
+                                       th:name="participantesReunion" 
+                                       th:value="${miembro.id}">
+                                <label style="margin-bottom: 0;"
+                                       th:for="${'miembro_' + miembro.id}" 
+                                       th:text="${miembro.nombre + ' ' + miembro.apellido + ' (' + miembro.email + ')'}">
+                                </label>
+                            </div>
+                        </div>
+                        <div th:if="${miembrosEquipo == null}" style="color: #0c5460; background-color: #d1ecf1; border-color: #bee5eb; padding: .75rem 1.25rem; margin-bottom: 0; border: 1px solid transparent; border-radius: .25rem;">
+                            No hay miembros del equipo disponibles para invitar.
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Enlace de la reunión (generado automáticamente) -->
+                <div class="form-group mb-3">
+                    <label for="enlaceReunion">Enlace de la reunión:</label>
+                    <div style="display: flex; width: 100%;">
+                        <input type="text" class="form-control" id="enlaceReunion" name="enlaceReunion" readonly style="flex: 1;">
+                        <div style="margin-left: 10px;">
+                            <button class="btn btn-outline-secondary" type="button" id="generarEnlace">Generar enlace</button>
+                        </div>
+                    </div>
+                    <small style="font-size: 0.85rem; color: #6c757d; margin-top: 5px; display: block;">El enlace se generará automáticamente al guardar la tarea.</small>
+                </div>
+            </div>
+        </div>
+        
         <!-- Botones -->
         <div class="form-group">
-            <button type="submit">Guardar Tarea</button>
-            <a th:href="@{/tarea}">Cancelar</a>
+            <button type="submit" class="btn btn-primary">Guardar Tarea</button>
+            
         </div>
     </form>
 </div>
@@ -62,6 +132,44 @@
         
         const todayFormatted = yyyy + '-' + mm + '-' + dd;
         document.getElementById('fechaEntrega').min = todayFormatted;
+        
+        // Para la reunión
+        if (document.getElementById('fechaReunion')) {
+            document.getElementById('fechaReunion').min = todayFormatted;
+        }
+        
+        // Mostrar/ocultar detalles de la reunión según el checkbox
+        const crearReunionCheckbox = document.getElementById('crearReunion');
+        const reunionDetails = document.getElementById('reunionDetails');
+        
+        if (crearReunionCheckbox && reunionDetails) {
+            crearReunionCheckbox.addEventListener('change', function() {
+                reunionDetails.style.display = this.checked ? 'block' : 'none';
+                
+                // Si se marca, establece la fecha por defecto como la fecha actual
+                if (this.checked) {
+                    document.getElementById('fechaReunion').value = todayFormatted;
+                    
+                    // Establecer hora por defecto (por ejemplo, hora actual + 1 hora)
+                    const nextHour = new Date();
+                    nextHour.setHours(nextHour.getHours() + 1, 0, 0); // Próxima hora en punto
+                    const hours = String(nextHour.getHours()).padStart(2, '0');
+                    const minutes = String(nextHour.getMinutes()).padStart(2, '0');
+                    document.getElementById('horaReunion').value = `${hours}:${minutes}`;
+                }
+            });
+        }
+        
+        // Funcionalidad para el botón de generar enlace
+        const generarEnlaceBtn = document.getElementById('generarEnlace');
+        if (generarEnlaceBtn) {
+            generarEnlaceBtn.addEventListener('click', function() {
+                // Generar un enlace temporal de Meet (esto será reemplazado por la integración real)
+                const enlaceInput = document.getElementById('enlaceReunion');
+                const meetId = Math.random().toString(36).substring(2, 10);
+                enlaceInput.value = `https://meet.google.com/${meetId}`;
+            });
+        }
     });
 </script>
 

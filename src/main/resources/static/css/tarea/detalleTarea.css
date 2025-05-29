@@ -1,0 +1,45 @@
+/* Estilos para la página de detalle de tarea */
+
+/* Estilo para el botón de reunión */
+.btn-primary {
+    background-color: #4285F4;
+    border-color: #4285F4;
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 16px;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #1a73e8;
+    border-color: #1a73e8;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Estilo para el icono de video */
+.fas.fa-video {
+    color: white;
+    margin-right: 8px;
+}
+
+/* Estilo para el enlace */
+.text-muted {
+    font-size: 0.85rem;
+    display: block;
+    margin-top: 8px;
+    word-break: break-all;
+}
+
+/* Estilos para las filas de detalles */
+.row.mb-3 {
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.row.mb-3:last-child {
+    border-bottom: none;
+}
+
+.fw-bold {
+    color: #333;
+}

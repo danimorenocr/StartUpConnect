@@ -2,6 +2,74 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 
 <head th:replace="~{layout/layout :: head}"></head>
+<!-- CSS específico y Font Awesome -->
+<style>
+    /* Estilo para el botón de reunión */
+    .btn-meet {
+        background-color: #4285F4;
+        border-color: #4285F4;
+        color: white;
+        display: inline-flex;
+        align-items: center;
+        padding: 8px 16px;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        border-radius: 4px;
+        font-weight: 500;
+    }
+
+    .btn-meet:hover {
+        background-color: #1a73e8;
+        border-color: #1a73e8;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        color: white;
+    }
+
+    /* Estilo para el enlace */
+    .meet-link {
+        font-size: 0.85rem;
+        display: block;
+        margin-top: 8px;
+        word-break: break-all;
+    }
+
+    /* Icono de video */
+    .video-icon {
+        margin-right: 8px;
+    }
+
+    /* Estilos para el contenedor de la reunión */
+    .meet-container {
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        overflow: hidden;
+        margin-top: 20px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .meet-header {
+        background-color: #4285F4;
+        color: white;
+        padding: 10px 15px;
+    }
+
+    .meet-header h5 {
+        margin: 0;
+        font-size: 1.1rem;
+    }
+
+    .meet-body {
+        padding: 15px;
+        background-color: #f8f9fa;
+    }
+
+    .meet-details {
+        margin-top: 12px;
+        font-size: 0.9rem;
+        color: #555;
+        white-space: pre-line;
+    }
+</style>
 
 <body>
 
@@ -18,12 +86,14 @@
                 <div class="row mb-3">
                     <div class="col-md-3 fw-bold">Título:</div>
                     <div class="col-md-9" th:text="${tareaDetalle.titulo}"></div>
-                </div>
-
-                <!-- Descripción -->
+                </div> <!-- Descripción -->
                 <div class="row mb-3">
                     <div class="col-md-3 fw-bold">Descripción:</div>
-                    <div class="col-md-9" th:text="${tareaDetalle.descripcion}"></div>
+                    <div class="col-md-9">
+                        <div id="descripcionContenido"
+                            th:utext="${#strings.replace(#strings.escapeXml(tareaDetalle.descripcion), '&#10;', '<br>')}">
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Fecha de Entrega -->
@@ -44,6 +114,54 @@
         </div>
     </div>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const descripcionElement = document.getElementById('descripcionContenido');
+            if (descripcionElement) {
+                const descripcionTexto = descripcionElement.innerHTML;
+
+                // Buscar enlace de reunión en el texto (formato https://meet.google.com/...)
+                const meetRegex = /(https:\/\/meet\.google\.com\/[a-zA-Z0-9\-]+)/;
+                const match = descripcionTexto.match(meetRegex);
+
+                if (match && match[1]) {
+                    const meetLink = match[1];
+
+                    // Encontrar la sección de la reunión y formatearla
+                    let textoFormateado = descripcionTexto;
+
+                    // Reemplazar la sección de reunión con un formato más atractivo
+                    if (descripcionTexto.includes('----- REUNIÓN DE GOOGLE MEET -----')) {
+                        const meetInfoStart = textoFormateado.indexOf('----- REUNIÓN DE GOOGLE MEET -----');
+
+                        // Dividir el texto en la parte normal y la parte de la reunión
+                        const parteNormal = textoFormateado.substring(0, meetInfoStart);
+
+                        // Crear el elemento de botón para la reunión
+                        const meetDiv = document.createElement('div');
+                        meetDiv.classList.add('meet-container', 'mt-4');
+                        meetDiv.innerHTML = `
+                            <div class="meet-header">
+                                <h5>Reunión de Google Meet</h5>
+                            </div>
+                            <div class="meet-body">
+                                <a href="${meetLink}" target="_blank" class="btn-meet">
+                                    <span class="video-icon">📹</span>Unirse a la reunión
+                                </a>
+                                <div class="meet-details">
+                                    ${textoFormateado.substring(meetInfoStart).replace('----- REUNIÓN DE GOOGLE MEET -----', '').replace(meetLink, '')}
+                                </div>
+                            </div>
+                        `;
+
+                        // Actualizar el contenido
+                        descripcionElement.innerHTML = parteNormal;
+                        descripcionElement.appendChild(meetDiv);
+                    }
+                }
+            }
+        });
+    </script>
 </body>
 
 </html>
