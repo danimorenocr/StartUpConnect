@@ -196,30 +196,40 @@ public class GoogleMeetService {
     }
       /**
      * Lists upcoming events from the primary calendar.
-     * 
+     * Ahora con timeout bajo y logs para evitar bloqueos en el dashboard.
      * @param maxResults Maximum number of events to return
      * @return List of upcoming events
      * @throws IOException If the request fails
      * @throws GeneralSecurityException If there's a security problem
      */
     public List<Event> listUpcomingEvents(int maxResults) throws IOException, GeneralSecurityException {
+        logger.info("Solicitando próximos eventos a Google Calendar...");
+        // Configurar timeout bajo (2 segundos)
+        final int TIMEOUT_MILLIS = 2000;
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-        Calendar service = new Calendar.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
+        // HttpRequestInitializer con timeout
+        com.google.api.client.http.HttpRequestInitializer requestInitializer = request -> {
+            getCredentials(HTTP_TRANSPORT).initialize(request);
+            request.setConnectTimeout(TIMEOUT_MILLIS);
+            request.setReadTimeout(TIMEOUT_MILLIS);
+        };
+        Calendar service = new Calendar.Builder(HTTP_TRANSPORT, JSON_FACTORY, requestInitializer)
                 .setApplicationName(APPLICATION_NAME)
                 .build();
-                
-        // Get current date time
         DateTime now = new DateTime(System.currentTimeMillis());
-        
-        // List events
-        Events events = service.events().list("primary")
-                .setMaxResults(maxResults)
-                .setTimeMin(now)
-                .setOrderBy("startTime")
-                .setSingleEvents(true)
-                .execute();
-                
-        return events.getItems();
+        try {
+            Events events = service.events().list("primary")
+                    .setMaxResults(maxResults)
+                    .setTimeMin(now)
+                    .setOrderBy("startTime")
+                    .setSingleEvents(true)
+                    .execute();
+            logger.info("Eventos obtenidos correctamente. Total: {}", events.getItems().size());
+            return events.getItems();
+        } catch (IOException e) {
+            logger.error("Error al obtener eventos de Google Calendar: {}", e.getMessage());
+            throw e;
+        }
     }
     
     /**

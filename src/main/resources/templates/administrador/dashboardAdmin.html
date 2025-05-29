@@ -394,10 +394,21 @@
                 <span class="block sm:inline" th:text="${calendarError}"></span>
             </div>            <!-- Google Calendar Embed -->
             <div class="relative overflow-hidden rounded-lg calendar-container" style="padding-top: 56.25%; min-height: 500px;">
-                <iframe th:src="${calendarEmbedUrl}" 
+                <!-- Solo mostrar el iframe si no hay errores y tenemos URL -->
+                <iframe th:if="${calendarEmbedUrl != null && calendarEmbedUrl != 'about:blank'}" 
+                        th:src="${calendarEmbedUrl}" 
                         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" 
                         frameborder="0" scrolling="no" allowfullscreen>
                 </iframe>
+                <!-- Mostrar un mensaje si no se puede cargar el calendario -->
+                <div th:if="${calendarEmbedUrl == null || calendarEmbedUrl == 'about:blank'}" 
+                     style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; background-color: #f0f4f8;">
+                    <div class="text-center">
+                        <i class="fa-solid fa-calendar-xmark text-blue-400 text-5xl mb-3"></i>
+                        <p class="text-lg font-semibold text-gray-600">No se pudo cargar el calendario</p>
+                        <p class="text-sm text-gray-500">Verifica tu conexión a internet y credenciales</p>
+                    </div>
+                </div>
             </div>
               <!-- Lista de próximos eventos -->
             <div class="mt-6">
@@ -415,20 +426,32 @@
                         </div>
                         <div class="flex-grow">
                             <h4 class="font-bold text-gray-800" th:text="${event.summary}">Título de la Reunión</h4>
-                            <p class="text-sm text-gray-600 mb-1" th:if="${event.description}" th:text="${#strings.abbreviate(event.description, 50)}">Descripción</p>
+                            <p class="text-sm text-gray-600 mb-1" th:if="${event.description != null}" th:text="${#strings.abbreviate(event.description, 50)}">Descripción</p>
                             <div class="flex items-center text-sm text-gray-600">
                                 <i class="fa-regular fa-clock mr-2"></i>
-                                <span th:text="${#dates.format(new java.util.Date(event.start.dateTime.value), 'EEE, MMM dd, yyyy - HH:mm')}">Fecha y hora</span>
+                                <!-- Verificar que los datos de fecha/hora estén disponibles -->
+                                <span th:if="${event.start != null && event.start.dateTime != null}" 
+                                      th:text="${#dates.format(new java.util.Date(event.start.dateTime.value), 'EEE, MMM dd, yyyy - HH:mm')}">
+                                    Fecha y hora
+                                </span>
+                                <span th:unless="${event.start != null && event.start.dateTime != null}">
+                                    Fecha no disponible
+                                </span>
                             </div>
                         </div>                        <div class="flex-shrink-0 ml-4 flex flex-col sm:flex-row gap-2">
-                            <a th:if="${event.conferenceData != null}" th:href="${event.hangoutLink}" target="_blank" 
+                            <a th:if="${event.conferenceData != null && event.hangoutLink != null}" 
+                               th:href="${event.hangoutLink}" 
+                               target="_blank" 
                                class="bg-blue-500 text-white font-semibold rounded-full px-4 py-1.5 text-sm hover:bg-blue-600 transition flex items-center justify-center">
                                 <i class="fa-solid fa-video mr-1"></i> Unirse
                             </a>
-                            <a th:href="${event.htmlLink}" target="_blank" 
+                            <a th:if="${event.htmlLink != null}" 
+                               th:href="${event.htmlLink}" 
+                               target="_blank" 
                                class="border border-blue-500 text-blue-500 font-semibold rounded-full px-4 py-1.5 text-sm hover:bg-blue-50 transition flex items-center justify-center">
                                 <i class="fa-solid fa-calendar-day mr-1"></i> Ver
                             </a>
+                        </div>
                         </div>
                     </div>
                 </div>
