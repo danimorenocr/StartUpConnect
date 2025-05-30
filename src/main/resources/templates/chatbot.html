@@ -11,16 +11,50 @@
     <!-- Ensure CSS is loaded -->
     <link rel="stylesheet" th:href="@{/css/chatbot.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
-    <div class="container">
+    
+    <!-- Para asegurar que ocupemos toda la pantalla -->
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+    </style>
+    
+    <div class="container-fluid p-0">
         <div class="chat-container">
             <div class="chat-header">
-                <h1 th:text="${title}">Chatbot de StartUpConnect</h1>
-                <button id="clearChatBtn" class="clear-chat-btn" title="Borrar historial de chat">
-                    <i class="fas fa-trash"></i>
-                </button>
+                <div class="chat-app-logo">
+                    <i class="fas fa-robot"></i> StartUp AI
+                </div>
+              
             </div>
-              <div class="chat-messages" id="chatMessages">
+            
+            <div class="welcome-section">
+                <h1>Hola, ¿en qué puedo ayudarte?</h1>
+                <p class="welcome-subtitle">Usa una de las opciones más comunes o escribe tu consulta</p>
+            </div>
+            
+            <div class="quick-options-container">
+                <div class="quick-option-row">
+                    <div class="quick-option">
+                        <div class="option-icon"><i class="fas fa-clipboard-list"></i></div>
+                        <div class="option-text">Escribe una lista de tareas para un proyecto o tarea personal</div>
+                    </div>
+                    <div class="quick-option">
+                        <div class="option-icon"><i class="fas fa-envelope"></i></div>
+                        <div class="option-text">Genera un correo electrónico para una oferta</div>
+                    </div>
+                    <div class="quick-option">
+                        <div class="option-icon"><i class="fas fa-cogs"></i></div>
+                        <div class="option-text">¿Cómo funciona la IA en capacidad técnica?</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chat-messages" id="chatMessages" style="display: none;">
                 <!-- Mensaje inicial del bot -->
                 <div class="message bot-message">
                     <p th:text="${description}">Bienvenido al chatbot de StartUp Connect. Aquí puedes hacer preguntas y obtener respuestas sobre nuestros servicios.</p>
@@ -35,7 +69,7 @@
                 </div>
             </div>
             
-            <div class="chat-quick-replies">
+            <div class="chat-quick-replies" style="display: none;">
                 <div th:each="pregunta : ${preguntasFrecuentes}" class="quick-reply">
                     <button class="quick-reply-button" th:text="${pregunta}" onclick="sendMessage(this.textContent)">Pregunta</button>
                 </div>
@@ -43,60 +77,218 @@
             
             <div class="chat-input-container">
                 <form id="chatForm" class="chat-input-form" onsubmit="return sendForm(event)">
-                    <input type="text" id="userInput" class="chat-input" placeholder="Escribe tu mensaje aquí...">
+                    <input type="text" id="userInput" class="chat-input" placeholder="Pregunta lo que quieras...">
                     <button type="submit" class="send-button">
-                        <i class="fas fa-paper-plane"></i>
+                        <i class="fas fa-arrow-right"></i>
                     </button>
                 </form>
             </div>
         </div>
-    </div>
-
-    <!-- Inline styles as a fallback -->
-    <style>
+    </div>    <!-- Inline styles as a fallback -->    <style>
+        body {
+            overflow: hidden; /* Prevenir scroll en la página */
+            background: linear-gradient(135deg, #2a3990, #4e73df, #2980b9);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+        
+        @keyframes gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+        
+        .container-fluid {
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
         .chat-container {
-            max-width: 800px;
-            margin: 30px auto;
-            border-radius: 15px;
-            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
-            background-color: #fff;
+            width: 100%;
+            height: 100vh;
+            background-color: #f9f9fb;
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            height: 75vh;
+            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.15);
         }
 
         .chat-header {
-            background: linear-gradient(45deg, #4e73df, #36b9cc);
-            color: white;
-            padding: 15px 20px;
+            background: white;
+            color: #333;
+            padding: 15px 25px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            border-bottom: 1px solid #e0e0e0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
         }
         
-        .chat-header h1 {
-            margin: 0;
-            font-size: 1.5rem;
+        .chat-app-logo {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        
+        .chat-app-logo i {
+            color: #4e73df;
+            margin-right: 5px;
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+          .welcome-section {
             text-align: center;
+            padding: 60px 20px 30px;
+            animation: fadeInDown 1s ease-out;
+        }
+        
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .welcome-section h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2a3990;
+            margin-bottom: 15px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        .welcome-subtitle {
+            color: #555;
+            font-size: 1.1rem;
+            margin-top: 0;
+            margin-bottom: 40px;
+        }
+        
+        .quick-options-container {
+            padding: 20px;
+            max-width: 90%;
+            margin: 0 auto 40px auto;
+            animation: fadeInUp 1s ease-out 0.3s forwards;
+            opacity: 0;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .quick-option-row {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+          .quick-option {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.09);
+            width: 30%;
+            min-width: 250px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .quick-option:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
+            border-color: rgba(78, 115, 223, 0.3);
+        }
+        
+        .quick-option:hover .option-icon {
+            background-color: #4e73df;
+            color: white;
+            transform: scale(1.1);
+        }
+        
+        .quick-option:hover::before {
+            opacity: 1;
+        }
+        
+        .quick-option::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(45deg, #4e73df, #2980b9);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .option-icon {
+            background-color: #eef1ff;
+            color: #4e73df;
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            transition: all 0.3s ease;
+        }
+        
+        .option-text {
+            font-size: 0.85rem;
+            color: #444;
+            line-height: 1.4;
         }
 
         .chat-messages {
             flex: 1;
             overflow-y: auto;
             padding: 20px;
-            background-color: #f5f7fb;
+            background-color: #f9f9fb;
             display: flex;
             flex-direction: column;
-        }
-
-        .message {
+        }        .message {
             max-width: 70%;
-            padding: 12px 15px;
-            margin-bottom: 10px;
-            border-radius: 20px;
+            padding: 14px 18px;
+            margin-bottom: 15px;
+            border-radius: 18px;
             position: relative;
+            font-size: 0.95rem;
+            line-height: 1.5;
         }
 
         .user-message {
@@ -109,11 +301,13 @@
 
         .bot-message {
             align-self: flex-start;
-            background-color: #e9ecef;
+            background-color: white;
             color: #333;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
             border-bottom-left-radius: 5px;
             margin-right: auto;
-        }        .message p {
+        }.message p {
             margin: 0;
             word-wrap: break-word;
             line-height: 1.5;
@@ -129,6 +323,47 @@
                 opacity: 1;
                 transform: translateY(0);
             }
+        }
+        
+        .markdown-header {
+            font-weight: bold;
+            color: #043A68;
+            margin: 12px 0 8px 0;
+            display: block;
+            border-bottom: 1px solid rgba(4, 58, 104, 0.2);
+            padding-bottom: 3px;
+            font-size: 1.2em;
+        }
+
+        .markdown-subheader {
+            font-weight: bold;
+            color: #4e73df;
+            margin: 10px 0 6px 0;
+            display: block;
+            font-size: 1.1em;
+        }
+
+        .numbered-item {
+            font-weight: bold;
+            margin: 8px 0;
+            display: block;
+            color: #043A68;
+        }
+
+        .important-point {
+            background-color: rgba(78, 115, 223, 0.08);
+            padding: 5px;
+            border-left: 3px solid #4e73df;
+            margin: 5px 0;
+            border-radius: 0 3px 3px 0;
+        }
+        
+        .keyword {
+            color: #4e73df;
+            font-weight: bold;
+            background-color: rgba(78, 115, 223, 0.1);
+            padding: 0 3px;
+            border-radius: 3px;
         }
         
         .markdown-header {
@@ -253,41 +488,57 @@
         .quick-reply-button:hover {
             background-color: #4e73df;
             color: white;
-        }
-
-        .chat-input-container {
-            padding: 15px;
-            border-top: 1px solid #e0e0e0;
-            background-color: #fff;
+        }        .chat-input-container {
+            padding: 25px 30px;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            background: rgba(255, 255, 255, 0.9);
+            margin-top: auto;
+            position: relative;
+            z-index: 10;
+            box-shadow: 0 -5px 25px rgba(0, 0, 0, 0.05);
         }
 
         .chat-input-form {
             display: flex;
             align-items: center;
+            background-color: #f0f2f5;
+            border-radius: 30px;
+            padding: 5px 5px 5px 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .chat-input-form:focus-within {
+            box-shadow: 0 5px 15px rgba(78, 115, 223, 0.15);
+            transform: translateY(-2px);
         }
 
         .chat-input {
             flex: 1;
-            border: 1px solid #ddd;
-            border-radius: 20px;
-            padding: 10px 15px;
+            border: none;
+            background: transparent;
+            border-radius: 30px;
+            padding: 14px 5px 14px 0;
             font-size: 1rem;
             outline: none;
+            color: #333;
         }
 
         .chat-input:focus {
-            border-color: #4e73df;
+            outline: none;
         }
 
         .typing-indicator {
             display: none;
             align-self: flex-start;
-            background-color: #e9ecef;
+            background-color: white;
             color: #333;
-            border-radius: 20px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+            border-radius: 18px;
             border-bottom-left-radius: 5px;
-            padding: 12px 15px;
-            margin-bottom: 10px;
+            padding: 14px 18px;
+            margin-bottom: 15px;
             margin-right: auto;
             animation: fadeIn 0.3s ease-in-out;
         }
@@ -319,26 +570,37 @@
             50% {
                 opacity: 1;
             }
-        }
-
-        .send-button {
-            background-color: #4e73df;
+        }        .send-button {
+            background: linear-gradient(45deg, #4e73df, #2980b9);
             color: white;
             border: none;
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            margin-left: 10px;
+            width: 46px;
+            height: 46px;
+            margin-right: 5px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 8px rgba(78, 115, 223, 0.4);
+        }
+        
+        .send-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(78, 115, 223, 0.5);
+            background: linear-gradient(45deg, #395fc9, #2171a5);
+        }
+        
+        .send-button:active {
+            transform: scale(0.95);
+            box-shadow: 0 2px 5px rgba(78, 115, 223, 0.4);
         }
 
         .clear-chat-btn {
             background: none;
             border: none;
-            color: white;
+            color: #4e73df;
             font-size: 0.9rem;
             cursor: pointer;
             padding: 5px 10px;
@@ -347,24 +609,96 @@
         }
         
         .clear-chat-btn:hover {
-            background-color: rgba(255, 255, 255, 0.2);
+            background-color: rgba(78, 115, 223, 0.1);
         }
-    </style>
-
-    <script>
+        
+        /* Animation for transitions */
+        .fade-in {
+            animation: fadeIn 0.4s ease-in-out;
+        }
+        
+        .fade-out {
+            animation: fadeOut 0.4s ease-in-out forwards;
+        }
+        
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateY(-20px);
+                display: none;
+            }
+        }
+    </style>    <script>
         function getCurrentTime() {
             const now = new Date();
             return now.getHours() + ':' + (now.getMinutes() < 10 ? '0' : '') + now.getMinutes();
+        }
+        
+        // Inicializar la interfaz cuando el documento está listo
+        document.addEventListener('DOMContentLoaded', function() {
+            // Añadir event listeners a las opciones rápidas
+            const quickOptions = document.querySelectorAll('.quick-option');
+            quickOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    const optionText = this.querySelector('.option-text').textContent;
+                    showChatInterface();
+                    sendMessage(optionText);
+                });
+            });
+            
+            // Enfoque automático en el input
+            document.getElementById('userInput').focus();
+        });
+        
+        // Función para mostrar la interfaz de chat y ocultar la pantalla de bienvenida
+        function showChatInterface() {
+            // Ocultar sección de bienvenida y opciones rápidas
+            const welcomeSection = document.querySelector('.welcome-section');
+            const quickOptionsContainer = document.querySelector('.quick-options-container');
+            
+            if (welcomeSection && welcomeSection.style.display !== 'none') {
+                welcomeSection.classList.add('fade-out');
+                quickOptionsContainer.classList.add('fade-out');
+                
+                setTimeout(() => {
+                    welcomeSection.style.display = 'none';
+                    quickOptionsContainer.style.display = 'none';
+                    
+                    // Mostrar mensajes y quick replies
+                    const chatMessages = document.getElementById('chatMessages');
+                    const chatQuickReplies = document.querySelector('.chat-quick-replies');
+                    
+                    chatMessages.style.display = 'flex';
+                    chatMessages.classList.add('fade-in');
+                    
+                    if (chatQuickReplies) {
+                        chatQuickReplies.style.display = 'flex';
+                        chatQuickReplies.classList.add('fade-in');
+                    }
+                }, 400);
+            }
         }
 
         function sendForm(event) {
             event.preventDefault();
             const userInput = document.getElementById('userInput');
-            sendMessage(userInput.value);
-            userInput.value = '';
+            const message = userInput.value.trim();
+            
+            if (message) {
+                showChatInterface();
+                sendMessage(message);
+                userInput.value = '';
+            }
             return false;
         }        function sendMessage(message) {
             if (!message.trim()) return;
+            
+            // Asegúrate de que se muestre la interfaz de chat
+            showChatInterface();
 
             addUserMessage(message);
 
@@ -380,7 +714,7 @@
                         throw new Error('Error en la respuesta del servidor');
                     }
                     return response.text();
-                })                .then(data => {
+                }).then(data => {
                     // Mostrar tipeo progresivo
                     let delay = 500 + Math.random() * 500; // Retraso aleatorio entre 0.5 y 1 segundo
                     
@@ -567,16 +901,11 @@
         function scrollToBottom() {
             const chatMessages = document.getElementById('chatMessages');
             chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
+        }        document.addEventListener('DOMContentLoaded', function() {
             scrollToBottom();
             
             // Cargar historial de chat al iniciar
             loadChatHistory();
-            
-            // Configurar el botón de limpiar historial
-            document.getElementById('clearChatBtn').addEventListener('click', clearChatHistory);
             
             // Debug CSS loading
             console.log('DOM loaded, checking styles...');
@@ -584,6 +913,20 @@
             linkElements.forEach(link => {
                 console.log('CSS link found:', link.href);
             });
+            
+            // Agregar botón de limpiar historial si no existe
+            if (!document.getElementById('clearChatBtn')) {
+                const header = document.querySelector('.chat-header');
+                const clearBtn = document.createElement('button');
+                clearBtn.id = 'clearChatBtn';
+                clearBtn.className = 'clear-chat-btn';
+                clearBtn.title = 'Borrar historial de chat';
+                clearBtn.innerHTML = '<i class="fas fa-trash"></i>';
+                clearBtn.addEventListener('click', clearChatHistory);
+                header.appendChild(clearBtn);
+            } else {
+                document.getElementById('clearChatBtn').addEventListener('click', clearChatHistory);
+            }
         });
         
         // Nueva función para limpiar el historial de chat

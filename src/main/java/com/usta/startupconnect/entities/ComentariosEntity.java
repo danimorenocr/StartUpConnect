@@ -24,13 +24,13 @@ public class ComentariosEntity implements Serializable {
 
     @Column(name = "comentario", nullable = false, length = 500)
     private String comentario;
-
+    
     @ManyToOne
     @JoinColumn(name = "id_startup", nullable = false)
     private StartupEntity startup;
 
     @ManyToOne
-    @JoinColumn(name = "id_usuario", nullable = false)
+    @JoinColumn(name = "id_usuario", referencedColumnName = "documento", nullable = false)
     private UsuarioEntity usuario;
 
 }

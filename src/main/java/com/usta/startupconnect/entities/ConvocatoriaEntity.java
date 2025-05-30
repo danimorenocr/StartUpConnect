@@ -71,7 +71,5 @@ public class ConvocatoriaEntity implements Serializable {
     @OneToOne(mappedBy = "convocatoria")
     private PostulacionEntity postulacion;
 
-    @OneToOne(mappedBy = "convocatoria")
-    private CalendarioEntity calendario;
 
 }

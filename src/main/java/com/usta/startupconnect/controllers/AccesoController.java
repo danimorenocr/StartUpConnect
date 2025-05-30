@@ -41,7 +41,7 @@ public class AccesoController {
             if (auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
                 return "redirect:/administrador";
             } else if (auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_MENTOR"))) {
-                return "redirect:/mentor";
+                return "redirect:/dashboardMentor";
             } else if (auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_EMPRENDEDOR"))) {
                 return "redirect:/emprendedor";
             }

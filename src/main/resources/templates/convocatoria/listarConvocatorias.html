@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{layout/layout :: head}"></head>
+<head th:replace="~{layout/layout :: head}">
+    <title>Listado de Convocatorias</title>
+    <!-- Font Awesome para los iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
 
 <body class="bg-white font-sans">
     <header th:replace="~{layout/layout :: header}"></header>
@@ -92,6 +96,8 @@
             Swal.fire({
                 title: "¿Estás seguro?",
                 text: "Esta acción no se puede deshacer",
+                title: "¿Estás seguro?",
+                text: "Esta acción no se puede deshacer",
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#1e40af",
@@ -100,7 +106,6 @@
                 cancelButtonText: "Cancelar"
             }).then((result) => {
                 if (result.isConfirmed) {
-                    console.log("Deleting...");
                     form.submit();
                 }
             });

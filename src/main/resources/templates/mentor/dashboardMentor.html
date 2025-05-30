@@ -7,7 +7,7 @@
 
 <body class="bg-stone-100 text-gray-900 min-h-screen w-screen flex flex-col items-center py-6 font-[Poppins]">
     <!-- Cargar hoja de estilo específica para el dashboard -->
-    <link rel="stylesheet" th:href="@{/css/administrador/dashboard.css}">
+    <link rel="stylesheet" th:href="@{/css/mentor/dashboardMentor.css}">
     <!-- Estilos adicionales para animaciones y efectos visuales -->
     <style>
         /* Animación de pulso para el indicador de sincronización */
@@ -110,195 +110,171 @@
     <main class="w-full max-w-6xl mx-auto px-4">
         <!-- Banner superior con mensaje de bienvenida -->
         <div class="dashboard-banner">
-            <img src="/images/bannerUsuario.jpg" alt="Banner de Administrador" class="w-full h-full object-cover">
-            <div class="dashboard-banner-overlay">
+            <img src="/images/bannerUsuario.jpg" alt="Banner de Administrador" class="w-full h-full object-cover">            <div class="dashboard-banner-overlay">
                 <div>
                     <h1 class="dashboard-banner-title">¡Bienvenido, <span th:text="${nombreCompleto}"></span>!</h1>
-                    <p class="dashboard-banner-subtitle">Panel de control de administración</p>
+                    <p class="dashboard-banner-subtitle">Panel de control de mentoría</p>
                 </div>
             </div>
         </div><!-- Contenedor principal -->
         <div class="flex flex-col md:flex-row gap-8 w-full">
             <!-- Sección de estadísticas -->
             <section class="flex-1">
-                <h2 class="text-2xl font-bold mb-4">Estadísticas de la Plataforma</h2>
-                <div class="grid grid-cols-2 gap-6"> <!-- Tarjeta 1 (verde) - Total Users -->
+                <h2 class="text-2xl font-bold mb-4">Mis Estadísticas</h2>
+                <div class="grid grid-cols-2 gap-6"> <!-- Tarjeta 1 (verde) - Etapas -->
                     <div class="bg-green-100 rounded-2xl p-5 shadow flex flex-col justify-between">
                         <div>
-                            <h3 class="text-lg font-bold">Crecimiento de Usuarios</h3>
-                            <p class="text-sm text-gray-600 mb-3">Total de usuarios registrados en la plataforma</p>
-                            <div class="flex justify-between items-center">                                <div class="text-3xl font-bold text-green-700" th:text="${totalUsers}">127</div>
+                            <h3 class="text-lg font-bold">Mis Etapas</h3>
+                            <p class="text-sm text-gray-600 mb-3">Etapas asignadas a mi mentoría</p>
+                            <div class="flex justify-between items-center">
+                                <div class="text-3xl font-bold text-green-700" th:text="${totalEtapas}">5</div>
                                 <div class="bg-green-200 text-green-800 rounded-full px-2 py-1 text-xs font-medium">
-                                    <i class="fa-solid fa-arrow-up mr-1"></i><span th:text="${crecimientoUsuarios != null ? crecimientoUsuarios : '24'}">24</span>% este mes
+                                    <i class="fa-solid fa-check mr-1"></i>Asignadas
                                 </div>
                             </div>
-                            <div class="mb-2 mt-3">
-                                <span class="text-xs font-semibold">Objetivo completado</span>
-                                <div class="w-full bg-white rounded-full h-2.5 mt-1">
-                                    <div class="bg-green-500 h-2.5 rounded-full" th:style="${'width: ' + (objetivoUsuarios != null ? objetivoUsuarios : '85') + '%'}" style="width: 85%"></div>
+                            <div class="space-y-2 mt-3" th:if="${etapasPorEstado != null && !etapasPorEstado.isEmpty()}">
+                                <div th:each="estado : ${etapasPorEstado.entrySet()}" class="flex items-center justify-between">
+                                    <span class="text-xs" th:text="${estado.key}">Estado</span>
+                                    <span class="text-xs font-semibold" th:text="${estado.value}">0</span>
                                 </div>
-                                <div class="text-right text-xs font-bold mt-1" th:text="${objetivoUsuarios != null ? objetivoUsuarios : '85'} + '%'">85%</div>
+                                <div th:each="estado : ${etapasPorEstado.entrySet()}" class="w-full bg-white rounded-full h-2">
+                                    <div class="bg-green-500 h-2 rounded-full"
+                                        th:style="'width: ' + (${estado.value} * 100 / ${totalEtapas}) + '%'"></div>
+                                </div>
+                            </div>
+                            <!-- Contenido estático en caso de no haber datos -->
+                            <div class="space-y-2 mt-3" th:if="${etapasPorEstado == null || etapasPorEstado.isEmpty()}">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-xs">Activas</span>
+                                    <span class="text-xs font-semibold">3</span>
+                                </div>
+                                <div class="w-full bg-white rounded-full h-2">
+                                    <div class="bg-green-500 h-2 rounded-full" style="width: 60%"></div>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <span class="text-xs">Completadas</span>
+                                    <span class="text-xs font-semibold">1</span>
+                                </div>
+                                <div class="w-full bg-white rounded-full h-2">
+                                    <div class="bg-green-500 h-2 rounded-full" style="width: 20%"></div>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <span class="text-xs">Por iniciar</span>
+                                    <span class="text-xs font-semibold">1</span>
+                                </div>
+                                <div class="w-full bg-white rounded-full h-2">
+                                    <div class="bg-green-500 h-2 rounded-full" style="width: 20%"></div>
+                                </div>
                             </div>
                         </div>
-                        <a href="/usuario"
+                        <a href="/etapa"
                             class="bg-white text-green-600 font-semibold border border-green-300 rounded-full px-4 py-1 text-xs hover:bg-green-50 transition mt-2 self-end">
-                            Ver Usuarios
+                            Ver Mis Etapas
                         </a>
-                    </div> <!-- Tarjeta 2 (azul) - Startups -->
+                    </div> <!-- Tarjeta 2 (azul) - Tareas -->
                     <div class="bg-cyan-200 rounded-2xl p-5 shadow flex flex-col justify-between">
                         <div>
-                            <h3 class="text-lg font-bold">Startups Activas</h3>
-                            <p class="text-sm text-gray-600 mb-3">Startups registradas por categoría</p>
+                            <h3 class="text-lg font-bold">Tareas Asignadas</h3>
+                            <p class="text-sm text-gray-600 mb-3">Tareas de mis etapas</p>
                             <div class="flex justify-between items-center">
-                                <div class="text-3xl font-bold text-cyan-700" th:text="${totalStartups}">42</div>
+                                <div class="text-3xl font-bold text-cyan-700" th:text="${totalTareas}">12</div>
                                 <div class="bg-cyan-100 text-cyan-800 rounded-full px-2 py-1 text-xs font-medium">
-                                    <i class="fa-solid fa-arrow-up mr-1"></i>12% este mes
+                                    <i class="fa-solid fa-list-check mr-1"></i>Por completar
                                 </div>
                             </div>
-                            <div class="space-y-2 mt-3"
-                                th:if="${startupsPorSector != null && !startupsPorSector.isEmpty()}">
-                                <div th:each="sector : ${startupsPorSector.entrySet()}"
-                                    class="flex items-center justify-between">
-                                    <span class="text-xs" th:text="${sector.key}">Sector</span>
-                                    <span class="text-xs font-semibold" th:text="${sector.value}">0</span>
-                                </div>
-                                <div th:each="sector : ${startupsPorSector.entrySet()}"
-                                    class="w-full bg-white rounded-full h-2">
-                                    <div class="bg-cyan-500 h-2 rounded-full"
-                                        th:style="'width: ' + (${sector.value} * 100 / ${totalStartups}) + '%'"></div>
+                            <div class="mt-3" th:if="${tareasProximasAVencer != null && !tareasProximasAVencer.isEmpty()}">
+                                <div class="text-sm font-semibold">Tareas próximas a vencer:</div>
+                                <div class="mt-2 space-y-2 max-h-32 overflow-y-auto scrollbar-thin">
+                                    <div th:each="tarea : ${tareasProximasAVencer}" class="bg-white rounded-lg p-2 text-sm">
+                                        <div class="font-medium line-clamp-1" th:text="${tarea.titulo}">Título de la tarea</div>
+                                        <div class="flex justify-between mt-1">
+                                            <span class="text-xs text-gray-600" th:text="${tarea.etapa.titulo}">Etapa</span>
+                                            <span class="text-xs font-semibold text-red-600" th:text="${#dates.format(tarea.fechaEntrega, 'dd MMM yyyy')}">Fecha</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <!-- Contenido estático en caso de no haber datos -->
-                            <div class="space-y-2 mt-3"
-                                th:if="${startupsPorSector == null || startupsPorSector.isEmpty()}">                                <div class="flex items-center justify-between">
-                                    <span class="text-xs">Tecnología</span>
-                                    <span class="text-xs font-semibold">18</span>
-                                </div>
-                                <div class="w-full bg-white rounded-full h-2">
-                                    <div class="bg-cyan-500 h-2 rounded-full" style="width: calc(18 / 42 * 100%)"></div>
-                                </div>
-                                <div class="flex items-center justify-between">
-                                    <span class="text-xs">Sostenibilidad</span>
-                                    <span class="text-xs font-semibold">15</span>
-                                </div>
-                                <div class="w-full bg-white rounded-full h-2">
-                                    <div class="bg-cyan-500 h-2 rounded-full" style="width: calc(15 / 42 * 100%)"></div>
-                                </div>
-                                <div class="flex items-center justify-between">
-                                    <span class="text-xs">Otros</span>
-                                    <span class="text-xs font-semibold">9</span>
-                                </div>
-                                <div class="w-full bg-white rounded-full h-2">
-                                    <div class="bg-cyan-500 h-2 rounded-full" style="width: calc(9 / 42 * 100%)"></div>
+                            <div class="mt-3" th:if="${tareasProximasAVencer == null || tareasProximasAVencer.isEmpty()}">
+                                <div class="text-sm font-semibold">Tareas próximas a vencer:</div>
+                                <div class="mt-2 space-y-2">
+                                    <div class="bg-white rounded-lg p-2 text-sm">
+                                        <div class="font-medium line-clamp-1">Revisión de prototipo</div>
+                                        <div class="flex justify-between mt-1">
+                                            <span class="text-xs text-gray-600">Fase de pruebas</span>
+                                            <span class="text-xs font-semibold text-red-600">05 Jun 2025</span>
+                                        </div>
+                                    </div>
+                                    <div class="bg-white rounded-lg p-2 text-sm">
+                                        <div class="font-medium line-clamp-1">Feedback de presentación</div>
+                                        <div class="flex justify-between mt-1">
+                                            <span class="text-xs text-gray-600">Preparación pitch</span>
+                                            <span class="text-xs font-semibold text-red-600">12 Jun 2025</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <a href="/startup"
+                        <a href="/tarea"
                             class="bg-white text-cyan-600 font-semibold border border-cyan-300 rounded-full px-4 py-1 text-xs hover:bg-cyan-50 transition mt-3 self-end">
-                            Gestionar Startups
+                            Gestionar Tareas
                         </a>
-                    </div> <!-- Tarjeta 3 (rosada) - Mentors -->
-                    <div class="bg-pink-200 rounded-2xl p-5 shadow flex flex-col justify-between">
+                    </div> <!-- Tarjeta 3 (púrpura) - Próxima etapa -->
+                    <div class="bg-purple-200 rounded-2xl p-5 shadow flex flex-col justify-between">
                         <div>
-                            <h3 class="text-lg font-bold">Red de Mentores</h3>
-                            <p class="text-sm text-gray-600 mb-3">Mentores activos por especialidad</p>
-                            <div class="flex justify-between items-center">
-                                <div class="text-3xl font-bold text-pink-700" th:text="${totalMentors}">24</div>
-                                <div class="bg-pink-100 text-pink-800 rounded-full px-2 py-1 text-xs font-medium">
-                                    <i class="fa-solid fa-arrow-up mr-1"></i>8% este mes
+                            <h3 class="text-lg font-bold">Próxima Etapa</h3>
+                            <p class="text-sm text-gray-600 mb-3">Detalles de la próxima etapa a comenzar</p>
+                            <div th:if="${proximaEtapa != null}">
+                                <div class="bg-white rounded-lg p-3 mt-2">
+                                    <div class="font-bold text-purple-800" th:text="${proximaEtapa.titulo}">Título de la etapa</div>
+                                    <div class="text-sm text-gray-700 mt-1 line-clamp-2" th:text="${proximaEtapa.descripcion}">Descripción de la etapa</div>
+                                    <div class="flex justify-between mt-2">
+                                        <div>
+                                            <div class="text-xs text-gray-500">Inicio:</div>
+                                            <div class="text-sm font-medium" th:text="${#dates.format(proximaEtapa.fechaInicio, 'dd MMM yyyy')}">Fecha inicio</div>
+                                        </div>
+                                        <div>
+                                            <div class="text-xs text-gray-500">Fin:</div>
+                                            <div class="text-sm font-medium" th:text="${#dates.format(proximaEtapa.fechaFin, 'dd MMM yyyy')}">Fecha fin</div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="grid grid-cols-2 gap-2 mt-3"
-                                th:if="${mentoresPorEspecialidad != null && !mentoresPorEspecialidad.isEmpty()}">
-                                <div th:each="especialidad : ${mentoresPorEspecialidad.entrySet()}"
-                                    class="bg-white bg-opacity-70 rounded-lg p-2 text-center">
-                                    <div class="text-xl font-bold text-pink-700" th:text="${especialidad.value}">0</div>
-                                    <div class="text-xs" th:text="${especialidad.key}">Especialidad</div>
-                                </div>
+                                <a th:href="@{'/etapa/verEtapa/' + ${proximaEtapa.id}}" class="flex justify-center items-center bg-white text-purple-700 font-medium rounded-lg mt-3 px-3 py-2 text-sm border border-purple-300 hover:bg-purple-50 transition">
+                                    <i class="fa-solid fa-eye mr-2"></i> Ver detalles completos
+                                </a>
                             </div>
                             <!-- Contenido estático en caso de no haber datos -->
-                            <div class="grid grid-cols-2 gap-2 mt-3"
-                                th:if="${mentoresPorEspecialidad == null || mentoresPorEspecialidad.isEmpty()}">
-                                <div class="bg-white bg-opacity-70 rounded-lg p-2 text-center">
-                                    <div class="text-xl font-bold text-pink-700">12</div>
-                                    <div class="text-xs">Tecnología</div>
+                            <div th:if="${proximaEtapa == null}">
+                                <div class="bg-white rounded-lg p-3 mt-2">
+                                    <div class="font-bold text-purple-800">Fase de validación</div>
+                                    <div class="text-sm text-gray-700 mt-1 line-clamp-2">Validación de la solución con usuarios reales y recolección de feedback para iteraciones.</div>
+                                    <div class="flex justify-between mt-2">
+                                        <div>
+                                            <div class="text-xs text-gray-500">Inicio:</div>
+                                            <div class="text-sm font-medium">15 Jun 2025</div>
+                                        </div>
+                                        <div>
+                                            <div class="text-xs text-gray-500">Fin:</div>
+                                            <div class="text-sm font-medium">30 Jul 2025</div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="bg-white bg-opacity-70 rounded-lg p-2 text-center">
-                                    <div class="text-xl font-bold text-pink-700">7</div>
-                                    <div class="text-xs">Negocios</div>
-                                </div>
-                                <div class="bg-white bg-opacity-70 rounded-lg p-2 text-center">
-                                    <div class="text-xl font-bold text-pink-700">3</div>
-                                    <div class="text-xs">Finanzas</div>
-                                </div>
-                                <div class="bg-white bg-opacity-70 rounded-lg p-2 text-center">
-                                    <div class="text-xl font-bold text-pink-700">2</div>
-                                    <div class="text-xs">Marketing</div>
-                                </div>
+                                <a href="/etapa" class="flex justify-center items-center bg-white text-purple-700 font-medium rounded-lg mt-3 px-3 py-2 text-sm border border-purple-300 hover:bg-purple-50 transition">
+                                    <i class="fa-solid fa-eye mr-2"></i> Ver etapas asignadas
+                                </a>
                             </div>
                         </div>
-                        <a href="/mentor"
-                            class="bg-white text-pink-600 font-semibold border border-pink-300 rounded-full px-4 py-1 text-xs hover:bg-pink-50 transition mt-3 self-end">
-                            Ver Mentores
-                        </a>
-                    </div> <!-- Tarjeta 4 (naranja) - Open Calls -->
-                    <div class="bg-orange-100 rounded-2xl p-5 shadow flex flex-col justify-between">
+                    </div> <!-- Tarjeta 4 (amber) - Etapas Activas -->
+                    <div class="bg-amber-100 rounded-2xl p-5 shadow flex flex-col justify-between">
                         <div>
-                            <h3 class="text-lg font-bold">Convocatorias Activas</h3>
-                            <p class="text-sm text-gray-600 mb-3">Convocatorias abiertas por estado</p>
+                            <h3 class="text-lg font-bold">Etapas Activas</h3>
+                            <p class="text-sm text-gray-600 mb-3">Etapas en curso actualmente</p>
                             <div class="flex justify-between items-center">
-                                <div class="text-3xl font-bold text-orange-700" th:text="${totalConvocatorias}">8</div>
-                                <div class="bg-orange-200 text-orange-800 rounded-full px-2 py-1 text-xs font-medium">
-                                    <i class="fa-solid fa-arrow-up mr-1"></i>2 nuevas este mes
+                                <div class="text-3xl font-bold text-amber-700" th:text="${etapasActivas}">3</div>
+                                <div class="bg-amber-200 text-amber-800 rounded-full px-2 py-1 text-xs font-medium">
+                                    <i class="fa-solid fa-clock mr-1"></i>En progreso
                                 </div>
                             </div>
-                            <div class="mt-3 space-y-2">
-                                <div class="flex justify-between items-center">
-                                    <div class="flex items-center">
-                                        <div class="w-3 h-3 rounded-full bg-green-500 mr-2"></div>
-                                        <span class="text-xs">Activas</span>
-                                    </div>
-                                    <span class="text-xs font-semibold" th:text="${convocatoriasActivas}">5</span>
-                                </div>
-                                <div class="flex justify-between items-center">
-                                    <div class="flex items-center">
-                                        <div class="w-3 h-3 rounded-full bg-yellow-500 mr-2"></div>
-                                        <span class="text-xs">Próximas a cerrar</span>
-                                    </div>
-                                    <span class="text-xs font-semibold"
-                                        th:text="${convocatoriasProximasACerrar}">2</span>
-                                </div>
-                                <div class="flex justify-between items-center">
-                                    <div class="flex items-center">
-                                        <div class="w-3 h-3 rounded-full bg-blue-500 mr-2"></div>
-                                        <span class="text-xs">En revisión</span>
-                                    </div>
-                                    <span class="text-xs font-semibold" th:text="${convocatoriasEnRevision}">1</span>
-                                </div>
-                            </div>
-                            <div class="mt-2" th:if="${proximaConvocatoria != null}">
-                                <div class="text-sm font-semibold mt-2">Próxima fecha límite:</div>
-                                <div class="bg-white rounded-lg p-2 mt-1 text-sm">
-                                    <div class="font-medium" th:text="${proximaConvocatoria.titulo}">Nombre de la
-                                        convocatoria</div>
-                                    <div class="text-xs text-gray-600"
-                                        th:text="${#dates.format(proximaConvocatoria.fechaFin, 'dd MMM yyyy')}">Fecha
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Contenido estático en caso de no haber datos -->
-                            <div class="mt-2" th:if="${proximaConvocatoria == null}">
-                                <div class="text-sm font-semibold mt-2">Próxima fecha límite:</div>
-                                <div class="bg-white rounded-lg p-2 mt-1 text-sm">
-                                    <div class="font-medium">Crecimiento Sostenible</div>
-                                    <div class="text-xs text-gray-600">15 Sept 2025</div>
-                                </div>
-                            </div>
-                        </div>
-                        <a href="/convocatoria"
-                            class="bg-white text-orange-600 font-semibold border border-orange-300 rounded-full px-4 py-1 text-xs hover:bg-orange-50 transition mt-3 self-end">
-                            Gestionar Convocatorias
-                        </a>
                     </div>
                 </div>
             </section> <!-- Sección de alertas y notificaciones -->

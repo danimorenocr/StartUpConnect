@@ -1,9 +1,7 @@
 package com.usta.startupconnect.entities;
 
 import jakarta.persistence.*;
-
 import lombok.Data;
-
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
@@ -28,18 +26,87 @@ public class NotificacionEntity implements Serializable {
     @Column(name = "mensaje", columnDefinition = "TEXT")
     private String mensaje;
 
+    /**
+     * Ejemplo: 'tarea', 'evento', 'convocatoria'
+     */
     @NotNull
-    @Size(min = 5, max = 50)
-    @Column(name = "tipo")
-    private String tipo;
+    @Size(min = 3, max = 50)
+    @Column(name = "tipo_entidad")
+    private String tipoEntidad;
+
+    /**
+     * ID del objeto referenciado (en su tabla original)
+     */
+    @NotNull
+    @Column(name = "entidad_id")
+    private Long entidadId;
 
     @NotNull
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "fecha")
     private Date fecha;
+    
+    @Column(name = "leido")
+    private Boolean leido = false;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_calendario")
-    private CalendarioEntity calendario;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_usuario", referencedColumnName = "documento")
+    private UsuarioEntity usuario;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getMensaje() {
+        return mensaje;
+    }
+
+    public void setMensaje(String mensaje) {
+        this.mensaje = mensaje;
+    }
+
+    public String getTipoEntidad() {
+        return tipoEntidad;
+    }
+
+    public void setTipoEntidad(String tipoEntidad) {
+        this.tipoEntidad = tipoEntidad;
+    }
+
+    public Long getEntidadId() {
+        return entidadId;
+    }
+
+    public void setEntidadId(Long entidadId) {
+        this.entidadId = entidadId;
+    }
+
+    public Date getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(Date fecha) {
+        this.fecha = fecha;
+    }
+
+    public Boolean getLeido() {
+        return leido;
+    }
+
+    public void setLeido(Boolean leido) {
+        this.leido = leido;
+    }
+
+    public UsuarioEntity getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(UsuarioEntity usuario) {
+        this.usuario = usuario;
+    }
 }

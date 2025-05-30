@@ -21,12 +21,11 @@ import javax.validation.Valid;
 @Controller
 public class ConvocatoriaController {
     @Autowired
-    ConvocatoriaService convocatoriaService;
-
-    @GetMapping(value = "/convocatoria")
+    ConvocatoriaService convocatoriaService;    @GetMapping(value = "/convocatoria")
     public String listarConvocatorias(Model model) {
         model.addAttribute("title", "Convocatorias");
         model.addAttribute("urlRegistro", "/crearConvocatoria");
+        model.addAttribute("specificCss", "/css/convocatoria/listarConvocatoria.css");
         List<ConvocatoriaEntity> lista = convocatoriaService.findAll();
         lista.sort(Comparator.comparing(ConvocatoriaEntity::getId));
         model.addAttribute("convocatorias", lista);
