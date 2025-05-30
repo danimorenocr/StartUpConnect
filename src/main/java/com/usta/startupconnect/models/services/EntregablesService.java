@@ -15,4 +15,7 @@ public interface EntregablesService {
     
     // Método para buscar entregables por ID de tarea
     List<EntregableEntity> findByIdTarea(Long idTarea);
+    
+    // Buscar entregables por nombre de archivo o título de tarea
+    List<EntregableEntity> searchByNombreArchivoOrTareaTitulo(String search);
 }

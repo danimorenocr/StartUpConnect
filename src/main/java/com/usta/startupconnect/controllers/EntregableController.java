@@ -39,12 +39,20 @@ public class EntregableController {
     private com.usta.startupconnect.models.services.TareaService tareaService;
 
     @GetMapping("/entregable")
-    public String listarEtregables(Model model) {
+    public String listarEtregables(Model model, @RequestParam(value = "search", required = false) String search) {
         model.addAttribute("title", "Entregables");
         model.addAttribute("urlRegistro", "/crearEntregable");
-        List<EntregableEntity> lista = entregablesService.findAll();
+        List<EntregableEntity> lista;
+        if (search != null && !search.trim().isEmpty()) {
+            lista = entregablesService.searchByNombreArchivoOrTareaTitulo(search.trim());
+        } else {
+            lista = entregablesService.findAll();
+        }
         lista.sort(Comparator.comparing(EntregableEntity::getId));
         model.addAttribute("entregables", lista);
+        model.addAttribute("param", new Object() {
+            public String getSearch() { return search; }
+        });
         return "/entregable/listarEntregables";
     }
 

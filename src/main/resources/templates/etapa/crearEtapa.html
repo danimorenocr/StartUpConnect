@@ -3,59 +3,77 @@
 
 <head th:replace="~{layout/layout :: head}"></head>
 
-<body>
-    <!-- Añadir la hoja de estilo después del head para que no sea reemplazada -->
-    <link rel="stylesheet" th:href="@{/css/etapa/crearEtapa.css}">
+<body class="bg-stone-100 text-gray-900 font-[Poppins] min-h-screen">
     <header th:replace="~{layout/layout :: header}"></header>
-
-    <div class="container mt-4">
-        <h1>Crear Nueva Etapa</h1>
-
-        <form th:action="@{/crearEtapa}" method="post" th:object="${etapa}">
-            <!-- Título -->
-            <div class="form-group mb-3">
-                <label for="titulo">Título:</label>
-                <input type="text" class="form-control" id="titulo" name="titulo" th:field="*{titulo}" required>
-                <div class="text-danger" th:if="${#fields.hasErrors('titulo')}" th:errors="*{titulo}"></div>
+    <div class="h-4 md:h-6"></div>
+    <!-- Banner ancho -->
+    <div class="relative w-full max-w-6xl mx-auto rounded-2xl overflow-hidden shadow mb-10">
+        <img src="/images/bannerListar.jpg" alt="Banner Crear Etapa" class="w-full h-56 md:h-64 object-cover object-center">
+        <div class="absolute inset-0 bg-gradient-to-r from-red-400/60 to-red-200/40 flex items-center min-h-[14rem] md:min-h-[16rem]">
+            <div class="px-10">
+                <h1 class="text-3xl md:text-5xl font-extrabold text-white drop-shadow-lg">Crear Nueva Etapa</h1>
+                <p class="text-lg text-red-100 font-medium mt-2">Registra una nueva etapa del proceso y asígnala a un mentor
+                </p>
             </div>
-
-            <!-- Descripción -->
-            <div class="form-group mb-3">
-                <label for="descripcion">Descripción:</label>
-                <textarea class="form-control" id="descripcion" name="descripcion" th:field="*{descripcion}"
-                    rows="4"></textarea>
-                <div class="text-danger" th:if="${#fields.hasErrors('descripcion')}" th:errors="*{descripcion}"></div>
+        </div>
+    </div>
+    <div class="max-w-2xl mx-auto px-0">
+        <form th:action="@{/crearEtapa}" method="post" th:object="${etapa}"
+            class="bg-white/90 rounded-xl shadow p-8 border-t-4 border-red-400 relative">
+            <div class="flex flex-col gap-6">
+                <div>
+                    <label for="titulo" class="block text-sm font-semibold text-sky-700">Título:</label>
+                    <input type="text"
+                        class="w-full rounded-2xl border-0 bg-sky-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400 text-sky-800 font-semibold placeholder:text-sky-400"
+                        id="titulo" name="titulo" th:field="*{titulo}" required>
+                    <div class="text-danger" th:if="${#fields.hasErrors('titulo')}" th:errors="*{titulo}"></div>
+                </div>
+                <div>
+                    <label for="descripcion" class="block text-sm font-semibold text-sky-700">Descripción:</label>
+                    <textarea
+                        class="w-full rounded-2xl border-0 bg-sky-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400 text-sky-800 font-semibold placeholder:text-sky-400"
+                        id="descripcion" name="descripcion" th:field="*{descripcion}" rows="4"></textarea>
+                    <div class="text-danger" th:if="${#fields.hasErrors('descripcion')}" th:errors="*{descripcion}"></div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="fechaInicio" class="block text-sm font-semibold text-sky-700">Fecha de Inicio:</label>
+                        <input type="date"
+                            class="w-full rounded-2xl border-0 bg-sky-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400 text-sky-800 font-semibold"
+                            id="fechaInicio" name="fechaInicio" th:field="*{fechaInicio}" required>
+                        <div class="text-danger" th:if="${#fields.hasErrors('fechaInicio')}" th:errors="*{fechaInicio}"></div>
+                    </div>
+                    <div>
+                        <label for="fechaFin" class="block text-sm font-semibold text-sky-700">Fecha de Fin:</label>
+                        <input type="date"
+                            class="w-full rounded-2xl border-0 bg-sky-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400 text-sky-800 font-semibold"
+                            id="fechaFin" name="fechaFin" th:field="*{fechaFin}" required>
+                        <div class="text-danger" th:if="${#fields.hasErrors('fechaFin')}" th:errors="*{fechaFin}"></div>
+                    </div>
+                </div>
+                <div sec:authorize="hasRole('ROLE_ADMIN')">
+                    <label for="mentorId" class="block text-sm font-semibold text-sky-700">ID del Mentor:</label>
+                    <input type="text"
+                        class="w-full rounded-2xl border-0 bg-sky-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400 text-sky-800 font-semibold"
+                        id="mentorId" name="mentorId" required>
+                    <div class="text-danger" th:if="${#fields.hasErrors('mentor')}" th:errors="*{mentor}"></div>
+                </div>
+                <input type="hidden" id="mentorId" name="mentorId" th:value="${mentorId}"
+                    sec:authorize="hasRole('ROLE_MENTOR') and !hasRole('ROLE_ADMIN')">
             </div>
-
-            <!-- Fecha de Inicio -->
-            <div class="form-group mb-3">
-                <label for="fechaInicio">Fecha de Inicio:</label>
-                <input type="date" class="form-control" id="fechaInicio" name="fechaInicio" th:field="*{fechaInicio}"
-                    required>
-                <div class="text-danger" th:if="${#fields.hasErrors('fechaInicio')}" th:errors="*{fechaInicio}"></div>
-            </div>
-
-            <!-- Fecha de Fin -->
-            <div class="form-group mb-3">
-                <label for="fechaFin">Fecha de Fin:</label>
-                <input type="date" class="form-control" id="fechaFin" name="fechaFin" th:field="*{fechaFin}" required>
-                <div class="text-danger" th:if="${#fields.hasErrors('fechaFin')}" th:errors="*{fechaFin}"></div>
-            </div>            <!-- Mentor - solo visible para administradores -->
-            <div class="form-group mb-3" sec:authorize="hasRole('ROLE_ADMIN')">
-                <label for="mentorId">ID del Mentor:</label>
-                <input type="text" class="form-control" id="mentorId" name="mentorId" required>
-                <div class="text-danger" th:if="${#fields.hasErrors('mentor')}" th:errors="*{mentor}"></div>
-            </div>            <!-- Campo oculto para mentores (se llenará automáticamente con su ID) -->
-            <input type="hidden" id="mentorId" name="mentorId" th:value="${mentorId}" sec:authorize="hasRole('ROLE_MENTOR') and !hasRole('ROLE_ADMIN')">
-
-            <!-- Botones -->
-            <div class="form-group">
-                <button type="submit">Guardar Etapa</button>
-                <a th:href="@{/etapa}">Cancelar</a>
+            <div class="w-full flex flex-col md:flex-row gap-4 mt-8">
+                <button type="submit"
+                    class="bg-sky-400 hover:bg-sky-500 text-white font-extrabold text-xl py-3 px-10 rounded-full shadow transition w-full md:w-auto min-w-[180px] text-center">
+                    Guardar Etapa
+                </button>
+                <a th:href="@{/etapa}"
+                    class="flex items-center justify-center gap-2 border border-orange-500 text-orange-500 bg-white font-semibold text-xl py-3 px-10 rounded-full shadow-sm transition hover:bg-orange-50 hover:text-orange-600 w-full md:w-auto min-w-[180px] text-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+                    Volver
+                </a>
             </div>
         </form>
     </div>
-
     <script>
         // Validación de fechas
         document.addEventListener('DOMContentLoaded', function () {

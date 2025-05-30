@@ -3,57 +3,124 @@
 
 <head th:replace="~{layout/layout :: head}"></head>
 
-<body>
-    <!-- Añadir la hoja de estilo después del head para que no sea reemplazada -->
-    <link rel="stylesheet" th:href="@{/css/tarea/listarTarea.css}">    <header th:replace="~{layout/layout :: header}"></header>
-    <h1>Listado de Tareas</h1>
+<body class="bg-stone-100 text-gray-900 font-[Poppins] min-h-screen">
+    <header th:replace="~{layout/layout :: header}"></header>
 
-    <!-- Mensajes de notificación -->
-    <div th:if="${mensajeExito}" class="alert alert-success" role="alert">
-        <i class="fas fa-check-circle"></i> <span th:text="${mensajeExito}"></span>
-    </div>
-    <div th:if="${mensajeAdvertencia}" class="alert alert-warning" role="alert">
-        <i class="fas fa-exclamation-triangle"></i> <span th:text="${mensajeAdvertencia}"></span>
-    </div>
-    <div th:if="${mensajeError}" class="alert alert-danger" role="alert">
-        <i class="fas fa-times-circle"></i> <span th:text="${mensajeError}"></span>
+    <!-- Banner ancho -->
+    <div class="relative w-full max-w-6xl mx-auto rounded-2xl overflow-hidden shadow mb-10 mt-8">
+        <img src="/images/bannerListar.jpg" alt="Banner Tareas"
+            class="w-full h-48 md:h-56 object-cover object-center">
+        <div class="absolute inset-0 bg-gradient-to-r from-sky-500/80 to-orange-400/60 flex items-center min-h-[10rem] md:min-h-[13rem]">
+            <div class="px-10">
+                <h1 class="text-4xl md:text-5xl font-extrabold text-white drop-shadow-lg">Listado de Tareas</h1>
+                <p class="text-lg text-white/80 font-medium mt-2">Gestiona, edita y visualiza todas las tareas del
+                    sistema</p>
+            </div>
+        </div>
     </div>
 
-    <!--// BOTON PARA CREAR TAREAS-->
-    <a th:href="@{/crearTarea}">
-        <button>
-            Crear Nueva Tarea
-        </button>
-    </a>
+    <!-- Card principal -->
+    <div class="max-w-5xl mx-auto px-2 md:px-0 -mt-6 md:-mt-2 relative z-10">
+        <div class="bg-white/90 rounded-2xl shadow-xl border-t-4 border-sky-400 p-8">
+            <!-- Mensajes de notificación -->
+            <div th:if="${mensajeExito}"
+                class="flex items-center gap-3 bg-green-100 border-l-4 border-green-500 text-green-800 px-4 py-3 rounded mb-4">
+                <i class="fas fa-check-circle text-2xl"></i> <span th:text="${mensajeExito}"></span>
+            </div>
+            <div th:if="${mensajeAdvertencia}"
+                class="flex items-center gap-3 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 px-4 py-3 rounded mb-4">
+                <i class="fas fa-exclamation-triangle text-2xl"></i> <span th:text="${mensajeAdvertencia}"></span>
+            </div>
+            <div th:if="${mensajeError}"
+                class="flex items-center gap-3 bg-red-100 border-l-4 border-red-500 text-red-800 px-4 py-3 rounded mb-4">
+                <i class="fas fa-times-circle text-2xl"></i> <span th:text="${mensajeError}"></span>
+            </div>
 
-    <section>
-        <h1> [[${title}]]</h1>
-        <section>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Título</th>
-                        <th>Etapa</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="tarea: ${tareas}">
-                        <td>[[${tarea.titulo}]]</td>
-                        <td>[[${tarea.etapa.titulo}]]</td>
-                        <td>
-                            <a th:href="@{/verTarea/{id}(id=${tarea.id})}">Ver</a> |
-                            <a th:href="@{/editarTarea/{id}(id=${tarea.id})}">Editar</a> |
-                            <form th:action="@{/eliminarTarea/{id}(id=${tarea.id})}" method="post"
-                                onsubmit="return confirmarEliminacion(event, this);" style="display: inline;">
-                                <button type="submit" class="eliminar" title="Eliminar">&#10060;</button>
-                            </form>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </section>
-    </section>    <script>
+            <!-- Barra de búsqueda y botón crear -->
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+                <form method="get" th:action="@{/tareas}"
+                    class="flex items-center bg-white/90 rounded-full shadow px-4 py-2 w-full md:w-auto">
+                    <input type="text" name="busqueda" id="busquedaTarea" placeholder="Buscar por título o etapa..."
+                        class="bg-transparent outline-none px-2 py-1 text-gray-700 placeholder:text-gray-400 w-48 md:w-64">
+                    <button type="submit" class="text-sky-400 hover:text-sky-600 text-xl ml-2">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </form>
+                <a th:href="@{/crearTarea}"
+                    class="inline-flex items-center gap-2 bg-sky-500 hover:bg-sky-600 text-white font-semibold px-6 py-2 rounded-full shadow transition text-lg">
+                    <i class="fas fa-plus"></i> Nueva Tarea
+                </a>
+            </div>
+
+            <!-- Tabla de tareas -->
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200 rounded-xl overflow-hidden bg-white">
+                    <thead class="bg-sky-50">
+                        <tr>
+                            <th
+                                class="px-6 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">
+                                Título
+                            </th>
+                            <th
+                                class="px-6 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">
+                                Etapa
+                            </th>
+                            <th
+                                class="px-6 py-3 text-center text-xs font-bold text-gray-600 uppercase tracking-wider">
+                                Acciones
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-100">
+                        <tr th:each="tarea: ${tareas}" class="hover:bg-orange-50 transition">
+                            <td class="px-6 py-4 font-semibold text-gray-800">[[${tarea.titulo}]]</td>
+                            <td class="px-6 py-4 text-gray-700">[[${tarea.etapa.titulo}]]</td>
+                            <td class="px-6 py-4 text-center">
+                                <div class="flex flex-row flex-nowrap gap-2 justify-center items-center">
+                                    <a th:href="@{/verTarea/{id}(id=${tarea.id})}"
+                                        class="inline-flex items-center px-4 py-2 bg-sky-100 text-sky-700 font-semibold rounded-full hover:bg-sky-200 transition">
+                                        <i class="fas fa-eye mr-1"></i> Ver</a>
+                                    <a th:href="@{/editarTarea/{id}(id=${tarea.id})}"
+                                        class="inline-flex items-center px-4 py-2 bg-amber-100 text-amber-700 font-semibold rounded-full hover:bg-amber-200 transition">
+                                        <i class="fas fa-edit mr-1"></i> Editar</a>
+                                    <form th:action="@{/eliminarTarea/{id}(id=${tarea.id})}" method="post"
+                                        onsubmit="return confirmarEliminacion(event, this);" class="inline-block m-0 p-0">
+                                        <button type="submit"
+                                            class="inline-flex items-center px-4 py-2 bg-red-100 text-red-700 font-semibold rounded-full hover:bg-red-200 transition"
+                                            title="Eliminar">
+                                            <i class="fas fa-trash mr-1"></i> Eliminar
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Filtro de búsqueda en frontend (opcional, si quieres que sea instantáneo)
+        document.addEventListener('DOMContentLoaded', function () {
+            const input = document.getElementById('busquedaTarea');
+            if (input) {
+                input.addEventListener('input', function () {
+                    const term = this.value.toLowerCase();
+                    document.querySelectorAll('tbody tr').forEach(row => {
+                        const titulo = row.querySelector('td:nth-child(1)')?.textContent.toLowerCase() || '';
+                        const etapa = row.querySelector('td:nth-child(2)')?.textContent.toLowerCase() || '';
+                        if (titulo.includes(term) || etapa.includes(term)) {
+                            row.style.display = '';
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    });
+                });
+            }
+        });
+
+        // Confirmación de eliminación
         function confirmarEliminacion(event, form) {
             event.preventDefault();
             Swal.fire({
@@ -67,7 +134,6 @@
                 cancelButtonText: "Cancelar"
             }).then((result) => {
                 if (result.isConfirmed) {
-                    console.log("Deleting...");
                     form.submit();
                 }
             });

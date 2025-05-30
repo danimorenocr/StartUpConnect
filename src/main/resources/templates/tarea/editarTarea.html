@@ -3,147 +3,177 @@
 
 <head th:replace="~{layout/layout :: head}"></head>
 
-<body>
-    <!-- Añadir la hoja de estilo después del head para que no sea reemplazada -->
-    <link rel="stylesheet" th:href="@{/css/tarea/crearTarea.css}">
+<body class="bg-stone-100 text-gray-900 font-[Poppins] min-h-screen">
     <header th:replace="~{layout/layout :: header}"></header>
 
-    <div class="container mt-4">
-        <h1>Editar Tarea</h1>
-
-        <form th:action="@{/editarTarea/{id}(id=${tareaEditar.id})}" method="post" th:object="${tareaEditar}">
-            <!-- Título -->
-            <div class="form-group mb-3">
-                <label for="titulo">Título:</label>
-                <input type="text" class="form-control" id="titulo" name="titulo" th:field="*{titulo}" required>
-                <div class="text-danger" th:if="${#fields.hasErrors('titulo')}" th:errors="*{titulo}"></div>
+    <!-- Banner ancho -->
+    <div class="relative w-full max-w-4xl mx-auto rounded-2xl overflow-hidden shadow mb-10 mt-8">
+        <img src="/images/bannerListar.jpg" alt="Banner Editar Tarea"
+            class="w-full h-44 md:h-56 object-cover object-center">
+        <div class="absolute inset-0 bg-gradient-to-r from-sky-500/80 to-orange-400/60 flex items-center min-h-[10rem] md:min-h-[13rem]">
+            <div class="px-10">
+                <h1 class="text-3xl md:text-4xl font-extrabold text-white drop-shadow-lg">Editar Tarea</h1>
+                <p class="text-lg text-white/80 font-medium mt-2">Modifica los datos de la tarea y su reunión si lo
+                    necesitas</p>
             </div>
+        </div>
+    </div>
 
-            <!-- Descripción -->
-            <div class="form-group mb-3">
-                <label for="descripcion">Descripción:</label>
-                <textarea class="form-control" id="descripcion" name="descripcion" th:field="*{descripcion}"
-                    rows="4"></textarea>
-                <div class="text-danger" th:if="${#fields.hasErrors('descripcion')}" th:errors="*{descripcion}"></div>
-            </div>
+    <!-- Card principal -->
+    <div class="max-w-2xl mx-auto px-2 md:px-0 -mt-10 md:-mt-6 relative z-10">
+        <form th:action="@{/editarTarea/{id}(id=${tareaEditar.id})}" method="post" th:object="${tareaEditar}"
+            class="bg-white/90 rounded-2xl shadow-xl border-t-4 border-sky-400 p-8">
+            <div class="flex flex-col gap-6">
+                <div>
+                    <label for="titulo" class="block text-sm font-semibold text-sky-700">Título:</label>
+                    <input type="text"
+                        class="w-full rounded-2xl border-0 bg-sky-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400 text-sky-800 font-semibold placeholder:text-sky-400"
+                        id="titulo" name="titulo" th:field="*{titulo}" required>
+                    <div class="text-danger" th:if="${#fields.hasErrors('titulo')}" th:errors="*{titulo}"></div>
+                </div>
+                <div>
+                    <label for="descripcion" class="block text-sm font-semibold text-sky-700">Descripción:</label>
+                    <textarea
+                        class="w-full rounded-2xl border-0 bg-sky-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400 text-sky-800 font-semibold placeholder:text-sky-400"
+                        id="descripcion" name="descripcion" th:field="*{descripcion}" rows="4"></textarea>
+                    <div class="text-danger" th:if="${#fields.hasErrors('descripcion')}" th:errors="*{descripcion}"></div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="fechaEntrega" class="block text-sm font-semibold text-sky-700">Fecha de
+                            Entrega:</label>
+                        <input type="date"
+                            class="w-full rounded-2xl border-0 bg-sky-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400 text-sky-800 font-semibold"
+                            id="fechaEntrega" name="fechaEntrega" th:field="*{fechaEntrega}" required>
+                        <div class="text-danger" th:if="${#fields.hasErrors('fechaEntrega')}" th:errors="*{fechaEntrega}"></div>
+                    </div>
+                    <div>
+                        <label for="etapa" class="block text-sm font-semibold text-sky-700">Etapa:</label>
+                        <select
+                            class="w-full rounded-2xl border-0 bg-sky-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400 text-sky-800 font-semibold"
+                            id="etapa" name="etapa.id" required>
+                            <option value="">Seleccione una Etapa</option>
+                            <option th:each="etapa : ${etapas}" th:value="${etapa.id}" th:text="${etapa.titulo}"
+                                th:selected="${tareaEditar.etapa != null && tareaEditar.etapa.id == etapa.id}"></option>
+                        </select>
+                        <div class="text-danger" th:if="${#fields.hasErrors('etapa')}" th:errors="*{etapa}"></div>
+                    </div>
+                </div>
 
-            <!-- Fecha de Entrega -->
-            <div class="form-group mb-3">
-                <label for="fechaEntrega">Fecha de Entrega:</label>
-                <input type="date" class="form-control" id="fechaEntrega" name="fechaEntrega" th:field="*{fechaEntrega}"
-                    required>
-                <div class="text-danger" th:if="${#fields.hasErrors('fechaEntrega')}" th:errors="*{fechaEntrega}"></div>
-            </div>            <!-- Etapa (combo box) -->
-            <div class="form-group mb-3">
-                <label for="etapa">Etapa:</label>
-                <select class="form-control" id="etapa" name="etapa.id" required>
-                    <option value="">Seleccione una Etapa</option>
-                    <option th:each="etapa : ${etapas}" th:value="${etapa.id}" th:text="${etapa.titulo}"
-                        th:selected="${tareaEditar.etapa != null && tareaEditar.etapa.id == etapa.id}">
-                    </option>
-                </select>
-                <div class="text-danger" th:if="${#fields.hasErrors('etapa')}" th:errors="*{etapa}"></div>
-            </div>
-            
-            <!-- Sección para editar reunión de Google Meet -->
-            <div style="border: 1px solid #ddd; border-radius: 8px; overflow: visible; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);">
-                <div style="background-color: #f8f9fa; padding: 15px; border-bottom: 1px solid #ddd;">
-                    <div style="display: flex; align-items: center;">
-                        <input style="margin-right: 10px;" type="checkbox" id="editarReunion" name="editarReunion" 
-                               th:checked="${meetingInfo != null}">
-                        <label style="margin-bottom: 0;" for="editarReunion">
+                <!-- Sección para editar reunión de Google Meet -->
+                <div class="bg-stone-50 border border-orange-200 rounded-xl shadow-inner p-6">
+                    <div class="flex items-center mb-4">
+                        <input class="accent-orange-500 mr-3" type="checkbox" id="editarReunion" name="editarReunion"
+                            th:checked="${meetingInfo != null}">
+                        <label for="editarReunion" class="font-semibold text-orange-700">
                             <span th:if="${meetingInfo != null}">Editar reunión de Google Meet existente</span>
-                            <span th:unless="${meetingInfo != null}">Crear nueva reunión de Google Meet para esta tarea</span>
+                            <span th:unless="${meetingInfo != null}">Crear nueva reunión de Google Meet para esta
+                                tarea</span>
                         </label>
                     </div>
-                </div>
-                <div id="reunionDetails" th:style="${meetingInfo != null ? 'display: block; padding: 20px; background-color: white;' : 'display: none; padding: 20px; background-color: white;'}">
-                    <!-- ID del evento (hidden) -->
-                    <input type="hidden" id="eventId" name="eventId" th:value="${meetingInfo != null ? meetingInfo.eventId : ''}">
-                    
-                    <!-- Fecha de la reunión -->
-                    <div class="form-group mb-3">
-                        <label for="fechaReunion">Fecha de la reunión:</label>
-                        <input type="date" class="form-control" id="fechaReunion" name="fechaReunion" th:value="${meetingInfo != null ? meetingInfo.fecha : ''}">
-                    </div>
-                    
-                    <!-- Hora de la reunión -->
-                    <div class="form-group mb-3">
-                        <label for="horaReunion">Hora de la reunión:</label>
-                        <input type="time" class="form-control" id="horaReunion" name="horaReunion" th:value="${meetingInfo != null ? meetingInfo.hora : ''}">
-                    </div>
-                    
-                    <!-- Duración de la reunión -->
-                    <div class="form-group mb-3">
-                        <label for="duracionReunion">Duración (minutos):</label>
-                        <select class="form-control" id="duracionReunion" name="duracionReunion">
-                            <option value="15" th:selected="${meetingInfo != null && meetingInfo.duracion == 15}">15 minutos</option>
-                            <option value="30" th:selected="${meetingInfo == null || meetingInfo.duracion == 30}">30 minutos</option>
-                            <option value="45" th:selected="${meetingInfo != null && meetingInfo.duracion == 45}">45 minutos</option>
-                            <option value="60" th:selected="${meetingInfo != null && meetingInfo.duracion == 60}">1 hora</option>
-                            <option value="90" th:selected="${meetingInfo != null && meetingInfo.duracion == 90}">1 hora 30 minutos</option>
-                            <option value="120" th:selected="${meetingInfo != null && meetingInfo.duracion == 120}">2 horas</option>
-                        </select>
-                    </div>
-                    
-                    <!-- Enlace de la reunión (generado automáticamente) -->
-                    <div class="form-group mb-3">
-                        <label for="enlaceReunion">Enlace de la reunión:</label>
-                        <div style="display: flex; width: 100%;">
-                            <input type="text" class="form-control" id="enlaceReunion" name="enlaceReunion" readonly
-                                   th:value="${meetingInfo != null ? meetingInfo.enlace : ''}" style="flex: 1;">
-                            <div style="margin-left: 10px;">
-                                <a th:if="${meetingInfo != null && meetingInfo.enlace != null}" 
-                                   th:href="${meetingInfo.enlace}" target="_blank" 
-                                   class="btn btn-primary">Abrir enlace</a>
+                    <div id="reunionDetails" th:style="${meetingInfo != null ? 'display: block;' : 'display: none;'}">
+                        <input type="hidden" id="eventId" name="eventId" th:value="${meetingInfo != null ? meetingInfo.eventId : ''}">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="fechaReunion" class="block text-sm font-semibold text-orange-600">Fecha de
+                                    la reunión:</label>
+                                <input type="date"
+                                    class="w-full rounded-2xl border-0 bg-stone-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-300 text-gray-800 font-semibold"
+                                    id="fechaReunion" name="fechaReunion" th:value="${meetingInfo != null ? meetingInfo.fecha : ''}">
+                            </div>
+                            <div>
+                                <label for="horaReunion" class="block text-sm font-semibold text-orange-600">Hora de
+                                    la reunión:</label>
+                                <input type="time"
+                                    class="w-full rounded-2xl border-0 bg-stone-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-300 text-gray-800 font-semibold"
+                                    id="horaReunion" name="horaReunion" th:value="${meetingInfo != null ? meetingInfo.hora : ''}">
                             </div>
                         </div>
-                        <small style="font-size: 0.85rem; color: #6c757d; margin-top: 5px; display: block;">
-                            <span th:if="${meetingInfo == null}">Se generará un nuevo enlace al guardar los cambios.</span>
-                            <span th:unless="${meetingInfo == null}">Se actualizará la reunión existente al guardar los cambios.</span>
-                        </small>
+                        <div class="mt-4">
+                            <label for="duracionReunion" class="block text-sm font-semibold text-orange-600">Duración
+                                (minutos):</label>
+                            <select
+                                class="w-full rounded-2xl border-0 bg-stone-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-300 text-gray-800 font-semibold"
+                                id="duracionReunion" name="duracionReunion">
+                                <option value="15" th:selected="${meetingInfo != null && meetingInfo.duracion == 15}">15
+                                    minutos</option>
+                                <option value="30" th:selected="${meetingInfo == null || meetingInfo.duracion == 30}">30
+                                    minutos</option>
+                                <option value="45" th:selected="${meetingInfo != null && meetingInfo.duracion == 45}">45
+                                    minutos</option>
+                                <option value="60" th:selected="${meetingInfo != null && meetingInfo.duracion == 60}">1
+                                    hora</option>
+                                <option value="90" th:selected="${meetingInfo != null && meetingInfo.duracion == 90}">1
+                                    hora 30 minutos</option>
+                                <option value="120" th:selected="${meetingInfo != null && meetingInfo.duracion == 120}">2
+                                    horas</option>
+                            </select>
+                        </div>
+                        <div class="mt-4">
+                            <label for="enlaceReunion" class="block text-sm font-semibold text-orange-600">Enlace de la
+                                reunión:</label>
+                            <div class="flex w-full gap-2">
+                                <input type="text"
+                                    class="w-full rounded-2xl border-0 bg-stone-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-300 text-gray-800 font-semibold"
+                                    id="enlaceReunion" name="enlaceReunion" readonly
+                                    th:value="${meetingInfo != null ? meetingInfo.enlace : ''}">
+                                <a th:if="${meetingInfo != null && meetingInfo.enlace != null}" th:href="${meetingInfo.enlace}"
+                                    target="_blank"
+                                    class="inline-flex items-center gap-2 border border-orange-400 text-orange-500 bg-white font-semibold px-4 py-2 rounded-full shadow-sm transition hover:bg-orange-50 hover:text-orange-600">
+                                    <i class="fas fa-link"></i> Abrir enlace
+                                </a>
+                            </div>
+                            <small class="text-xs text-gray-500 mt-1 block">
+                                <span th:if="${meetingInfo == null}">Se generará un nuevo enlace al guardar los
+                                    cambios.</span>
+                                <span th:unless="${meetingInfo == null}">Se actualizará la reunión existente al guardar
+                                    los cambios.</span>
+                            </small>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Botones -->
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                <!-- Botones -->
+                <div class="flex flex-col md:flex-row gap-4 justify-end mt-8">
+                    <button type="submit"
+                        class="bg-sky-400 hover:bg-sky-500 text-white font-extrabold text-xl py-3 px-10 rounded-full shadow transition w-full md:w-auto min-w-[180px] text-center">
+                        <i class="fas fa-save mr-2"></i> Guardar Cambios
+                    </button>
+                    <a th:href="@{/tarea}"
+                        class="flex items-center justify-center gap-2 border border-orange-500 text-orange-500 bg-white font-semibold text-xl py-3 px-10 rounded-full shadow-sm transition hover:bg-orange-50 hover:text-orange-600 w-full md:w-auto min-w-[180px] text-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                        Volver
+                    </a>
+                </div>
             </div>
-        </form>    </div>
+        </form>
+    </div>
 
     <script>
         // Establecer la fecha mínima como hoy para evitar fechas pasadas
         document.addEventListener('DOMContentLoaded', function () {
             const today = new Date();
             const dd = String(today.getDate()).padStart(2, '0');
-            const mm = String(today.getMonth() + 1).padStart(2, '0'); // Enero es 0
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
             const yyyy = today.getFullYear();
-
             const todayFormatted = yyyy + '-' + mm + '-' + dd;
             document.getElementById('fechaEntrega').min = todayFormatted;
-            
-            // Para la reunión
             if (document.getElementById('fechaReunion')) {
                 document.getElementById('fechaReunion').min = todayFormatted;
             }
-            
             // Mostrar/ocultar detalles de la reunión según el checkbox
             const editarReunionCheckbox = document.getElementById('editarReunion');
             const reunionDetails = document.getElementById('reunionDetails');
-            
             if (editarReunionCheckbox && reunionDetails) {
-                editarReunionCheckbox.addEventListener('change', function() {
+                editarReunionCheckbox.addEventListener('change', function () {
                     reunionDetails.style.display = this.checked ? 'block' : 'none';
-                    
-                    // Si se marca y no hay fecha/hora establecida, establece valores por defecto
                     if (this.checked && (!document.getElementById('fechaReunion').value || !document.getElementById('horaReunion').value)) {
-                        // Establecer fecha por defecto como la fecha actual
                         document.getElementById('fechaReunion').value = todayFormatted;
-                        
-                        // Establecer hora por defecto (por ejemplo, hora actual + 1 hora)
                         const nextHour = new Date();
-                        nextHour.setHours(nextHour.getHours() + 1, 0, 0); // Próxima hora en punto
+                        nextHour.setHours(nextHour.getHours() + 1, 0, 0);
                         const hours = String(nextHour.getHours()).padStart(2, '0');
                         const minutes = String(nextHour.getMinutes()).padStart(2, '0');
                         document.getElementById('horaReunion').value = `${hours}:${minutes}`;

@@ -41,4 +41,9 @@ public class EntregablesServiceImpl implements EntregablesService {
     public List<EntregableEntity> findByIdTarea(Long idTarea) {
         return entregablesRepository.findByIdTarea(idTarea);
     }
+
+    @Override
+    public List<EntregableEntity> searchByNombreArchivoOrTareaTitulo(String search) {
+        return entregablesRepository.searchByNombreArchivoOrTareaTitulo(search);
+    }
 }

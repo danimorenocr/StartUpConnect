@@ -56,75 +56,103 @@
       .btn:hover { opacity: 0.9; }
     </style>
   </head>
-  <body>
+  <body class="bg-stone-100 text-gray-900 font-[Poppins] min-h-screen">
     <header th:replace="~{layout/layout :: header}"></header>
-
-    <div class="container mt-4">
-      <h1 class="mb-4">Listado de entregables</h1>
-
-    <!--// BOTON PARA CREAR ENTREGABLES-->
-    <a th:href="@{/crearEntregable}">
-      <button>Crear Nuevo Entregable</button>
-    </a>
-
-    <section>
-      <h1>[[${title}]]</h1>
-      <section>
-        <table>
-          <thead>
-            <tr>
-              <th>Nombre del Archivo</th>
-              <th>Tarea</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr th:each="entregable: ${entregables}">
-              <td>[[${entregable.nombreArchivo}]]</td>
-              <td>[[${entregable.tarea != null ? entregable.tarea.titulo : 'Sin tarea asignada'}]]</td>
-              <td>
-                <a th:href="@{/previewEntregable/{id}(id=${entregable.id})}" target="_blank" class="btn btn-info btn-sm" title="Vista previa">
-                    <i class="fas fa-eye"></i> Vista previa
-                </a>
-                |
-                <a th:href="@{/descargarEntregable/{id}(id=${entregable.id})}" class="btn btn-success btn-sm" title="Descargar">
-                    <i class="fas fa-download"></i> Descargar
-                </a>
-                |
-                <a th:href="@{/editarEntregable/{id}(id=${entregable.id})}" class="btn btn-warning btn-sm" title="Editar">
-                    <i class="fas fa-edit"></i> Editar
-                </a>
-                |
-                <a th:href="@{/eliminarEntregable/{id}(id=${entregable.id})}"
-                   onclick="return confirm('¿Estás seguro de que deseas eliminar este entregable?')"
-                   class="btn btn-danger btn-sm" title="Eliminar">
-                    <i class="fas fa-trash"></i> Eliminar
-                </a>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </section>
-    </section>
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Archivo</th>
-          <th>Estado</th>
-          <th>Acción</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr th:each="e : ${entregables}">
-          <td th:text="${e.id}"></td>
-          <td th:text="${e.nombreArchivo}"></td>
-          <td th:text="${e.estado}"></td>
-          <td>
-            <a th:href="@{'/descargarEntregable/' + ${e.id}}">Descargar</a>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <!-- Banner moderno -->
+    <div class="relative w-full max-w-5xl mx-auto rounded-2xl overflow-hidden shadow mb-10 mt-8">
+      <img src="/images/bannerListar.jpg" alt="Banner Entregables" class="w-full h-48 md:h-56 object-cover object-center">
+      <div class="absolute inset-0 bg-gradient-to-r from-sky-500/80 to-orange-400/60 flex items-center min-h-[10rem] md:min-h-[13rem]">
+        <div class="px-10">
+          <h1 class="text-4xl md:text-5xl font-extrabold text-white drop-shadow-lg">Listado de Entregables</h1>
+          <p class="text-lg text-white/80 font-medium mt-2">Gestiona y visualiza todos los entregables del sistema</p>
+        </div>
+      </div>
+    </div>
+    <div class="max-w-5xl mx-auto px-2 md:px-0 -mt-6 md:-mt-2 relative z-10">
+      <div class="bg-white rounded-2xl shadow-xl border-t-4 border-sky-400 p-4 sm:p-6 md:p-8">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+          <div class="flex-1 flex items-center gap-2">
+            <div class="relative w-full sm:w-64">
+              <input id="searchInput" type="text" placeholder="Buscar entregable..." class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-sky-400 outline-none pr-10" autocomplete="off">
+              <span class="absolute right-3 top-1/2 -translate-y-1/2 text-sky-400 pointer-events-none">
+                <i class="fas fa-search"></i>
+              </span>
+            </div>
+          </div>
+          <a th:href="@{/crearEntregable}" class="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white font-semibold px-6 py-2.5 rounded-full shadow transition text-base">
+            <i class="fas fa-plus"></i> Nuevo Entregable
+          </a>
+        </div>
+        <div class="table-responsive rounded-xl overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200" id="entregablesTable">
+            <thead class="bg-sky-50">
+              <tr>
+                <th class="px-4 py-3 text-left text-xs font-bold text-sky-700 uppercase tracking-wider">Nombre del Archivo</th>
+                <th class="px-4 py-3 text-left text-xs font-bold text-sky-700 uppercase tracking-wider">Tarea</th>
+                <th class="px-4 py-3 text-left text-xs font-bold text-sky-700 uppercase tracking-wider">Estado</th>
+                <th class="px-4 py-3 text-center text-xs font-bold text-sky-700 uppercase tracking-wider">Acciones</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-100">
+              <tr th:each="entregable: ${entregables}" class="hover:bg-sky-50 transition">
+                <td class="px-4 py-3 font-semibold text-gray-900 break-words max-w-xs" th:text="${entregable.nombreArchivo}"></td>
+                <td class="px-4 py-3 text-gray-700 break-words max-w-xs" th:text="${entregable.tarea != null ? entregable.tarea.titulo : 'Sin tarea asignada'}"></td>
+                <td class="px-4 py-3">
+                  <span class="inline-block px-3 py-1 rounded-full text-xs font-bold"
+                    th:classappend="${entregable.estado == 'Pendiente' ? 'bg-yellow-100 text-yellow-800' :
+                                     (entregable.estado == 'En revisión' ? 'bg-sky-100 text-sky-800' :
+                                     (entregable.estado == 'Aprobado' ? 'bg-green-100 text-green-800' :
+                                     (entregable.estado == 'Rechazado' ? 'bg-red-100 text-red-800' : '')))}">
+                  [[${entregable.estado}]]
+                  </span>
+                </td>
+                <td class="px-4 py-3 text-center">
+                  <div class="flex flex-wrap gap-2 justify-center">
+                    <a th:href="@{/previewEntregable/{id}(id=${entregable.id})}" target="_blank" class="inline-flex items-center px-3 py-2 bg-sky-100 text-sky-700 font-semibold rounded-full hover:bg-sky-200 transition text-xs" title="Vista previa">
+                      <i class="fas fa-eye mr-1"></i> Vista previa
+                    </a>
+                    <a th:href="@{/descargarEntregable/{id}(id=${entregable.id})}" class="inline-flex items-center px-3 py-2 bg-green-100 text-green-700 font-semibold rounded-full hover:bg-green-200 transition text-xs" title="Descargar">
+                      <i class="fas fa-download mr-1"></i> Descargar
+                    </a>
+                    <a th:href="@{/editarEntregable/{id}(id=${entregable.id})}" class="inline-flex items-center px-3 py-2 bg-yellow-100 text-yellow-800 font-semibold rounded-full hover:bg-yellow-200 transition text-xs" title="Editar">
+                      <i class="fas fa-edit mr-1"></i> Editar
+                    </a>
+                    <a th:href="@{/eliminarEntregable/{id}(id=${entregable.id})}"
+                      onclick="return confirm('¿Estás seguro de que deseas eliminar este entregable?')"
+                      class="inline-flex items-center px-3 py-2 bg-red-100 text-red-700 font-semibold rounded-full hover:bg-red-200 transition text-xs" title="Eliminar">
+                      <i class="fas fa-trash mr-1"></i> Eliminar
+                    </a>
+                  </div>
+                </td>
+              </tr>
+              <tr th:if="${entregables == null || entregables.empty}">
+                <td colspan="4" class="text-center text-gray-500 py-8">
+                  <i class="fas fa-info-circle text-2xl mb-2"></i><br>
+                  No hay entregables registrados.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <script>
+          document.addEventListener('DOMContentLoaded', function () {
+            const input = document.getElementById('searchInput');
+            const table = document.getElementById('entregablesTable').getElementsByTagName('tbody')[0];
+            input.addEventListener('input', function () {
+              const term = this.value.toLowerCase();
+              Array.from(table.rows).forEach(row => {
+                const nombre = row.cells[0]?.textContent.toLowerCase() || '';
+                const tarea = row.cells[1]?.textContent.toLowerCase() || '';
+                if (nombre.includes(term) || tarea.includes(term)) {
+                  row.style.display = '';
+                } else {
+                  row.style.display = 'none';
+                }
+              });
+            });
+          });
+        </script>
+      </div>
+    </div>
   </body>
 </html>
