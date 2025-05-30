@@ -3,63 +3,104 @@
 
 <head th:replace="~{layout/layout :: head}"></head>
 
-<body>
+<body class="bg-white font-sans">
 
     <header th:replace="~{layout/layout :: header}"></header>
 
-    <h1>Crear Nueva Convocatoria</h1>
+    <div class="max-w-2xl mx-auto py-10 px-6">
+        <h1 class="text-4xl font-extrabold text-sky-700 mb-10 tracking-tight drop-shadow">Crear Convocatoria</h1>
+        <form th:action="@{/crearConvocatoria}" method="post" th:object="${convocatoria}"
+            class="bg-white/80 rounded-xl shadow p-6 mb-6 border-t-4 border-blue-400 relative">
+            <!-- Encabezado de la tarjeta -->
+            <div
+                class="absolute -top-5 left-6 flex items-center gap-2 bg-white/90 px-4 py-1 rounded-full shadow-lg border border-blue-200">
+                <span class="inline-block w-8 h-1.5 rounded bg-gradient-to-r from-blue-400 to-blue-600 shadow-md"></span>
+                <span
+                    class="text-xs font-bold text-blue-500 tracking-wider uppercase">Datos de la convocatoria</span>
+            </div>
 
-    <form th:action="@{/crearConvocatoria}" method="post" th:object="${convocatoria}">
-        <div class="form-group">
-            <label for="titulo">Título:</label>
-            <input th:field="*{titulo}" type="text" id="titulo" name="titulo" required>
-        </div>
+            <!-- Contenido del formulario -->
+            <div class="flex flex-col gap-6 mt-10">
+                <div>
+                    <label for="titulo" class="block text-sm font-semibold text-sky-700">Título:</label>
+                    <input th:field="*{titulo}" type="text" id="titulo" name="titulo" required
+                        class="w-full rounded-2xl border-0 bg-sky-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400 text-sky-800 font-semibold placeholder:text-sky-400" />
+                </div>
 
-        <div class="form-group">
-            <label for="descripcion">Descripción:</label>
-            <textarea th:field="*{descripcion}" id="descripcion" name="descripcion" rows="4" required></textarea>
-        </div>
+                <div>
+                    <label for="descripcion" class="block text-sm font-semibold text-sky-700">Descripción:</label>
+                    <textarea th:field="*{descripcion}" id="descripcion" name="descripcion" rows="4" required
+                        class="w-full rounded-2xl border-0 bg-sky-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400 text-sky-800 font-semibold placeholder:text-sky-400"></textarea>
+                </div>
 
-        <div class="form-group">
-            <label for="fechaInicio">Fecha de inicio:</label>
-            <input th:field="*{fechaInicio}" type="date" id="fechaInicio" name="fechaInicio" required>
-        </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="fechaInicio" class="block text-sm font-semibold text-sky-700">Fecha de
+                            inicio:</label>
+                        <input th:field="*{fechaInicio}" type="date" id="fechaInicio" name="fechaInicio" required
+                            class="w-full rounded-2xl border-0 bg-sky-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400 text-sky-800 font-semibold placeholder:text-sky-400" />
+                    </div>
 
-        <div class="form-group">
-            <label for="fechaFin">Fecha de fin:</label>
-            <input th:field="*{fechaFin}" type="date" id="fechaFin" name="fechaFin" required>
-        </div>
+                    <div>
+                        <label for="fechaFin" class="block text-sm font-semibold text-sky-700">Fecha de
+                            fin:</label>
+                        <input th:field="*{fechaFin}" type="date" id="fechaFin" name="fechaFin" required
+                            class="w-full rounded-2xl border-0 bg-sky-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400 text-sky-800 font-semibold placeholder:text-sky-400" />
+                    </div>
+                </div>
 
-        <div class="form-group">
-            <label for="beneficios">Beneficios:</label>
-            <textarea th:field="*{beneficios}" id="beneficios" name="beneficios" rows="3" required></textarea>
-        </div>
+                <div>
+                    <label for="beneficios" class="block text-sm font-semibold text-sky-700">Beneficios:</label>
+                    <textarea th:field="*{beneficios}" id="beneficios" name="beneficios" rows="3" required
+                        class="w-full rounded-2xl border-0 bg-sky-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400 text-sky-800 font-semibold placeholder:text-sky-400"></textarea>
+                </div>
 
-        <div class="form-group">
-            <label for="requisitos">Requisitos:</label>
-            <textarea th:field="*{requisitos}" id="requisitos" name="requisitos" rows="3" required></textarea>
-        </div>
+                <div>
+                    <label for="requisitos" class="block text-sm font-semibold text-sky-700">Requisitos:</label>
+                    <textarea th:field="*{requisitos}" id="requisitos" name="requisitos" rows="3" required
+                        class="w-full rounded-2xl border-0 bg-sky-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400 text-sky-800 font-semibold placeholder:text-sky-400"></textarea>
+                </div>
 
-        <div class="form-group">
-            <label for="contacto">Contacto:</label>
-            <input th:field="*{contacto}" type="text" id="contacto" name="contacto" required>
-        </div>
+                <div>
+                    <label for="contacto" class="block text-sm font-semibold text-sky-700">Contacto:</label>
+                    <input th:field="*{contacto}" type="text" id="contacto" name="contacto" required
+                        class="w-full rounded-2xl border-0 bg-sky-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400 text-sky-800 font-semibold placeholder:text-sky-400" />
+                </div>
 
-        <div class="form-group">
-            <label for="sectorObjetivo">Sector Objetivo:</label>
-            <input th:field="*{sectorObjetivo}" type="text" id="sectorObjetivo" name="sectorObjetivo" required>
-        </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="sectorObjetivo" class="block text-sm font-semibold text-sky-700">Sector
+                            Objetivo:</label>
+                        <input th:field="*{sectorObjetivo}" type="text" id="sectorObjetivo" name="sectorObjetivo"
+                            required
+                            class="w-full rounded-2xl border-0 bg-sky-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400 text-sky-800 font-semibold placeholder:text-sky-400" />
+                    </div>
 
-        <div class="form-group">
-            <label for="organizador">Organizador:</label>
-            <input th:field="*{organizador}" type="text" id="organizador" name="organizador" required>
-        </div>
+                    <div>
+                        <label for="organizador" class="block text-sm font-semibold text-sky-700">Organizador:</label>
+                        <input th:field="*{organizador}" type="text" id="organizador" name="organizador" required
+                            class="w-full rounded-2xl border-0 bg-sky-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400 text-sky-800 font-semibold placeholder:text-sky-400" />
+                    </div>
+                </div>
+            </div>
 
-        <div class="form-actions">
-            <button type="submit" class="btn-submit">Guardar Convocatoria</button>
-        </div>
-    </form>
-
+            <!-- Botones de acción -->
+            <div class="w-full flex flex-col md:flex-row gap-4 mt-8">
+                <button type="submit"
+                    class="bg-blue-500 hover:bg-blue-600 text-white font-extrabold text-xl py-3 px-10 rounded-full shadow transition w-full md:w-auto min-w-[180px] text-center">
+                    Guardar
+                </button>
+                <a th:href="@{/convocatoria}"
+                    class="flex items-center justify-center gap-2 border border-blue-500 text-blue-500 bg-white font-semibold text-xl py-3 px-10 rounded-full shadow-sm transition hover:bg-blue-50 hover:text-blue-600 w-full md:w-auto min-w-[180px] text-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                    Volver
+                </a>
+            </div>
+        </form>
+    </div>
 </body>
 
 </html>

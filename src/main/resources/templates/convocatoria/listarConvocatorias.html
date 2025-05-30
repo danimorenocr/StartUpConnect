@@ -3,58 +3,101 @@
 
 <head th:replace="~{layout/layout :: head}"></head>
 
-<body>
-
+<body class="bg-white font-sans">
     <header th:replace="~{layout/layout :: header}"></header>
-    
-    <h1>Listado de Convocatorias</h1>
+    <div class="max-w-6xl mx-auto py-10 px-6">
+        <!-- Banner Section -->
+        <div class="relative w-full mb-10">
+            <img src="/images/bannerListar.jpg" alt="Banner convocatorias"
+                class="w-full h-80 object-cover rounded-2xl shadow-lg">
+            <div class="absolute inset-0 flex flex-col justify-center items-center rounded-2xl"
+                style="background: rgba(0,0,0,0.45);">
+                <h2 class="text-4xl md:text-5xl font-extrabold text-white drop-shadow mb-2">Convocatorias</h2>
+                <p class="text-lg md:text-2xl text-white font-medium drop-shadow">Explora oportunidades para impulsar tu startup</p>
+            </div>
+        </div>
 
-    <!--// BOTON PARA CREAR CONVOCATORIAS-->
-
-    <a th:href="@{/crearConvocatoria}">
-        <button>
-            Crear
-        </button>
-    </a>
-
-    <section>
-        <h1> [[${title}]]</h1>
-        <section>
-            <div th:each="convocatoria: ${convocatorias}">
-                <h2>Titulo: [[${convocatoria.titulo}]]</h2>
-                <h2>Sector: [[${convocatoria.sectorObjetivo}]]</h2>
-                <h2>Organizador: [[${convocatoria.organizador}]]</h2>
-
-                <div class="botones-accion">
-                   <a th:href="@{/verConvocatoria/{id}(id=${convocatoria.id})}"
-                    class="ver-perfil-btn">
-                        <button>Ver</button>
+        <h1 class="text-4xl font-extrabold text-[#0369a1] mb-10 tracking-tight drop-shadow">Listado de Convocatorias</h1>
+        
+        <!-- Search and Create Section -->
+        <div class="section-header mb-6">
+            <div id="convocatorias-header-container" class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div class="search-container flex items-center relative w-full md:w-80 md:mx-0 mx-auto">
+                    <i class="search-icon absolute left-4 top-1/2 -translate-y-1/2 text-blue-500 text-lg">🔍</i>
+                    <input id="buscar-convocatoria" type="text" placeholder="Buscar por título..." 
+                        class="rounded-full pl-10 pr-4 py-2 border border-blue-300 shadow focus:outline-none focus:ring-2 focus:ring-blue-400 text-blue-800 font-medium w-full" 
+                        autocomplete="off">
+                </div>
+                <div class="flex justify-end w-full md:w-auto">
+                    <a th:href="@{/crearConvocatoria}"
+                        class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-full shadow transition text-base">
+                        Crear
                     </a>
-                    <!-- Botón Editar -->
-                    <a th:href="@{/editarConvocatoria/{id}(id=${convocatoria.id})}">
-                        <button class="btn-editar">Editar</button>
-                    </a>
+                </div>
+            </div>
+        </div>
 
+        <!-- Cards Grid Section -->
+        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div th:each="convocatoria: ${convocatorias}" 
+                class="bg-white/80 rounded-2xl shadow-lg p-6 flex flex-col items-center border-t-4 border-blue-600 relative transition-transform duration-200 hover:scale-105 hover:shadow-2xl hover:border-blue-700 convocatoria-card">
+                <!-- Icon -->
+                <div class="w-28 h-28 flex items-center justify-center rounded-full bg-blue-50 border-4 border-white shadow-lg mt-6 mb-2">
+                    <i class="fas fa-bullhorn text-4xl text-blue-600"></i>
+                </div>
+
+                <div class="text-center w-full">
+                    <h2 class="font-extrabold text-xl text-slate-900 mb-3 mt-2" th:text="${convocatoria.titulo}"></h2>
+                    <p class="text-base text-slate-600 mb-2">
+                        <span class="font-medium">Sector:</span> 
+                        <span th:text="${convocatoria.sectorObjetivo != null ? convocatoria.sectorObjetivo : 'No especificado'}"></span>
+                    </p>
+                    <p class="text-base text-slate-600 mb-2">
+                        <span class="font-medium">Organizador:</span> 
+                        <span th:text="${convocatoria.organizador != null ? convocatoria.organizador : 'No especificado'}"></span>
+                    </p>
+                </div>
+
+                <!-- Botones de acción -->
+                <div class="flex gap-3 mt-4">
+                    <a th:href="@{/verConvocatoria/{id}(id=${convocatoria.id})}"
+                        class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-full shadow transition text-sm">
+                        Ver
+                    </a>
+                    <a th:href="@{'/editarConvocatoria/' + ${convocatoria.id}}"
+                        class="bg-yellow-400 hover:bg-yellow-500 text-white font-semibold py-2 px-4 rounded-full shadow transition text-sm"
+                        title="Editar">&#9998;</a>
                     <form th:action="@{/eliminarConvocatoria/{id}(id=${convocatoria.id})}" method="post"
                         onsubmit="return confirmarEliminacion(event, this);" style="display: inline;">
-                        <button type="submit" class="eliminar" title="Eliminar">&#10060;</button>
+                        <button type="submit"
+                            class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-full shadow transition text-sm"
+                            title="Eliminar">&#10005;</button>
                     </form>
                 </div>
             </div>
+
+            <!-- Mensaje si no hay convocatorias -->
+            <div th:if="${#lists.isEmpty(convocatorias)}" class="col-span-full text-center py-8">
+                <div class="bg-blue-50 rounded-xl p-8 shadow-sm">
+                    <i class="fas fa-bullhorn text-4xl text-blue-400 mb-4"></i>
+                    <p class="text-lg text-gray-600">No hay convocatorias registradas en el sistema.</p>
+                </div>
+            </div>
         </section>
-    </section>
+    </div>
+
     <script>
         function confirmarEliminacion(event, form) {
             event.preventDefault();
             Swal.fire({
-                title: "Are you sure?",
-                text: "This action cannot be undone",
+                title: "¿Estás seguro?",
+                text: "Esta acción no se puede deshacer",
                 icon: "warning",
                 showCancelButton: true,
-                confirmButtonColor: "#991b1b",
+                confirmButtonColor: "#1e40af",
                 cancelButtonColor: "#f59e0b",
-                confirmButtonText: "Yes, delete",
-                cancelButtonText: "Cancel"
+                confirmButtonText: "Sí, eliminar",
+                cancelButtonText: "Cancelar"
             }).then((result) => {
                 if (result.isConfirmed) {
                     console.log("Deleting...");
@@ -62,8 +105,25 @@
                 }
             });
         }
+
+        // Buscador de convocatorias
+        document.addEventListener('DOMContentLoaded', function () {
+            const searchInput = document.getElementById('buscar-convocatoria');
+            const convocatoriaCards = document.querySelectorAll('.convocatoria-card');
+
+            searchInput.addEventListener('input', function () {
+                const searchTerm = this.value.toLowerCase().trim();
+
+                convocatoriaCards.forEach(card => {
+                    const convocatoria = card.textContent.toLowerCase();
+                    if (convocatoria.includes(searchTerm)) {
+                        card.style.display = 'flex';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
     </script>
-
 </body>
-
 </html>

@@ -1,0 +1,132 @@
+.startup-form-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    position: relative;
+}
+
+.space-y-16 > * + * {
+    margin-top: 4rem;
+}
+
+.startup-form-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+}
+
+/* Ancho máximo para las tarjetas individuales */
+.startup-form-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+.startup-card {
+    background: rgba(255, 255, 255, 0.98);
+    border-radius: 1rem;
+    padding: 3rem 2.5rem 2.5rem;
+    position: relative;
+    box-shadow: 0 4px 15px -1px rgba(0, 0, 0, 0.08);
+    backdrop-filter: blur(8px);
+    width: 100%;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    margin-top: 2rem;
+}
+
+/* Espaciado de los campos dentro de las tarjetas */
+.startup-card-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin-top: 2.5rem;
+}
+
+.startup-card-content > div {
+    margin-bottom: 1.5rem;
+}
+
+/* Espaciado para los inputs y labels */
+.startup-card-content label {
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.startup-card-content input,
+.startup-card-content select,
+.startup-card-content textarea {
+    margin-top: 0.5rem;
+}
+
+/* En pantallas medianas y grandes */
+@media (min-width: 1024px) {
+    .startup-form-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6rem 8rem;
+        align-items: start;
+        margin-top: 2rem;
+    }
+
+    .startup-form-left {
+        display: flex;
+        flex-direction: column;
+        gap: 6rem;
+        justify-self: end;
+        margin-top: 2rem;
+    }
+
+    .startup-form-right {
+        display: flex;
+        flex-direction: column;
+        gap: 6rem;
+        justify-self: start;
+        margin-top: 2rem;
+    }
+
+    .startup-form-actions {
+        grid-column: span 2;
+        margin-top: 1rem;
+    }
+}
+
+.startup-card-header {
+    position: absolute;
+    top: -2rem;
+    left: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: rgba(255, 255, 255, 0.98);
+    padding: 1rem 2rem;
+    border-radius: 9999px;
+    box-shadow: 0 4px 15px -3px rgba(0, 0, 0, 0.15);
+    z-index: 10;
+    transform: translateY(-1rem);
+}
+
+/* Estilos específicos para cada tarjeta */
+.card-startup {
+    border-top: 4px solid #ec4899;
+}
+
+.card-entrepreneur {
+    border-top: 4px solid #a855f7;
+}
+
+.card-multimedia {
+    border-top: 4px solid #f97316;
+}
+
+.card-links {
+    border-top: 4px solid #0ea5e9;
+}
+
+/* Estilo para el contenedor del banner */
+.banner-container {
+    max-width: 72rem;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem;
+}

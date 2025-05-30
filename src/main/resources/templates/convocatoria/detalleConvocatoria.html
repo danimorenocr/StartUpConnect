@@ -8,121 +8,111 @@
     </th:block>
 </head>
 
-<body class="bg-light">
-
+<body class="bg-gray-50">
     <header th:replace="~{layout/layout :: header}"></header>
     
-    <div class="container mt-5">
-        <div class="convocatoria-container">
-            <div class="row">
-                <!-- Imagen lateral izquierda -->
-                <div class="col-md-4">
-                    <div class="convocatoria-imagen">
-                        <img th:src="@{/images/convocatoria-banner.jpg}" alt="Banner de convocatoria" onerror="this.src='/images/bannerListar.jpg'">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+            <div class="flex flex-col md:flex-row">
+                <!-- Banner Image -->
+                <div class="md:w-2/5 relative">
+                    <div class="aspect-w-4 aspect-h-3">
+                        <img th:src="@{/images/convocatoria-banner.jpg}" 
+                             alt="Banner de convocatoria" 
+                             onerror="this.src='/images/bannerListar.jpg'"
+                             class="object-cover w-full h-full">
                     </div>
                 </div>
 
-                <!-- Contenido principal -->
-                <div class="col-md-8">
-                    <div class="convocatoria-header">
-                        <h1 class="convocatoria-titulo" th:text="${convocatoriaDetalle.titulo}">Ean Fase Construye</h1>
+                <!-- Content Section -->
+                <div class="md:w-3/5 p-6 md:p-8">
+                    <!-- Header Section -->
+                    <div class="border-b pb-6 mb-6">
+                        <h1 class="text-3xl font-bold text-gray-900 mb-4" th:text="${convocatoriaDetalle.titulo}">
+                            Ean Fase Construye
+                        </h1>
                         
-                        <!-- Organizador -->
-                        <div class="convocatoria-organizador">
-                            <span class="label">Organizador:</span>
-                            <span class="valor" th:text="${convocatoriaDetalle.organizador}">Universidad EAN</span>
+                        <div class="flex items-center mb-4">
+                            <span class="text-gray-600 font-medium">Organizador:</span>
+                            <span class="ml-2 text-gray-900" th:text="${convocatoriaDetalle.organizador}">Universidad EAN</span>
                         </div>
-                        
-                        <!-- Estado de la convocatoria -->
-                        <div class="convocatoria-estado" th:classappend="${convocatoriaDetalle.fechaFin.after(new java.util.Date())} ? 'activa' : 'finalizada'">
-                            <span th:text="${convocatoriaDetalle.fechaFin.after(new java.util.Date())} ? 'Convocatoria Activa' : 'Convocatoria Finalizada'">
-                                Convocatoria Activa
-                            </span>
-                        </div>
-                        
-                        <!-- Fechas -->
-                        <div class="convocatoria-fechas">
-                            <div class="fecha">
-                                <i class="fas fa-calendar-alt"></i> 
-                                <span>Inicio: </span>
-                                <span th:text="${#dates.format(convocatoriaDetalle.fechaInicio, 'dd/MM/yyyy')}">01/04/2025</span>
-                            </div>
-                            <div class="fecha">
-                                <i class="fas fa-calendar-check"></i> 
-                                <span>Fin: </span>
-                                <span th:text="${#dates.format(convocatoriaDetalle.fechaFin, 'dd/MM/yyyy')}">30/04/2025</span>
-                            </div>
-                        </div>
-                        
-                        <!-- Contacto -->
-                        <div class="convocatoria-contacto">
-                            <div class="contacto-label">Contacto:</div>
-                            <div class="contacto-valor">
-                                <i class="fas fa-phone me-2"></i>
-                                <a href="tel:0180001234" th:href="'tel:' + ${convocatoriaDetalle.contacto}" th:text="${convocatoriaDetalle.contacto}">0180001234</a>
-                            </div>
-                        </div>
-                        
-                        <!-- Botón Postularse -->
-                        <div class="postulate-button">
-                            <a th:href="@{/crearPostulacion(idConvocatoria=${convocatoriaDetalle.id})}" class="btn-postulate">
-                                ¡Postúlate!
+
+                        <!-- Contact Info -->
+                        <div class="flex items-center text-gray-600">
+                            <i class="fas fa-phone-alt mr-2"></i>
+                            <a href="tel:0180001234" 
+                               th:href="'tel:' + ${convocatoriaDetalle.contacto}" 
+                               th:text="${convocatoriaDetalle.contacto}"
+                               class="text-blue-600 hover:text-blue-800">
+                                0180001234
                             </a>
                         </div>
                     </div>
-                    
-                    <div class="convocatoria-content">
-                        <!-- Descripción -->
-                        <div class="seccion">
-                            <h3 class="seccion-titulo">Descripción:</h3>
-                            <div class="seccion-contenido" th:text="${convocatoriaDetalle.descripcion}">
-                                Esta convocatoria tiene como objetivo seleccionar y acompañar hasta quince (15) equipos emprendedores con ideas de negocio que le aporten a la sostenibilidad, en proceso de llevar su producto mínimo viable al mercado y estructurar modelo de negocio, mejorar su innovación y validar la viabilidad en el mercado.
+
+                    <!-- Status and Dates -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                        <div class="bg-blue-50 rounded-lg p-4">
+                            <div class="flex items-center">
+                                <i class="fas fa-calendar-alt text-blue-600 mr-2"></i>
+                                <div>
+                                    <div class="text-sm text-gray-600">Fecha Inicio</div>
+                                    <div class="font-medium text-gray-900" 
+                                         th:text="${#dates.format(convocatoriaDetalle.fechaInicio, 'dd/MM/yyyy')}">
+                                        30/04/2025
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        
-                        <!-- Requisitos -->
-                        <div class="seccion">
-                            <h3 class="seccion-titulo">Requisitos:</h3>
-                            <div class="seccion-contenido requisitos" th:utext="${#strings.replace(convocatoriaDetalle.requisitos, '\\n', '&lt;br&gt;')}">
-                                <ol class="requisitos-lista">
-                                    <li>Ser un equipo emprendedor apasionado y decidido de mínimo 2 y máximo 4 personas.</li>
-                                    <li>Contar con la disposición a validar su idea de negocio y su aporte desde la sostenibilidad, para soluciones sistémicas a los desafíos ambientales y sociales locales y globales.</li>
-                                    <li>Con un Producto Mínimo Viable (MVP) en mano que puedan llevar al mercado a demostrar su valor durante el tiempo de nuestra travesía de incubación.</li>
-                                </ol>
+                        <div class="bg-blue-50 rounded-lg p-4">
+                            <div class="flex items-center">
+                                <i class="fas fa-calendar-check text-blue-600 mr-2"></i>
+                                <div>
+                                    <div class="text-sm text-gray-600">Fecha Fin</div>
+                                    <div class="font-medium text-gray-900" 
+                                         th:text="${#dates.format(convocatoriaDetalle.fechaFin, 'dd/MM/yyyy')}">
+                                        30/05/2025
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        
-                        <!-- Beneficios -->
-                        <div class="seccion">
-                            <h3 class="seccion-titulo">Beneficios:</h3>
-                            <div class="seccion-contenido" th:utext="${#strings.replace(convocatoriaDetalle.beneficios, '\\n', '&lt;br&gt;')}">
-                                Acompañamiento personalizado, mentoría especializada, acceso a red de contactos, espacios de trabajo colaborativo, y oportunidades de financiación.
-                            </div>
+                    </div>
+
+                    <!-- Description Section -->
+                    <div class="mb-8">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-3">Descripción</h3>
+                        <p class="text-gray-600" th:text="${convocatoriaDetalle.descripcion}">
+                            Esta convocatoria tiene como objetivo seleccionar y acompañar hasta quince (15) equipos emprendedores...
+                        </p>
+                    </div>
+
+                    <!-- Requirements Section -->
+                    <div class="mb-8">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-3">Requisitos</h3>
+                        <div class="text-gray-600 space-y-2" 
+                             th:utext="${#strings.replace(convocatoriaDetalle.requisitos, '\\n', '&lt;br&gt;')}">
+                            <ol class="list-decimal pl-4 space-y-2">
+                                <li>Ser un equipo emprendedor apasionado y decidido de mínimo 2 y máximo 4 personas.</li>
+                                <li>Contar con la disposición a validar su idea de negocio...</li>
+                                <li>Con un Producto Mínimo Viable (MVP) en mano...</li>
+                            </ol>
                         </div>
-                        
-                        <!-- Sector Objetivo -->
-                        <div class="seccion">
-                            <h3 class="seccion-titulo">Sector Objetivo:</h3>
-                            <div class="seccion-contenido">
-                                <span class="sector-badge" th:text="${convocatoriaDetalle.sectorObjetivo}">Sostenibilidad</span>
-                            </div>
-                        </div>
-                        
-                        <!-- Enlaces -->
-                        <div class="convocatoria-actions">
-                            <a th:href="@{/listarPostulaciones/{id}(id=${convocatoriaDetalle.id})}" class="btn-convocatoria btn-postulaciones">
-                                <i class="fas fa-list me-2"></i> Ver Postulaciones
-                            </a>
-                            
-                            <a th:href="@{/convocatoria}" class="btn-convocatoria btn-volver">
-                                <i class="fas fa-arrow-left me-2"></i> Volver a la lista
-                            </a>
-                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex flex-col sm:flex-row gap-4 mt-8">
+                        <a th:href="@{/listarpostulaciones/{id}(id=${convocatoriaDetalle.id})}" 
+                           class="inline-flex justify-center items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                            ¡Postúlate!
+                        </a>
+                        <a th:href="@{/convocatoria}" 
+                           class="inline-flex justify-center items-center px-6 py-3 border border-gray-300 text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                            <i class="fas fa-arrow-left mr-2"></i>
+                            Volver
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
 </body>
 </html>

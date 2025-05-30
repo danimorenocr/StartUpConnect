@@ -261,3 +261,22 @@
         justify-content: center;
     }
 }
+
+body {
+  font-family: 'Inter', sans-serif;
+}
+
+/* Espaciado uniforme entre secciones */
+.space-y-6 > * + * {
+  margin-top: 1.5rem;
+}
+
+.space-y-3 > * + * {
+  margin-top: 0.75rem;
+}
+
+/* Suavidad en botones */
+button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(251, 146, 60, 0.5);
+}
