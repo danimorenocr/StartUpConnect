@@ -22,6 +22,8 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,6 +38,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -45,6 +48,8 @@ import java.util.stream.Collectors;
 
 @Controller
 public class UsuarioController {
+    private static final Logger logger = LoggerFactory.getLogger(UsuarioController.class);
+    
     @Autowired
     private UsuarioService usuarioService;
     @Autowired
@@ -124,12 +129,21 @@ public class UsuarioController {
         model.addAttribute("convocatoriasEnRevision", convocatoriasEnRevision);
         
         // Obtener próxima convocatoria por cerrar
-        Optional<ConvocatoriaEntity> proximaConvocatoria = convocatorias.stream()
-                .filter(c -> c.getFechaFin().after(hoy))
-                .min(Comparator.comparing(ConvocatoriaEntity::getFechaFin));
-        
-        if (proximaConvocatoria.isPresent()) {
-            model.addAttribute("proximaConvocatoria", proximaConvocatoria.get());
+        try {
+            Optional<ConvocatoriaEntity> proximaConvocatoria = convocatorias.stream()
+                    .filter(c -> c.getFechaFin().after(hoy))
+                    .min(Comparator.comparing(ConvocatoriaEntity::getFechaFin));
+            
+            if (proximaConvocatoria.isPresent()) {
+                ConvocatoriaEntity convocatoria = proximaConvocatoria.get();
+                // Verificar que todos los campos necesarios estén presentes
+                if (convocatoria.getTitulo() != null && convocatoria.getFechaFin() != null) {
+                    model.addAttribute("proximaConvocatoria", convocatoria);
+                }
+            }
+        } catch (Exception e) {
+            logger.error("Error al obtener próxima convocatoria: {}", e.getMessage());
+            // No agregamos la convocatoria al modelo si hay error
         }
         
         // Obtener eventos próximos y configuración del calendario
@@ -147,8 +161,12 @@ public class UsuarioController {
             model.addAttribute("calendars", calendars);
             
         } catch (Exception e) {
+            logger.error("Error al cargar eventos de Google Calendar: {}", e.getMessage(), e);
             model.addAttribute("calendarError", "No se pudieron cargar los eventos: " + e.getMessage());
-            e.printStackTrace();
+            // Agregar valores por defecto para que la plantilla no falle
+            model.addAttribute("upcomingEvents", Collections.emptyList());
+            model.addAttribute("calendarEmbedUrl", "about:blank");
+            model.addAttribute("calendars", Collections.emptyList());
         }
         
         return "/administrador/dashboardAdmin";

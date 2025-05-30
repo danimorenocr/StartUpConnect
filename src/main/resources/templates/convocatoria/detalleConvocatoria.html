@@ -1,88 +1,128 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{layout/layout :: head}"></head>
+<head th:replace="~{layout/layout :: head}">
+    <title>Detalle de Convocatoria</title>
+    <th:block th:fragment="custom-css">
+        <link rel="stylesheet" th:href="@{/css/convocatoria/detalleConvocatoria.css}">
+    </th:block>
+</head>
 
-<body>
+<body class="bg-light">
 
     <header th:replace="~{layout/layout :: header}"></header>
     
     <div class="container mt-5">
-        <div class="card">
-            <div class="card-header">
-                <h1>Detalle de Convocatoria</h1>
-            </div>
-            <div class="card-body">
-                <!-- Estado de la convocatoria -->
-                <div class="badge-convocatoria mb-4" th:if="${convocatoriaDetalle.fechaFin.after(new java.util.Date())}">
-                    Convocatoria Activa
-                </div>
-                <div class="badge-convocatoria mb-4 bg-secondary" th:unless="${convocatoriaDetalle.fechaFin.after(new java.util.Date())}">
-                    Convocatoria Finalizada
-                </div>
-                
-                <!-- Título -->
-                <h2 class="mb-4" th:text="${convocatoriaDetalle.titulo}"></h2>
-                
-                <!-- Fechas -->
-                <div class="mb-4">
-                    <span class="date-badge"><i class="fas fa-calendar-alt"></i> Inicio: <span th:text="${#dates.format(convocatoriaDetalle.fechaInicio, 'dd/MM/yyyy')}"></span></span>
-                    <span class="date-badge"><i class="fas fa-calendar-check"></i> Fin: <span th:text="${#dates.format(convocatoriaDetalle.fechaFin, 'dd/MM/yyyy')}"></span></span>
-                </div>
-
-                <!-- Descripción -->
-                <div class="row mb-4">
-                    <div class="col-md-3 fw-bold">Descripción:</div>
-                    <div class="col-md-9" th:text="${convocatoriaDetalle.descripcion}"></div>
-                </div>                <!-- Requisitos -->
-                <div class="row mb-4">
-                    <div class="col-md-3 fw-bold">Requisitos:</div>
-                    <div class="col-md-9" th:text="${convocatoriaDetalle.requisitos}"></div>
-                </div>
-
-                <!-- Beneficios -->
-                <div class="row mb-4">
-                    <div class="col-md-3 fw-bold">Beneficios:</div>
-                    <div class="col-md-9" th:text="${convocatoriaDetalle.beneficios}"></div>
-                </div>
-
-                <!-- Contacto -->
-                <div class="row mb-4">
-                    <div class="col-md-3 fw-bold">Contacto:</div>
-                    <div class="col-md-9">
-                        <i class="fas fa-envelope me-2 text-primary"></i>
-                        <a href="#" th:text="${convocatoriaDetalle.contacto}"></a>
+        <div class="convocatoria-container">
+            <div class="row">
+                <!-- Imagen lateral izquierda -->
+                <div class="col-md-4">
+                    <div class="convocatoria-imagen">
+                        <img th:src="@{/images/convocatoria-banner.jpg}" alt="Banner de convocatoria" onerror="this.src='/images/bannerListar.jpg'">
                     </div>
                 </div>
 
-                <!-- Sector Objetivo -->
-                <div class="row mb-4">
-                    <div class="col-md-3 fw-bold">Sector Objetivo:</div>
-                    <div class="col-md-9">
-                        <span class="badge bg-primary p-2" th:text="${convocatoriaDetalle.sectorObjetivo}"></span>
+                <!-- Contenido principal -->
+                <div class="col-md-8">
+                    <div class="convocatoria-header">
+                        <h1 class="convocatoria-titulo" th:text="${convocatoriaDetalle.titulo}">Ean Fase Construye</h1>
+                        
+                        <!-- Organizador -->
+                        <div class="convocatoria-organizador">
+                            <span class="label">Organizador:</span>
+                            <span class="valor" th:text="${convocatoriaDetalle.organizador}">Universidad EAN</span>
+                        </div>
+                        
+                        <!-- Estado de la convocatoria -->
+                        <div class="convocatoria-estado" th:classappend="${convocatoriaDetalle.fechaFin.after(new java.util.Date())} ? 'activa' : 'finalizada'">
+                            <span th:text="${convocatoriaDetalle.fechaFin.after(new java.util.Date())} ? 'Convocatoria Activa' : 'Convocatoria Finalizada'">
+                                Convocatoria Activa
+                            </span>
+                        </div>
+                        
+                        <!-- Fechas -->
+                        <div class="convocatoria-fechas">
+                            <div class="fecha">
+                                <i class="fas fa-calendar-alt"></i> 
+                                <span>Inicio: </span>
+                                <span th:text="${#dates.format(convocatoriaDetalle.fechaInicio, 'dd/MM/yyyy')}">01/04/2025</span>
+                            </div>
+                            <div class="fecha">
+                                <i class="fas fa-calendar-check"></i> 
+                                <span>Fin: </span>
+                                <span th:text="${#dates.format(convocatoriaDetalle.fechaFin, 'dd/MM/yyyy')}">30/04/2025</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Contacto -->
+                        <div class="convocatoria-contacto">
+                            <div class="contacto-label">Contacto:</div>
+                            <div class="contacto-valor">
+                                <i class="fas fa-phone me-2"></i>
+                                <a href="tel:0180001234" th:href="'tel:' + ${convocatoriaDetalle.contacto}" th:text="${convocatoriaDetalle.contacto}">0180001234</a>
+                            </div>
+                        </div>
+                        
+                        <!-- Botón Postularse -->
+                        <div class="postulate-button">
+                            <a th:href="@{/crearPostulacion(idConvocatoria=${convocatoriaDetalle.id})}" class="btn-postulate">
+                                ¡Postúlate!
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="convocatoria-content">
+                        <!-- Descripción -->
+                        <div class="seccion">
+                            <h3 class="seccion-titulo">Descripción:</h3>
+                            <div class="seccion-contenido" th:text="${convocatoriaDetalle.descripcion}">
+                                Esta convocatoria tiene como objetivo seleccionar y acompañar hasta quince (15) equipos emprendedores con ideas de negocio que le aporten a la sostenibilidad, en proceso de llevar su producto mínimo viable al mercado y estructurar modelo de negocio, mejorar su innovación y validar la viabilidad en el mercado.
+                            </div>
+                        </div>
+                        
+                        <!-- Requisitos -->
+                        <div class="seccion">
+                            <h3 class="seccion-titulo">Requisitos:</h3>
+                            <div class="seccion-contenido requisitos" th:utext="${#strings.replace(convocatoriaDetalle.requisitos, '\\n', '&lt;br&gt;')}">
+                                <ol class="requisitos-lista">
+                                    <li>Ser un equipo emprendedor apasionado y decidido de mínimo 2 y máximo 4 personas.</li>
+                                    <li>Contar con la disposición a validar su idea de negocio y su aporte desde la sostenibilidad, para soluciones sistémicas a los desafíos ambientales y sociales locales y globales.</li>
+                                    <li>Con un Producto Mínimo Viable (MVP) en mano que puedan llevar al mercado a demostrar su valor durante el tiempo de nuestra travesía de incubación.</li>
+                                </ol>
+                            </div>
+                        </div>
+                        
+                        <!-- Beneficios -->
+                        <div class="seccion">
+                            <h3 class="seccion-titulo">Beneficios:</h3>
+                            <div class="seccion-contenido" th:utext="${#strings.replace(convocatoriaDetalle.beneficios, '\\n', '&lt;br&gt;')}">
+                                Acompañamiento personalizado, mentoría especializada, acceso a red de contactos, espacios de trabajo colaborativo, y oportunidades de financiación.
+                            </div>
+                        </div>
+                        
+                        <!-- Sector Objetivo -->
+                        <div class="seccion">
+                            <h3 class="seccion-titulo">Sector Objetivo:</h3>
+                            <div class="seccion-contenido">
+                                <span class="sector-badge" th:text="${convocatoriaDetalle.sectorObjetivo}">Sostenibilidad</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Enlaces -->
+                        <div class="convocatoria-actions">
+                            <a th:href="@{/listarPostulaciones/{id}(id=${convocatoriaDetalle.id})}" class="btn-convocatoria btn-postulaciones">
+                                <i class="fas fa-list me-2"></i> Ver Postulaciones
+                            </a>
+                            
+                            <a th:href="@{/convocatoria}" class="btn-convocatoria btn-volver">
+                                <i class="fas fa-arrow-left me-2"></i> Volver a la lista
+                            </a>
+                        </div>
                     </div>
                 </div>
-
-                <!-- Organizador -->
-                <div class="row mb-4">
-                    <div class="col-md-3 fw-bold">Organizador:</div>
-                    <div class="col-md-9">
-                        <i class="fas fa-building me-2 text-primary"></i>
-                        <span th:text="${convocatoriaDetalle.organizador}"></span>
-                    </div>
-                </div></div>            <div class="card-footer d-flex justify-content-between align-items-center p-3">
-                <a th:href="@{/listarPostulaciones/{id}(id=${convocatoriaDetalle.id})}" class="btn btn-info text-white">
-                    <i class="fas fa-list me-2"></i> Ver Postulaciones
-                </a>
-                
-                <a th:href="@{/crearPostulacion(idConvocatoria=${convocatoriaDetalle.id})}" class="btn btn-success">
-                    <i class="fas fa-rocket me-2"></i> Postular mi Startup
-                </a>
-                
             </div>
         </div>
     </div>
 
-    </body>
-
+</body>
 </html>
