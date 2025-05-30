@@ -28,7 +28,7 @@ body {
     background-size: cover;
     background-position: center;
     position: relative;
-    margin-top: 80px;
+    margin-top: 60px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -73,9 +73,11 @@ body {
     max-width: 1200px;
     margin: 0 auto;
     padding: 40px 20px;
-    background-color: #fff;
+    background-color: transparent;
     position: relative;
     z-index: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 /* Descripción de la página */
@@ -293,9 +295,9 @@ body {
 .info-cards-container {
     flex: 2;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 25px;
-    min-width: 300px;
+    min-width: 280px;
 }
 
 .info-card {
@@ -832,8 +834,7 @@ body {
     width: 100%;
     overflow-x: auto;
     padding: 20px 20px 10px;
-    scrollbar-width: thin;
-    scrollbar-color: #e74c3c #f1f1f1;
+    -webkit-overflow-scrolling: touch;
 }
 
 /* Estilizando la barra de scroll */
@@ -1161,48 +1162,153 @@ body {
     }
     
     .section-title {
-        font-size: 1.5rem;
+        font-size: 1.75rem;
     }
-}
 
-/* Botón de volver */
-.acciones {
-    display: flex;
-    justify-content: center;
-    margin-top: 30px;
-}
+    .container {
+        padding: 20px 15px;
+    }
 
-.btn-volver {
-    background-color: #3498db;
-    color: white;
-    border: none;
-    padding: 12px 30px;
-    border-radius: 30px;
-    font-size: 1rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 3px 10px rgba(52, 152, 219, 0.3);
-}
+    .hero-section {
+        height: 250px;
+        margin-top: 60px;
+    }
 
-.btn-volver:hover {
-    background-color: #2980b9;
-    box-shadow: 0 5px 15px rgba(52, 152, 219, 0.5);
-}
+    .profile-container {
+        padding: 15px;
+    }
 
-/* Responsive */
-@media (max-width: 768px) {
-    .emprendedor-content {
+    .profile-header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .profile-avatar {
+        margin-right: 0;
+        margin-bottom: 15px;
+    }
+
+    .stats-container {
+        flex-wrap: wrap;
+    }
+
+    .contact-action {
         flex-direction: column;
     }
-    
-    .foto-container, .datos-container {
-        flex: none;
+
+    .btn-contactar {
         width: 100%;
     }
-    
-    .foto-wrapper {
-        width: 180px;
-        height: 180px;
+}
+
+/* Ajustes responsive y de espaciado */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    background-color: transparent;
+    position: relative;
+    z-index: 1;
+    min-height: calc(100vh - 380px); /* Altura del viewport - (header + hero) */
+    display: flex;
+    flex-direction: column;
+}
+
+/* Ajuste para las cards */
+.info-cards-container {
+    flex: 2;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    min-width: 280px;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 20px 15px;
     }
+
+    .hero-section {
+        height: 250px;
+        margin-top: 60px;
+    }
+
+    .hero-title {
+        font-size: 2rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1rem;
+    }
+
+    .page-description {
+        padding: 0 5%;
+    }
+
+    .section-title {
+        font-size: 1.75rem;
+    }
+
+    .profile-container {
+        padding: 15px;
+    }
+
+    .profile-header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .profile-avatar {
+        margin-right: 0;
+        margin-bottom: 15px;
+    }
+
+    .stats-container {
+        flex-wrap: wrap;
+    }
+
+    .contact-action {
+        flex-direction: column;
+    }
+
+    .btn-contactar {
+        width: 100%;
+    }
+}
+
+/* Ajustes para la sección de startups */
+.startups-section-wrapper {
+    margin: 20px 0;
+    transition: all 0.3s ease;
+}
+
+.startups-scroll-container {
+    width: 100%;
+    overflow-x: auto;
+    padding: 20px 20px 10px;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Mejorar visualización en móviles */
+@media (max-width: 480px) {
+    .startup-card-horizontal {
+        width: 220px;
+        min-width: 220px;
+    }
+
+    .startup-logo-horizontal {
+        height: 100px;
+    }
+
+    .startup-info-horizontal h4 {
+        font-size: 1.1rem;
+    }
+}
+
+/* Estilos para el botón volver */
+.btn-volver {
+    border: none;
+    outline: none;
+    cursor: pointer;
+    min-width: 120px;
 }
