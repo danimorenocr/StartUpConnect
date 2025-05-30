@@ -202,8 +202,7 @@ public class EntregableController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-    
-    private String determineContentType(String fileName) {
+      private String determineContentType(String fileName) {
         String extension = "";
         int i = fileName.lastIndexOf('.');
         if (i > 0) {
@@ -268,6 +267,112 @@ public class EntregableController {
                 return "application/x-tar";
             default:
                 return "application/octet-stream";
+        }
+    }
+    
+    @GetMapping("/editarEntregable/{id}")
+    public String editarEntregable(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
+        EntregableEntity entregable = entregablesService.findById(id);
+        
+        if (entregable == null) {
+            redirectAttributes.addFlashAttribute("error", "El entregable no existe.");
+            return "redirect:/entregable";
+        }
+        
+        model.addAttribute("title", "Editar Entregable");
+        model.addAttribute("entregable", entregable);
+        
+        // Obtener todas las tareas para el dropdown
+        model.addAttribute("tareas", tareaService.findAll());
+        
+        return "/entregable/editarEntregable";
+    }
+    
+    @PostMapping("/actualizarEntregable")
+    public String actualizarEntregable(@ModelAttribute EntregableEntity entregable,
+                                      @RequestParam(value = "archivo", required = false) MultipartFile archivo,
+                                      RedirectAttributes redirectAttributes) {
+        try {
+            // Obtener el entregable original de la base de datos
+            EntregableEntity entregableOriginal = entregablesService.findById(entregable.getId());
+            
+            if (entregableOriginal == null) {
+                redirectAttributes.addFlashAttribute("error", "El entregable no existe.");
+                return "redirect:/entregable";
+            }
+            
+            // Actualizar campos básicos
+            entregableOriginal.setNombreArchivo(entregable.getNombreArchivo());
+            entregableOriginal.setEstado(entregable.getEstado());
+            entregableOriginal.setIdTarea(entregable.getIdTarea());
+            
+            // Si se proporciona un nuevo archivo, reemplazar el archivo existente
+            if (archivo != null && !archivo.isEmpty()) {
+                // Crear carpeta si no existe
+                String uploadDir = "src/main/resources/uploads/entregables/";
+                File dir = new File(uploadDir);
+                if (!dir.exists()) dir.mkdirs();
+                
+                // Eliminar archivo antiguo si existe
+                try {
+                    Path pathViejo = Paths.get(entregableOriginal.getRutaArchivo());
+                    Files.deleteIfExists(pathViejo);
+                } catch (IOException e) {
+                    // Si no se puede eliminar el archivo antiguo, solo lo registramos pero continuamos
+                    System.out.println("No se pudo eliminar el archivo antiguo: " + e.getMessage());
+                }
+                
+                // Guardar nuevo archivo
+                String filename = UUID.randomUUID() + "_" + archivo.getOriginalFilename();
+                Path path = Paths.get(uploadDir + filename);
+                Files.write(path, archivo.getBytes());
+                
+                // Actualizar entregable con la nueva información del archivo
+                entregableOriginal.setNombreArchivo(archivo.getOriginalFilename());
+                entregableOriginal.setRutaArchivo(path.toString());
+            }
+              // Guardar los cambios
+            entregablesService.save(entregableOriginal);
+            
+            redirectAttributes.addFlashAttribute("success", "Entregable actualizado correctamente.");
+            return "redirect:/entregable";
+            
+        } catch (IOException e) {
+            redirectAttributes.addFlashAttribute("error", "Error al actualizar el entregable: " + e.getMessage());
+            return "redirect:/editarEntregable/" + entregable.getId();
+        }
+    }
+    
+    @GetMapping("/eliminarEntregable/{id}")
+    public String eliminarEntregable(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        try {
+            EntregableEntity entregable = entregablesService.findById(id);
+            
+            if (entregable == null) {
+                redirectAttributes.addFlashAttribute("error", "El entregable no existe.");
+                return "redirect:/entregable";
+            }
+            
+            // Eliminar el archivo físico si existe
+            if (entregable.getRutaArchivo() != null && !entregable.getRutaArchivo().isEmpty()) {
+                try {
+                    Path path = Paths.get(entregable.getRutaArchivo());
+                    Files.deleteIfExists(path);
+                } catch (IOException e) {
+                    System.out.println("No se pudo eliminar el archivo: " + e.getMessage());
+                    // Continuamos con la eliminación del registro aunque no se pueda eliminar el archivo
+                }
+            }
+            
+            // Eliminar el registro de la base de datos
+            entregablesService.deleteById(id);
+            
+            redirectAttributes.addFlashAttribute("success", "Entregable eliminado correctamente.");
+            return "redirect:/entregable";
+            
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Error al eliminar el entregable: " + e.getMessage());
+            return "redirect:/entregable";
         }
     }
 }
