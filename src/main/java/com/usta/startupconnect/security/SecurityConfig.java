@@ -1,6 +1,7 @@
 package com.usta.startupconnect.security;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -9,9 +10,14 @@ import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import com.usta.startupconnect.handler.LoginSuccessHandler;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+    @Autowired
+    private LoginSuccessHandler loginSuccessHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -28,15 +34,14 @@ public class SecurityConfig {
                 
                 // Rutas para emprendedores
                 .requestMatchers("/emprendedor/**", "/startup/**", "/postulacion/**").hasAnyRole("ADMIN", "EMPRENDEDOR")
-                //ROL_ADMIN
-                // Rutas compartidas
+                //ROL_ADMIN                // Rutas compartidas
                 .requestMatchers("/convocatoria/**", "/evento/**").hasAnyRole("ADMIN", "MENTOR", "EMPRENDEDOR")
                 
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
                 .loginPage("/login") 
-                .defaultSuccessUrl("/dashboard", true)
+                .successHandler(loginSuccessHandler)
                 .failureUrl("/login?error=true")
                 .permitAll()
             )

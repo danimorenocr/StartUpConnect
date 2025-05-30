@@ -8,11 +8,10 @@ public interface MentorService {
 
     public List<MentorEntity> findAll();
     
-    public void save(MentorEntity mentor);
-
-    public MentorEntity findById(String id);
+    public void save(MentorEntity mentor);    public MentorEntity findById(String id);
 
     public void deleteById(String id);
 
+    public MentorEntity findByUsuarioEmail(String email);
 
 }

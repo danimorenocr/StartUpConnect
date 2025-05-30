@@ -2,10 +2,12 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 
 <head th:replace="~{layout/layout :: head}">
-    <title>Panel de Administración</title>
+    <title>Panel de Mentoría</title>
 </head>
 
 <body class="bg-stone-100 text-gray-900 min-h-screen w-screen flex flex-col items-center py-6 font-[Poppins]">
+   <div th:replace="~{layout/layout :: header}"></div>
+    
     <!-- Cargar hoja de estilo específica para el dashboard -->
     <link rel="stylesheet" th:href="@{/css/mentor/dashboardMentor.css}">
     <!-- Estilos adicionales para animaciones y efectos visuales -->
@@ -31,86 +33,13 @@
         .animate-pulse {
             animation: pulse 2s infinite;
         }
-
-        /* Transiciones suaves para elementos del calendario */
-        .transition-all {
-            transition-property: all;
-            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        /* Efecto hover para cards */
-        .hover\:scale-102:hover {
-            transform: scale(1.02);
-        }
-
-        /* Estilos para mostrar gradualmente el iframe */
-        .calendar-container iframe {
-            transition: opacity 0.8s ease-in-out;
-        }
-
-        /* Animación de entrada para los eventos */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Sombras mejoradas */
-        .shadow-blue {
-            box-shadow: 0 4px 14px -2px rgba(59, 130, 246, 0.18);
-        }
-
-        /* Estilos para la barra de desplazamiento */
-        .scrollbar-thin::-webkit-scrollbar {
-            width: 4px;
-        }
-
-        .scrollbar-thin::-webkit-scrollbar-track {
-            background: #f1f5f9;
-            border-radius: 2px;
-        }
-
-        .scrollbar-thin::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 2px;
-        }
-
-        .scrollbar-thin::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
-        }
-
-        /* Limitar líneas de texto */
-        .line-clamp-1 {
-            overflow: hidden;
-            display: -webkit-box;
-            -webkit-box-orient: vertical;
-            -webkit-line-clamp: 1;
-            line-clamp: 1;
-            max-height: 1.5em;
-        }
-
-        .line-clamp-2 {
-            overflow: hidden;
-            display: -webkit-box;
-            -webkit-box-orient: vertical;
-            -webkit-line-clamp: 2;
-            line-clamp: 2;
-            max-height: 3em;
-        }
     </style>
-
-    <header th:replace="~{layout/layout :: header}"></header>
 
     <main class="w-full max-w-6xl mx-auto px-4">
         <!-- Banner superior con mensaje de bienvenida -->
         <div class="dashboard-banner">
-            <img src="/images/bannerUsuario.jpg" alt="Banner de Administrador" class="w-full h-full object-cover">            <div class="dashboard-banner-overlay">
+            <img src="/images/bannerUsuario.jpg" alt="Banner de Mentor" class="w-full h-full object-cover">
+            <div class="dashboard-banner-overlay">
                 <div>
                     <h1 class="dashboard-banner-title">¡Bienvenido, <span th:text="${nombreCompleto}"></span>!</h1>
                     <p class="dashboard-banner-subtitle">Panel de control de mentoría</p>
@@ -132,15 +61,17 @@
                                     <i class="fa-solid fa-check mr-1"></i>Asignadas
                                 </div>
                             </div>
-                            <div class="space-y-2 mt-3" th:if="${etapasPorEstado != null && !etapasPorEstado.isEmpty()}">
-                                <div th:each="estado : ${etapasPorEstado.entrySet()}" class="flex items-center justify-between">
+                            <div class="mt-3" th:if="${etapasPorEstado != null && !etapasPorEstado.isEmpty()}">
+                                <div th:each="estado : ${etapasPorEstado.entrySet()}"
+                                    class="flex items-center justify-between">
                                     <span class="text-xs" th:text="${estado.key}">Estado</span>
                                     <span class="text-xs font-semibold" th:text="${estado.value}">0</span>
                                 </div>
-                                <div th:each="estado : ${etapasPorEstado.entrySet()}" class="w-full bg-white rounded-full h-2">
+                                <!-- <div th:each="estado : ${etapasPorEstado.entrySet()}"
+                                    class="w-full bg-white rounded-full h-2">
                                     <div class="bg-green-500 h-2 rounded-full"
                                         th:style="'width: ' + (${estado.value} * 100 / ${totalEtapas}) + '%'"></div>
-                                </div>
+                                </div> -->
                             </div>
                             <!-- Contenido estático en caso de no haber datos -->
                             <div class="space-y-2 mt-3" th:if="${etapasPorEstado == null || etapasPorEstado.isEmpty()}">
@@ -182,20 +113,26 @@
                                     <i class="fa-solid fa-list-check mr-1"></i>Por completar
                                 </div>
                             </div>
-                            <div class="mt-3" th:if="${tareasProximasAVencer != null && !tareasProximasAVencer.isEmpty()}">
+                            <div class="mt-3"
+                                th:if="${tareasProximasAVencer != null && !tareasProximasAVencer.isEmpty()}">
                                 <div class="text-sm font-semibold">Tareas próximas a vencer:</div>
                                 <div class="mt-2 space-y-2 max-h-32 overflow-y-auto scrollbar-thin">
-                                    <div th:each="tarea : ${tareasProximasAVencer}" class="bg-white rounded-lg p-2 text-sm">
-                                        <div class="font-medium line-clamp-1" th:text="${tarea.titulo}">Título de la tarea</div>
+                                    <div th:each="tarea : ${tareasProximasAVencer}"
+                                        class="bg-white rounded-lg p-2 text-sm">
+                                        <div class="font-medium line-clamp-1" th:text="${tarea.titulo}">Título de la
+                                            tarea</div>
                                         <div class="flex justify-between mt-1">
-                                            <span class="text-xs text-gray-600" th:text="${tarea.etapa.titulo}">Etapa</span>
-                                            <span class="text-xs font-semibold text-red-600" th:text="${#dates.format(tarea.fechaEntrega, 'dd MMM yyyy')}">Fecha</span>
+                                            <span class="text-xs text-gray-600"
+                                                th:text="${tarea.etapa.titulo}">Etapa</span>
+                                            <span class="text-xs font-semibold text-red-600"
+                                                th:text="${#dates.format(tarea.fechaEntrega, 'dd MMM yyyy')}">Fecha</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <!-- Contenido estático en caso de no haber datos -->
-                            <div class="mt-3" th:if="${tareasProximasAVencer == null || tareasProximasAVencer.isEmpty()}">
+                            <div class="mt-3"
+                                th:if="${tareasProximasAVencer == null || tareasProximasAVencer.isEmpty()}">
                                 <div class="text-sm font-semibold">Tareas próximas a vencer:</div>
                                 <div class="mt-2 space-y-2">
                                     <div class="bg-white rounded-lg p-2 text-sm">
@@ -226,20 +163,27 @@
                             <p class="text-sm text-gray-600 mb-3">Detalles de la próxima etapa a comenzar</p>
                             <div th:if="${proximaEtapa != null}">
                                 <div class="bg-white rounded-lg p-3 mt-2">
-                                    <div class="font-bold text-purple-800" th:text="${proximaEtapa.titulo}">Título de la etapa</div>
-                                    <div class="text-sm text-gray-700 mt-1 line-clamp-2" th:text="${proximaEtapa.descripcion}">Descripción de la etapa</div>
+                                    <div class="font-bold text-purple-800" th:text="${proximaEtapa.titulo}">Título de la
+                                        etapa</div>
+                                    <div class="text-sm text-gray-700 mt-1 line-clamp-2"
+                                        th:text="${proximaEtapa.descripcion}">Descripción de la etapa</div>
                                     <div class="flex justify-between mt-2">
                                         <div>
                                             <div class="text-xs text-gray-500">Inicio:</div>
-                                            <div class="text-sm font-medium" th:text="${#dates.format(proximaEtapa.fechaInicio, 'dd MMM yyyy')}">Fecha inicio</div>
+                                            <div class="text-sm font-medium"
+                                                th:text="${#dates.format(proximaEtapa.fechaInicio, 'dd MMM yyyy')}">
+                                                Fecha inicio</div>
                                         </div>
                                         <div>
                                             <div class="text-xs text-gray-500">Fin:</div>
-                                            <div class="text-sm font-medium" th:text="${#dates.format(proximaEtapa.fechaFin, 'dd MMM yyyy')}">Fecha fin</div>
+                                            <div class="text-sm font-medium"
+                                                th:text="${#dates.format(proximaEtapa.fechaFin, 'dd MMM yyyy')}">Fecha
+                                                fin</div>
                                         </div>
                                     </div>
                                 </div>
-                                <a th:href="@{'/etapa/verEtapa/' + ${proximaEtapa.id}}" class="flex justify-center items-center bg-white text-purple-700 font-medium rounded-lg mt-3 px-3 py-2 text-sm border border-purple-300 hover:bg-purple-50 transition">
+                                <a th:href="@{'/etapa/verEtapa/' + ${proximaEtapa.id}}"
+                                    class="flex justify-center items-center bg-white text-purple-700 font-medium rounded-lg mt-3 px-3 py-2 text-sm border border-purple-300 hover:bg-purple-50 transition">
                                     <i class="fa-solid fa-eye mr-2"></i> Ver detalles completos
                                 </a>
                             </div>
@@ -247,7 +191,8 @@
                             <div th:if="${proximaEtapa == null}">
                                 <div class="bg-white rounded-lg p-3 mt-2">
                                     <div class="font-bold text-purple-800">Fase de validación</div>
-                                    <div class="text-sm text-gray-700 mt-1 line-clamp-2">Validación de la solución con usuarios reales y recolección de feedback para iteraciones.</div>
+                                    <div class="text-sm text-gray-700 mt-1 line-clamp-2">Validación de la solución con
+                                        usuarios reales y recolección de feedback para iteraciones.</div>
                                     <div class="flex justify-between mt-2">
                                         <div>
                                             <div class="text-xs text-gray-500">Inicio:</div>
@@ -259,7 +204,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                <a href="/etapa" class="flex justify-center items-center bg-white text-purple-700 font-medium rounded-lg mt-3 px-3 py-2 text-sm border border-purple-300 hover:bg-purple-50 transition">
+                                <a href="/etapa"
+                                    class="flex justify-center items-center bg-white text-purple-700 font-medium rounded-lg mt-3 px-3 py-2 text-sm border border-purple-300 hover:bg-purple-50 transition">
                                     <i class="fa-solid fa-eye mr-2"></i> Ver etapas asignadas
                                 </a>
                             </div>
@@ -275,6 +221,7 @@
                                     <i class="fa-solid fa-clock mr-1"></i>En progreso
                                 </div>
                             </div>
+                        </div>
                     </div>
                 </div>
             </section> <!-- Sección de alertas y notificaciones -->
@@ -362,11 +309,14 @@
                             class="bg-green-500 text-white font-bold rounded-full px-4 py-1 text-xs hover:bg-green-600 transition">
                             Detalles
                         </a>
-                    </div>                </div>
+                    </div>
+                </div>
                 <!-- Tarjeta CTA para acceder al Chatbot -->
-                <div class="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl p-5 shadow text-white relative overflow-hidden mt-6">
+                <div
+                    class="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl p-5 shadow text-white relative overflow-hidden mt-6">
                     <div class="absolute top-0 right-0 -mt-6 -mr-6 w-24 h-24 rounded-full bg-blue-400 opacity-20"></div>
-                    <div class="absolute bottom-0 left-0 -mb-6 -ml-6 w-20 h-20 rounded-full bg-indigo-400 opacity-20"></div>
+                    <div class="absolute bottom-0 left-0 -mb-6 -ml-6 w-20 h-20 rounded-full bg-indigo-400 opacity-20">
+                    </div>
                     <div class="relative z-10">
                         <div class="flex items-center mb-3">
                             <div class="bg-white bg-opacity-20 rounded-full p-2 mr-3">
@@ -376,7 +326,8 @@
                         </div>
 
                         <h4 class="text-base font-bold mb-2">Asistente Inteligente</h4>
-                        <p class="text-sm mb-4 opacity-90">Resuelve dudas, genera ideas y obtén recomendaciones personalizadas para tu equipo con nuestro asistente AI.</p>
+                        <p class="text-sm mb-4 opacity-90">Resuelve dudas, genera ideas y obtén recomendaciones
+                            personalizadas para tu equipo con nuestro asistente AI.</p>
 
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-4 text-sm">
                             <div class="flex items-center">
@@ -393,7 +344,8 @@
                             </div>
                         </div>
 
-                        <a href="/chatbot" class="inline-flex items-center justify-center bg-white text-indigo-600 rounded-full px-5 py-2 font-bold hover:bg-opacity-90 transition transform hover:-translate-y-1 shadow-md w-full text-sm">
+                        <a href="/chatbot"
+                            class="inline-flex items-center justify-center bg-white text-indigo-600 rounded-full px-5 py-2 font-bold hover:bg-opacity-90 transition transform hover:-translate-y-1 shadow-md w-full text-sm">
                             <i class="fas fa-comments mr-2"></i>
                             Iniciar chat ahora
                         </a>
@@ -676,100 +628,84 @@
                     </div>
                 </div>
 
-
-
                 <!-- Tarjeta de Rendimiento de la Plataforma -->
                 <div class="bg-white rounded-2xl p-6 shadow">
                     <h3 class="text-lg font-semibold mb-4">Rendimiento de la Plataforma</h3>
-                    <div class="space-y-4">                        <div>
+                    <div class="space-y-4">
+                        <div>
                             <div class="flex justify-between mb-1">
                                 <span class="text-sm font-medium">Conexiones Startup-Mentor</span>
-                                <span class="text-sm font-medium" th:text="${conexionesStartupMentor != null ? conexionesStartupMentor : '75'}">75%</span>
+                                <span class="text-sm font-medium"
+                                    th:text="${conexionesStartupMentor != null ? conexionesStartupMentor : '75'}">75%</span>
                             </div>
                             <div class="w-full bg-gray-200 rounded-full h-2">
-                                <div class="bg-blue-600 h-2 rounded-full" th:style="${'width: ' + (conexionesStartupMentor != null ? conexionesStartupMentor : '75') + '%'}" style="width: 75%"></div>
+                                <div class="bg-blue-600 h-2 rounded-full"
+                                    th:style="${'width: ' + (conexionesStartupMentor != null ? conexionesStartupMentor : '75') + '%'}"
+                                    style="width: 75%"></div>
                             </div>
                         </div>
                         <div>
                             <div class="flex justify-between mb-1">
                                 <span class="text-sm font-medium">Solicitudes Exitosas</span>
-                                <span class="text-sm font-medium" th:text="${solicitudesExitosas != null ? solicitudesExitosas : '64'}">64%</span>
+                                <span class="text-sm font-medium"
+                                    th:text="${solicitudesExitosas != null ? solicitudesExitosas : '64'}">64%</span>
                             </div>
                             <div class="w-full bg-gray-200 rounded-full h-2">
-                                <div class="bg-green-600 h-2 rounded-full" th:style="${'width: ' + (solicitudesExitosas != null ? solicitudesExitosas : '64') + '%'}" style="width: 64%"></div>
+                                <div class="bg-green-600 h-2 rounded-full"
+                                    th:style="${'width: ' + (solicitudesExitosas != null ? solicitudesExitosas : '64') + '%'}"
+                                    style="width: 64%"></div>
                             </div>
                         </div>
                         <div>
                             <div class="flex justify-between mb-1">
                                 <span class="text-sm font-medium">Participación de Mentores</span>
-                                <span class="text-sm font-medium" th:text="${participacionMentores != null ? participacionMentores : '82'}">82%</span>
+                                <span class="text-sm font-medium"
+                                    th:text="${participacionMentores != null ? participacionMentores : '82'}">82%</span>
                             </div>
                             <div class="w-full bg-gray-200 rounded-full h-2">
-                                <div class="bg-purple-600 h-2 rounded-full" th:style="${'width: ' + (participacionMentores != null ? participacionMentores : '82') + '%'}" style="width: 82%"></div>
+                                <div class="bg-purple-600 h-2 rounded-full"
+                                    th:style="${'width: ' + (participacionMentores != null ? participacionMentores : '82') + '%'}"
+                                    style="width: 82%"></div>
                             </div>
                         </div>
                         <div>
                             <div class="flex justify-between mb-1">
                                 <span class="text-sm font-medium">Satisfacción de la Plataforma</span>
-                                <span class="text-sm font-medium" th:text="${satisfaccionPlataforma != null ? satisfaccionPlataforma : '91'}">91%</span>
+                                <span class="text-sm font-medium"
+                                    th:text="${satisfaccionPlataforma != null ? satisfaccionPlataforma : '91'}">91%</span>
                             </div>
                             <div class="w-full bg-gray-200 rounded-full h-2">
-                                <div class="bg-yellow-500 h-2 rounded-full" th:style="${'width: ' + (satisfaccionPlataforma != null ? satisfaccionPlataforma : '91') + '%'}" style="width: 91%"></div>
+                                <div class="bg-yellow-500 h-2 rounded-full"
+                                    th:style="${'width: ' + (satisfaccionPlataforma != null ? satisfaccionPlataforma : '91') + '%'}"
+                                    style="width: 91%"></div>
                             </div>
                         </div>
-                    </div>                    <div class="mt-4 pt-4 border-t border-gray-200">
+                    </div>
+                    <div class="mt-4 pt-4 border-t border-gray-200">
                         <div class="flex justify-between text-sm">
                             <div>
                                 <p class="font-medium">Proyectos Activos</p>
-                                <p class="text-2xl font-bold mt-1" th:text="${proyectosActivos != null ? proyectosActivos : '37'}">37</p>
+                                <p class="text-2xl font-bold mt-1"
+                                    th:text="${proyectosActivos != null ? proyectosActivos : '37'}">37</p>
                             </div>
                             <div>
                                 <p class="font-medium">Tasa de Éxito</p>
-                                <p class="text-2xl font-bold mt-1" th:text="${tasaExito != null ? tasaExito + '%' : '78%'}">78%</p>
+                                <p class="text-2xl font-bold mt-1"
+                                    th:text="${tasaExito != null ? tasaExito + '%' : '78%'}">78%</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
-
     </main>
 
-    <!-- FontAwesome para los iconos -->
-    <script src="https://kit.fontawesome.com/3d5c9629ad.js" crossorigin="anonymous"></script>
-
-    <!-- Chart.js para los gráficos -->
+    <!-- Script para los gráficos -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <!-- Script para ajustar el iframe del calendario dinámicamente -->
     <script>
-        document.addEventListener('DOMContentLoaded', function () {        // Ajustar la altura del iframe del calendario según el ancho disponible
-            function adjustCalendarHeight() {
-                const calendarContainer = document.querySelector('.calendar-container');
-                if (calendarContainer) {
-                    const width = calendarContainer.offsetWidth;
-                    // Mantener proporción adecuada para el calendario (3:2)
-                    let height = Math.max(width * 0.66, 500);
-
-                    // En dispositivos móviles, aumentar la altura para mejor visualización
-                    if (window.innerWidth < 768) {
-                        height = Math.max(height, 600);
-                    }
-
-                    calendarContainer.style.height = height + 'px';
-                }
-            }
-
-            // Ejecutar al cargar y cuando cambie el tamaño de la ventana
-            adjustCalendarHeight();
-            window.addEventListener('resize', adjustCalendarHeight);
-
-            // También ajustar cuando el iframe se carga completamente
-            const calendarIframe = document.querySelector('.calendar-container iframe');
-            if (calendarIframe) {
-                calendarIframe.addEventListener('load', adjustCalendarHeight);
-            }
-
+        document.addEventListener('DOMContentLoaded', function () {
             // Gráfico de Startups por Sector
             const startupsSectorCtx = document.getElementById('startupsBySectorChart').getContext('2d');
             const startupsBySectorChart = new Chart(startupsSectorCtx, {
@@ -818,7 +754,8 @@
                                     const label = context.label || '';
                                     const value = context.raw || 0;
                                     const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                    const percentage = Math.round((value / total) * 100); return `${label}: ${value} (${percentage}%)`;
+                                    const percentage = Math.round((value / total) * 100); 
+                                    return `${label}: ${value} (${percentage}%)`;
                                 }
                             }
                         }

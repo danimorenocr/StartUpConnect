@@ -29,4 +29,8 @@ public interface MentorDao extends CrudRepository<MentorEntity, String> {
     @Query("SELECT m FROM MentorEntity m WHERE m.usuario.documento = ?1")
     MentorEntity findByUsuarioDocumento(String documento);
 
+    @Transactional
+    @Query("SELECT m FROM MentorEntity m WHERE m.usuario.emailUsu = ?1")
+    MentorEntity findByUsuarioEmail(String email);
+
 }

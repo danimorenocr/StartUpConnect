@@ -1,6 +1,7 @@
 package com.usta.startupconnect.models.services;
 
 import com.usta.startupconnect.entities.EtapaEntity;
+import com.usta.startupconnect.entities.MentorEntity;
 import com.usta.startupconnect.models.dao.EtapaDao;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,12 +31,16 @@ public class EtapaServiceImplement implements EtapaService {
     @Transactional
     public EtapaEntity findById(Long id) {
         return etapaDao.findById(id).orElse(null);
-    }
-
-    @Override
+    }    @Override
     @Transactional
     public void deleteById(Long id) {
         etapaDao.deleteById(id);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<EtapaEntity> findByMentor(MentorEntity mentor) {
+        return etapaDao.findByMentor(mentor);
     }
 
 }
