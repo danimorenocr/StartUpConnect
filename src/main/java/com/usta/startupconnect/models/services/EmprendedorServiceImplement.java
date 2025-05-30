@@ -36,11 +36,15 @@ public class EmprendedorServiceImplement implements EmprendedorService {
     @Transactional
     public void deleteById(String id) {
         emprendedorDao.deleteById(id);
-    }
-
-    @Override
+    }    @Override
     @Transactional
     public EmprendedorEntity findByDocumento(String documento) {
         return emprendedorDao.findByDocumento(documento);
+    }
+    
+    @Override
+    @Transactional
+    public EmprendedorEntity findByUsuarioEmail(String email) {
+        return emprendedorDao.findByUsuarioEmail(email);
     }
 }

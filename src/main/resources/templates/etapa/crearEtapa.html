@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head th:replace="~{layout/layout :: head}"></head>
 
@@ -40,13 +40,13 @@
                 <label for="fechaFin">Fecha de Fin:</label>
                 <input type="date" class="form-control" id="fechaFin" name="fechaFin" th:field="*{fechaFin}" required>
                 <div class="text-danger" th:if="${#fields.hasErrors('fechaFin')}" th:errors="*{fechaFin}"></div>
-            </div>
-            <!-- Mentor -->
-            <div class="form-group mb-3">
+            </div>            <!-- Mentor - solo visible para administradores -->
+            <div class="form-group mb-3" sec:authorize="hasRole('ROLE_ADMIN')">
                 <label for="mentorId">ID del Mentor:</label>
                 <input type="text" class="form-control" id="mentorId" name="mentorId" required>
                 <div class="text-danger" th:if="${#fields.hasErrors('mentor')}" th:errors="*{mentor}"></div>
-            </div>
+            </div>            <!-- Campo oculto para mentores (se llenará automáticamente con su ID) -->
+            <input type="hidden" id="mentorId" name="mentorId" th:value="${mentorId}" sec:authorize="hasRole('ROLE_MENTOR') and !hasRole('ROLE_ADMIN')">
 
             <!-- Botones -->
             <div class="form-group">

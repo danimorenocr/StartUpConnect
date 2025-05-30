@@ -10,9 +10,9 @@ public interface EmprendedorService {
 
     public void save(EmprendedorEntity emprendedor);
 
-    public EmprendedorEntity findById(String id);
-
-    public void deleteById(String id);
+    public EmprendedorEntity findById(String id);    public void deleteById(String id);
     
     public EmprendedorEntity findByDocumento(String documento);
+    
+    public EmprendedorEntity findByUsuarioEmail(String email);
 }

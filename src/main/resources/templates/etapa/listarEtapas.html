@@ -1,38 +1,50 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head th:replace="~{layout/layout :: head}"></head>
 
 <body>
-    <!-- Añadir la hoja de estilo después del head para que no sea reemplazada -->
-    <link rel="stylesheet" th:href="@{/css/etapa/listarEtapa.css}">
+    <!-- Añadir la hoja de estilo después del head para que no sea reemplazada -->    <link rel="stylesheet" th:href="@{/css/etapa/listarEtapa.css}">
     <header th:replace="~{layout/layout :: header}"></header>
-    <h1>Listado de etapas</h1>
-
-    <!--// BOTON PARA CREAR ETAPAS-->
-    <a th:href="@{/crearEtapa}">Crear Nueva Etapa</a>
+    
+    <!-- Título de sección según el rol -->
+    <div sec:authorize="hasRole('ROLE_ADMIN')">
+        <h1>Administración de Etapas</h1>
+    </div>
+    <div sec:authorize="hasRole('ROLE_MENTOR')">
+        <h1>Mis Etapas Asignadas</h1>
+    </div>    <!--// BOTON PARA CREAR ETAPAS (visible para administradores y mentores) -->
+    <a th:href="@{/crearEtapa}" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MENTOR')">Crear Nueva Etapa</a>
 
     <section>
         <h1> [[${title}]]</h1>
         <section>
-            <div>
-                <table>
+            <div>                <table>
                     <thead>
                         <tr>
                             <th>Título</th>
-                            <th>Mentor</th>
+                            <!-- Mostrar columna de mentor solo para administradores -->
+                            <th sec:authorize="hasRole('ROLE_ADMIN')">Mentor</th>
+                            <th>Fecha Inicio</th>
+                            <th>Fecha Fin</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr th:each="etapa: ${etapas}">
                             <td>[[${etapa.titulo}]]</td>
-                            <td>[[${etapa.mentor.usuario.nombreUsu}]]</td>
-                            <td>
+                            <!-- Mostrar mentor solo para administradores -->
+                            <td sec:authorize="hasRole('ROLE_ADMIN')">[[${etapa.mentor.usuario.nombreUsu}]]</td>
+                            <td>[[${#dates.format(etapa.fechaInicio, 'dd MMM yyyy')}]]</td>
+                            <td>[[${#dates.format(etapa.fechaFin, 'dd MMM yyyy')}]]</td>                            <td>
                                 <a th:href="@{/verEtapa/{id}(id=${etapa.id})}">Ver</a> |
-                                <a th:href="@{/editarEtapa/{id}(id=${etapa.id})}">Editar</a> |
+                                <!-- Permitir editar a administradores y mentores (sus propias etapas) -->
+                                <a th:href="@{/editarEtapa/{id}(id=${etapa.id})}" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MENTOR')">Editar</a>
+                                <span sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MENTOR')"> | </span>
+                                <!-- Permitir eliminar a administradores y mentores (sus propias etapas) -->
                                 <form th:action="@{/eliminarEtapa/{id}(id=${etapa.id})}" method="post"
-                                    onsubmit="return confirmarEliminacion(event, this);" style="display: inline;">
+                                    onsubmit="return confirmarEliminacion(event, this);" style="display: inline;"
+                                    sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MENTOR')">
                                     <button type="submit" class="eliminar" title="Eliminar">&#10060;</button>
                                 </form>
                             </td>

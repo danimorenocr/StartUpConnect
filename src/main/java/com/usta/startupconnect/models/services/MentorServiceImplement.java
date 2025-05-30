@@ -30,11 +30,15 @@ public class MentorServiceImplement implements MentorService {
     @Transactional
     public MentorEntity findById(String id) {
         return mentorDao.findById(id).orElse(null);
-    }
-
-    @Override
+    }    @Override
     @Transactional
     public void deleteById(String id) {
         mentorDao.deleteById(id);
+    }
+    
+    @Override
+    @Transactional
+    public MentorEntity findByUsuarioEmail(String email) {
+        return mentorDao.findByUsuarioEmail(email);
     }
 }
