@@ -46,14 +46,7 @@
                     <span class="stat-number" th:text="${startups != null ? startups.size() : '0'}">0</span>
                     <span class="stat-label">Startups</span>
                 </div>
-                <div class="stat-item">
-                    <span class="stat-number">15</span>
-                    <span class="stat-label">Conexiones</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-number">3</span>
-                    <span class="stat-label">Eventos</span>
-                </div>
+
             </div>
             
             <div class="contact-action">
@@ -119,8 +112,8 @@
         </div>    </div>
 
     <!-- Sección de Startups Asociadas - A ancho completo y con scroll horizontal -->
-    <div class="container">
-        <div class="startups-section-wrapper">
+    <div class="container pb-4">
+        <div class="startups-section-wrapper bg-white/80 rounded-xl shadow p-6 border-t-4 border-orange-400 relative hover:transform hover:scale-105 transition-all duration-300">
             <div class="startups-section-header">
                 <div class="header-icon">
                     <i class="fas fa-rocket"></i>
@@ -153,46 +146,13 @@
             </div>
         </div>
     
-        <div class="acciones">
+        <div class="acciones mt-4 mb-4">
             <a th:href="@{/emprendedor}">
-                <button type="button" class="btn-volver">
+                <button type="button" class="btn-volver bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow transition-all duration-300 flex items-center gap-2">
                     <i class="fas fa-arrow-left"></i> Volver
-            </button>
-        </a>
-    </div>
-</div>
-
-<div class="footer">
-    <div class="footer-content">
-        <div class="footer-brand">
-            <img src="/images/logo.png" alt="StartUp Connect Logo" class="footer-logo">
-            <p>Conectando talento e innovación</p>
-        </div>
-        <div class="footer-links">
-            <h4>Explora</h4>
-            <ul>
-                <li><a href="/">Inicio</a></li>
-                <li><a href="/startup">Startups</a></li>
-                <li><a href="/emprendedor">Emprendedores</a></li>
-                <li><a href="/evento">Eventos</a></li>
-            </ul>
-        </div>
-        <div class="footer-contact">
-            <h4>Contacto</h4>
-            <p><i class="fas fa-envelope"></i> info@startupconnect.com</p>
-            <p><i class="fas fa-phone"></i> +57 300 123 4567</p>
-            <div class="social-links">
-                <a href="#"><i class="fab fa-facebook"></i></a>
-                <a href="#"><i class="fab fa-twitter"></i></a>
-                <a href="#"><i class="fab fa-instagram"></i></a>
-                <a href="#"><i class="fab fa-linkedin"></i></a>
-            </div>
+                </button>
+            </a>
         </div>
     </div>
-    <div class="footer-bottom">
-        <p>&copy; 2025 StartUp Connect. Todos los derechos reservados.</p>
-    </div>
-</div>
-
 </body>
 </html>

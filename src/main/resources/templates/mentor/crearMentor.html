@@ -1,48 +1,53 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
-
 <head th:replace="~{layout/layout :: head}"></head>
-
-<body>
-
+<body class="bg-white font-sans">
 <header th:replace="~{layout/layout :: header}"></header>
-    <h1>Crear Nuevo Mentor</h1>
 
-    <form th:action="@{/crearMentor}" method="post" enctype="multipart/form-data" th:object="${mentor}">
-        <div class="form-group">
-            <label for="documento">Documento:</label>
-            <input th:field="*{documento}" type="text" id="documento" name="documento" required>
+  <div class="max-w-2xl mx-auto py-10 px-6">
+    <h1 class="text-4xl font-extrabold text-sky-700 mb-10 tracking-tight drop-shadow">Crear Mentor</h1>
+    <form th:action="@{/crearMentor}" method="post" enctype="multipart/form-data" th:object="${mentor}" id="formMentor" class="bg-white/80 rounded-xl shadow p-6 mb-6 border-t-4 border-purple-400 relative">
+      <div class="absolute -top-5 left-6 flex items-center gap-2 bg-white/90 px-4 py-1 rounded-full shadow-lg border border-purple-200">
+        <span class="inline-block w-8 h-1.5 rounded bg-gradient-to-r from-purple-400 to-purple-600 shadow-md"></span>
+        <span class="text-xs font-bold text-purple-500 tracking-wider uppercase">Datos del mentor</span>
+      </div>
+      <div class="flex flex-col gap-6 mt-10">
+        <div>
+          <label for="documento" class="block text-sm font-semibold text-sky-700">Documento:</label>
+          <input th:field="*{documento}" type="text" id="documento" name="documento" required
+              class="w-full rounded-2xl border-0 bg-sky-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400 text-sky-800 font-semibold placeholder:text-sky-400" />
         </div>
-
-
-        <div class="form-group">
-            <label for="biografia">Biografía:</label>
-            <textarea th:field="*{biografia}" id="biografia" name="biografia" rows="4" required></textarea>
+        <div>
+          <label for="biografia" class="block text-sm font-semibold text-sky-700">Biografía:</label>
+          <textarea th:field="*{biografia}" id="biografia" name="biografia" rows="4" required
+                 class="w-full rounded-2xl border-0 bg-sky-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400 text-sky-800 font-semibold placeholder:text-sky-400"></textarea>
         </div>
-
-        <div class="form-group">
-            <label for="especialidad">Especialidad:</label>
-            <input th:field="*{especialidad}" type="text" id="especialidad" name="especialidad" required>
+        <div>
+          <label for="especialidad" class="block text-sm font-semibold text-sky-700">Especialidad:</label>
+          <input th:field="*{especialidad}" type="text" id="especialidad" name="especialidad" required
+              class="w-full rounded-2xl border-0 bg-sky-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400 text-sky-800 font-semibold placeholder:text-sky-400" />
         </div>
-
-        <div class="form-group">
-            <label for="aniosExperiencia">Años de Experiencia:</label>
-            <input th:field="*{anosExperiencia}" type="number" id="aniosExperiencia" name="aniosExperiencia" min="0"
-                required>
+        <div>
+          <label for="aniosExperiencia" class="block text-sm font-semibold text-sky-700">Años de Experiencia:</label>
+          <input th:field="*{anosExperiencia}" type="number" id="aniosExperiencia" name="aniosExperiencia" min="0" required
+              class="w-full rounded-2xl border-0 bg-sky-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400 text-sky-800 font-semibold placeholder:text-sky-400" />
         </div>
-
-        <div class="form-group">
-            <label for="linkedinUrl">Perfil de LinkedIn:</label>
-            <input th:field="*{linkedin}" type="url" id="linkedinUrl" name="linkedinUrl"
-                placeholder="https://www.linkedin.com/in/tu-perfil">
+        <div>
+          <label for="linkedinUrl" class="block text-sm font-semibold text-sky-700">Perfil de LinkedIn:</label>
+          <input th:field="*{linkedin}" type="url" id="linkedinUrl" name="linkedinUrl" 
+              placeholder="https://www.linkedin.com/in/tu-perfil"
+              class="w-full rounded-2xl border-0 bg-sky-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400 text-sky-800 font-semibold placeholder:text-sky-400" />
         </div>
+      </div>
 
-        <div class="form-actions">
-            <button type="submit" class="btn-submit">Guardar Mentor</button>
-        </div>
+      <div class="w-full flex flex-col md:flex-row gap-4 mt-8">
+        <button type="submit" class="bg-sky-400 hover:bg-sky-500 text-white font-extrabold text-xl py-3 px-10 rounded-full shadow transition w-full md:w-auto min-w-[180px] text-center">Guardar</button>
+        <a th:href="@{/mentor}" class="flex items-center justify-center gap-2 border border-purple-500 text-purple-500 bg-white font-semibold text-xl py-3 px-10 rounded-full shadow-sm transition hover:bg-purple-50 hover:text-purple-600 w-full md:w-auto min-w-[180px] text-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+          Volver
+        </a>
+      </div>
     </form>
-
-
+  </div>
 </body>
-
 </html>
