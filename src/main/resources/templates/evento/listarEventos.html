@@ -5,75 +5,74 @@
 
 <body class="bg-white font-sans">
     <header th:replace="~{layout/layout :: header}"></header>
-    <div class="max-w-6xl mx-auto py-10 px-6">
+    <div class="max-w-4xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
         <!-- Banner Section -->
         <div class="relative w-full mb-10">
             <img src="/images/bannerEmprendedor.jpg" alt="Banner eventos"
-                class="w-full h-80 object-cover rounded-2xl shadow-lg">
+                class="w-full h-60 object-cover rounded-2xl shadow-lg">
             <div class="absolute inset-0 flex flex-col justify-center items-center rounded-2xl"
                 style="background: rgba(0,0,0,0.45);">
-                <h2 class="text-4xl md:text-5xl font-extrabold text-white drop-shadow mb-2">Eventos</h2>
-                <p class="text-lg md:text-2xl text-white font-medium drop-shadow">Descubre todos los eventos disponibles para la comunidad.</p>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-white drop-shadow mb-2">Eventos</h2>
+                <p class="text-lg md:text-xl text-white font-medium drop-shadow">Descubre todos los eventos disponibles para la comunidad.</p>
             </div>
         </div>
 
-        <h1 class="text-4xl font-extrabold text-[#0369a1] mb-10 tracking-tight drop-shadow">Listado de Eventos</h1>
-        
-        <!-- Search and Create Section -->
-        <div class="section-header mb-6">
-            <div id="eventos-header-container" class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                <div class="search-container flex items-center relative w-full md:w-80 md:mx-0 mx-auto">
-                    <i class="search-icon absolute left-4 top-1/2 -translate-y-1/2 text-orange-500 text-lg">🔍</i>
-                    <input id="buscar-evento" type="text" placeholder="Buscar evento..." 
-                           class="rounded-full pl-10 pr-4 py-2 border border-orange-300 shadow focus:outline-none focus:ring-2 focus:ring-orange-400 text-orange-800 font-medium w-full" 
-                           autocomplete="off">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+            <div class="search-container flex items-center relative w-full md:w-80 md:mx-0 mx-auto">
+                <i class="search-icon absolute left-4 top-1/2 -translate-y-1/2 text-orange-500 text-lg">🔍</i>
+                <input id="buscar-evento" type="text" placeholder="Buscar evento..." 
+                       class="rounded-full pl-10 pr-4 py-2 border border-orange-300 shadow focus:outline-none focus:ring-2 focus:ring-orange-400 text-orange-800 font-medium w-full" 
+                       autocomplete="off">
+            </div>
+            <a th:href="@{/crearEvento}"
+                class="bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-6 rounded-full shadow transition text-base">
+                Crear
+            </a>
+        </div>
+
+        <!-- Modern Event List -->
+        <div class="bg-white rounded-2xl shadow-lg p-0 divide-y divide-gray-100">
+            <div class="flex gap-2 px-6 py-4 border-b bg-gray-50 rounded-t-2xl">
+                <span class="w-3"></span>
+                <span class="w-24 font-semibold text-gray-500">Fecha</span>
+                <span class="w-40 font-semibold text-gray-500">Convocatoria</span>
+                <span class="flex-1 font-semibold text-gray-500">Título</span>
+                <span class="w-32 font-semibold text-gray-500 text-center">Acciones</span>
+            </div>
+            <div th:each="evento: ${eventos}" class="flex items-center gap-2 px-6 py-5 evento-card transition hover:bg-orange-50 relative" th:data-titulo="${evento.titulo}">
+                <!-- Barra de color -->
+                <div class="w-3 h-14 rounded-l-2xl mr-2" th:style="'background-color: ' + ${evento.color}"></div>
+                <!-- Fecha -->
+                <div class="w-24 flex flex-col items-center">
+                    <span class="text-lg font-bold text-orange-600" th:text="${#dates.format(evento.fecha, 'dd/MM')}" style="letter-spacing:1px;">28/05</span>
                 </div>
-                <div class="flex justify-end w-full md:w-auto">
-                    <a th:href="@{/crearEvento}"
-                        class="bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-6 rounded-full shadow transition text-base">
-                        Crear
+                <!-- Convocatoria destacada -->
+                <div class="w-40 flex items-center">
+                    <span class="inline-block bg-orange-100 text-orange-700 text-xs font-semibold px-3 py-1 rounded-full text-center w-full" th:text="${evento.convocatoria != null ? evento.convocatoria.titulo : 'No asignada'}">Convocatoria</span>
+                </div>
+                <!-- Título y descripción -->
+                <div class="flex-1 min-w-0">
+                    <div class="font-semibold text-gray-900 truncate" th:text="${evento.titulo}">Título del Evento</div>
+                    <div class="text-xs text-gray-500 truncate" th:text="${evento.descripcion}">Descripción breve...</div>
+                </div>
+                <!-- Acciones -->
+                <div class="w-32 flex justify-center gap-2">
+                    <a th:href="@{/editarEvento/{id}(id=${evento.id})}"
+                       class="bg-yellow-400 hover:bg-yellow-500 text-white font-semibold py-1.5 px-3 rounded-full shadow transition text-xs flex items-center gap-1"
+                       title="Editar">
+                        <i class="fas fa-edit"></i>
                     </a>
+                    <form th:action="@{/eliminarEvento/{id}(id=${evento.id})}" method="post"
+                          onsubmit="return confirmarEliminacion(event, this);" style="display: inline;">
+                        <button type="submit"
+                                class="bg-red-500 hover:bg-red-600 text-white font-semibold py-1.5 px-3 rounded-full shadow transition text-xs flex items-center gap-1"
+                                title="Eliminar">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
-
-        <!-- Events Grid -->
-        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div th:each="evento: ${eventos}" 
-                 class="bg-white/80 rounded-2xl shadow-lg p-6 flex flex-col items-center border-t-4 border-orange-400 relative transition-transform duration-200 hover:scale-105 hover:shadow-2xl hover:border-orange-500 evento-card"
-                 th:data-titulo="${evento.titulo}">
-                <div class="p-6">
-                    <!-- Event Title -->
-                    <h2 class="text-xl font-semibold text-gray-900 mb-2" th:text="${evento.titulo}">Título del Evento</h2>
-                    
-                    <!-- Event Color Tag -->
-                    <div class="flex items-center mb-4">
-                        <span class="text-sm text-gray-600 mr-2">Color:</span>
-                        <span class="inline-block w-6 h-6 rounded-full" th:style="'background-color: ' + ${evento.color}"></span>
-                    </div>
-
-                    <!-- Action Buttons -->
-                    <div class="flex gap-3 mt-4">
-                        <a th:href="@{/verEvento/{id}(id=${evento.id})}"
-                           class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-4 rounded-full shadow transition text-sm">
-                            <i class="fas fa-eye mr-1"></i> Ver
-                        </a>
-                        <a th:href="@{/editarEvento/{id}(id=${evento.id})}"
-                           class="bg-yellow-400 hover:bg-yellow-500 text-white font-semibold py-2 px-4 rounded-full shadow transition text-sm"
-                           title="Editar">
-                            <i class="fas fa-edit mr-1"></i> Editar
-                        </a>
-                        <form th:action="@{/eliminarEvento/{id}(id=${evento.id})}" method="post"
-                              onsubmit="return confirmarEliminacion(event, this);" style="display: inline;">
-                            <button type="submit"
-                                    class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-full shadow transition text-sm">
-                                <i class="fas fa-trash-alt mr-1"></i> Eliminar
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </section>
     </div>
 
     <script>
@@ -90,7 +89,6 @@
                 cancelButtonText: "Cancelar"
             }).then((result) => {
                 if (result.isConfirmed) {
-                    console.log("Eliminando...");
                     form.submit();
                 }
             });
@@ -103,7 +101,6 @@
 
             searchInput.addEventListener('input', function () {
                 const searchTerm = this.value.toLowerCase().trim();
-
                 eventoCards.forEach(card => {
                     const titulo = card.getAttribute('data-titulo').toLowerCase();
                     if (titulo.includes(searchTerm)) {
