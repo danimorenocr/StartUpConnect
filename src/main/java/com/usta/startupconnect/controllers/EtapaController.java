@@ -71,6 +71,8 @@ public class EtapaController {    @Autowired
 
         etapaService.save(etapa);
         System.out.println("Etapa guardada correctamente");
+
+        
         return "redirect:/etapa";
     }
 

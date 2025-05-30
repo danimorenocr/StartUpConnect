@@ -1,63 +1,119 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{layout/layout :: head}"></head>
+<head th:replace="~{layout/layout :: head}">
+    <title>Listado de Convocatorias</title>
+    <!-- Font Awesome para los iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
 
 <body>
+    <header th:replace="~{layout/layout :: header}"></header>    <div class="page-container">
+        <div class="page-header">
+            <h1 class="page-title">Convocatorias Activas</h1>
+            <a th:href="@{/crearConvocatoria}" class="create-button">
+                <i class="fas fa-plus-circle"></i> Crear Nueva
+            </a>
+        </div>
+        <div class="convocatoria-container">
+            <!-- Tarjeta de convocatoria -->
+            <div th:each="convocatoria: ${convocatorias}" class="convocatoria-card">
+                <div class="convocatoria-content">
+                    <!-- Icono y título -->
+                    <div class="convocatoria-header">
+                        <div th:switch="${convocatoria.sectorObjetivo}" class="convocatoria-icon">
+                            <div th:case="'Tecnología'" class="icon-container blue">
+                                <i class="fas fa-microchip"></i>
+                            </div>
+                            <div th:case="'Salud'" class="icon-container green">
+                                <i class="fas fa-heartbeat"></i>
+                            </div>
+                            <div th:case="'Educación'" class="icon-container amber">
+                                <i class="fas fa-graduation-cap"></i>
+                            </div>
+                            <div th:case="'Finanzas'" class="icon-container purple">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <div th:case="*" class="icon-container cyan">
+                                <i class="fas fa-lightbulb"></i>
+                            </div>
+                        </div>
+                        <div class="convocatoria-title-container">
+                            <h2 class="convocatoria-title" th:text="${convocatoria.titulo}">Título de Convocatoria</h2>
+                        </div>
+                    </div>
+                    <div class="convocatoria-details">
+                        <!-- Organizador -->
+                        <div class="convocatoria-info">
+                            <i class="fas fa-building"></i>
+                            <span th:text="${convocatoria.organizador}">Nombre del Organizador</span>
+                        </div>
 
-    <header th:replace="~{layout/layout :: header}"></header>
-    
-    <h1>Listado de Convocatorias</h1>
+                        <!-- Sector -->
+                        <div class="convocatoria-info">
+                            <i class="fas fa-tag"></i>
+                            <span th:text="${convocatoria.sectorObjetivo}">Sector Objetivo</span>
+                        </div>
 
-    <!--// BOTON PARA CREAR CONVOCATORIAS-->
+                        <!-- Fechas -->
+                        <div class="convocatoria-dates">
+                            <div class="convocatoria-date">
+                                <div class="date-label">Inicio:</div>
+                                <div class="date-value"
+                                    th:text="${#dates.format(convocatoria.fechaInicio, 'dd MMM yyyy')}">01 Jun 2025
+                                </div>
+                            </div>
+                            <div class="convocatoria-date">
+                                <div class="date-label">Fin:</div>
+                                <div class="date-value"
+                                    th:text="${#dates.format(convocatoria.fechaFin, 'dd MMM yyyy')}">30 Jun 2025</div>
+                            </div>
+                        </div>
+                    </div>
 
-    <a th:href="@{/crearConvocatoria}">
-        <button>
-            Crear
-        </button>
-    </a>
-
-    <section>
-        <h1> [[${title}]]</h1>
-        <section>
-            <div th:each="convocatoria: ${convocatorias}">
-                <h2>Titulo: [[${convocatoria.titulo}]]</h2>
-                <h2>Sector: [[${convocatoria.sectorObjetivo}]]</h2>
-                <h2>Organizador: [[${convocatoria.organizador}]]</h2>
-
-                <div class="botones-accion">
-                   <a th:href="@{/verConvocatoria/{id}(id=${convocatoria.id})}"
-                    class="ver-perfil-btn">
-                        <button>Ver</button>
-                    </a>
-                    <!-- Botón Editar -->
-                    <a th:href="@{/editarConvocatoria/{id}(id=${convocatoria.id})}">
-                        <button class="btn-editar">Editar</button>
-                    </a>
-
-                    <form th:action="@{/eliminarConvocatoria/{id}(id=${convocatoria.id})}" method="post"
-                        onsubmit="return confirmarEliminacion(event, this);" style="display: inline;">
-                        <button type="submit" class="eliminar" title="Eliminar">&#10060;</button>
-                    </form>
+                    <!-- Estado (activa/finalizada) -->
+                    <div class="convocatoria-status">
+                        <span th:if="${convocatoria.fechaFin.after(new java.util.Date())}" class="status-badge active">
+                            <i class="fas fa-check-circle"></i> Convocatoria Activa
+                        </span>
+                        <span th:unless="${convocatoria.fechaFin.after(new java.util.Date())}"
+                            class="status-badge finished">
+                            <i class="fas fa-clock"></i> Convocatoria Finalizada
+                        </span>
+                    </div> <!-- Botones de acción -->
+                    <div class="convocatoria-actions">
+                        <a th:href="@{/verConvocatoria/{id}(id=${convocatoria.id})}" class="view-button">
+                            <i class="fas fa-eye"></i> Ver detalles
+                        </a>
+                        <div class="action-icons">
+                            <a th:href="@{/editarConvocatoria/{id}(id=${convocatoria.id})}" class="edit-button">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <form th:action="@{/eliminarConvocatoria/{id}(id=${convocatoria.id})}" method="post"
+                                onsubmit="return confirmarEliminacion(event, this);">
+                                <button type="submit" class="delete-button">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </section>
-    </section>
+        </div>    </div>
     <script>
         function confirmarEliminacion(event, form) {
             event.preventDefault();
             Swal.fire({
-                title: "Are you sure?",
-                text: "This action cannot be undone",
+                title: "¿Estás seguro?",
+                text: "Esta acción no se puede deshacer",
                 icon: "warning",
                 showCancelButton: true,
-                confirmButtonColor: "#991b1b",
-                cancelButtonColor: "#f59e0b",
-                confirmButtonText: "Yes, delete",
-                cancelButtonText: "Cancel"
+                confirmButtonColor: "#ef4444",
+                cancelButtonColor: "#3b82f6",
+                confirmButtonText: "Sí, eliminar",
+                cancelButtonText: "Cancelar"
             }).then((result) => {
                 if (result.isConfirmed) {
-                    console.log("Deleting...");
                     form.submit();
                 }
             });
@@ -65,5 +121,4 @@
     </script>
 
 </body>
-
 </html>

@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface NotificacionDao extends JpaRepository<NotificacionEntity, Long> {
 
-    List<NotificacionEntity> findByUsuarioIdOrderByFechaDesc(String idUsuario);
+    List<NotificacionEntity> findByUsuarioDocumentoOrderByFechaDesc(String idUsuario);
 
 }

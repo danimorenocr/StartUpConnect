@@ -1,11 +1,18 @@
 package com.usta.startupconnect.dto;
 
+import java.util.Date;
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
+@AllArgsConstructor
 public class NotificacionDTO {
     private String mensaje;
-    private String tipoEntidad;  // Ej: "tarea", "evento", "convocatoria"
+    private String tipoEntidad; // Ej: "tarea", "evento", "convocatoria"
     private Long entidadId;
-    private String idUsuario;    // Porque el ID de UsuarioEntity es String
+    private Date fecha;
+    private Boolean leido;
+    private String idUsuario;
+
 }

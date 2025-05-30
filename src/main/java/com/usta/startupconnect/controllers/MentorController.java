@@ -2,10 +2,16 @@ package com.usta.startupconnect.controllers;
 
 import com.usta.startupconnect.entities.MentorEntity;
 import com.usta.startupconnect.entities.UsuarioEntity;
+import com.usta.startupconnect.entities.EtapaEntity;
+import com.usta.startupconnect.entities.TareaEntity;
 import com.usta.startupconnect.models.services.MentorService;
 import com.usta.startupconnect.models.services.UsuarioService;
+import com.usta.startupconnect.models.services.TareaService;
+import com.usta.startupconnect.models.dao.EtapaDao;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -16,6 +22,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Date;
+import java.util.stream.Collectors;
+import java.util.Calendar;
 
 import javax.validation.Valid;
 
@@ -26,6 +37,78 @@ public class MentorController {
     private MentorService mentorService;
     @Autowired
     private UsuarioService usuarioService;
+    @Autowired
+    private TareaService tareaService;
+    @Autowired
+    private EtapaDao etapaDao;
+    
+    @GetMapping(value = "/dashboardMentor")
+    public String dashboardMentor(Model model) {
+        // Obtener el usuario autenticado
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        
+        // Buscar el usuario por email (username es el email en este sistema)
+        UsuarioEntity usuario = usuarioService.findByEmail(username);
+        if (usuario == null) {
+            return "redirect:/login";
+        }
+        
+        // Buscar el mentor asociado al usuario
+        MentorEntity mentor = mentorService.findById(usuario.getDocumento());
+        if (mentor == null) {
+            return "redirect:/login";
+        }
+        
+        // Nombre para el banner de bienvenida
+        model.addAttribute("nombreCompleto", usuario.getNombreUsu());
+        
+        // Obtener las etapas del mentor
+        List<EtapaEntity> etapas = etapaDao.findByMentor(mentor);
+        model.addAttribute("totalEtapas", etapas.size());
+        
+        // Obtener tareas de las etapas del mentor
+        List<TareaEntity> tareas = etapas.stream()
+                .flatMap(etapa -> tareaService.findByEtapa(etapa).stream())
+                .collect(Collectors.toList());
+        model.addAttribute("totalTareas", tareas.size());
+        
+        // Etapas activas (que están en curso actualmente)
+        Date hoy = new Date();
+        List<EtapaEntity> etapasActivas = etapas.stream()
+                .filter(etapa -> etapa.getFechaInicio().before(hoy) && etapa.getFechaFin().after(hoy))
+                .collect(Collectors.toList());
+        model.addAttribute("etapasActivas", etapasActivas.size());
+        
+        // Tareas próximas a vencer (en los próximos 7 días)
+        Calendar calendario = Calendar.getInstance();
+        calendario.add(Calendar.DAY_OF_MONTH, 7);
+        Date proximos7Dias = calendario.getTime();
+        
+        List<TareaEntity> tareasProximasAVencer = tareas.stream()
+                .filter(tarea -> tarea.getFechaEntrega().after(hoy) && tarea.getFechaEntrega().before(proximos7Dias))
+                .collect(Collectors.toList());
+        model.addAttribute("tareasProximasAVencer", tareasProximasAVencer);
+        
+        // Estadísticas de etapas por estado
+        Map<String, Integer> etapasPorEstado = new HashMap<>();
+        etapasPorEstado.put("Activas", etapasActivas.size());
+        etapasPorEstado.put("Completadas", (int) etapas.stream()
+                .filter(etapa -> etapa.getFechaFin().before(hoy))
+                .count());
+        etapasPorEstado.put("Por iniciar", (int) etapas.stream()
+                .filter(etapa -> etapa.getFechaInicio().after(hoy))
+                .count());
+        model.addAttribute("etapasPorEstado", etapasPorEstado);
+        
+        // Próxima etapa a iniciar
+        etapas.stream()
+                .filter(etapa -> etapa.getFechaInicio().after(hoy))
+                .min(Comparator.comparing(EtapaEntity::getFechaInicio))
+                .ifPresent(proximaEtapa -> model.addAttribute("proximaEtapa", proximaEtapa));
+        
+        return "/mentor/dashboardMentor";
+    }
 
     @GetMapping(value = "/mentor")
     public String listarMentores(Model model) {

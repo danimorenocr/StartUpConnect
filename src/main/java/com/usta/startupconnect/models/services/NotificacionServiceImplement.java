@@ -37,11 +37,9 @@ public class NotificacionServiceImplement implements NotificacionService {
         notificacion.setUsuario(usuarioOpt.get());
 
         return notificacionDao.save(notificacion);
-    }
-
-    @Override
+    }    @Override
     public List<NotificacionEntity> obtenerNotificacionesPorUsuario(String idUsuario) {
-        return notificacionDao.findByUsuarioIdOrderByFechaDesc(idUsuario);
+        return notificacionDao.findByUsuarioDocumentoOrderByFechaDesc(idUsuario);
     }
 
     @Override
