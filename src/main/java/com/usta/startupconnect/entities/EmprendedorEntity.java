@@ -24,9 +24,10 @@ public class EmprendedorEntity {
     @NotNull
     @Size(min = 1, max = 100)
     @Column(name = "programa_educativo", length = 100, nullable = false)
-    private String programaEducativo;    @OneToOne(fetch = FetchType.EAGER)
+    private String programaEducativo;
+    
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idUsuario", referencedColumnName = "documento")
     private UsuarioEntity usuario;
 
-    
 }
