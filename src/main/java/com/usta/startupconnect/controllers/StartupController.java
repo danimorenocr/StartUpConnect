@@ -61,7 +61,6 @@ public class StartupController {
     @Autowired
     private ComentariosService comentariosService;
 
-
     @GetMapping(value = "/vitrina-alt")
     public String vitrina(Model model) {
         model.addAttribute("title", "Startups");
@@ -80,18 +79,20 @@ public class StartupController {
         lista.sort(Comparator.comparing(StartupEntity::getId));
         model.addAttribute("startups", lista);
         return "/startup/listarStartups";
-    }    @GetMapping(value = "/crearStartup")
+    }
+
+    @GetMapping(value = "/crearStartup")
     public String crearStartup(Model model) {
         model.addAttribute("title", "Crear startup");
         model.addAttribute("startup", new StartupEntity());
-        
+
         // Obtener la lista de emprendedores para el combo box
         List<EmprendedorEntity> emprendedores = emprendedorService.findAll();
         model.addAttribute("emprendedores", emprendedores);
-        
+
         // Añadir un flag para indicar si hay emprendedores disponibles
         model.addAttribute("hayEmprendedores", !emprendedores.isEmpty());
-        
+
         return "/startup/crearStartup";
     }
 
@@ -197,27 +198,27 @@ public class StartupController {
     @GetMapping(value = "/verStartup/{id}")
     public String verStartup(Model model, @PathVariable(value = "id") Long id) {
         StartupEntity startup = startupService.findById(id);
-        if(startup == null) {
+        if (startup == null) {
             return "redirect:/startup";
         }
-        
+
         model.addAttribute("title", "Ver startup");
         model.addAttribute("startupDetalle", startup);
-        
+
         List<ComentariosEntity> comentarios = comentariosService.findByStartupId(id);
         if (comentarios == null) {
             comentarios = new ArrayList<>();
         }
         model.addAttribute("comentarios", comentarios);
-         // Verificar si el usuario actual ha dado like a esta startup
-    UsuarioEntity usuario = userDetailsService.obtenerUsuarioAutenticado();
-    boolean hasLiked = false;
-    if (usuario != null) {
-        hasLiked = likeDao.existsByStartupAndUsuario(startup, usuario);
-    }
-    model.addAttribute("hasLiked", hasLiked);
-    
-    return "startup/detalleStartup";
+        // Verificar si el usuario actual ha dado like a esta startup
+        UsuarioEntity usuario = userDetailsService.obtenerUsuarioAutenticado();
+        boolean hasLiked = false;
+        if (usuario != null) {
+            hasLiked = likeDao.existsByStartupAndUsuario(startup, usuario);
+        }
+        model.addAttribute("hasLiked", hasLiked);
+
+        return "startup/detalleStartup";
     }
 
     @RequestMapping("/eliminarStartup/{id}")
@@ -225,50 +226,77 @@ public class StartupController {
         startupService.deleteById(idStartup);
         return "redirect:/startup";
     }
+
     @PostMapping("/startup/{id}/like")
-public String toggleLike(@PathVariable("id") Long startupId, RedirectAttributes redirectAttributes) {
-    // Obtener el usuario autenticado
-    UsuarioEntity usuario = userDetailsService.obtenerUsuarioAutenticado();
-    if (usuario == null) {
-        redirectAttributes.addFlashAttribute("error", "Debes iniciar sesión para dar like");
+    public String toggleLike(@PathVariable("id") Long startupId, RedirectAttributes redirectAttributes) {
+        // Obtener el usuario autenticado
+        UsuarioEntity usuario = userDetailsService.obtenerUsuarioAutenticado();
+        if (usuario == null) {
+            redirectAttributes.addFlashAttribute("error", "Debes iniciar sesión para dar like");
+            return "redirect:/verStartup/" + startupId;
+        }
+
+        // Buscar la startup
+        StartupEntity startup = startupService.findById(startupId);
+        if (startup == null) {
+            redirectAttributes.addFlashAttribute("error", "La startup no existe");
+            return "redirect:/vitrina";
+        }
+
+        // Verificar si el usuario ya ha dado like
+        LikeEntity existingLike = likeDao.findByStartupAndUsuario(startup, usuario);
+
+        if (existingLike != null) {
+            // Si ya dio like, quitar el like
+            likeDao.delete(existingLike);
+            startup.setCantLikes(startup.getCantLikes() - 1);
+            redirectAttributes.addFlashAttribute("mensajeExito", "Like removido");
+        } else {
+            // Si no ha dado like, agregar el like
+            LikeEntity newLike = new LikeEntity();
+            newLike.setStartup(startup);
+            newLike.setUsuario(usuario);
+            likeDao.save(newLike);
+
+            startup.setCantLikes(startup.getCantLikes() + 1);
+            redirectAttributes.addFlashAttribute("mensajeExito", "Like agregado");
+        }
+
+        // Guardar la startup con el nuevo contador de likes
+        startupService.save(startup);
+
         return "redirect:/verStartup/" + startupId;
     }
-    
-    // Buscar la startup
-    StartupEntity startup = startupService.findById(startupId);
-    if (startup == null) {
-        redirectAttributes.addFlashAttribute("error", "La startup no existe");
-        return "redirect:/vitrina";
-    }
-    
-    // Verificar si el usuario ya ha dado like
-    LikeEntity existingLike = likeDao.findByStartupAndUsuario(startup, usuario);
-    
-    if (existingLike != null) {
-        // Si ya dio like, quitar el like
-        likeDao.delete(existingLike);
-        startup.setCantLikes(startup.getCantLikes() - 1);
-        redirectAttributes.addFlashAttribute("mensajeExito", "Like removido");
-    } else {
-        // Si no ha dado like, agregar el like
-        LikeEntity newLike = new LikeEntity();
-        newLike.setStartup(startup);
-        newLike.setUsuario(usuario);
-        likeDao.save(newLike);
-        
-        startup.setCantLikes(startup.getCantLikes() + 1);
-        redirectAttributes.addFlashAttribute("mensajeExito", "Like agregado");
-    }
-    
-    // Guardar la startup con el nuevo contador de likes
-    startupService.save(startup);
-    
-    return "redirect:/verStartup/" + startupId;
-}
 
     @GetMapping("/api/startups/emprendedor/{documento}")
     @ResponseBody
     public List<StartupEntity> getStartupsByEmprendedor(@PathVariable String documento) {
+        EmprendedorEntity emprendedor = emprendedorService.findById(documento);
+        if (emprendedor != null) {
+            return startupService.findByEmprendedor(emprendedor);
+        }
+        return new ArrayList<>();
+    }
+
+    @GetMapping(value = "/startup/emprendedor/{documento}")
+    public String listarStartupsPorEmprendedor(@PathVariable String documento, Model model) {
+        EmprendedorEntity emprendedor = emprendedorService.findById(documento);
+        if (emprendedor != null) {
+            List<StartupEntity> startups = startupService.findByEmprendedor(emprendedor);
+            System.out.println("Emprendedor encontrado: " + emprendedor.getDocumento());
+            System.out.println("Número de startups encontradas: " + (startups != null ? startups.size() : 0));
+            model.addAttribute("startups", startups);
+            model.addAttribute("emprendedor", emprendedor);
+        } else {
+            System.out.println("Emprendedor no encontrado para documento: " + documento);
+            model.addAttribute("error", "El emprendedor no existe o no tiene startups asociadas.");
+        }
+        return "/startup/listarStartupsPorUsuario";
+    }
+
+    @GetMapping(value = "/startup/emprendedor/{documento}/list")
+    @ResponseBody
+    public List<StartupEntity> listarStartupsPorEmprendedorApi(@PathVariable String documento) {
         EmprendedorEntity emprendedor = emprendedorService.findById(documento);
         if (emprendedor != null) {
             return startupService.findByEmprendedor(emprendedor);

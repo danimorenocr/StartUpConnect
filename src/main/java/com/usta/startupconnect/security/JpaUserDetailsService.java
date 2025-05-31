@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -26,6 +25,7 @@ public class JpaUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        // Still look up by email since users log in with email
         UsuarioEntity usuario = usuarioDao.findByEmail(username);
 
         if (usuario == null) {
@@ -34,12 +34,15 @@ public class JpaUserDetailsService implements UserDetailsService {
         }
 
         System.out.println("Usuario encontrado: " + usuario.getEmailUsu());
+        System.out.println("Documento: " + usuario.getDocumento());
         System.out.println("Contraseña almacenada (cifrada): " + usuario.getContrasenna());
 
-        return new User(
-                usuario.getEmailUsu(),
+        // Use CustomUserDetails to store both email and documento
+        return new CustomUserDetails(
+                usuario.getEmailUsu(), // Use email as username
                 usuario.getContrasenna(),
-                mapearAutoridadesRol(usuario.getRol())
+                mapearAutoridadesRol(usuario.getRol()),
+                usuario.getDocumento() // Store documento
         );
     }
 
@@ -49,7 +52,11 @@ public class JpaUserDetailsService implements UserDetailsService {
 
     public UsuarioEntity obtenerUsuarioAutenticado() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String emailUsuario = authentication.getName();
-        return usuarioDao.findByEmail(emailUsuario);
+        Object principal = authentication.getPrincipal();
+        if (principal instanceof CustomUserDetails) {
+            String documento = ((CustomUserDetails) principal).getDocumento();
+            return usuarioDao.findById(documento).orElse(null);
+        }
+        return null;
     }
 }

@@ -1,12 +1,13 @@
 <!-- layout/layout.html -->
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <head th:fragment="head">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>[[${title}]]</title>
 
-   
+
     <script src="https://cdn.tailwindcss.com"></script>
 
     <!-- 2) Fuentes e iconos -->
@@ -15,8 +16,9 @@
 
     <link rel="icon" type="image/png" href="/images/StartUpConnect.png">
 
-            
-    <!-- 3) Tus estilos globales -->    <link rel="stylesheet" th:href="@{/css/layout.css}">
+
+    <!-- 3) Tus estilos globales -->
+    <link rel="stylesheet" th:href="@{/css/layout.css}">
     <link rel="stylesheet" th:href="@{/css/usuarios/listarUsuarios.css}">
     <link rel="stylesheet" th:href="@{/css/crearUsuario.css}">
     <!-- CSS específico de la página (si existe) -->
@@ -30,91 +32,95 @@
 <body>
 
 
-<header th:fragment="header">
-    <!-- Botón de menú -->
-    <button id="menuButton" class="menu-toggle">
-    <img src="/images/StartUpConnect.png" alt="Logo" style="width: 70%; height: 70%; object-fit: contain;">
-</button>    <!-- Sidebar/Navbar -->
-    <div id="sidebar" class="sidebar hidden" >
-        <h2 class="sidebar-title">StartUp Connect</h2>
-        <nav>
-            <ul class="sidebar-menu">
-                <!-- Menú para administradores -->
-                <th:block sec:authorize="hasRole('ROLE_ADMIN')">
-                    <li><a href="/administrador"><i class="fa-solid fa-house"></i> Inicio</a></li>
-                    <li><a href="/usuario"><i class="fa-solid fa-users"></i> Usuario</a></li>
-                    <li><a href="/emprendedor"><i class="fa-solid fa-briefcase"></i> Emprendedores</a></li>
-                    <li><a href="/mentor"><i class="fa-solid fa-user-tie"></i> Mentores</a></li>
-                    <li><a href="/startup"><i class="fa-solid fa-rocket"></i> StartUps</a></li>
-                    <li><a href="/convocatoria"><i class="fa-solid fa-file-alt"></i> Convocatorias</a></li>
-                    <li><a href="/evento"><i class="fa-solid fa-calendar-alt"></i> Eventos</a></li>
-                    <li><a href="/etapa"><i class="fa-solid fa-layer-group"></i> Etapas</a></li>
-                    <li><a href="/tarea"><i class="fa-solid fa-tasks"></i> Tareas</a></li>
-                    <li><a href="/entregable"><i class="fa-solid fa-clipboard-check"></i> Entregable</a></li>
-                </th:block>
-                
-                <!-- Menú para mentores -->
-                <th:block sec:authorize="hasRole('ROLE_MENTOR')">
-                    <li><a href="/mentor/dashboardMentor"><i class="fa-solid fa-house"></i> Dashboard</a></li>
-                    <li><a href="/etapa"><i class="fa-solid fa-layer-group"></i> Mis Etapas</a></li>
-                    <li><a href="/tarea"><i class="fa-solid fa-tasks"></i> Tareas</a></li>
-                    <li><a href="/entregable"><i class="fa-solid fa-clipboard-check"></i> Entregables</a></li>
-                    <li><a href="/convocatoria"><i class="fa-solid fa-file-alt"></i> Convocatorias</a></li>
-                    <li><a href="/evento"><i class="fa-solid fa-calendar-alt"></i> Eventos</a></li>
-                </th:block>
-                
-                <!-- Menú para emprendedores -->
-                <th:block sec:authorize="hasRole('ROLE_EMPRENDEDOR')">
-                    <li><a href="/emprendedor/dashboardEmprendedor"><i class="fa-solid fa-house"></i> Dashboard</a></li>
-                    <li><a href="/startup"><i class="fa-solid fa-rocket"></i> Mis StartUps</a></li>
-                    <li><a href="/postulacion"><i class="fa-solid fa-file-signature"></i> Mis Postulaciones</a></li>
-                    <li><a href="/entregable"><i class="fa-solid fa-clipboard-check"></i> Mis Entregables</a></li>
-                    <li><a href="/convocatoria"><i class="fa-solid fa-file-alt"></i> Convocatorias</a></li>
-                    <li><a href="/evento"><i class="fa-solid fa-calendar-alt"></i> Eventos</a></li>
-                </th:block>
-                
-                <li style="display: flex; justify-content: center; align-items: center; margin-top: 1.5rem;">
-                    <form th:action="@{/logout}" method="post" style="display:inline;">
-                        <button type="submit" style="background:#e74c3c;color:white;font-weight:bold;padding:0.7rem 1.2rem;border-radius:2rem;display:flex;align-items:center;gap:0.5rem;border:none;cursor:pointer;transition:background 0.2s;">
-                            <i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión
-                        </button>
-                    </form>
-                </li>
-            </ul>
-        </nav>
-    </div>
+    <header th:fragment="header">
+        <!-- Botón de menú -->
+        <button id="menuButton" class="menu-toggle">
+            <img src="/images/StartUpConnect.png" alt="Logo" style="width: 70%; height: 70%; object-fit: contain;">
+        </button> <!-- Sidebar/Navbar -->
+        <div id="sidebar" class="sidebar hidden">
+            <h2 class="sidebar-title">StartUp Connect</h2>
+            <nav>
+                <ul class="sidebar-menu">
+                    <!-- Menú para administradores -->
+                    <th:block sec:authorize="hasRole('ROLE_ADMIN')">
+                        <li><a href="/administrador"><i class="fa-solid fa-house"></i> Inicio</a></li>
+                        <li><a href="/usuario"><i class="fa-solid fa-users"></i> Usuario</a></li>
+                        <li><a href="/emprendedor"><i class="fa-solid fa-briefcase"></i> Emprendedores</a></li>
+                        <li><a href="/mentor"><i class="fa-solid fa-user-tie"></i> Mentores</a></li>
+                        <li><a href="/startup"><i class="fa-solid fa-rocket"></i> StartUps</a></li>
+                        <li><a href="/convocatoria"><i class="fa-solid fa-file-alt"></i> Convocatorias</a></li>
+                        <li><a href="/evento"><i class="fa-solid fa-calendar-alt"></i> Eventos</a></li>
+                        <li><a href="/etapa"><i class="fa-solid fa-layer-group"></i> Etapas</a></li>
+                        <li><a href="/tarea"><i class="fa-solid fa-tasks"></i> Tareas</a></li>
+                        <li><a href="/entregable"><i class="fa-solid fa-clipboard-check"></i> Entregable</a></li>
+                    </th:block>
 
-    <script>
-        const menuButton = document.getElementById('menuButton');
-        const sidebar = document.getElementById('sidebar');
-        const content = document.querySelector('main.content');
+                    <!-- Menú para mentores -->
+                    <th:block sec:authorize="hasRole('ROLE_MENTOR')">
+                        <li><a href="/mentor/dashboardMentor"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+                        <li><a href="/etapa"><i class="fa-solid fa-layer-group"></i> Mis Etapas</a></li>
+                        <li><a href="/tarea"><i class="fa-solid fa-tasks"></i> Tareas</a></li>
+                        <li><a href="/entregable"><i class="fa-solid fa-clipboard-check"></i> Entregables</a></li>
+                        <li><a href="/convocatoria"><i class="fa-solid fa-file-alt"></i> Convocatorias</a></li>
+                        <li><a href="/evento"><i class="fa-solid fa-calendar-alt"></i> Eventos</a></li>
+                    </th:block>
 
-        menuButton.addEventListener('click', () => {
-            sidebar.classList.toggle('hidden');
-            content.classList.toggle('expanded');
-        });
+                    <!-- Menú para emprendedores -->
+                    <th:block sec:authorize="hasRole('ROLE_EMPRENDEDOR')">
+                        <li><a href="/emprendedor/dashboardEmprendedor"><i class="fa-solid fa-house"></i> Dashboard</a>
+                        </li>
+                        <li><a th:href="@{/startup/emprendedor/__${#authentication.principal.documento}__}"><i
+                                    class="fa-solid fa-rocket"></i> Mis StartUps</a></li>
+                        <li><a href="/postulacion"><i class="fa-solid fa-file-signature"></i> Mis Postulaciones</a></li>
+                        <li><a href="/entregable"><i class="fa-solid fa-clipboard-check"></i> Mis Entregables</a></li>
+                        <li><a href="/convocatoria"><i class="fa-solid fa-file-alt"></i> Convocatorias</a></li>
+                        <li><a href="/evento"><i class="fa-solid fa-calendar-alt"></i> Eventos</a></li>
+                    </th:block>
 
-        document.querySelectorAll('.sidebar-menu a').forEach(link => {
-            link.addEventListener('click', () => {
-                if(window.innerWidth < 992) {
-                    sidebar.classList.add('hidden');
-                    content.classList.add('expanded');
-                }
+                    <li style="display: flex; justify-content: center; align-items: center; margin-top: 1.5rem;">
+                        <form th:action="@{/logout}" method="post" style="display:inline;">
+                            <button type="submit"
+                                style="background:#e74c3c;color:white;font-weight:bold;padding:0.7rem 1.2rem;border-radius:2rem;display:flex;align-items:center;gap:0.5rem;border:none;cursor:pointer;transition:background 0.2s;">
+                                <i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión
+                            </button>
+                        </form>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+        <script>
+            const menuButton = document.getElementById('menuButton');
+            const sidebar = document.getElementById('sidebar');
+            const content = document.querySelector('main.content');
+
+            menuButton.addEventListener('click', () => {
+                sidebar.classList.toggle('hidden');
+                content.classList.toggle('expanded');
             });
-        });
-    </script>
-    </script>
 
-</header>
+            document.querySelectorAll('.sidebar-menu a').forEach(link => {
+                link.addEventListener('click', () => {
+                    if (window.innerWidth < 992) {
+                        sidebar.classList.add('hidden');
+                        content.classList.add('expanded');
+                    }
+                });
+            });
+        </script>
+        </script>
+
+    </header>
 
 
 
 
-<footer th:fragment="footer">
-    <div>
-        &copy 2025. All rights reserved for Luxury Hotel.
-    </div>
-</footer>
+    <footer th:fragment="footer">
+        <div>
+            &copy 2025. All rights reserved for Luxury Hotel.
+        </div>
+    </footer>
 
 </body>
+
 </html>

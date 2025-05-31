@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 
-<head >
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StartUp Connect - Inicio</title>
@@ -14,10 +14,12 @@
     <header class="header">
         <div class="logo-container">
             <img src="/images/StartUpConnect.png" alt="StartUp Connect Logo" class="logo">
-        </div>        <div class="header-buttons">
-            <a th:href="@{/vitrina}" class="btn btn-primary">Vitrina</a>
+        </div>
+        <div class="header-buttons">
+            <a th:href="@{/vitrina-alt}" class="btn btn-primary">Vitrina</a>
             <a th:href="@{/login}" class="btn btn-outline">Iniciar Sesión</a>
-<a th:href="@{/registro}" class="btn btn-primary">Registrarse</a>        </div>
+            <a th:href="@{/registro}" class="btn btn-primary">Registrarse</a>
+        </div>
     </header>
 
     <main class="content"> <!-- Hero Section -->
@@ -27,7 +29,7 @@
                 <p>StartUp Connect te conecta con los emprendimientos más prometedores. Explora nuestra vitrina de
                     proyectos y encuentra oportunidades de colaboración.</p>
                 <div class="hero-buttons">
-                    <a href="/vitrina" class="btn btn-primary btn-large">Explorar Vitrina</a>
+                    <a href="/vitrina-alt" class="btn btn-primary btn-large">Explorar Vitrina</a>
                     <a href="#como-funciona" class="btn btn-outline btn-large">Cómo Funciona</a>
                 </div>
             </div>
@@ -66,7 +68,7 @@
             </div>
 
             <div class="view-all-container">
-                <a href="/vitrina" class="btn btn-outline">Ver Todos los Proyectos</a>
+                <a href="/vitrina-alt" class="btn btn-outline">Ver Todos los Proyectos</a>
             </div>
         </section>
 
@@ -179,7 +181,8 @@
                 <p>Conectando el talento emprendedor con las mejores oportunidades.</p>
             </div>
             <div class="footer-links">
-                <h4>Enlaces Rápidos</h4>                <ul>
+                <h4>Enlaces Rápidos</h4>
+                <ul>
                     <li><a href="#caracteristicas">Características</a></li>
                     <li><a href="#como-funciona">Cómo Funciona</a></li>
                     <li><a th:href="@{/login}">Iniciar Sesión</a></li>
@@ -191,7 +194,8 @@
                 <p><i class="fas fa-envelope"></i> info@startupconnect.com</p>
                 <p><i class="fas fa-phone"></i> +57 300 123 4567</p>
                 <div class="social-icons">
-                    <a href="https://www.facebook.com/?locale=es_LA" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://www.facebook.com/?locale=es_LA" class="social-icon"><i
+                            class="fab fa-facebook-f"></i></a>
                     <a href="https://x.com/?lang=es" class="social-icon"><i class="fab fa-twitter"></i></a>
                     <a href="https://co.linkedin.com/" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
                     <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
