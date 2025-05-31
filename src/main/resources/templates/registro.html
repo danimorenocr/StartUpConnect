@@ -73,6 +73,14 @@ Forma parte de nosotros.</p>
                         <input th:field="*{contrasenna}" type="password" id="password" name="password"
                             placeholder="Ingrese su contraseña"
                             class="w-full mt-2 p-2 border-b border-sky-400 focus:outline-none focus:border-sky-500 bg-transparent transition" />
+                    </div>                    <!-- Confirmación de contraseña -->
+                    <div>
+                        <label for="confirmarClave" class="block font-semibold">Confirmar Contraseña:</label>
+                        <input type="password" id="confirmarClave" name="confirmarClave" 
+                               placeholder="Confirme su contraseña"
+                               class="w-full mt-2 p-2 border-b border-sky-400 focus:outline-none focus:border-sky-500 bg-transparent transition"
+                               required>
+                        <div id="password-error" class="text-red-500 text-sm mt-1 hidden">Las contraseñas no coinciden</div>
                     </div>
 
                     <div>
@@ -129,9 +137,7 @@ Forma parte de nosotros.</p>
         <div class="w-full md:w-1/2 h-1/2 md:h-full">
             <img src="/images/registro.png" alt="Galería de Arte" class="w-full h-full object-cover" />
         </div>
-    </div>
-
-    <script>
+    </div>    <script>
         const imagenInput = document.getElementById('foto');
         const preview = document.getElementById('preview');
 
@@ -147,6 +153,50 @@ Forma parte de nosotros.</p>
             } else {
                 preview.src = '';
                 preview.classList.add('hidden');
+            }
+        });
+
+        // Validación de contraseñas
+        const passwordInput = document.getElementById('password');
+        const confirmPasswordInput = document.getElementById('confirmarClave');
+        const passwordError = document.getElementById('password-error');
+        const form = document.getElementById('formUsuario');
+
+        function validatePasswords() {
+            const password = passwordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
+            
+            if (confirmPassword !== '') {
+                if (password !== confirmPassword) {
+                    passwordError.classList.remove('hidden');
+                    confirmPasswordInput.style.borderColor = '#ef4444'; // border-red-500
+                    return false;
+                } else {
+                    passwordError.classList.add('hidden');
+                    confirmPasswordInput.style.borderColor = '#52ACC4'; // border-sky-400
+                    return true;
+                }
+            }
+            return true;
+        }
+
+        // Validar en tiempo real mientras el usuario escribe
+        passwordInput.addEventListener('input', validatePasswords);
+        confirmPasswordInput.addEventListener('input', validatePasswords);
+
+        // Validar antes de enviar el formulario
+        form.addEventListener('submit', function(e) {
+            if (!validatePasswords()) {
+                e.preventDefault();
+                alert('Por favor, asegúrese de que las contraseñas coincidan.');
+                return false;
+            }
+            
+            // Validación adicional de longitud de contraseña
+            if (passwordInput.value.length < 6) {
+                e.preventDefault();
+                alert('La contraseña debe tener al menos 6 caracteres.');
+                return false;
             }
         });
 
