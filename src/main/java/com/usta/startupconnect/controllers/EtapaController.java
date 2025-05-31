@@ -6,6 +6,8 @@ import com.usta.startupconnect.entities.TareaEntity;
 import com.usta.startupconnect.models.services.EtapaService;
 import com.usta.startupconnect.models.services.MentorService;
 import com.usta.startupconnect.models.services.TareaService;
+import com.usta.startupconnect.security.JpaUserDetailsService;
+import com.usta.startupconnect.entities.UsuarioEntity;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,25 +27,30 @@ import java.util.List;
 import javax.validation.Valid;
 
 @Controller
-public class EtapaController {    @Autowired
+public class EtapaController {
+    @Autowired
     private EtapaService etapaService;
 
     @Autowired
     private MentorService mentorService;
-      @Autowired
+
+    @Autowired
+    private JpaUserDetailsService userDetailsService;
+
+    @Autowired
     private TareaService tareaService;
 
     @GetMapping(value = "/etapa")
     public String listaEtapas(Model model, org.springframework.security.core.Authentication authentication) {
         model.addAttribute("title", "Etapas");
         model.addAttribute("urlRegistro", "/crearEtapa");
-        
+
         List<EtapaEntity> lista;
-        
+
         // Comprobar el rol del usuario autenticado
         boolean isAdmin = authentication.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
-                
+
         if (isAdmin) {
             // Si es administrador, mostrar todas las etapas
             lista = etapaService.findAll();
@@ -51,7 +58,7 @@ public class EtapaController {    @Autowired
             // Si es mentor, mostrar solo sus etapas
             String email = authentication.getName();
             MentorEntity mentor = mentorService.findByUsuarioEmail(email);
-            
+
             if (mentor != null) {
                 lista = etapaService.findByMentor(mentor);
             } else {
@@ -59,27 +66,29 @@ public class EtapaController {    @Autowired
                 lista = java.util.Collections.emptyList();
             }
         }
-        
+
         lista.sort(Comparator.comparing(EtapaEntity::getId));
         model.addAttribute("etapas", lista);
         return "/etapa/listarEtapas";
-    }    @GetMapping(value = "/crearEtapa")
+    }
+
+    @GetMapping(value = "/crearEtapa")
     public String crearEtapa(Model model, org.springframework.security.core.Authentication authentication) {
         // Verificar si el usuario es administrador o mentor
         boolean isAdmin = authentication.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
         boolean isMentor = authentication.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_MENTOR"));
-                
+
         if (!isAdmin && !isMentor) {
             // Si no es administrador ni mentor, redirigir a la lista de etapas
             return "redirect:/etapa";
         }
-        
+
         model.addAttribute("title", "Crear Etapa");
         EtapaEntity etapa = new EtapaEntity();
         model.addAttribute("etapa", etapa);
-        
+
         // Si es mentor, obtenemos su ID para pre-llenarlo en el formulario
         if (isMentor && !isAdmin) {
             String email = authentication.getName();
@@ -88,31 +97,33 @@ public class EtapaController {    @Autowired
                 model.addAttribute("mentorId", mentor.getDocumento());
             }
         }
-        
+
         return "/etapa/crearEtapa";
-    }@PostMapping("/crearEtapa")
+    }
+
+    @PostMapping("/crearEtapa")
     public String crearEtapa(@Valid @ModelAttribute("etapa") EtapaEntity etapa,
             BindingResult result, @RequestParam("mentorId") String mentorId,
             org.springframework.security.core.Authentication authentication) {
-            
+
         // Verificar si el usuario es administrador o mentor
         boolean isAdmin = authentication.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
         boolean isMentor = authentication.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_MENTOR"));
-                
+
         if (!isAdmin && !isMentor) {
             // Si no es administrador ni mentor, redirigir a la lista de etapas
             return "redirect:/etapa";
         }
-        
+
         if (result.hasErrors()) {
             System.out.println(result.getFieldErrors());
             return "etapa/crearEtapa";
         }
 
         MentorEntity mentor;
-        
+
         // Si es mentor, asignarle la etapa a sí mismo
         if (isMentor && !isAdmin) {
             String email = authentication.getName();
@@ -127,59 +138,64 @@ public class EtapaController {    @Autowired
             if (mentor == null) {
                 result.rejectValue("mentor", "error.mentor", "El mentor especificado no existe");
                 return "etapa/crearEtapa";
-            }        }
+            }
+        }
 
         etapa.setMentor(mentor);
 
         etapaService.save(etapa);
         System.out.println("Etapa guardada correctamente");
 
-        
         return "redirect:/etapa";
-    }    @GetMapping(value = "/editarEtapa/{id}")
-    public String editarEtapa(Model model, @PathVariable(value = "id") Long id, org.springframework.security.core.Authentication authentication) {
+    }
+
+    @GetMapping(value = "/editarEtapa/{id}")
+    public String editarEtapa(Model model, @PathVariable(value = "id") Long id,
+            org.springframework.security.core.Authentication authentication) {
         // Verificar si el usuario es administrador o mentor
         boolean isAdmin = authentication.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
         boolean isMentor = authentication.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_MENTOR"));
-                
+
         if (!isAdmin && !isMentor) {
             // Si no es administrador ni mentor, redirigir a la lista de etapas
             return "redirect:/etapa";
         }
-        
+
         EtapaEntity etapa = etapaService.findById(id);
-        
+
         // Si es mentor, verificar que la etapa le pertenezca
         if (isMentor && !isAdmin) {
             String email = authentication.getName();
             MentorEntity mentor = mentorService.findByUsuarioEmail(email);
-            
+
             if (mentor == null || !mentor.getDocumento().equals(etapa.getMentor().getDocumento())) {
                 // Si no es el mentor asignado, redirigir a la lista de etapas
                 return "redirect:/etapa";
             }
         }
-        
+
         model.addAttribute("title", "Editar etapa");
         model.addAttribute("etapaEditar", etapa);
         // Agregar el ID del mentor actual para el formulario
         model.addAttribute("mentorId", etapa.getMentor().getDocumento());
         return "etapa/editarEtapa";
-    }    @PostMapping("/editarEtapa/{id}")
+    }
+
+    @PostMapping("/editarEtapa/{id}")
     public String editarEtapa(@Valid EtapaEntity etapa,
             BindingResult result,
-            RedirectAttributes redirectAttributes, 
+            RedirectAttributes redirectAttributes,
             @RequestParam("mentorId") String mentorId,
             org.springframework.security.core.Authentication authentication) {
-            
+
         // Verificar si el usuario es administrador o mentor
         boolean isAdmin = authentication.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
         boolean isMentor = authentication.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_MENTOR"));
-                
+
         if (!isAdmin && !isMentor) {
             // Si no es administrador ni mentor, redirigir a la lista de etapas
             return "redirect:/etapa";
@@ -192,16 +208,16 @@ public class EtapaController {    @Autowired
             if (etapaOriginal == null) {
                 return "redirect:/etapa";
             }
-            
+
             // Verificar que sea el mentor asignado
             String email = authentication.getName();
             MentorEntity mentor = mentorService.findByUsuarioEmail(email);
-            
+
             if (mentor == null || !mentor.getDocumento().equals(etapaOriginal.getMentor().getDocumento())) {
                 // Si no es el mentor asignado, redirigir a la lista de etapas
                 return "redirect:/etapa";
             }
-            
+
             // Asegurar que no se cambie el mentor asignado
             mentorId = mentor.getDocumento();
         }
@@ -223,63 +239,86 @@ public class EtapaController {    @Autowired
         etapaService.save(etapa);
         redirectAttributes.addFlashAttribute("mensajeExito", "etapa actualizada exitosamente");
         return "redirect:/etapa";
-    }    @RequestMapping("/eliminarEtapa/{id}")
-    public String eliminarEtapa(@PathVariable("id") Long idEtapa, org.springframework.security.core.Authentication authentication) {
+    }
+
+    @RequestMapping("/eliminarEtapa/{id}")
+    public String eliminarEtapa(@PathVariable("id") Long idEtapa,
+            org.springframework.security.core.Authentication authentication) {
         // Verificar si el usuario es administrador o mentor
         boolean isAdmin = authentication.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
         boolean isMentor = authentication.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_MENTOR"));
-                
+
         if (!isAdmin && !isMentor) {
             // Si no es administrador ni mentor, redirigir a la lista de etapas
             return "redirect:/etapa";
         }
-        
+
         // Si es mentor, verificar que la etapa le pertenezca
         if (isMentor && !isAdmin) {
             EtapaEntity etapa = etapaService.findById(idEtapa);
             if (etapa == null) {
                 return "redirect:/etapa";
             }
-            
+
             String email = authentication.getName();
             MentorEntity mentor = mentorService.findByUsuarioEmail(email);
-            
+
             if (mentor == null || !mentor.getDocumento().equals(etapa.getMentor().getDocumento())) {
                 // Si no es el mentor asignado, redirigir a la lista de etapas
                 return "redirect:/etapa";
             }
         }
-        
+
         etapaService.deleteById(idEtapa);
         return "redirect:/etapa";
-    }@GetMapping(value = "/verEtapa/{id}")
-    public String verEtapa(Model model, @PathVariable(value = "id") Long id, org.springframework.security.core.Authentication authentication) {
+    }
+
+    @GetMapping(value = "/verEtapa/{id}")
+    public String verEtapa(Model model, @PathVariable(value = "id") Long id,
+            org.springframework.security.core.Authentication authentication) {
         EtapaEntity etapa = etapaService.findById(id);
-        
+
         // Verificar si el usuario tiene permiso para ver esta etapa
         boolean isAdmin = authentication.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
-                
+
         if (!isAdmin) {
             // Si es mentor, verificar que la etapa le pertenezca
             String email = authentication.getName();
             MentorEntity mentor = mentorService.findByUsuarioEmail(email);
-            
+
             if (mentor == null || !mentor.getDocumento().equals(etapa.getMentor().getDocumento())) {
                 // Si no es el mentor asignado, redirigir a la lista de etapas
                 return "redirect:/etapa";
             }
         }
-        
+
         model.addAttribute("title", "Ver etapa");
         model.addAttribute("etapaDetalle", etapa);
-        
+
         // Obtener las tareas asociadas a esta etapa
         List<TareaEntity> tareasAsociadas = tareaService.findByEtapa(etapa);
         model.addAttribute("tareas", tareasAsociadas);
-        
+
         return "etapa/detalleEtapa";
+    }
+
+    @GetMapping(value = "/etapasEmprendedor")
+    public String listaEtapasEmprendedor(Model model, org.springframework.security.core.Authentication authentication) {
+        if (authentication != null) {
+            List<EtapaEntity> etapas = etapaService.findAll();
+            List<MentorEntity> mentores = mentorService.findAll();
+            
+            // Sort etapas by ID
+            etapas.sort(Comparator.comparing(EtapaEntity::getId));
+            
+            model.addAttribute("etapas", etapas);
+            model.addAttribute("mentores", mentores);
+            model.addAttribute("title", "Mis Etapas");
+            return "etapa/listarEtapasEmprendedor";
+        }
+        return "redirect:/login";
     }
 }

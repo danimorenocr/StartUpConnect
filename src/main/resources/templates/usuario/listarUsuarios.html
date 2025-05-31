@@ -40,12 +40,15 @@
                         </div>
                     </div>                    <div class="usuario-actions">
                         <div class="glass-actions-container">
-                            <form th:action="@{/eliminarUsuario/{id}(id=${usuario.documento})}" method="post"
-                                onsubmit="return confirmarEliminacion(event, this);" style="display: inline;">
-                                <button type="submit" class="eliminar" title="Eliminar">✖</button>
-                            </form>
                             <a th:href="@{/editarUsuario/{documento}(documento=${usuario.documento})}" class="editar"
                                 title="Editar">✎</a>
+                            <form th:if="${usuario.rol.rol == 'ADMIN' || usuario.rol.rol == 'INVERSIONISTA'}" 
+                                th:action="@{/eliminarUsuario/{id}(id=${usuario.documento})}" 
+                                method="post"
+                                onsubmit="return confirmarEliminacion(event, this);" 
+                                style="display: inline;">
+                                <button type="submit" class="eliminar" title="Eliminar">✖</button>
+                            </form>
                             <a th:href="@{/verUsuario/{documento}(documento=${usuario.documento})}"
                                 class="ver-perfil-btn">Ver perfil</a>
                         </div>
@@ -56,22 +59,20 @@
 
         </div>
 
-    </main>
-    <script>
+    </main>    <script>
         function confirmarEliminacion(event, form) {
             event.preventDefault();
             Swal.fire({
-                title: "Are you sure?",
-                text: "This action cannot be undone",
+                title: "¿Estás seguro?",
+                text: "Esta acción no se puede deshacer",
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#991b1b",
                 cancelButtonColor: "#f59e0b",
-                confirmButtonText: "Yes, delete",
-                cancelButtonText: "Cancel"
+                confirmButtonText: "Sí, eliminar",
+                cancelButtonText: "Cancelar"
             }).then((result) => {
                 if (result.isConfirmed) {
-                    console.log("Deleting...");
                     form.submit();
                 }
             });

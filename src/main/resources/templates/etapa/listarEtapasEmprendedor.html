@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/layout :: head}"></head>
+<body class="bg-white font-sans">
+    <header th:replace="~{layout/layout :: header}"></header>
+    <div class="container max-w-6xl mx-auto py-10 px-6">
+        <!-- Banner hero section -->
+        <div class="relative w-full mb-10">
+            <img src="/images/banner-etapas.jpg" alt="Banner etapas" 
+                class="w-full h-60 object-cover rounded-2xl shadow-lg">
+            <div class="absolute inset-0 flex flex-col justify-center items-center rounded-2xl text-center" 
+                 style="background: rgba(0,0,0,0.45);">
+                <h2 class="text-4xl md:text-5xl font-extrabold text-white drop-shadow mb-2">Mis Etapas</h2>
+                <p class="text-lg md:text-2xl text-white font-medium drop-shadow">Sigue tu progreso y trabaja con mentores expertos.</p>
+            </div>
+        </div>
+
+        <!-- Lista de etapas -->
+        <div class="grid grid-cols-1 gap-8">
+            <!-- Iterar sobre cada etapa -->
+            <div th:each="etapa : ${etapas}" class="bg-white rounded-2xl shadow p-6 border-t-4 border-blue-400 hover:shadow-lg transition duration-300">
+                <div class="flex flex-col lg:flex-row justify-between gap-6">
+                    <!-- Información de la etapa -->
+                    <div class="flex-grow">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2" th:text="${etapa.nombre}">Nombre de la Etapa</h3>
+                        <p class="text-gray-600 mb-4" th:text="${etapa.descripcion}">Descripción de la etapa</p>
+                        
+                        <!-- Estado de la etapa -->
+                        <div class="flex items-center gap-2 mb-4">
+                            <span class="text-sm font-medium text-gray-600">Estado:</span>
+                            <span th:class="${etapa.estado == 'Completada' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'} + ' px-3 py-1 rounded-full text-sm font-medium'" th:text="${etapa.estado}">Estado</span>
+                        </div>
+
+                        <!-- Lista de tareas -->
+                        <div class="space-y-2">
+                            <h4 class="text-lg font-semibold text-gray-700 mb-2">Tareas Asignadas:</h4>
+                            <div th:if="${not #lists.isEmpty(etapa.tareas)}" class="space-y-2">
+                                <div th:each="tarea : ${etapa.tareas}" class="flex items-center gap-2 text-gray-600">
+                                    <i class="fas fa-tasks text-blue-500"></i>
+                                    <span th:text="${tarea.descripcion}">Descripción de la tarea</span>
+                                </div>
+                            </div>
+                            <p th:if="${#lists.isEmpty(etapa.tareas)}" class="text-gray-500 italic">No hay tareas asignadas</p>
+                        </div>
+                    </div>
+
+                    <!-- Información del mentor -->
+                    <div class="lg:w-80 flex flex-col items-center p-4 bg-gray-50 rounded-xl">
+                        <div class="text-center">
+                            <h4 class="text-lg font-semibold text-gray-800 mb-4">Mentor Asignado</h4>
+                            <div th:if="${etapa.mentor != null}" class="space-y-3">
+                                <img th:src="${etapa.mentor.usuario != null && etapa.mentor.usuario.fotoUrl != null ? etapa.mentor.usuario.fotoUrl : '/images/default-profile.jpg'}"
+                                     alt="Foto del mentor" class="w-24 h-24 rounded-full mx-auto object-cover border-4 border-white shadow-lg">
+                                <h5 class="font-bold text-gray-800" th:text="${etapa.mentor.usuario != null ? etapa.mentor.usuario.nombreUsu : 'Nombre no disponible'}">Nombre del Mentor</h5>
+                                <p class="text-sm text-gray-600" th:text="${etapa.mentor.especialidad}">Especialidad del mentor</p>
+                                <a th:if="${etapa.mentor.linkedin != null}" th:href="${etapa.mentor.linkedin}" target="_blank"
+                                   class="inline-flex items-center text-blue-600 hover:text-blue-700">
+                                    <i class="fab fa-linkedin mr-2"></i>
+                                    <span>Ver perfil profesional</span>
+                                </a>
+                            </div>
+                            <p th:unless="${etapa.mentor != null}" class="text-gray-500 italic">No hay mentor asignado</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Mensaje si no hay etapas -->
+            <div th:if="${#lists.isEmpty(etapas)}" class="text-center py-10">
+                <div class="bg-gray-50 rounded-lg p-8 inline-block">
+                    <i class="fas fa-clipboard-list text-4xl text-gray-400 mb-4"></i>
+                    <h3 class="text-xl font-bold text-gray-700 mb-2">No hay etapas disponibles</h3>
+                    <p class="text-gray-600">Las etapas aparecerán aquí una vez que sean asignadas.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

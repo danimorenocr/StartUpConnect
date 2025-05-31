@@ -224,7 +224,7 @@ body {
 }
 
 .rol-inversionista {
-  background-color: #9b59b6; /* Morado */
+  background-color: #e74c3c; /* Rojo */
 }
 
 .rol-estudiante {
@@ -267,9 +267,12 @@ body {
   border: 3px solid #2ecc71; /* Verde */
 }
 
-.rol-mentor ~ .usuario-card-content .usuario-foto,
-.rol-inversionista ~ .usuario-card-content .usuario-foto {
+.rol-mentor ~ .usuario-card-content .usuario-foto {
   border: 3px solid #9b59b6; /* Morado */
+}
+
+.rol-inversionista ~ .usuario-card-content .usuario-foto {
+  border: 3px solid #e74c3c; /* Rojo */
 }
 
 .rol-estudiante ~ .usuario-card-content .usuario-foto {
