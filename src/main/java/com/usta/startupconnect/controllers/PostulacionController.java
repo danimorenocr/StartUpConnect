@@ -110,10 +110,9 @@ public class PostulacionController {
                     }
                 }
             }
-        }
-
-        postulacionesFiltradas.sort(Comparator.comparing(PostulacionEntity::getId));
+        }        postulacionesFiltradas.sort(Comparator.comparing(PostulacionEntity::getId));
         model.addAttribute("postulaciones", postulacionesFiltradas);
+        model.addAttribute("isAdmin", isAdmin); // Agregar información de admin al modelo
         return "/postulacion/listarPostulaciones";
     }
 
@@ -391,5 +390,81 @@ public class PostulacionController {
         model.addAttribute("title", "Ver postulación");
         model.addAttribute("postulacionDetalle", postulacion);
         return "postulacion/detallePostulacion";
+    }
+    
+    @PostMapping("/cambiarEstadoPostulacion/{id}")
+    public String cambiarEstadoPostulacion(@PathVariable("id") Long idPostulacion,
+            @RequestParam("nuevoEstado") String nuevoEstado,
+            @RequestParam(value = "comentarios", required = false) String comentarios,
+            RedirectAttributes redirectAttributes,
+            org.springframework.security.core.Authentication authentication) {
+        
+        // Verificar que el usuario es administrador
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+        
+        if (!isAdmin) {
+            redirectAttributes.addFlashAttribute("error", "No tienes permisos para realizar esta acción");
+            return "redirect:/postulacion";
+        }
+        
+        // Verificar que la postulación existe
+        PostulacionEntity postulacion = postulacionService.findById(idPostulacion);
+        if (postulacion == null) {
+            redirectAttributes.addFlashAttribute("error", "La postulación no existe");
+            return "redirect:/postulacion";
+        }
+        
+        // Validar el nuevo estado
+        if (!nuevoEstado.equals("Aprobada") && !nuevoEstado.equals("Rechazada") && !nuevoEstado.equals("En revisión")) {
+            redirectAttributes.addFlashAttribute("error", "Estado no válido");
+            return "redirect:/postulacion";
+        }
+        
+        // Cambiar el estado
+        String estadoAnterior = postulacion.getEstado();
+        postulacion.setEstado(nuevoEstado);
+        
+        // Si hay comentarios, agregarlos (podríamos crear un campo para esto en el futuro)
+        // Por ahora los guardamos en un log del sistema
+        if (comentarios != null && !comentarios.trim().isEmpty()) {
+            System.out.println("📝 ADMIN COMMENT: Estado de postulación " + idPostulacion + 
+                " cambiado de '" + estadoAnterior + "' a '" + nuevoEstado + "'. Comentarios: " + comentarios);
+        }
+        
+        postulacionService.save(postulacion);
+        
+        redirectAttributes.addFlashAttribute("mensajeExito", 
+            "Estado de la postulación cambiado exitosamente de '" + estadoAnterior + "' a '" + nuevoEstado + "'");
+        
+        // Redirigir de vuelta a la vista de postulaciones de la convocatoria
+        if (postulacion.getConvocatoria() != null) {
+            return "redirect:/postulacion/convocatoria/" + postulacion.getConvocatoria().getId();
+        } else {
+            return "redirect:/postulacion";
+        }
+    }
+    
+    @GetMapping("/gestionarPostulacion/{id}")
+    public String gestionarPostulacion(@PathVariable("id") Long idPostulacion, Model model,
+            org.springframework.security.core.Authentication authentication) {
+        
+        // Verificar que el usuario es administrador
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+        
+        if (!isAdmin) {
+            return "redirect:/postulacion";
+        }
+        
+        PostulacionEntity postulacion = postulacionService.findById(idPostulacion);
+        if (postulacion == null) {
+            return "redirect:/postulacion";
+        }
+        
+        model.addAttribute("title", "Gestionar Postulación - " + postulacion.getNombreProyecto());
+        model.addAttribute("postulacion", postulacion);
+        
+        return "postulacion/gestionarPostulacion";
     }
 }
