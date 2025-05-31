@@ -11,6 +11,7 @@ import com.usta.startupconnect.models.services.EmprendedorService;
 import com.usta.startupconnect.models.services.LikeService;
 import com.usta.startupconnect.models.services.StartupService;
 import com.usta.startupconnect.security.JpaUserDetailsService;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -31,6 +32,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -77,12 +80,18 @@ public class StartupController {
         lista.sort(Comparator.comparing(StartupEntity::getId));
         model.addAttribute("startups", lista);
         return "/startup/listarStartups";
-    }
-
-    @GetMapping(value = "/crearStartup")
+    }    @GetMapping(value = "/crearStartup")
     public String crearStartup(Model model) {
         model.addAttribute("title", "Crear startup");
         model.addAttribute("startup", new StartupEntity());
+        
+        // Obtener la lista de emprendedores para el combo box
+        List<EmprendedorEntity> emprendedores = emprendedorService.findAll();
+        model.addAttribute("emprendedores", emprendedores);
+        
+        // Añadir un flag para indicar si hay emprendedores disponibles
+        model.addAttribute("hayEmprendedores", !emprendedores.isEmpty());
+        
         return "/startup/crearStartup";
     }
 
@@ -256,4 +265,14 @@ public String toggleLike(@PathVariable("id") Long startupId, RedirectAttributes 
     
     return "redirect:/verStartup/" + startupId;
 }
+
+    @GetMapping("/api/startups/emprendedor/{documento}")
+    @ResponseBody
+    public List<StartupEntity> getStartupsByEmprendedor(@PathVariable String documento) {
+        EmprendedorEntity emprendedor = emprendedorService.findById(documento);
+        if (emprendedor != null) {
+            return startupService.findByEmprendedor(emprendedor);
+        }
+        return new ArrayList<>();
+    }
 }
