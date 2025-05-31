@@ -32,16 +32,6 @@ public class EmprendedorController {
     @Autowired
     private StartupService startupService;
 
-    @GetMapping("/vitrina")
-    public String mostrarVitrina(Model model) {
-        List<EmprendedorEntity> emprendedores = emprendedorService.findAll();
-        List<StartupEntity> startups = startupService.findAll();
-        
-        model.addAttribute("emprendedores", emprendedores);
-        model.addAttribute("startups", startups);
-        
-        return "vitrina";
-    }
 
     @GetMapping(value = "/emprendedor")
     public String listarEmprendedores(Model model) {

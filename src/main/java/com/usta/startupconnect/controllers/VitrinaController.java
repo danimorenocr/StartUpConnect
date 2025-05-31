@@ -3,6 +3,7 @@ package com.usta.startupconnect.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -17,7 +18,9 @@ public class VitrinaController {
     private EmprendedorService emprendedorService;
 
     @Autowired
-    private StartupService startupService;    @GetMapping("/vitrina")
+    private StartupService startupService;    
+    
+    @GetMapping("/vitrina")
     public String mostrarVitrina(Model model) {
         List<EmprendedorEntity> emprendedores = emprendedorService.findAll();
         List<StartupEntity> startups = startupService.findAllActive();

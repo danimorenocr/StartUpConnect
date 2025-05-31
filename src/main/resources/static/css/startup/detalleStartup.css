@@ -536,7 +536,7 @@ body {
 .stat-number {
     font-size: 1.8rem;
     font-weight: 700;
-    color: #FF6B00;
+    color: rgb(237, 233, 231);
     text-shadow: 0 2px 5px rgba(255, 107, 0, 0.1);
 }
 
@@ -1825,6 +1825,68 @@ body {
 .detail-container {
     padding: 30px 20px 10px;
     margin-top: 10px;
+}
+.like-form {
+    display: inline-block;
+}
+
+.like-button {
+    background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+    border: none;
+    border-radius: 12px;
+    padding: 12px 20px;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+}
+
+.like-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+}
+
+.like-button.liked {
+    background: linear-gradient(135deg, #ff4757, #ff3742);
+    animation: pulse 0.6s ease-in-out;
+}
+
+.like-button .fa-heart {
+    font-size: 18px;
+    transition: all 0.3s ease;
+}
+
+.like-button .fa-heart.liked-heart {
+    color: #fff;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    animation: heartBeat 0.6s ease-in-out;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+@keyframes heartBeat {
+    0% { transform: scale(1); }
+    14% { transform: scale(1.2); }
+    28% { transform: scale(1); }
+    42% { transform: scale(1.2); }
+    70% { transform: scale(1); }
+}
+
+.stat-label {
+    font-size: 12px;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 5px;
 }
 
 /*# sourceMappingURL=styles.css.map */

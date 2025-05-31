@@ -2,10 +2,15 @@ package com.usta.startupconnect.controllers;
 
 import com.usta.startupconnect.entities.ComentariosEntity;
 import com.usta.startupconnect.entities.EmprendedorEntity;
+import com.usta.startupconnect.entities.LikeEntity;
 import com.usta.startupconnect.entities.StartupEntity;
+import com.usta.startupconnect.entities.UsuarioEntity;
+import com.usta.startupconnect.models.dao.LikeDao;
 import com.usta.startupconnect.models.services.ComentariosService;
 import com.usta.startupconnect.models.services.EmprendedorService;
+import com.usta.startupconnect.models.services.LikeService;
 import com.usta.startupconnect.models.services.StartupService;
+import com.usta.startupconnect.security.JpaUserDetailsService;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -38,6 +43,12 @@ import javax.validation.Valid;
 
 @Controller
 public class StartupController {
+
+    @Autowired
+    private LikeDao likeDao;
+
+    @Autowired
+    private JpaUserDetailsService userDetailsService;
     @Autowired
     private StartupService startupService;
 
@@ -46,6 +57,7 @@ public class StartupController {
 
     @Autowired
     private ComentariosService comentariosService;
+
 
     @GetMapping(value = "/vitrina-alt")
     public String vitrina(Model model) {
@@ -188,8 +200,15 @@ public class StartupController {
             comentarios = new ArrayList<>();
         }
         model.addAttribute("comentarios", comentarios);
-        
-        return "startup/detalleStartup";
+         // Verificar si el usuario actual ha dado like a esta startup
+    UsuarioEntity usuario = userDetailsService.obtenerUsuarioAutenticado();
+    boolean hasLiked = false;
+    if (usuario != null) {
+        hasLiked = likeDao.existsByStartupAndUsuario(startup, usuario);
+    }
+    model.addAttribute("hasLiked", hasLiked);
+    
+    return "startup/detalleStartup";
     }
 
     @RequestMapping("/eliminarStartup/{id}")
@@ -197,4 +216,44 @@ public class StartupController {
         startupService.deleteById(idStartup);
         return "redirect:/startup";
     }
+    @PostMapping("/startup/{id}/like")
+public String toggleLike(@PathVariable("id") Long startupId, RedirectAttributes redirectAttributes) {
+    // Obtener el usuario autenticado
+    UsuarioEntity usuario = userDetailsService.obtenerUsuarioAutenticado();
+    if (usuario == null) {
+        redirectAttributes.addFlashAttribute("error", "Debes iniciar sesión para dar like");
+        return "redirect:/verStartup/" + startupId;
+    }
+    
+    // Buscar la startup
+    StartupEntity startup = startupService.findById(startupId);
+    if (startup == null) {
+        redirectAttributes.addFlashAttribute("error", "La startup no existe");
+        return "redirect:/vitrina";
+    }
+    
+    // Verificar si el usuario ya ha dado like
+    LikeEntity existingLike = likeDao.findByStartupAndUsuario(startup, usuario);
+    
+    if (existingLike != null) {
+        // Si ya dio like, quitar el like
+        likeDao.delete(existingLike);
+        startup.setCantLikes(startup.getCantLikes() - 1);
+        redirectAttributes.addFlashAttribute("mensajeExito", "Like removido");
+    } else {
+        // Si no ha dado like, agregar el like
+        LikeEntity newLike = new LikeEntity();
+        newLike.setStartup(startup);
+        newLike.setUsuario(usuario);
+        likeDao.save(newLike);
+        
+        startup.setCantLikes(startup.getCantLikes() + 1);
+        redirectAttributes.addFlashAttribute("mensajeExito", "Like agregado");
+    }
+    
+    // Guardar la startup con el nuevo contador de likes
+    startupService.save(startup);
+    
+    return "redirect:/verStartup/" + startupId;
+}
 }

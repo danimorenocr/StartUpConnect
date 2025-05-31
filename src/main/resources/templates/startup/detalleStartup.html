@@ -36,7 +36,8 @@
                         <img th:src="${startupDetalle.logoUrl != null ? startupDetalle.logoUrl : '/images/sinfoto.jpg'}" 
                              alt="Logo de la startup" class="avatar-img">
                         <div class="status-indicator active"></div>
-                    </div>                    <div class="profile-title">
+                    </div>                    
+                    <div class="profile-title">
                         <h2 class="profile-name" th:text="${startupDetalle.nombreStartup}">Nombre Startup</h2>
                         <div class="profile-badges">
                             <span class="profile-badge sector"><span class="badge-label">Sector:</span> <span th:text="${startupDetalle.sector}">Energía Renovable</span></span>
@@ -47,14 +48,18 @@
                 
                 <div class="stats-container">
                     <div class="stat-item">
-                        <span class="stat-number" th:text="${startupDetalle.cantLikes}">0</span>
-                        <span class="stat-label">Likes</span>
+                        <form th:action="@{/startup/{id}/like(id=${startupDetalle.id})}" method="post" class="like-form">
+                            <button type="submit" class="like-button" th:classappend="${hasLiked} ? 'liked' : ''">
+                                <i class="fas fa-heart" th:classappend="${hasLiked} ? 'liked-heart' : ''"></i>
+                                <span class="stat-number" th:text="${startupDetalle.cantLikes}">0</span>
+                            </button>
+                        </form>
+                        <span class="stat-label" th:text="${hasLiked} ? 'Te gusta' : 'Likes'">Likes</span>
                     </div>
                     <div class="stat-item">
                         <span class="stat-date" th:text="${#temporals.format(startupDetalle.fechaCreacion, 'dd/MM/yyyy')}">01/01/2023</span>
                         <span class="stat-label">Fecha creación</span>
                     </div>
-           
                 </div>
                 
 <div class="info-cards-container">
@@ -227,7 +232,8 @@
                          alt="Foto de perfil" class="comment-avatar">
                     <div class="comment-info">
                         <div class="user-info">
-                            <h4 th:text="${comentario.usuario.nombreUsu}" class="comment-author">Nombre del Usuario</h4>                            <span th:with="pattern='dd/MM/yyyy HH:mm'" th:text="${#temporals.format(comentario.fechaComentario, pattern)}" 
+                            <h4 th:text="${comentario.usuario.nombreUsu}" class="comment-author">Nombre del Usuario</h4>                            
+                            <span th:with="pattern='dd/MM/yyyy HH:mm'" th:text="${#temporals.format(comentario.fechaComentario, pattern)}" 
                                   class="comment-date">
                                 <i class="far fa-clock"></i> Fecha
                             </span>
