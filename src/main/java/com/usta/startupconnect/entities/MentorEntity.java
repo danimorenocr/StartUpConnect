@@ -33,9 +33,7 @@ public class MentorEntity {
 
     @NotNull
     @Column(name = "anos_experiencia", nullable = false)
-    private Short anosExperiencia;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "idUsuario", referencedColumnName = "documento")
+    private Short anosExperiencia;    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_usuario", referencedColumnName = "documento")
     private UsuarioEntity usuario;
 }

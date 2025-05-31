@@ -12,11 +12,21 @@ import java.util.List;
 @Service
 public class FeedbackServiceImplement implements FeedbackService {
     @Autowired
-    private FeedbackDao feedbackDao;
-
-    @Override
+    private FeedbackDao feedbackDao;    @Override
     @Transactional(readOnly = true)
     public List<FeedbackEntity> findAll() {
         return (List<FeedbackEntity>) feedbackDao.findAll();
+    }
+
+    @Override
+    @Transactional
+    public FeedbackEntity save(FeedbackEntity feedback) {
+        return feedbackDao.save(feedback);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public FeedbackEntity findById(Long id) {
+        return feedbackDao.findById(id).orElse(null);
     }
 }
