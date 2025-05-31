@@ -3,6 +3,7 @@ package com.usta.startupconnect.controllers;
 import com.google.api.services.calendar.model.CalendarListEntry;
 import com.google.api.services.calendar.model.Event;
 import com.usta.startupconnect.entities.ConvocatoriaEntity;
+import com.usta.startupconnect.entities.EmprendedorEntity;
 import com.usta.startupconnect.entities.MentorEntity;
 import com.usta.startupconnect.entities.RolEntity;
 import com.usta.startupconnect.entities.StartupEntity;
@@ -13,6 +14,7 @@ import com.usta.startupconnect.models.services.MentorService;
 import com.usta.startupconnect.models.services.RolService;
 import com.usta.startupconnect.models.services.StartupService;
 import com.usta.startupconnect.models.services.UsuarioService;
+import com.usta.startupconnect.models.services.EmprendedorService;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -50,7 +52,7 @@ import java.util.stream.Collectors;
 @Controller
 public class UsuarioController {
     private static final Logger logger = LoggerFactory.getLogger(UsuarioController.class);
-      @Autowired
+    @Autowired
     private UsuarioService usuarioService;
     @Autowired
     private RolService rolService;
@@ -62,8 +64,12 @@ public class UsuarioController {
     private MentorService mentorService;
     @Autowired
     private ConvocatoriaService convocatoriaService;
+    @Autowired    private PasswordEncoder passwordEncoder;
+
     @Autowired
-    private PasswordEncoder passwordEncoder;@GetMapping(value = "/administrador")
+    private EmprendedorService emprendedorService;
+
+    @GetMapping(value = "/administrador")
     public String administrador(Model model, org.springframework.security.core.Authentication authentication) {
         if (authentication != null) {
             String email = authentication.getName();
@@ -77,65 +83,66 @@ public class UsuarioController {
         } else {
             model.addAttribute("nombreCompleto", "Usuario");
         }
-        
+
         // Obtener datos para el dashboard
-        
+
         // 1. Total de usuarios
         List<UsuarioEntity> usuarios = usuarioService.findAll();
         model.addAttribute("totalUsers", usuarios.size());
-        
+
         // 2. Startups - Total y distribución por sector
         List<StartupEntity> startups = startupService.findAll();
         model.addAttribute("totalStartups", startups.size());
-        
+
         // Conteo de startups por sector
         Map<String, Long> startupsPorSector = startups.stream()
                 .collect(Collectors.groupingBy(
-                        startup -> startup.getSector() != null ? startup.getSector() : "Otros", 
+                        startup -> startup.getSector() != null ? startup.getSector() : "Otros",
                         Collectors.counting()));
         model.addAttribute("startupsPorSector", startupsPorSector);
-        
+
         // 3. Mentores - Total y distribución por especialidad
         List<MentorEntity> mentores = mentorService.findAll();
         model.addAttribute("totalMentors", mentores.size());
-        
+
         // Conteo de mentores por especialidad
         Map<String, Long> mentoresPorEspecialidad = mentores.stream()
                 .collect(Collectors.groupingBy(
-                        mentor -> mentor.getEspecialidad() != null ? mentor.getEspecialidad() : "Otros", 
+                        mentor -> mentor.getEspecialidad() != null ? mentor.getEspecialidad() : "Otros",
                         Collectors.counting()));
         model.addAttribute("mentoresPorEspecialidad", mentoresPorEspecialidad);
-        
+
         // 4. Convocatorias - Total y por estado
         List<ConvocatoriaEntity> convocatorias = convocatoriaService.findAll();
         model.addAttribute("totalConvocatorias", convocatorias.size());
-        
+
         // Clasificar convocatorias por estado (activas, próximas a cerrar, en revisión)
         Date hoy = new Date();
         Date proximosSieteDias = sumarDiasAFecha(hoy, 7);
-        
+
         long convocatoriasActivas = convocatorias.stream()
                 .filter(c -> c.getFechaInicio().before(hoy) && c.getFechaFin().after(hoy))
                 .count();
-        
+
         long convocatoriasProximasACerrar = convocatorias.stream()
-                .filter(c -> c.getFechaInicio().before(hoy) && c.getFechaFin().after(hoy) && c.getFechaFin().before(proximosSieteDias))
+                .filter(c -> c.getFechaInicio().before(hoy) && c.getFechaFin().after(hoy)
+                        && c.getFechaFin().before(proximosSieteDias))
                 .count();
-        
+
         long convocatoriasEnRevision = convocatorias.stream()
                 .filter(c -> c.getFechaFin().before(hoy))
                 .count();
-        
+
         model.addAttribute("convocatoriasActivas", convocatoriasActivas);
         model.addAttribute("convocatoriasProximasACerrar", convocatoriasProximasACerrar);
         model.addAttribute("convocatoriasEnRevision", convocatoriasEnRevision);
-        
+
         // Obtener próxima convocatoria por cerrar
         try {
             Optional<ConvocatoriaEntity> proximaConvocatoria = convocatorias.stream()
                     .filter(c -> c.getFechaFin().after(hoy))
                     .min(Comparator.comparing(ConvocatoriaEntity::getFechaFin));
-            
+
             if (proximaConvocatoria.isPresent()) {
                 ConvocatoriaEntity convocatoria = proximaConvocatoria.get();
                 // Verificar que todos los campos necesarios estén presentes
@@ -147,21 +154,21 @@ public class UsuarioController {
             logger.error("Error al obtener próxima convocatoria: {}", e.getMessage());
             // No agregamos la convocatoria al modelo si hay error
         }
-        
+
         // Obtener eventos próximos y configuración del calendario
         try {
             // Obtener eventos próximos
             List<Event> upcomingEvents = googleMeetService.listUpcomingEvents(5);
             model.addAttribute("upcomingEvents", upcomingEvents);
-            
+
             // Obtener URL del calendario con autenticación
             String calendarEmbedUrl = googleMeetService.getCalendarEmbedUrl();
             model.addAttribute("calendarEmbedUrl", calendarEmbedUrl);
-            
+
             // Obtener lista de calendarios disponibles (opcional, para futuras mejoras)
             List<CalendarListEntry> calendars = googleMeetService.getCalendars();
             model.addAttribute("calendars", calendars);
-            
+
         } catch (Exception e) {
             logger.error("Error al cargar eventos de Google Calendar: {}", e.getMessage(), e);
             model.addAttribute("calendarError", "No se pudieron cargar los eventos: " + e.getMessage());
@@ -170,10 +177,10 @@ public class UsuarioController {
             model.addAttribute("calendarEmbedUrl", "about:blank");
             model.addAttribute("calendars", Collections.emptyList());
         }
-        
+
         return "/administrador/dashboardAdmin";
     }
-    
+
     // Método auxiliar para sumar días a una fecha
     private Date sumarDiasAFecha(Date fecha, int dias) {
         Calendar calendar = Calendar.getInstance();
@@ -199,7 +206,9 @@ public class UsuarioController {
         model.addAttribute("title", "Crear usuario");
         model.addAttribute("usuario", new UsuarioEntity());
         return "/usuario/formCrearUsuario";
-    }    @PostMapping(value = "/crearUsuario")
+    }
+
+    @PostMapping(value = "/crearUsuario")
     public String guardarUsuario(@Valid UsuarioEntity usuario, @RequestParam(value = "foto") MultipartFile foto,
             BindingResult result, RedirectAttributes redirectAttributes) {
         String urlImagen = guardarImagen(foto);
@@ -227,33 +236,73 @@ public class UsuarioController {
         return "redirect:/usuario";
     }
 
-@GetMapping(value = "/registro")
-public String registroUsuario(Model model) {
-    List<RolEntity> roles = rolService.findAll();
-    model.addAttribute("roles", roles);
-    model.addAttribute("title", "Registro de usuario");
-    model.addAttribute("usuario", new UsuarioEntity());
-    return "registro"; 
-}
-
-@PostMapping(value = "/registro")
-public String guardarRegistroUsuario(@Valid UsuarioEntity usuario, @RequestParam(value = "foto", required = false) MultipartFile foto,
-        BindingResult result, RedirectAttributes redirectAttributes) {
-    String urlImagen = guardarImagen(foto);
-    if (result.hasErrors()) {
-        System.out.println(result.getAllErrors());
+    @GetMapping(value = "/registro")
+    public String registroUsuario(Model model) {
+        List<RolEntity> roles = rolService.findAll();
+        model.addAttribute("roles", roles);
+        model.addAttribute("title", "Registro de usuario");
+        model.addAttribute("usuario", new UsuarioEntity());
         return "registro";
+    }    @PostMapping(value = "/registro")
+    public String guardarRegistroUsuario(@Valid UsuarioEntity usuario,
+            @RequestParam(value = "foto", required = false) MultipartFile foto,
+            @RequestParam(value = "especialidad", required = false) String especialidad,
+            @RequestParam(value = "biografia", required = false) String biografia,
+            @RequestParam(value = "linkedin", required = false) String linkedin,
+            @RequestParam(value = "anosExperiencia", required = false) Short anosExperiencia,
+            @RequestParam(value = "universidad", required = false) String universidad,
+            @RequestParam(value = "programaEducativo", required = false) String programaEducativo,
+            BindingResult result, RedirectAttributes redirectAttributes) {
+        String urlImagen = guardarImagen(foto);
+        if (result.hasErrors()) {
+            System.out.println(result.getAllErrors());
+            return "registro";
+        }
+
+        // Encriptar contraseña antes de guardar
+        usuario.setContrasenna(passwordEncoder.encode(usuario.getContrasenna()));
+        usuario.setFotoUrl(urlImagen);
+        usuario.setFecha_creacion(LocalDate.now());
+        usuarioService.save(usuario);        // Si el usuario es un mentor, crear el registro del mentor
+        if (usuario.getRol() != null && usuario.getRol().getIdRol() == 2L) {
+            MentorEntity mentor = new MentorEntity();
+            mentor.setDocumento(usuario.getDocumento());
+            mentor.setUsuario(usuario);
+            mentor.setEspecialidad(especialidad);
+            mentor.setBiografia(biografia);
+            mentor.setLinkedin(linkedin);
+            mentor.setAnosExperiencia(anosExperiencia);
+
+            try {
+                mentorService.save(mentor);
+                redirectAttributes.addFlashAttribute("mensajeExito", "Mentor registrado exitosamente");
+            } catch (Exception e) {
+                logger.error("Error al crear el mentor: " + e.getMessage(), e);
+                redirectAttributes.addFlashAttribute("error", "Error al registrar el mentor: " + e.getMessage());
+                return "registro";
+            }
+        }
+        // Si el usuario es un emprendedor, crear el registro del emprendedor
+        else if (usuario.getRol() != null && usuario.getRol().getIdRol() == 3L) {
+            EmprendedorEntity emprendedor = new EmprendedorEntity();
+            emprendedor.setDocumento(usuario.getDocumento());
+            emprendedor.setUsuario(usuario);
+            emprendedor.setUniversidad(universidad);
+            emprendedor.setProgramaEducativo(programaEducativo);
+
+            try {
+                emprendedorService.save(emprendedor);
+                redirectAttributes.addFlashAttribute("mensajeExito", "Emprendedor registrado exitosamente");
+            } catch (Exception e) {
+                logger.error("Error al crear el emprendedor: " + e.getMessage(), e);
+                redirectAttributes.addFlashAttribute("error", "Error al registrar el emprendedor: " + e.getMessage());
+                return "registro";
+            }
+        }
+
+        redirectAttributes.addFlashAttribute("mensajeExito", "Usuario registrado exitosamente");
+        return "redirect:/login";
     }
-
-    // Encriptar contraseña antes de guardar
-    usuario.setContrasenna(passwordEncoder.encode(usuario.getContrasenna()));
-    usuario.setFotoUrl(urlImagen);
-    usuario.setFecha_creacion(LocalDate.now());
-    usuarioService.save(usuario);
-
-    redirectAttributes.addFlashAttribute("mensajeExito", "Usuario registrado exitosamente");
-    return "redirect:/login";
-}
 
     private String guardarImagen(MultipartFile imagen) {
         try {
@@ -319,7 +368,9 @@ public String guardarRegistroUsuario(@Valid UsuarioEntity usuario, @RequestParam
         model.addAttribute("usuarioEditar", usuario);
         model.addAttribute("imagen", usuario.getFotoUrl());
         return "usuario/editarUsuario";
-    }    @PostMapping("/editarUsuario/{id}")
+    }
+
+    @PostMapping("/editarUsuario/{id}")
     public String actualizarUsuario(@Valid UsuarioEntity usuario,
             @RequestParam(value = "foto", required = false) MultipartFile foto,
             BindingResult result,
@@ -335,7 +386,7 @@ public String guardarRegistroUsuario(@Valid UsuarioEntity usuario, @RequestParam
 
         if (usuarioExistente != null) {
             usuario.setFecha_creacion(usuarioExistente.getFecha_creacion());
-            
+
             // Verificar si la contraseña ha cambiado
             if (!usuario.getContrasenna().equals(usuarioExistente.getContrasenna())) {
                 // Si la contraseña cambió, encriptarla
