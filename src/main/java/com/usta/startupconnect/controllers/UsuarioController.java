@@ -25,6 +25,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -49,8 +50,7 @@ import java.util.stream.Collectors;
 @Controller
 public class UsuarioController {
     private static final Logger logger = LoggerFactory.getLogger(UsuarioController.class);
-    
-    @Autowired
+      @Autowired
     private UsuarioService usuarioService;
     @Autowired
     private RolService rolService;
@@ -61,7 +61,9 @@ public class UsuarioController {
     @Autowired
     private MentorService mentorService;
     @Autowired
-    private ConvocatoriaService convocatoriaService;    @GetMapping(value = "/administrador")
+    private ConvocatoriaService convocatoriaService;
+    @Autowired
+    private PasswordEncoder passwordEncoder;@GetMapping(value = "/administrador")
     public String administrador(Model model, org.springframework.security.core.Authentication authentication) {
         if (authentication != null) {
             String email = authentication.getName();
@@ -197,9 +199,7 @@ public class UsuarioController {
         model.addAttribute("title", "Crear usuario");
         model.addAttribute("usuario", new UsuarioEntity());
         return "/usuario/formCrearUsuario";
-    }
-
-    @PostMapping(value = "/crearUsuario")
+    }    @PostMapping(value = "/crearUsuario")
     public String guardarUsuario(@Valid UsuarioEntity usuario, @RequestParam(value = "foto") MultipartFile foto,
             BindingResult result, RedirectAttributes redirectAttributes) {
         String urlImagen = guardarImagen(foto);
@@ -209,6 +209,8 @@ public class UsuarioController {
 
         }
 
+        // Encriptar contraseña antes de guardar
+        usuario.setContrasenna(passwordEncoder.encode(usuario.getContrasenna()));
         usuario.setFotoUrl(urlImagen);
         usuario.setFecha_creacion(LocalDate.now());
         usuarioService.save(usuario);
@@ -243,6 +245,8 @@ public String guardarRegistroUsuario(@Valid UsuarioEntity usuario, @RequestParam
         return "registro";
     }
 
+    // Encriptar contraseña antes de guardar
+    usuario.setContrasenna(passwordEncoder.encode(usuario.getContrasenna()));
     usuario.setFotoUrl(urlImagen);
     usuario.setFecha_creacion(LocalDate.now());
     usuarioService.save(usuario);
@@ -315,9 +319,7 @@ public String guardarRegistroUsuario(@Valid UsuarioEntity usuario, @RequestParam
         model.addAttribute("usuarioEditar", usuario);
         model.addAttribute("imagen", usuario.getFotoUrl());
         return "usuario/editarUsuario";
-    }
-
-    @PostMapping("/editarUsuario/{id}")
+    }    @PostMapping("/editarUsuario/{id}")
     public String actualizarUsuario(@Valid UsuarioEntity usuario,
             @RequestParam(value = "foto", required = false) MultipartFile foto,
             BindingResult result,
@@ -328,13 +330,21 @@ public String guardarRegistroUsuario(@Valid UsuarioEntity usuario, @RequestParam
             return "usuario/editarUsuario";
         }
 
-        String documento =usuario.getDocumento();
+        String documento = usuario.getDocumento();
         UsuarioEntity usuarioExistente = usuarioService.findById(documento);
 
         if (usuarioExistente != null) {
             usuario.setFecha_creacion(usuarioExistente.getFecha_creacion());
+            
+            // Verificar si la contraseña ha cambiado
+            if (!usuario.getContrasenna().equals(usuarioExistente.getContrasenna())) {
+                // Si la contraseña cambió, encriptarla
+                usuario.setContrasenna(passwordEncoder.encode(usuario.getContrasenna()));
+            }
         } else {
             usuario.setFecha_creacion(LocalDate.now());
+            // Si es un usuario nuevo, encriptar la contraseña
+            usuario.setContrasenna(passwordEncoder.encode(usuario.getContrasenna()));
         }
 
         if (foto != null && !foto.isEmpty()) {

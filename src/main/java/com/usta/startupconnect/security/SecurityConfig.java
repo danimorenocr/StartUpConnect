@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -52,12 +52,9 @@ public class SecurityConfig {
         
         return http.build();
     }
-    
-    @Bean
-    @SuppressWarnings("deprecation")
+      @Bean
     public PasswordEncoder passwordEncoder() {
-        // Usar NoOpPasswordEncoder para permitir contraseñas en texto plano (NO USAR EN PRODUCCIÓN)
-        return NoOpPasswordEncoder.getInstance();
+        return new BCryptPasswordEncoder();
     }
 }
 
