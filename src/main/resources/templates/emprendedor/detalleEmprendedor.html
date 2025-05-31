@@ -48,8 +48,7 @@
                 </div>
 
             </div>
-            
-            <div class="contact-action">
+              <div class="contact-action">
                 <a th:if="${emprendedorDetalle.usuario != null && emprendedorDetalle.usuario.emailUsu != null}" 
                    th:href="@{'mailto:' + ${emprendedorDetalle.usuario.emailUsu} + '?subject=Contacto con emprendedor'}" 
                    class="btn-contactar primary">
@@ -58,6 +57,10 @@
                 <button class="btn-contactar secondary">
                     <i class="fas fa-user-plus"></i> Conectar
                 </button>
+                <a th:href="@{/crearStartupParaEmprendedor/{documento}(documento=${emprendedorDetalle.documento})}"
+                   class="btn-contactar primary">
+                    <i class="fas fa-rocket"></i> Crear Startup
+                </a>
             </div>
         </div>
         

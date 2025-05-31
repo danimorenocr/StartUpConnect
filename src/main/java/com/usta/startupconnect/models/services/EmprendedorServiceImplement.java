@@ -39,7 +39,12 @@ public class EmprendedorServiceImplement implements EmprendedorService {
     }    @Override
     @Transactional
     public EmprendedorEntity findByDocumento(String documento) {
-        return emprendedorDao.findByDocumento(documento);
+        EmprendedorEntity emprendedor = emprendedorDao.findByDocumento(documento);
+        if (emprendedor != null) {
+            // Ensure the usuario is loaded
+            emprendedor.getUsuario();
+        }
+        return emprendedor;
     }
     
     @Override

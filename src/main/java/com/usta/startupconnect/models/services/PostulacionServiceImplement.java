@@ -1,5 +1,6 @@
 package com.usta.startupconnect.models.services;
 
+import com.usta.startupconnect.entities.ConvocatoriaEntity;
 import com.usta.startupconnect.entities.PostulacionEntity;
 import com.usta.startupconnect.models.dao.PostulacionDao;
 
@@ -18,6 +19,12 @@ public class PostulacionServiceImplement implements PostulacionService {
     @Transactional(readOnly = true)
     public List<PostulacionEntity> findAll() {
         return (List<PostulacionEntity>) postulacionDao.findAll();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<PostulacionEntity> findByConvocatoria(ConvocatoriaEntity convocatoria) {
+        return postulacionDao.findByConvocatoria(convocatoria);
     }
 
     @Override

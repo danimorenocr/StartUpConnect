@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/layout :: head}"></head>
+<body class="bg-white font-sans">
+    <header th:replace="~{layout/layout :: header}"></header>
+    <link rel="stylesheet" th:href="@{/css/startup/crearStartup.css}">
+
+    <!-- Banner container -->
+    <div class="max-w-6xl mx-auto py-10 px-6">
+        <div class="relative w-full mb-16">
+            <img src="/images/bannerListar.jpg" alt="Banner startups"
+                class="w-full h-64 object-cover rounded-3xl shadow-xl">
+            <div class="absolute inset-0 flex flex-col justify-center items-center rounded-3xl bg-gradient-to-br from-black/60 to-black/40 backdrop-blur-sm">
+                <h1 class="text-5xl font-extrabold text-white mb-3">Crear Startup</h1>
+                <p class="text-xl text-white/90 font-medium">Registra tu emprendimiento y comienza tu camino al éxito</p>
+            </div>
+        </div>
+    </div>    <div class="startup-form-container">
+        <!-- Mensaje de error si existe -->
+        <div th:if="${error}" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+            <span class="block sm:inline" th:text="${error}"></span>
+        </div>
+
+        <form th:action="@{/crearStartupParaEmprendedor/{documento}(documento=${documento})}" method="post" enctype="multipart/form-data" th:object="${startup}">
+            <!-- Campo oculto para el documento del emprendedor -->
+            <input type="hidden" name="emprendedor.documento" th:value="${documento}">
+            <!-- Tarjeta de datos básicos -->
+            <div class="startup-card card-startup">
+                <div class="startup-card-header">
+                    <span class="inline-block w-8 h-1.5 rounded bg-gradient-to-r from-pink-400 to-pink-600 shadow-md"></span>
+                    <span class="text-xs font-bold text-pink-500 tracking-wider uppercase">Datos de la startup</span>
+                </div>
+                <div class="startup-card-content">
+                    <div>
+                        <label for="nombreStartup" class="block text-sm font-semibold text-sky-700">Nombre:</label>
+                        <input th:field="*{nombreStartup}" type="text" id="nombreStartup" name="nombreStartup" required
+                            class="w-full rounded-2xl border-0 bg-sky-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400 text-sky-800 font-semibold placeholder:text-sky-400" />
+                    </div>
+                    <div>
+                        <label for="sector" class="block text-sm font-semibold text-sky-700">Sector:</label>
+                        <input th:field="*{sector}" type="text" id="sector" name="sector" required
+                            class="w-full rounded-2xl border-0 bg-sky-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400 text-sky-800 font-semibold placeholder:text-sky-400" />
+                    </div>
+                    <div>
+                        <label for="descripcion" class="block text-sm font-semibold text-sky-700">Descripción:</label>
+                        <textarea th:field="*{descripcion}" id="descripcion" name="descripcion" rows="4" required
+                            class="w-full rounded-2xl border-0 bg-sky-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400 text-sky-800 font-semibold placeholder:text-sky-400"></textarea>
+                    </div>
+                    <div>
+                        <label for="estado" class="block text-sm font-semibold text-sky-700">Estado:</label>
+                        <select th:field="*{estado}" id="estado" name="estado" required
+                            class="w-full rounded-2xl border-0 bg-sky-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400 text-sky-800 font-semibold">
+                            <option value="">Seleccione un estado</option>
+                            <option value="Idea">Idea</option>
+                            <option value="Validación">Validación</option>
+                            <option value="Desarrollo">Desarrollo</option>
+                            <option value="Crecimiento">Crecimiento</option>
+                            <option value="Expansión">Expansión</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tarjeta de emprendedor -->
+            <div class="startup-card card-entrepreneur">
+                <div class="startup-card-header">
+                    <span class="inline-block w-8 h-1.5 rounded bg-gradient-to-r from-purple-400 to-purple-600 shadow-md"></span>
+                    <span class="text-xs font-bold text-purple-500 tracking-wider uppercase">Datos del emprendedor</span>
+                </div>
+                <div class="startup-card-content">                    <div>                        <label class="block text-sm font-semibold text-sky-700">Emprendedor:</label>
+                        <div class="w-full rounded-2xl border-0 bg-sky-100 px-4 py-2 text-sky-800 font-semibold">
+                            <span th:if="${emprendedor != null && emprendedor.usuario != null}" 
+                                  th:text="${emprendedor.usuario.nombreUsu + ' (' + emprendedor.documento + ')'}">Nombre del Emprendedor</span>
+                            <span th:unless="${emprendedor != null && emprendedor.usuario != null}" class="text-sky-500">Emprendedor no seleccionado</span>
+                        </div>
+                    </div>
+                    <!-- Sección para mostrar startups del emprendedor -->
+                    <div id="startupsEmprendedor" class="mt-4">
+                        <p class="text-sm font-semibold text-sky-700 mb-2">Startups asociadas:</p>
+                        <div id="loadingStartups" class="text-sm text-sky-600 italic hidden">
+                            <div class="flex items-center">
+                                <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-sky-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                                Cargando startups...
+                            </div>
+                        </div>
+                        <div id="startupsList" class="bg-sky-50 rounded-lg p-3 max-h-40 overflow-y-auto">
+                            <p id="noStartupsMessage" class="text-sm text-sky-600 italic">No hay startups asociadas a este emprendedor</p>
+                            <ul id="startupsItems" class="list-disc list-inside space-y-1 text-sm"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tarjeta de contenido multimedia -->
+            <div class="startup-card card-multimedia">
+                <div class="startup-card-header">
+                    <span class="inline-block w-8 h-1.5 rounded bg-gradient-to-r from-orange-400 to-orange-600 shadow-md"></span>
+                    <span class="text-xs font-bold text-orange-500 tracking-wider uppercase">Contenido multimedia</span>
+                </div>
+                <div class="startup-card-content">
+                    <div>
+                        <label for="foto" class="block text-sm font-semibold text-sky-700">Logo de la Startup:</label>
+                        <input type="file" id="foto" name="foto" accept="image/*" required
+                            class="w-full rounded-2xl border-0 bg-sky-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400 text-sky-800 font-semibold file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-pink-50 file:text-pink-700 hover:file:bg-pink-100" />
+                        <img id="preview" src="" alt="Previsualización" class="mt-3 max-w-[200px] rounded-lg shadow-md hidden" />
+                        <small class="block mt-2 text-sm text-sky-600">Seleccione una imagen para el logo de la startup (obligatorio)</small>
+                    </div>
+                    <div>
+                        <label for="pitchUrl" class="block text-sm font-semibold text-sky-700">URL del Pitch Deck:</label>
+                        <input th:field="*{pitchUrl}" type="url" id="pitchUrl" name="pitchUrl"
+                            placeholder="https://example.com/pitch.pdf"
+                            class="w-full rounded-2xl border-0 bg-sky-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400 text-sky-800 font-semibold placeholder:text-sky-400" />
+                    </div>
+                    <div>
+                        <label for="videoPresentacion" class="block text-sm font-semibold text-sky-700">URL del Video de Presentación:</label>
+                        <input th:field="*{videoPresentacion}" type="url" id="videoPresentacion" name="videoPresentacion"
+                            placeholder="https://youtube.com/watch?v=example"
+                            class="w-full rounded-2xl border-0 bg-sky-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400 text-sky-800 font-semibold placeholder:text-sky-400" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tarjeta de enlaces web -->
+            <div class="startup-card card-links">
+                <div class="startup-card-header">
+                    <span class="inline-block w-8 h-1.5 rounded bg-gradient-to-r from-sky-400 to-sky-600 shadow-md"></span>
+                    <span class="text-xs font-bold text-sky-500 tracking-wider uppercase">Enlaces web</span>
+                </div>
+                <div class="startup-card-content">
+                    <div>
+                        <label for="paginaWeb" class="block text-sm font-semibold text-sky-700">Página Web:</label>
+                        <input th:field="*{paginaWeb}" type="url" id="paginaWeb" name="paginaWeb"
+                            placeholder="https://tuempresa.com"
+                            class="w-full rounded-2xl border-0 bg-sky-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400 text-sky-800 font-semibold placeholder:text-sky-400" />
+                    </div>
+                    <div>
+                        <label for="github" class="block text-sm font-semibold text-sky-700">GitHub:</label>
+                        <input th:field="*{github}" type="url" id="github" name="github"
+                            placeholder="https://github.com/tuempresa"
+                            class="w-full rounded-2xl border-0 bg-sky-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400 text-sky-800 font-semibold placeholder:text-sky-400" />
+                    </div>
+                    <div>
+                        <label for="linkedin" class="block text-sm font-semibold text-sky-700">LinkedIn:</label>
+                        <input th:field="*{linkedin}" type="url" id="linkedin" name="linkedin"
+                            placeholder="https://linkedin.com/company/tuempresa"
+                            class="w-full rounded-2xl border-0 bg-sky-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400 text-sky-800 font-semibold placeholder:text-sky-400" />
+                    </div>
+                    <div>
+                        <label for="instagram" class="block text-sm font-semibold text-sky-700">Instagram:</label>
+                        <input th:field="*{instagram}" type="url" id="instagram" name="instagram"
+                            placeholder="https://instagram.com/tuempresa"
+                            class="w-full rounded-2xl border-0 bg-sky-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400 text-sky-800 font-semibold placeholder:text-sky-400" />
+                    </div>
+                </div>
+            </div>            <!-- Tarjeta de acciones -->
+            <div class="bg-white/80 rounded-xl shadow p-6 flex flex-col md:flex-row gap-4 justify-center">
+                <button th:if="${hayEmprendedores}" type="submit" class="bg-sky-400 hover:bg-sky-500 text-white font-extrabold text-xl py-3 px-10 rounded-full shadow transition w-full md:w-auto min-w-[180px] text-center">Guardar</button>
+                <button th:unless="${hayEmprendedores}" type="button" disabled class="bg-gray-400 cursor-not-allowed text-white font-extrabold text-xl py-3 px-10 rounded-full shadow transition w-full md:w-auto min-w-[180px] text-center">Guardar</button>
+                <a th:href="@{/startup}" class="flex items-center justify-center gap-2 border border-pink-500 text-pink-500 bg-white font-semibold text-xl py-3 px-10 rounded-full shadow-sm transition hover:bg-pink-50 hover:text-pink-600 w-full md:w-auto min-w-[180px] text-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                    Volver
+                </a>
+            </div>
+        </form>
+    </div>    <script>
+        const imagenInput = document.getElementById('foto');
+        const preview = document.getElementById('preview');
+
+        imagenInput.addEventListener('change', function () {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    preview.src = e.target.result;
+                    preview.classList.remove('hidden');
+                }
+                reader.readAsDataURL(file);
+            } else {
+                preview.src = '';
+                preview.classList.add('hidden');
+            }
+        });        // Cargar startups
+        const documentoInput = document.querySelector('input[name="emprendedor.documento"]');
+        if (!documentoInput) {
+            console.error('No se encontró el campo del documento del emprendedor');
+            return;
+        }
+        const documento = documentoInput.value;
+        console.log('Documento del emprendedor:', documento);
+        
+        const startupsEmprendedor = document.getElementById('startupsEmprendedor');
+        const startupsList = document.getElementById('startupsList');
+        const startupsItems = document.getElementById('startupsItems');
+        const noStartupsMessage = document.getElementById('noStartupsMessage');
+        const loadingStartups = document.getElementById('loadingStartups');
+
+        // Mostrar sección de startups y el indicador de carga
+        loadingStartups.classList.remove('hidden');
+        startupsList.classList.add('hidden');
+
+        // Realizar petición AJAX para obtener las startups del emprendedor
+        fetch(`/api/startups/emprendedor/${documento}`)
+            .then(response => response.json())
+            .then(startups => {
+                // Ocultar indicador de carga
+                loadingStartups.classList.add('hidden');
+                startupsList.classList.remove('hidden');
+
+                // Limpiar lista actual
+                startupsItems.innerHTML = '';
+
+                if (startups.length > 0) {
+                    // Ocultar mensaje de no startups
+                    noStartupsMessage.classList.add('hidden');
+
+                    // Añadir cada startup a la lista
+                    startups.forEach(startup => {
+                        const li = document.createElement('li');
+                        li.className = 'text-sky-800 font-medium';
+                        li.innerHTML = `${startup.nombreStartup} <span class="text-xs text-sky-600">(${startup.estado})</span>`;
+                        startupsItems.appendChild(li);
+                    });
+                } else {
+                    // Mostrar mensaje de no startups
+                    noStartupsMessage.classList.remove('hidden');
+                }
+            })
+            .catch(error => {
+                console.error('Error al cargar startups:', error);
+                loadingStartups.classList.add('hidden');
+                startupsList.classList.remove('hidden');
+                noStartupsMessage.textContent = "Error al cargar las startups. Intente nuevamente.";
+                noStartupsMessage.classList.remove('hidden');
+            });
+    </script>
+
+</body>
+</html>

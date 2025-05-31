@@ -48,9 +48,7 @@ public class EmprendedorController {
         model.addAttribute("title", "Crear emprendedor");
         model.addAttribute("emprendedor", new EmprendedorEntity());
         return "/emprendedor/formCrearEmprendedor";
-    }
-
-    @PostMapping(value = "/crearEmprendedor")
+    }    @PostMapping(value = "/crearEmprendedor")
     public String guardarEmprendedor(@Valid EmprendedorEntity emprendedor, BindingResult result,
             RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
@@ -61,10 +59,18 @@ public class EmprendedorController {
         String documentoUsuario = emprendedor.getDocumento();
         UsuarioEntity usuario = usuarioService.findById(documentoUsuario);
 
-        emprendedor.setUsuario(usuario);
+        if (usuario == null) {
+            redirectAttributes.addFlashAttribute("error", "No se encontró el usuario con documento " + documentoUsuario);
+            return "redirect:/emprendedor";
+        }
 
-        emprendedorService.save(emprendedor);
-        redirectAttributes.addFlashAttribute("mensajeExito", "Emprendedor Saved Successfully");
+        emprendedor.setUsuario(usuario);
+        try {
+            emprendedorService.save(emprendedor);
+            redirectAttributes.addFlashAttribute("mensajeExito", "Emprendedor guardado exitosamente");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Error al guardar el emprendedor: " + e.getMessage());
+        }
         return "redirect:/emprendedor";
     }
 

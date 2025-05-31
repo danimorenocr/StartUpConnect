@@ -13,8 +13,7 @@
         <div class="flex flex-wrap gap-3">
             <a th:href="@{/convocatoria}" class="bg-white border border-gray-300 hover:border-orange-500 text-gray-700 font-medium py-2 px-4 rounded-lg transition flex items-center">
                 <i class="fas fa-arrow-left mr-2"></i> Volver
-            </a>
-            <a th:href="@{/listarPostulaciones/{id}(id=${convocatoriaDetalle.id})}" class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-lg transition flex items-center">
+            </a>            <a th:href="@{/postulacion/convocatoria/{id}(id=${convocatoriaDetalle.id})}" class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-lg transition flex items-center">
                 <i class="fas fa-list-ul mr-2"></i> Ver Postulaciones
             </a>
             <a th:href="@{/editarConvocatoria/{id}(id=${convocatoriaDetalle.id})}" class="bg-amber-500 hover:bg-amber-600 text-white font-medium py-2 px-4 rounded-lg transition flex items-center">

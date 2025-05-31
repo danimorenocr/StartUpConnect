@@ -302,5 +302,102 @@ public class StartupController {
             return startupService.findByEmprendedor(emprendedor);
         }
         return new ArrayList<>();
+    }    @GetMapping(value = "/crearStartupParaEmprendedor/{documento}")
+    public String crearStartupParaEmprendedor(@PathVariable String documento, Model model) {
+        try {
+            // Buscar el emprendedor por documento
+            EmprendedorEntity emprendedor = emprendedorService.findById(documento);
+            if (emprendedor == null) {
+                return "redirect:/emprendedor?error=emprendedor_no_encontrado";
+            }
+
+            // Crear nuevo startup
+            StartupEntity startup = new StartupEntity();
+            
+            // Configurar el startup con el emprendedor
+            startup.setEmprendedor(emprendedor);
+            
+            // Añadir atributos al modelo
+            model.addAttribute("title", "Crear startup");
+            model.addAttribute("startup", startup);
+            model.addAttribute("emprendedor", emprendedor);
+            model.addAttribute("documento", documento);
+            model.addAttribute("hayEmprendedores", true);
+            
+            // Log para debug
+            System.out.println("Emprendedor encontrado: " + emprendedor.getDocumento());
+            System.out.println("Documento: " + documento);
+
+            return "startup/crearStartupEmprendedor";
+        } catch (Exception e) {
+            System.err.println("Error al cargar el formulario: " + e.getMessage());
+            e.printStackTrace();
+            model.addAttribute("error", "Error al cargar el formulario: " + e.getMessage());
+            return "redirect:/emprendedor?error=error_carga_formulario";
+        }
+    }
+
+    @PostMapping("/crearStartupParaEmprendedor/{documento}")
+    public String guardarStartupParaEmprendedor(@Valid @ModelAttribute("startup") StartupEntity startup,
+            @RequestParam(value = "foto") MultipartFile foto,
+            @PathVariable String documento,
+            BindingResult result,
+            RedirectAttributes redirectAttributes) {
+
+        // Handle validation errors
+        if (result.hasErrors()) {
+            System.out.println("Errores de validación: " + result.getAllErrors());
+            return "startup/crearStartupEmprendedor";
+        }
+
+        // Find and validate entrepreneur
+        EmprendedorEntity emprendedor = emprendedorService.findById(documento);
+        if (emprendedor == null) {
+            redirectAttributes.addFlashAttribute("error", "Emprendedor no encontrado");
+            return "redirect:/emprendedor";
+        }
+
+        try {
+            // Save image and set URL
+            String urlImagen = guardarImagen(foto);
+            startup.setLogoUrl(urlImagen);
+
+            // Set startup metadata
+            startup.setFechaCreacion(LocalDate.now());
+            startup.setEmprendedor(emprendedor);
+
+            // Save startup
+            startupService.save(startup);
+            redirectAttributes.addFlashAttribute("mensajeExito", "Startup creada exitosamente");
+
+            return "redirect:/startup/emprendedor/" + documento;
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Error al guardar la startup: " + e.getMessage());
+            return "redirect:/crearStartupParaEmprendedor/" + documento;
+        }
+    }
+
+    @GetMapping(value = "/misStartups")
+    public String listarMisStartups(Model model) {
+        // Get the currently authenticated user
+        UsuarioEntity usuario = userDetailsService.obtenerUsuarioAutenticado();
+        System.out.println("MisStartups - Usuario autenticado: " + (usuario != null ? usuario.getDocumento() : "null"));
+
+        if (usuario != null) {
+            // Find the emprendedor associated with the user
+            EmprendedorEntity emprendedor = emprendedorService.findByDocumento(usuario.getDocumento());
+            System.out.println("MisStartups - Emprendedor encontrado: " + (emprendedor != null ? emprendedor.getDocumento() : "null"));
+
+            if (emprendedor != null) {
+                List<StartupEntity> startups = startupService.findByEmprendedor(emprendedor);
+                System.out.println("MisStartups - Número de startups encontradas: " + (startups != null ? startups.size() : 0));
+                model.addAttribute("startups", startups);
+                model.addAttribute("emprendedor", emprendedor);
+                return "/startup/listarStartupsPorUsuario";
+            }
+        }
+
+        model.addAttribute("error", "No se encontró un emprendedor asociado a tu cuenta.");
+        return "/startup/listarStartupsPorUsuario";
     }
 }
