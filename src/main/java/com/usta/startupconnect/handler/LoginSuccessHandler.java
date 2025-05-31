@@ -15,6 +15,12 @@ import org.springframework.web.servlet.support.SessionFlashMapManager;
 @Component
 public class LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
     
+    public LoginSuccessHandler() {
+        super();
+        // No usar una request guardada si es recurso estático
+        setAlwaysUseDefaultTargetUrl(true);
+    }
+    
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
                                         HttpServletResponse response,
@@ -38,9 +44,13 @@ public class LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessH
             redirectUrl = "/";
         }
         
-        // Establecer la URL de redirección
+        // Establecer la URL de redirección como destino por defecto
         setDefaultTargetUrl(redirectUrl);
         
-        super.onAuthenticationSuccess(request, response, authentication);
+        // Limpiar cualquier solicitud guardada que pueda ser un recurso estático
+        clearAuthenticationAttributes(request);
+        
+        // Redirigir al usuario
+        getRedirectStrategy().sendRedirect(request, response, redirectUrl);
     }
 }

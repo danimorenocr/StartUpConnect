@@ -1,6 +1,7 @@
 package com.usta.startupconnect.entities;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -10,9 +11,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.Data;
 
 @Entity
 @Table(name = "COMENTARIOS")
+@Data
 public class ComentariosEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -24,6 +27,8 @@ public class ComentariosEntity implements Serializable {
 
     @Column(name = "comentario", nullable = false, length = 500)
     private String comentario;
+      @Column(name = "fecha_comentario", nullable = false)
+    private LocalDateTime fechaComentario;
     
     @ManyToOne
     @JoinColumn(name = "id_startup", nullable = false)
@@ -32,5 +37,4 @@ public class ComentariosEntity implements Serializable {
     @ManyToOne
     @JoinColumn(name = "id_usuario", referencedColumnName = "documento", nullable = false)
     private UsuarioEntity usuario;
-
 }

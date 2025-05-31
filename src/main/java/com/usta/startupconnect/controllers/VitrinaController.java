@@ -11,20 +11,20 @@ import com.usta.startupconnect.entities.StartupEntity;
 import com.usta.startupconnect.models.services.EmprendedorService;
 import com.usta.startupconnect.models.services.StartupService;
 
+@Controller
 public class VitrinaController {
     @Autowired
     private EmprendedorService emprendedorService;
 
     @Autowired
-    private StartupService startupService;
-
-    @GetMapping("/vitrina")
+    private StartupService startupService;    @GetMapping("/vitrina")
     public String mostrarVitrina(Model model) {
         List<EmprendedorEntity> emprendedores = emprendedorService.findAll();
-        List<StartupEntity> startups = startupService.findAll();
+        List<StartupEntity> startups = startupService.findAllActive();
 
         model.addAttribute("emprendedores", emprendedores);
         model.addAttribute("startups", startups);
+        model.addAttribute("title", "Vitrina de Startups");
 
         return "vitrina";
     }

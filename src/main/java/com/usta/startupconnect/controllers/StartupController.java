@@ -1,7 +1,9 @@
 package com.usta.startupconnect.controllers;
 
+import com.usta.startupconnect.entities.ComentariosEntity;
 import com.usta.startupconnect.entities.EmprendedorEntity;
 import com.usta.startupconnect.entities.StartupEntity;
+import com.usta.startupconnect.models.services.ComentariosService;
 import com.usta.startupconnect.models.services.EmprendedorService;
 import com.usta.startupconnect.models.services.StartupService;
 
@@ -28,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -41,15 +44,18 @@ public class StartupController {
     @Autowired
     private EmprendedorService emprendedorService;
 
-    // @GetMapping(value = "/vitrina")
-    // public String vitrina(Model model) {
-    //     model.addAttribute("title", "Startups");
-    //     model.addAttribute("urlRegistro", "/crearStartup");
-    //     List<StartupEntity> lista = startupService.findAll();
-    //     lista.sort(Comparator.comparing(StartupEntity::getId));
-    //     model.addAttribute("startups", lista);
-    //     return "/vitrina";
-    // }
+    @Autowired
+    private ComentariosService comentariosService;
+
+    @GetMapping(value = "/vitrina-alt")
+    public String vitrina(Model model) {
+        model.addAttribute("title", "Startups");
+        model.addAttribute("urlRegistro", "/crearStartup");
+        List<StartupEntity> lista = startupService.findAll();
+        lista.sort(Comparator.comparing(StartupEntity::getId));
+        model.addAttribute("startups", lista);
+        return "vitrina";
+    }
 
     @GetMapping(value = "/startup")
     public String listarStartups(Model model) {
@@ -170,8 +176,19 @@ public class StartupController {
     @GetMapping(value = "/verStartup/{id}")
     public String verStartup(Model model, @PathVariable(value = "id") Long id) {
         StartupEntity startup = startupService.findById(id);
+        if(startup == null) {
+            return "redirect:/startup";
+        }
+        
         model.addAttribute("title", "Ver startup");
         model.addAttribute("startupDetalle", startup);
+        
+        List<ComentariosEntity> comentarios = comentariosService.findByStartupId(id);
+        if (comentarios == null) {
+            comentarios = new ArrayList<>();
+        }
+        model.addAttribute("comentarios", comentarios);
+        
         return "startup/detalleStartup";
     }
 
@@ -180,5 +197,4 @@ public class StartupController {
         startupService.deleteById(idStartup);
         return "redirect:/startup";
     }
-
 }

@@ -7,12 +7,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class StartupServiceImplement implements StartupService {
     @Autowired
     private StartupDao startupDao;
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<StartupEntity> findAllActive() {
+        return ((List<StartupEntity>) startupDao.findAll())
+                .stream()
+                .filter(startup -> startup.getEstado() != null)
+                .sorted(Comparator.comparing(StartupEntity::getFechaCreacion).reversed())
+                .collect(Collectors.toList());
+    }
 
     @Override
     @Transactional(readOnly = true)

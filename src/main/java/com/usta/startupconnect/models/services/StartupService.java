@@ -9,6 +9,8 @@ public interface StartupService {
     
     public List<StartupEntity> findAll();
 
+    public List<StartupEntity> findAllActive();
+
     public void save(StartupEntity startup);
 
     public StartupEntity findById(Long id);

@@ -193,7 +193,59 @@
             </a>
         </div>
     </div>
-    
+      <!-- Sección de comentarios -->
+    <div class="comments-section">
+        <h2 class="comments-title">Comentarios</h2>
+        
+        <!-- Mensajes de éxito y error -->
+        <div th:if="${error}" class="alert alert-danger" role="alert">
+            <span th:text="${error}">Error</span>
+        </div>
+        <div th:if="${mensajeExito}" class="alert alert-success" role="alert">
+            <span th:text="${mensajeExito}">Éxito</span>
+        </div>
+        
+        <!-- Formulario de comentarios -->
+        <div class="comment-form">
+            <form th:action="@{/startup/{id}/comentar(id=${startupDetalle.id})}" method="post">
+                <div class="form-group">
+                    <textarea name="comentario" required class="form-control" 
+                            rows="4" placeholder="Escribe tu comentario aquí..."></textarea>
+                </div>
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-paper-plane"></i>
+                    Enviar comentario
+                </button>
+            </form>
+        </div>
+
+        <!-- Lista de comentarios -->
+        <div class="comments-list">
+            <div th:each="comentario : ${comentarios}" class="comment">
+                <div class="comment-header">
+                    <img th:src="${comentario.usuario.fotoUrl != null ? comentario.usuario.fotoUrl : '/images/sinfoto.jpg'}" 
+                         alt="Foto de perfil" class="comment-avatar">
+                    <div class="comment-info">
+                        <div class="user-info">
+                            <h4 th:text="${comentario.usuario.nombreUsu}" class="comment-author">Nombre del Usuario</h4>                            <span th:with="pattern='dd/MM/yyyy HH:mm'" th:text="${#temporals.format(comentario.fechaComentario, pattern)}" 
+                                  class="comment-date">
+                                <i class="far fa-clock"></i> Fecha
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <p th:text="${comentario.comentario}" class="comment-text"></p>
+            </div>
+
+            <div th:if="${comentarios.empty}" class="no-comments">
+                <p>
+                    <i class="far fa-comments"></i>
+                    No hay comentarios todavía. ¡Sé el primero en comentar!
+                </p>
+            </div>
+        </div>
+    </div>
+
     <div class="footer">
         <div class="footer-content">
             <div class="footer-brand">
