@@ -104,9 +104,7 @@ public class PostulacionEntity implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_startup", referencedColumnName = "id")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private StartupEntity startup;
-
-    @OneToOne
-    @JoinColumn(name = "idConvocatoria", unique = true)
+    private StartupEntity startup;    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "idConvocatoria")
     private ConvocatoriaEntity convocatoria;
 }

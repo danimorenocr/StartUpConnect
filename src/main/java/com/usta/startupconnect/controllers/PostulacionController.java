@@ -46,7 +46,8 @@ public class PostulacionController {
 
     @Autowired
     private JpaUserDetailsService userDetailsService;    @GetMapping(value = {"/postulacion", "/postulacion/convocatoria/{idConvocatoria}"})
-    public String listarPostulaciones(Model model, @PathVariable(required = false) Long idConvocatoria) {
+    public String listarPostulaciones(Model model, @PathVariable(required = false) Long idConvocatoria,
+            org.springframework.security.core.Authentication authentication) {
         model.addAttribute("urlRegistro", "/crearPostulacion");
 
         List<PostulacionEntity> listaPostulaciones;
@@ -55,41 +56,64 @@ public class PostulacionController {
             ConvocatoriaEntity convocatoria = convocatoriaService.findById(idConvocatoria);
             if (convocatoria != null) {
                 listaPostulaciones = postulacionService.findByConvocatoria(convocatoria);
+                System.out.println("🔍 DEBUG: Encontradas " + listaPostulaciones.size() + " postulaciones para la convocatoria: " + convocatoria.getTitulo());
                 model.addAttribute("title", "Postulaciones - " + convocatoria.getTitulo());
                 model.addAttribute("convocatoriaActual", convocatoria);
             } else {
                 listaPostulaciones = new ArrayList<>();
+                System.out.println("⚠️ DEBUG: Convocatoria no encontrada con ID: " + idConvocatoria);
             }
         } else {
             // Si no se especifica convocatoria, obtener todas las postulaciones
             model.addAttribute("title", "Mis Postulaciones");
             listaPostulaciones = postulacionService.findAll();
+            System.out.println("🔍 DEBUG: Cargadas " + listaPostulaciones.size() + " postulaciones totales");
         }
         
-        List<PostulacionEntity> postulacionesUsuario = new ArrayList<>();
+        // Verificar si el usuario es administrador
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+        
+        System.out.println("👤 DEBUG: Usuario es admin: " + isAdmin);
+        System.out.println("👤 DEBUG: Authorities: " + authentication.getAuthorities());
+        
+        List<PostulacionEntity> postulacionesFiltradas;
+        
+        if (isAdmin && idConvocatoria != null) {
+            // Si es administrador y está viendo una convocatoria específica, mostrar todas las postulaciones
+            postulacionesFiltradas = listaPostulaciones;
+            System.out.println("✅ DEBUG: Admin viendo convocatoria específica - Mostrando " + postulacionesFiltradas.size() + " postulaciones");
+            model.addAttribute("title", "Todas las Postulaciones - " + 
+                (model.getAttribute("convocatoriaActual") != null ? 
+                    ((ConvocatoriaEntity) model.getAttribute("convocatoriaActual")).getTitulo() : "Convocatoria"));
+        } else {
+            // Si no es administrador o no está viendo una convocatoria específica, filtrar por usuario
+            postulacionesFiltradas = new ArrayList<>();
+            System.out.println("🔒 DEBUG: Filtrando postulaciones por usuario...");
 
-        // Obtener el usuario autenticado actual
-        UsuarioEntity usuarioActual = userDetailsService.obtenerUsuarioAutenticado();
+            // Obtener el usuario autenticado actual
+            UsuarioEntity usuarioActual = userDetailsService.obtenerUsuarioAutenticado();
 
-        if (usuarioActual != null) {
-            // Buscar el emprendedor asociado al usuario actual
-            EmprendedorEntity emprendedor = emprendedorService.findByDocumento(usuarioActual.getDocumento());
+            if (usuarioActual != null) {
+                // Buscar el emprendedor asociado al usuario actual
+                EmprendedorEntity emprendedor = emprendedorService.findByDocumento(usuarioActual.getDocumento());
 
-            if (emprendedor != null) {
-                // Obtener las startups del emprendedor actual
-                List<StartupEntity> startups = startupService.findByEmprendedor(emprendedor);
+                if (emprendedor != null) {
+                    // Obtener las startups del emprendedor actual
+                    List<StartupEntity> startups = startupService.findByEmprendedor(emprendedor);
 
-                // Filtrar las postulaciones que pertenecen a las startups del usuario
-                for (PostulacionEntity postulacion : listaPostulaciones) {
-                    if (postulacion.getStartup() != null && startups.contains(postulacion.getStartup())) {
-                        postulacionesUsuario.add(postulacion);
+                    // Filtrar las postulaciones que pertenecen a las startups del usuario
+                    for (PostulacionEntity postulacion : listaPostulaciones) {
+                        if (postulacion.getStartup() != null && startups.contains(postulacion.getStartup())) {
+                            postulacionesFiltradas.add(postulacion);
+                        }
                     }
                 }
             }
         }
 
-        postulacionesUsuario.sort(Comparator.comparing(PostulacionEntity::getId));
-        model.addAttribute("postulaciones", postulacionesUsuario);
+        postulacionesFiltradas.sort(Comparator.comparing(PostulacionEntity::getId));
+        model.addAttribute("postulaciones", postulacionesFiltradas);
         return "/postulacion/listarPostulaciones";
     }
 
@@ -169,12 +193,18 @@ public class PostulacionController {
         // Establecer el estado inicial como "Pendiente" si no está establecido
         if (postulacion.getEstado() == null || postulacion.getEstado().isEmpty()) {
             postulacion.setEstado("Pendiente");
+        }        // Asegurarse de que la convocatoria esté correctamente enlazada
+        System.out.println("🔍 DEBUG CONVOCATORIA: postulacion.getConvocatoria() = " + postulacion.getConvocatoria());
+        if (postulacion.getConvocatoria() != null) {
+            System.out.println("🔍 DEBUG CONVOCATORIA ID: " + postulacion.getConvocatoria().getId());
         }
-
-        // Asegurarse de que la convocatoria esté correctamente enlazada
+        
         if (postulacion.getConvocatoria() != null && postulacion.getConvocatoria().getId() != null) {
             ConvocatoriaEntity convocatoria = convocatoriaService.findById(postulacion.getConvocatoria().getId());
+            System.out.println("✅ DEBUG: Convocatoria encontrada y asignada: " + convocatoria.getTitulo());
             postulacion.setConvocatoria(convocatoria);
+        } else {
+            System.out.println("⚠️ DEBUG: Convocatoria no asignada - viene como null desde el formulario");
         }
 
         postulacionService.save(postulacion);

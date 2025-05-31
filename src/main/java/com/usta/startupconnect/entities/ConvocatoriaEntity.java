@@ -11,6 +11,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "CONVOCATORIAS")
@@ -66,10 +67,8 @@ public class ConvocatoriaEntity implements Serializable {
     @NotNull
     @Size(min = 20, max = 100)
     @Column(name = "sector_objetivo")
-    private String sectorObjetivo;
-
-    @OneToOne(mappedBy = "convocatoria")
-    private PostulacionEntity postulacion;
+    private String sectorObjetivo;    @OneToMany(mappedBy = "convocatoria", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<PostulacionEntity> postulaciones;
 
 
 }

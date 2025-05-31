@@ -49,9 +49,9 @@
                                                 <span class="badge bg-info">
                                                     <i class="fas fa-tag me-1"></i>
                                                     <span th:text="${convocatoriaSeleccionada.sectorObjetivo}"></span>
-                                                </span>                                            </div>
-                                        </div>
+                                                </span>                                            </div>                                        </div>
                                         <!-- Campo oculto para el ID de la convocatoria -->
+                                        <input type="hidden" th:field="*{convocatoria.id}" th:value="${convocatoriaSeleccionada?.id}" />
                                     </div>
                                 </div>
                             </div>
