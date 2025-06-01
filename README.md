@@ -174,7 +174,7 @@ VALUES
 (1, 'ADMIN'),
 (2, 'MENTOR'),
 (3, 'EMPRENDEDOR'),
-(4, 'USUARIO');
+(4, 'INVERSIONISTA');
 
 INSERT INTO USUARIOS (documento, nombre, email, contrasenna, fecha_creacion, telefono, foto_url, id_rol)
 VALUES

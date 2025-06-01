@@ -13,6 +13,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
@@ -25,13 +26,12 @@ public class EmprendedorController {
 
     @Autowired
     private EmprendedorService emprendedorService;
-    
+
     @Autowired
     private UsuarioService usuarioService;
-    
+
     @Autowired
     private StartupService startupService;
-
 
     @GetMapping(value = "/emprendedor")
     public String listarEmprendedores(Model model) {
@@ -44,11 +44,17 @@ public class EmprendedorController {
     }
 
     @GetMapping(value = "/crearEmprendedor")
-    public String crearEmprendedor(Model model) {
+    public String crearEmprendedor(Model model, @RequestParam(required = false) String documento) {
+        EmprendedorEntity emprendedor = new EmprendedorEntity();
+        if (documento != null) {
+            emprendedor.setDocumento(documento);
+        }
         model.addAttribute("title", "Crear emprendedor");
-        model.addAttribute("emprendedor", new EmprendedorEntity());
+        model.addAttribute("emprendedor", emprendedor);
         return "/emprendedor/formCrearEmprendedor";
-    }    @PostMapping(value = "/crearEmprendedor")
+    }
+
+    @PostMapping(value = "/crearEmprendedor")
     public String guardarEmprendedor(@Valid EmprendedorEntity emprendedor, BindingResult result,
             RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
@@ -60,7 +66,8 @@ public class EmprendedorController {
         UsuarioEntity usuario = usuarioService.findById(documentoUsuario);
 
         if (usuario == null) {
-            redirectAttributes.addFlashAttribute("error", "No se encontró el usuario con documento " + documentoUsuario);
+            redirectAttributes.addFlashAttribute("error",
+                    "No se encontró el usuario con documento " + documentoUsuario);
             return "redirect:/emprendedor";
         }
 
@@ -92,20 +99,21 @@ public class EmprendedorController {
             redirectAttributes.addFlashAttribute("error", "Error al eliminar el emprendedor: " + e.getMessage());
             return "redirect:/emprendedor";
         }
-    }    @GetMapping(value = "/verEmprendedor/{id}")
+    }
+
+    @GetMapping(value = "/verEmprendedor/{id}")
     public String verEmprendedor(Model model, @PathVariable(value = "id") String id) {
         EmprendedorEntity emprendedor = emprendedorService.findById(id);
-        
+
         // Buscar startups asociadas a este emprendedor
         List<StartupEntity> startups = startupService.findByEmprendedor(emprendedor);
-        
+
         model.addAttribute("title", "Ver Emprendedor");
         model.addAttribute("emprendedorDetalle", emprendedor);
         model.addAttribute("startups", startups);
-        
+
         return "emprendedor/detalleEmprendedor";
     }
-
 
     @GetMapping(value = "/editarEmprendedor/{id}")
     public String editarUsuario(Model model, @PathVariable(value = "id") String id) {

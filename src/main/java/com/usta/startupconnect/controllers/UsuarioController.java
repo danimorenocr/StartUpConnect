@@ -64,7 +64,8 @@ public class UsuarioController {
     private MentorService mentorService;
     @Autowired
     private ConvocatoriaService convocatoriaService;
-    @Autowired    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private EmprendedorService emprendedorService;
@@ -222,17 +223,15 @@ public class UsuarioController {
         usuario.setContrasenna(passwordEncoder.encode(usuario.getContrasenna()));
         usuario.setFotoUrl(urlImagen);
         usuario.setFecha_creacion(LocalDate.now());
-        usuarioService.save(usuario);
-
-        // Redirige según el rol
+        usuarioService.save(usuario); // Redirige según el rol
         Long rolId = usuario.getRol().getIdRol();
         if (rolId == 2L) {
-            return "redirect:/crearMentor";
+            return "redirect:/crearMentor?documento=" + usuario.getDocumento();
         } else if (rolId == 3L) {
-            return "redirect:/crearEmprendedor";
+            return "redirect:/crearEmprendedor?documento=" + usuario.getDocumento();
         }
 
-        redirectAttributes.addFlashAttribute("mensajeExito", "Room Saved Successfully");
+        redirectAttributes.addFlashAttribute("mensajeExito", "Usuario guardado exitosamente");
         return "redirect:/usuario";
     }
 
@@ -243,7 +242,9 @@ public class UsuarioController {
         model.addAttribute("title", "Registro de usuario");
         model.addAttribute("usuario", new UsuarioEntity());
         return "registro";
-    }    @PostMapping(value = "/registro")
+    }
+
+    @PostMapping(value = "/registro")
     public String guardarRegistroUsuario(@Valid UsuarioEntity usuario,
             @RequestParam(value = "foto", required = false) MultipartFile foto,
             @RequestParam(value = "especialidad", required = false) String especialidad,
@@ -263,7 +264,7 @@ public class UsuarioController {
         usuario.setContrasenna(passwordEncoder.encode(usuario.getContrasenna()));
         usuario.setFotoUrl(urlImagen);
         usuario.setFecha_creacion(LocalDate.now());
-        usuarioService.save(usuario);        // Si el usuario es un mentor, crear el registro del mentor
+        usuarioService.save(usuario); // Si el usuario es un mentor, crear el registro del mentor
         if (usuario.getRol() != null && usuario.getRol().getIdRol() == 2L) {
             MentorEntity mentor = new MentorEntity();
             mentor.setDocumento(usuario.getDocumento());

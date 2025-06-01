@@ -52,8 +52,7 @@
                         <span th:text="${startup.emprendedor != null && startup.emprendedor.usuario != null ? 
                            startup.emprendedor.usuario.nombreUsu : 'No asignado'}"></span>
                     </p>
-                </div>                <!-- Botones de acción -->
-                <div class="flex gap-3 mt-4">
+                </div>                <!-- Botones de acción -->                <div class="flex gap-3 mt-4">
                     <a th:href="@{/verStartup/{id}(id=${startup.id})}"
                         class="bg-pink-500 hover:bg-pink-600 text-white font-semibold py-2 px-4 rounded-full shadow transition text-sm">
                         Ver
@@ -61,6 +60,10 @@
                     <a th:href="@{'/feedbackStartup/' + ${startup.id}}"
                         class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-full shadow transition text-sm">
                         Feedback
+                    </a>
+                    <a th:href="@{'/crearEtapa?startupId=' + ${startup.id}}"
+                        class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-full shadow transition text-sm">
+                        Crear Etapa
                     </a>
                 </div>
             </div>

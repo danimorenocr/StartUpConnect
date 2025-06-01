@@ -6,10 +6,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="icon" type="image/png" href="/images/StartUpConnect.png">
 
-    <link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
 
     <!-- Font Awesome 6 -->
@@ -26,12 +23,11 @@
 
 <body class="bg-white h-screen w-screen flex items-center justify-center overflow-hidden">
 
-<a href="/" 
-   class="fixed top-4 left-4 w-12 h-12 bg-[#E79938] border border-gray-300 rounded-full flex items-center justify-center text-gray-600 shadow-sm hover:bg-gray-50 transition"
-   aria-label="Volver al inicio" 
-   title="Volver al inicio">
-   <i class="fas fa-home text-xl"></i>
-</a>
+    <a href="/"
+        class="fixed top-4 left-4 w-12 h-12 bg-[#E79938] border border-gray-300 rounded-full flex items-center justify-center text-gray-600 shadow-sm hover:bg-gray-50 transition"
+        aria-label="Volver al inicio" title="Volver al inicio">
+        <i class="fas fa-home text-xl"></i>
+    </a>
 
     <div class="w-full h-full flex flex-col md:flex-row items-center justify-center">
 
@@ -44,7 +40,7 @@
                 </h1>
 
                 <p class="text-base md:text-lg text-gray-600 mt-2 text-lef ">
-Forma parte de nosotros.</p>
+                    Forma parte de nosotros.</p>
 
                 <form th:action="@{/registro}" method="post" enctype="multipart/form-data" th:object="${usuario}"
                     id="formUsuario" class="flex flex-col gap-5">
@@ -58,13 +54,15 @@ Forma parte de nosotros.</p>
 
                     <div>
                         <label for="nombre" class="block font-semibold">Nombre:</label>
-                        <input th:field="*{nombreUsu}" type="text" id="nombre" name="nombre" placeholder="Ingrese su nombre"
+                        <input th:field="*{nombreUsu}" type="text" id="nombre" name="nombre"
+                            placeholder="Ingrese su nombre"
                             class="w-full mt-2 p-2 border-b border-sky-400 focus:outline-none focus:border-sky-500 bg-transparent transition" />
                     </div>
 
                     <div>
                         <label for="email" class="block font-semibold">Email:</label>
-                        <input th:field="*{emailUsu}" type="email" id="email" name="email" placeholder="ejemplo@correo.com"
+                        <input th:field="*{emailUsu}" type="email" id="email" name="email"
+                            placeholder="ejemplo@correo.com"
                             class="w-full mt-2 p-2 border-b border-sky-400 focus:outline-none focus:border-sky-500 bg-transparent transition" />
                     </div>
 
@@ -73,14 +71,15 @@ Forma parte de nosotros.</p>
                         <input th:field="*{contrasenna}" type="password" id="password" name="password"
                             placeholder="Ingrese su contraseña"
                             class="w-full mt-2 p-2 border-b border-sky-400 focus:outline-none focus:border-sky-500 bg-transparent transition" />
-                    </div>                    <!-- Confirmación de contraseña -->
+                    </div> <!-- Confirmación de contraseña -->
                     <div>
                         <label for="confirmarClave" class="block font-semibold">Confirmar Contraseña:</label>
-                        <input type="password" id="confirmarClave" name="confirmarClave" 
-                               placeholder="Confirme su contraseña"
-                               class="w-full mt-2 p-2 border-b border-sky-400 focus:outline-none focus:border-sky-500 bg-transparent transition"
-                               required>
-                        <div id="password-error" class="text-red-500 text-sm mt-1 hidden">Las contraseñas no coinciden</div>
+                        <input type="password" id="confirmarClave" name="confirmarClave"
+                            placeholder="Confirme su contraseña"
+                            class="w-full mt-2 p-2 border-b border-sky-400 focus:outline-none focus:border-sky-500 bg-transparent transition"
+                            required>
+                        <div id="password-error" class="text-red-500 text-sm mt-1 hidden">Las contraseñas no coinciden
+                        </div>
                     </div>
 
                     <div>
@@ -88,45 +87,96 @@ Forma parte de nosotros.</p>
                         <input th:field="*{telefono}" type="tel" id="telefono" name="telefono"
                             placeholder="Ingrese su teléfono"
                             class="w-full mt-2 p-2 border-b border-sky-400 focus:outline-none focus:border-sky-500 bg-transparent transition" />
+                    </div>                    <div>                        <label for="rol" class="block font-semibold">Rol:</label>
+                        <select id="rol" name="rol" onchange="mostrarCamposPorRol(this.value)"
+                            class="w-full mt-2 p-2 border-b border-sky-400 focus:   outline-none focus:border-sky-500 bg-transparent transition">
+                            <option value="">Seleccione un rol</option>
+                            <option th:each="r : ${roles}" th:if="${r.rol != 'ADMIN'}" th:value="${r.idRol}"
+                                th:data-rol="${r.rol}" th:text="${r.rol}">
+                            </option>
+                            
+                        </select>
+                    </div>
+                      <!-- Campos específicos para Mentor (ocultos por defecto) -->
+                    <div id="camposMentor" style="display: none;">
+                        <div class="mt-4 border-t border-gray-200 pt-4">
+                            <h3 class="text-lg font-semibold mb-4" style="color: #52ACC4;">Información de Mentor</h3>
+                            
+                            <div class="mb-4">
+                                <label for="especialidad" class="block font-semibold">Especialidad:</label>
+                                <input type="text" id="especialidad" name="especialidad" 
+                                    placeholder="Ej: Desarrollo Web, Marketing Digital, Finanzas..."
+                                    class="w-full mt-2 p-2 border-b border-sky-400 focus:outline-none focus:border-sky-500 bg-transparent transition" />
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label for="biografia" class="block font-semibold">Biografía:</label>
+                                <textarea id="biografia" name="biografia" rows="3"
+                                    placeholder="Breve descripción de su experiencia profesional..."
+                                    class="w-full mt-2 p-2 border-b border-sky-400 focus:outline-none focus:border-sky-500 bg-transparent transition"></textarea>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label for="linkedin" class="block font-semibold">LinkedIn:</label>
+                                <input type="url" id="linkedin" name="linkedin" 
+                                    placeholder="URL de su perfil de LinkedIn"
+                                    class="w-full mt-2 p-2 border-b border-sky-400 focus:outline-none focus:border-sky-500 bg-transparent transition" />
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label for="anosExperiencia" class="block font-semibold">Años de Experiencia:</label>
+                                <input type="number" id="anosExperiencia" name="anosExperiencia" min="1" 
+                                    placeholder="Número de años"
+                                    class="w-full mt-2 p-2 border-b border-sky-400 focus:outline-none focus:border-sky-500 bg-transparent transition" />
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Campos específicos para Emprendedor (ocultos por defecto) -->
+                    <div id="camposEmprendedor" style="display: none;">
+                        <div class="mt-4 border-t border-gray-200 pt-4">
+                            <h3 class="text-lg font-semibold mb-4" style="color: #52ACC4;">Información de Emprendedor</h3>
+                            
+                            <div class="mb-4">
+                                <label for="universidad" class="block font-semibold">Universidad:</label>
+                                <input type="text" id="universidad" name="universidad" 
+                                    placeholder="Ej: Universidad Santo Tomás"
+                                    class="w-full mt-2 p-2 border-b border-sky-400 focus:outline-none focus:border-sky-500 bg-transparent transition" />
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label for="programaEducativo" class="block font-semibold">Programa Educativo:</label>
+                                <input type="text" id="programaEducativo" name="programaEducativo" 
+                                    placeholder="Ej: Ingeniería de Sistemas"
+                                    class="w-full mt-2 p-2 border-b border-sky-400 focus:outline-none focus:border-sky-500 bg-transparent transition" />
+                            </div>
+                        </div>
                     </div>
 
                     <div>
-                        <label for="rol" class="block font-semibold">Rol:</label>
-                        <select id="rol" name="rol" onchange="redirigirPorRol(this.value)"
-                            class="w-full mt-2 p-2 border-b border-sky-400 focus:outline-none focus:border-sky-500 bg-transparent transition">
-                            <option value="">Seleccione un rol</option>
-        <option th:each="r : ${roles}"
-                th:value="${r.idRol}"
-                th:data-rol="${r.rol}"
-                th:text="${r.rol}">
-        </option>
-                        </select>
+                        <label for="foto" class="block font-semibold mb-1">Seleccionar imagen:</label>
+                        <div class="relative w-full">
+                            <!-- input file oculto pero clickable -->
+                            <input type="file" id="foto" name="foto" accept="image/*"
+                                class="opacity-0 absolute inset-0 w-full h-full cursor-pointer" />
+                            <!-- botón personalizado -->
+                            <div class="flex justify-center mt-4">
+                                <button type="button"
+                                    class="py-2 px-6 bg-[#E79938] text-white rounded font-bold hover:bg-[#E25D00] hover:scale-105 active:scale-95 transition pointer-events-none select-none">
+                                    Seleccionar archivo
+                                </button>
+                            </div>
+
+
+                        </div>
+
+                        <img id="preview" src="" alt="Previsualización" class="mt-4 max-w-xs hidden" />
                     </div>
 
-<div>
-    <label for="foto" class="block font-semibold mb-1">Seleccionar imagen:</label>
-    <div class="relative w-full">
-        <!-- input file oculto pero clickable -->
-        <input type="file" id="foto" name="foto" accept="image/*"
-            class="opacity-0 absolute inset-0 w-full h-full cursor-pointer" />
-        <!-- botón personalizado -->
-<div class="flex justify-center mt-4">
-    <button type="button"
-        class="py-2 px-6 bg-[#E79938] text-white rounded font-bold hover:bg-[#E25D00] hover:scale-105 active:scale-95 transition pointer-events-none select-none">
-        Seleccionar archivo
-    </button>
-</div>
-
-
-    </div>
-
-    <img id="preview" src="" alt="Previsualización" class="mt-4 max-w-xs hidden" />
-</div>
-
-<button type="submit"
-    class="bg-[#E79938] text-white py-2 px-4 rounded font-bold hover:bg-[#E25D00] hover:scale-105 active:scale-95 transition mt-6">
-    Registrarse
-</button>
+                    <button type="submit"
+                        class="bg-[#E79938] text-white py-2 px-4 rounded font-bold hover:bg-[#E25D00] hover:scale-105 active:scale-95 transition mt-6">
+                        Registrarse
+                    </button>
 
 
                 </form>
@@ -154,7 +204,41 @@ Forma parte de nosotros.</p>
                 preview.src = '';
                 preview.classList.add('hidden');
             }
-        });
+        });        // Función para mostrar u ocultar campos según el rol seleccionado
+        function mostrarCamposPorRol(idRol) {
+            const camposMentor = document.getElementById('camposMentor');
+            const camposEmprendedor = document.getElementById('camposEmprendedor');
+            const selectRol = document.getElementById('rol');
+            const rolSeleccionado = selectRol.options[selectRol.selectedIndex].text;
+            
+            // Ocultar todos los campos específicos primero
+            camposMentor.style.display = 'none';
+            camposEmprendedor.style.display = 'none';
+            
+            // Quitar todos los atributos required
+            document.getElementById('especialidad').removeAttribute('required');
+            document.getElementById('biografia').removeAttribute('required');
+            document.getElementById('linkedin').removeAttribute('required');
+            document.getElementById('anosExperiencia').removeAttribute('required');
+            document.getElementById('universidad').removeAttribute('required');
+            document.getElementById('programaEducativo').removeAttribute('required');
+            
+            // Mostrar campos según el rol seleccionado
+            if (rolSeleccionado === 'MENTOR') {
+                camposMentor.style.display = 'block';
+                // Hacer los campos de mentor requeridos
+                document.getElementById('especialidad').setAttribute('required', '');
+                document.getElementById('biografia').setAttribute('required', '');
+                document.getElementById('linkedin').setAttribute('required', '');
+                document.getElementById('anosExperiencia').setAttribute('required', '');
+            } 
+            else if (rolSeleccionado === 'EMPRENDEDOR') {
+                camposEmprendedor.style.display = 'block';
+                // Hacer los campos de emprendedor requeridos
+                document.getElementById('universidad').setAttribute('required', '');
+                document.getElementById('programaEducativo').setAttribute('required', '');
+            }
+        }
 
         // Validación de contraseñas
         const passwordInput = document.getElementById('password');
@@ -165,7 +249,7 @@ Forma parte de nosotros.</p>
         function validatePasswords() {
             const password = passwordInput.value;
             const confirmPassword = confirmPasswordInput.value;
-            
+
             if (confirmPassword !== '') {
                 if (password !== confirmPassword) {
                     passwordError.classList.remove('hidden');
@@ -185,13 +269,13 @@ Forma parte de nosotros.</p>
         confirmPasswordInput.addEventListener('input', validatePasswords);
 
         // Validar antes de enviar el formulario
-        form.addEventListener('submit', function(e) {
+        form.addEventListener('submit', function (e) {
             if (!validatePasswords()) {
                 e.preventDefault();
                 alert('Por favor, asegúrese de que las contraseñas coincidan.');
                 return false;
             }
-            
+
             // Validación adicional de longitud de contraseña
             if (passwordInput.value.length < 6) {
                 e.preventDefault();

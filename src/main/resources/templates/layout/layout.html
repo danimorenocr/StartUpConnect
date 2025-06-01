@@ -40,10 +40,10 @@
         <div id="sidebar" class="sidebar hidden">
             <h2 class="sidebar-title">StartUp Connect</h2>
             <nav>
-                <ul class="sidebar-menu">
-                    <!-- Menú para administradores -->
+                <ul class="sidebar-menu">                    <!-- Menú para administradores -->
                     <th:block sec:authorize="hasRole('ROLE_ADMIN')">
                         <li><a href="/administrador"><i class="fa-solid fa-house"></i> Inicio</a></li>
+                        <li><a href="/perfil"><i class="fa-solid fa-user"></i> Ver Perfil</a></li>
                         <li><a href="/usuario"><i class="fa-solid fa-users"></i> Usuario</a></li>
                         <li><a href="/emprendedor"><i class="fa-solid fa-briefcase"></i> Emprendedores</a></li>
                         <li><a href="/mentor"><i class="fa-solid fa-user-tie"></i> Mentores</a></li>
@@ -56,18 +56,19 @@
                     </th:block>                    <!-- Menú para mentores -->
                     <th:block sec:authorize="hasRole('ROLE_MENTOR')">
                         <li><a href="/dashboardMentor"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+                        <li><a href="/perfil"><i class="fa-solid fa-user"></i> Ver Perfil</a></li>
                         <li><a href="/misStartupsAsignadas"><i class="fa-solid fa-rocket"></i> Mis Startups</a></li>
                         <li><a href="/etapa"><i class="fa-solid fa-layer-group"></i> Mis Etapas</a></li>
                         <li><a href="/tarea"><i class="fa-solid fa-tasks"></i> Tareas</a></li>
                         <li><a href="/entregable"><i class="fa-solid fa-clipboard-check"></i> Entregables</a></li>
                         <li><a href="/convocatoria"><i class="fa-solid fa-file-alt"></i> Convocatorias</a></li>
                         <li><a href="/evento"><i class="fa-solid fa-calendar-alt"></i> Eventos</a></li>
-                    </th:block>
-
-                    <!-- Menú para emprendedores -->
+                    </th:block>                    <!-- Menú para emprendedores -->
                     <th:block sec:authorize="hasRole('ROLE_EMPRENDEDOR')">
                         <li><a href="/emprendedor/dashboardEmprendedor"><i class="fa-solid fa-house"></i> Dashboard</a>
-                        </li>                        <li><a href="/misStartups"><i class="fa-solid fa-rocket"></i> Mis StartUps</a></li>
+                        </li>
+                        <li><a href="/perfil"><i class="fa-solid fa-user"></i> Ver Perfil</a></li>
+                        <li><a href="/misStartups"><i class="fa-solid fa-rocket"></i> Mis StartUps</a></li>
                         <li><a href="/etapasEmprendedor"><i class="fa-solid fa-layer-group"></i> Mis Etapas</a></li>
                         <li><a href="/postulacion"><i class="fa-solid fa-file-signature"></i> Mis Postulaciones</a></li>
                         <li><a href="/entregable"><i class="fa-solid fa-clipboard-check"></i> Mis Entregables</a></li>

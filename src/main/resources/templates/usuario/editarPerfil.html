@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="layout/layout :: head">
+    <title>Editar Perfil</title>
+</head>
+
+<body>
+    <header th:replace="layout/layout :: header"></header>
+
+    <main class="content">
+        <div class="container mx-auto px-4 py-8">
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden max-w-4xl mx-auto">
+                <div class="p-6 bg-gradient-to-r from-[#043A68] to-[#52ACC4] text-white">
+                    <h1 class="text-3xl font-bold">Editar Perfil</h1>
+                    <p class="text-lg opacity-80">Actualiza tu información personal</p>
+                </div>
+
+                <div class="p-6">
+                    <form th:action="@{/actualizarPerfil}" method="post" th:object="${usuario}" class="space-y-6">
+                        <input type="hidden" th:field="*{documento}" />
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="nombreUsu" class="block text-sm font-medium text-gray-700 mb-1">Nombre completo</label>
+                                <input type="text" th:field="*{nombreUsu}" id="nombreUsu" 
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#52ACC4] focus:border-transparent"
+                                    required />
+                            </div>
+                            
+                            <div>
+                                <label for="emailUsu" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                                <input type="email" th:field="*{emailUsu}" id="emailUsu" 
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#52ACC4] focus:border-transparent"
+                                    required />
+                            </div>
+                            
+                            <div>
+                                <label for="telefono" class="block text-sm font-medium text-gray-700 mb-1">Teléfono</label>
+                                <input type="tel" th:field="*{telefono}" id="telefono" 
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#52ACC4] focus:border-transparent"
+                                    required />
+                            </div>
+                        </div>
+                        
+                        <!-- Campos específicos para mentor -->
+                        <div th:if="${rolUsuario == 'MENTOR'}" class="border-t border-gray-200 pt-6">
+                            <h3 class="text-lg font-semibold mb-4 text-[#043A68]">Información de Mentor</h3>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="especialidad" class="block text-sm font-medium text-gray-700 mb-1">Especialidad</label>
+                                    <input type="text" name="especialidad" id="especialidad" th:value="${mentor?.especialidad}" 
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#52ACC4] focus:border-transparent"
+                                        required />
+                                </div>
+                                
+                                <div>
+                                    <label for="anosExperiencia" class="block text-sm font-medium text-gray-700 mb-1">Años de Experiencia</label>
+                                    <input type="number" name="anosExperiencia" id="anosExperiencia" th:value="${mentor?.anosExperiencia}" 
+                                        min="1" 
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#52ACC4] focus:border-transparent"
+                                        required />
+                                </div>
+                                
+                                <div>
+                                    <label for="linkedin" class="block text-sm font-medium text-gray-700 mb-1">LinkedIn (URL)</label>
+                                    <input type="url" name="linkedin" id="linkedin" th:value="${mentor?.linkedin}" 
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#52ACC4] focus:border-transparent"
+                                        required />
+                                </div>
+                                
+                                <div class="md:col-span-2">
+                                    <label for="biografia" class="block text-sm font-medium text-gray-700 mb-1">Biografía</label>
+                                    <textarea name="biografia" id="biografia" rows="4" th:text="${mentor?.biografia}"
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#52ACC4] focus:border-transparent"
+                                        required></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Campos específicos para emprendedor -->
+                        <div th:if="${rolUsuario == 'EMPRENDEDOR'}" class="border-t border-gray-200 pt-6">
+                            <h3 class="text-lg font-semibold mb-4 text-[#043A68]">Información de Emprendedor</h3>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="universidad" class="block text-sm font-medium text-gray-700 mb-1">Universidad</label>
+                                    <input type="text" name="universidad" id="universidad" th:value="${emprendedor?.universidad}" 
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#52ACC4] focus:border-transparent"
+                                        required />
+                                </div>
+                                
+                                <div>
+                                    <label for="programaEducativo" class="block text-sm font-medium text-gray-700 mb-1">Programa Educativo</label>
+                                    <input type="text" name="programaEducativo" id="programaEducativo" th:value="${emprendedor?.programaEducativo}" 
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#52ACC4] focus:border-transparent"
+                                        required />
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-end space-x-4">
+                            <a href="/perfil" class="px-6 py-2 bg-gray-300 text-gray-700 rounded-md font-semibold hover:bg-gray-400 transition duration-200">
+                                Cancelar
+                            </a>
+                            <button type="submit" class="px-6 py-2 bg-[#E79938] text-white rounded-md font-semibold hover:bg-[#E25D00] transition duration-200">
+                                Guardar cambios
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer th:replace="layout/layout :: footer"></footer>
+</body>
+
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="layout/layout :: head">
+    <title>Perfil de Usuario</title>
+</head>
+
+<body>
+    <header th:replace="layout/layout :: header"></header>
+
+    <main class="content">
+        <div class="container mx-auto px-4 py-8">
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden max-w-4xl mx-auto">
+                <div class="p-6 bg-gradient-to-r from-[#043A68] to-[#52ACC4] text-white">
+                    <h1 class="text-3xl font-bold">Mi Perfil</h1>
+                    <p class="text-lg opacity-80">Información personal</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 p-6">
+                    <!-- Columna izquierda - Foto de perfil -->                    <div class="flex flex-col items-center">
+                        <div class="w-48 h-48 rounded-full overflow-hidden mb-4 border-4 border-[#E79938] shadow-lg">
+                            <img th:if="${usuario.fotoUrl != null && !usuario.fotoUrl.isEmpty()}"
+                                th:src="@{${usuario.fotoUrl}}" alt="Foto de perfil"
+                                class="w-full h-full object-cover" />
+                            <img th:unless="${usuario.fotoUrl != null && !usuario.fotoUrl.isEmpty()}"
+                                th:src="@{/images/sinfoto.jpg}" alt="Foto de perfil predeterminada"
+                                class="w-full h-full object-cover" />
+                        </div>
+                        <h2 class="text-xl font-bold text-[#043A68] mb-1" th:text="${usuario.nombreUsu}">Nombre del Usuario</h2>
+                        <p class="text-gray-600 mb-4" th:text="${rolUsuario}">Rol del Usuario</p>
+
+                        <a href="/cambiarFoto" class="bg-[#E79938] text-white py-2 px-4 rounded-md font-semibold hover:bg-[#E25D00] transition duration-200 text-center">
+                            <i class="fas fa-camera mr-2"></i>Cambiar foto
+                        </a>
+                    </div>
+
+                    <!-- Columna central y derecha - Información del perfil -->
+                    <div class="md:col-span-2">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Información general del usuario -->
+                            <div class="space-y-4">
+                                <div>
+                                    <h3 class="text-sm font-semibold text-gray-500">Documento</h3>
+                                    <p class="text-lg font-medium" th:text="${usuario.documento}">123456789</p>
+                                </div>
+                                <div>
+                                    <h3 class="text-sm font-semibold text-gray-500">Nombre</h3>
+                                    <p class="text-lg font-medium" th:text="${usuario.nombreUsu}">Nombre Completo</p>
+                                </div>
+                                <div>
+                                    <h3 class="text-sm font-semibold text-gray-500">Email</h3>
+                                    <p class="text-lg font-medium" th:text="${usuario.emailUsu}">email@ejemplo.com</p>
+                                </div>
+                                <div>
+                                    <h3 class="text-sm font-semibold text-gray-500">Teléfono</h3>
+                                    <p class="text-lg font-medium" th:text="${usuario.telefono}">+57 123456789</p>
+                                </div>
+                            </div>
+
+                            <!-- Información específica del rol (si es mentor o emprendedor) -->
+                            <div class="space-y-4" th:if="${rolUsuario == 'MENTOR'}">
+                                <div>
+                                    <h3 class="text-sm font-semibold text-gray-500">Especialidad</h3>
+                                    <p class="text-lg font-medium" th:text="${mentor?.especialidad}">Desarrollo Web</p>
+                                </div>
+                                <div>
+                                    <h3 class="text-sm font-semibold text-gray-500">Años de Experiencia</h3>
+                                    <p class="text-lg font-medium" th:text="${mentor?.anosExperiencia}">5</p>
+                                </div>
+                                <div>
+                                    <h3 class="text-sm font-semibold text-gray-500">LinkedIn</h3>
+                                    <a th:if="${mentor?.linkedin}" th:href="${mentor.linkedin}" target="_blank" 
+                                       class="text-blue-600 hover:underline">
+                                        <i class="fab fa-linkedin mr-1"></i>Ver perfil
+                                    </a>
+                                    <p th:unless="${mentor?.linkedin}" class="text-gray-400">No disponible</p>
+                                </div>
+                                <div>
+                                    <h3 class="text-sm font-semibold text-gray-500">Biografía</h3>
+                                    <p class="text-base" th:text="${mentor?.biografia}">Biografía del mentor...</p>
+                                </div>
+                            </div>
+
+                            <div class="space-y-4" th:if="${rolUsuario == 'EMPRENDEDOR'}">
+                                <div>
+                                    <h3 class="text-sm font-semibold text-gray-500">Universidad</h3>
+                                    <p class="text-lg font-medium" th:text="${emprendedor?.universidad}">Universidad Santo Tomás</p>
+                                </div>
+                                <div>
+                                    <h3 class="text-sm font-semibold text-gray-500">Programa Educativo</h3>
+                                    <p class="text-lg font-medium" th:text="${emprendedor?.programaEducativo}">Ingeniería de Sistemas</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Botones de acción -->
+                        <div class="mt-8 flex flex-wrap gap-4">
+                            <a href="/editarPerfil" class="bg-[#043A68] text-white py-2 px-6 rounded-md font-semibold hover:bg-[#052D4E] transition duration-200">
+                                <i class="fas fa-edit mr-2"></i>Editar perfil
+                            </a>
+                            <a href="/cambiarPassword" class="bg-gray-600 text-white py-2 px-6 rounded-md font-semibold hover:bg-gray-700 transition duration-200">
+                                <i class="fas fa-lock mr-2"></i>Cambiar contraseña
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer th:replace="layout/layout :: footer"></footer>
+</body>
+
+</html>
