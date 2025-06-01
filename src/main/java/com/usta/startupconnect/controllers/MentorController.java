@@ -4,10 +4,14 @@ import com.usta.startupconnect.entities.MentorEntity;
 import com.usta.startupconnect.entities.UsuarioEntity;
 import com.usta.startupconnect.entities.EtapaEntity;
 import com.usta.startupconnect.entities.TareaEntity;
+import com.usta.startupconnect.entities.StartupEntity;
+import com.usta.startupconnect.entities.FeedbackEntity;
 import com.usta.startupconnect.models.services.MentorService;
 import com.usta.startupconnect.models.services.UsuarioService;
 import com.usta.startupconnect.models.services.TareaService;
 import com.usta.startupconnect.models.dao.EtapaDao;
+import com.usta.startupconnect.models.dao.FeedbackDao;
+import com.usta.startupconnect.security.JpaUserDetailsService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -41,6 +45,10 @@ public class MentorController {
     private TareaService tareaService;
     @Autowired
     private EtapaDao etapaDao;
+    @Autowired
+    private FeedbackDao feedbackDao;
+    @Autowired
+    private JpaUserDetailsService userDetailsService;
     
     @GetMapping(value = "/dashboardMentor")
     public String dashboardMentor(Model model) {
@@ -198,9 +206,7 @@ public class MentorController {
         model.addAttribute("title", "Editar mentor");
         model.addAttribute("mentorEditar", mentor);
         return "mentor/editarMentor";
-    }
-
-    @PostMapping("/editarMentor/{id}")
+    }    @PostMapping("/editarMentor/{id}")
     public String actualizarMentor(@Valid MentorEntity mentor,
             BindingResult result,
             @PathVariable("id") String id,
@@ -222,6 +228,36 @@ public class MentorController {
 
         redirectAttributes.addFlashAttribute("mensajeExito", "Emprendedor actualizado exitosamente");
         return "redirect:/mentor";
+    }
+      @GetMapping(value = "/misStartupsAsignadas")
+    public String listarStartupsMentor(Model model) {
+        // Obtener el usuario autenticado
+        UsuarioEntity usuario = userDetailsService.obtenerUsuarioAutenticado();
+        
+        if (usuario == null) {
+            return "redirect:/login";
+        }
+        
+        // Buscar el mentor asociado al usuario
+        MentorEntity mentor = mentorService.findById(usuario.getDocumento());
+        if (mentor == null) {
+            return "redirect:/login";
+        }
+        
+        // Obtener los feedbacks del mentor
+        List<FeedbackEntity> feedbacks = feedbackDao.findByMentor(mentor);
+        
+        // Extraer las startups de los feedbacks
+        List<StartupEntity> startups = feedbacks.stream()
+                .map(FeedbackEntity::getStartup)
+                .distinct()
+                .collect(Collectors.toList());
+        
+        model.addAttribute("title", "Mis Startups Asignadas");
+        model.addAttribute("startups", startups);
+        model.addAttribute("mentor", mentor);
+        
+        return "startup/listarStartupsMentor";
     }
 
 }

@@ -8,7 +8,6 @@ import com.usta.startupconnect.entities.UsuarioEntity;
 import com.usta.startupconnect.models.dao.LikeDao;
 import com.usta.startupconnect.models.services.ComentariosService;
 import com.usta.startupconnect.models.services.EmprendedorService;
-import com.usta.startupconnect.models.services.LikeService;
 import com.usta.startupconnect.models.services.StartupService;
 import com.usta.startupconnect.security.JpaUserDetailsService;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -32,8 +31,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -302,7 +299,9 @@ public class StartupController {
             return startupService.findByEmprendedor(emprendedor);
         }
         return new ArrayList<>();
-    }    @GetMapping(value = "/crearStartupParaEmprendedor/{documento}")
+    }
+
+    @GetMapping(value = "/crearStartupParaEmprendedor/{documento}")
     public String crearStartupParaEmprendedor(@PathVariable String documento, Model model) {
         try {
             // Buscar el emprendedor por documento
@@ -313,17 +312,17 @@ public class StartupController {
 
             // Crear nuevo startup
             StartupEntity startup = new StartupEntity();
-            
+
             // Configurar el startup con el emprendedor
             startup.setEmprendedor(emprendedor);
-            
+
             // Añadir atributos al modelo
             model.addAttribute("title", "Crear startup");
             model.addAttribute("startup", startup);
             model.addAttribute("emprendedor", emprendedor);
             model.addAttribute("documento", documento);
             model.addAttribute("hayEmprendedores", true);
-            
+
             // Log para debug
             System.out.println("Emprendedor encontrado: " + emprendedor.getDocumento());
             System.out.println("Documento: " + documento);
@@ -386,11 +385,13 @@ public class StartupController {
         if (usuario != null) {
             // Find the emprendedor associated with the user
             EmprendedorEntity emprendedor = emprendedorService.findByDocumento(usuario.getDocumento());
-            System.out.println("MisStartups - Emprendedor encontrado: " + (emprendedor != null ? emprendedor.getDocumento() : "null"));
+            System.out.println("MisStartups - Emprendedor encontrado: "
+                    + (emprendedor != null ? emprendedor.getDocumento() : "null"));
 
             if (emprendedor != null) {
                 List<StartupEntity> startups = startupService.findByEmprendedor(emprendedor);
-                System.out.println("MisStartups - Número de startups encontradas: " + (startups != null ? startups.size() : 0));
+                System.out.println(
+                        "MisStartups - Número de startups encontradas: " + (startups != null ? startups.size() : 0));
                 model.addAttribute("startups", startups);
                 model.addAttribute("emprendedor", emprendedor);
                 return "/startup/listarStartupsPorUsuario";
@@ -399,5 +400,15 @@ public class StartupController {
 
         model.addAttribute("error", "No se encontró un emprendedor asociado a tu cuenta.");
         return "/startup/listarStartupsPorUsuario";
+    }
+
+    @GetMapping("/api/startup/{id}/foto")
+    @ResponseBody
+    public String getStartupFotoUrl(@PathVariable Long id) {
+        StartupEntity startup = startupService.findById(id);
+        if (startup != null && startup.getLogoUrl() != null) {
+            return startup.getLogoUrl();
+        }
+        return "";
     }
 }

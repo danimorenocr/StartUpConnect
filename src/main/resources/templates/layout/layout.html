@@ -53,11 +53,10 @@
                         <li><a href="/etapa"><i class="fa-solid fa-layer-group"></i> Etapas</a></li>
                         <li><a href="/tarea"><i class="fa-solid fa-tasks"></i> Tareas</a></li>
                         <li><a href="/entregable"><i class="fa-solid fa-clipboard-check"></i> Entregable</a></li>
-                    </th:block>
-
-                    <!-- Menú para mentores -->
+                    </th:block>                    <!-- Menú para mentores -->
                     <th:block sec:authorize="hasRole('ROLE_MENTOR')">
-                        <li><a href="/mentor/dashboardMentor"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+                        <li><a href="/dashboardMentor"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+                        <li><a href="/misStartupsAsignadas"><i class="fa-solid fa-rocket"></i> Mis Startups</a></li>
                         <li><a href="/etapa"><i class="fa-solid fa-layer-group"></i> Mis Etapas</a></li>
                         <li><a href="/tarea"><i class="fa-solid fa-tasks"></i> Tareas</a></li>
                         <li><a href="/entregable"><i class="fa-solid fa-clipboard-check"></i> Entregables</a></li>

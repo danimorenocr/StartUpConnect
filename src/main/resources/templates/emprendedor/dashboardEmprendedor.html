@@ -541,11 +541,10 @@
                                     th:style="${'animation-delay: ' + (eventStat.index * 0.1) + 's'}">
 
                                     <!-- Cabecera del evento -->
-                                    <div class="flex items-center mb-3">
-                                        <div th:class="${event.conferenceData != null ? 'bg-gradient-to-br from-indigo-500 to-blue-600' : 'bg-gradient-to-br from-blue-400 to-blue-500'}"
+                                    <div class="flex items-center mb-3">                                        <div th:class="${event.conferenceData != null ? 'bg-gradient-to-br from-purple-500 to-indigo-600' : 'bg-gradient-to-br from-blue-500 to-indigo-600'}"
                                             class="text-white rounded-lg p-2 mr-3 flex-shrink-0 shadow-md">
                                             <i
-                                                th:class="${event.conferenceData != null ? 'fa-solid fa-video' : 'fa-solid fa-calendar-day'}"></i>
+                                                th:class="${event.conferenceData != null ? 'fa-solid fa-video-plus' : 'fa-solid fa-calendar-star'}"></i>
                                         </div>
                                         <h4 class="font-bold text-gray-800 text-sm line-clamp-1"
                                             th:text="${event.summary}">Título de la Reunión</h4>

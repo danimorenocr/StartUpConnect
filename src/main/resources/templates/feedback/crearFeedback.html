@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{layout/layout :: head}"></head>
+
+<body class="bg-white font-sans">
+    <header th:replace="~{layout/layout :: header}"></header>
+    
+    <!-- Agregar SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <div class="max-w-4xl mx-auto py-10 px-6">
+        <div class="bg-gradient-to-r from-purple-600 to-blue-500 rounded-xl shadow-lg mb-10 overflow-hidden">
+            <div class="px-8 py-10 text-white">
+                <h1 class="text-3xl md:text-4xl font-bold mb-2">Feedback para Startup</h1>
+                <p class="text-lg opacity-90">Proporciona retroalimentación constructiva para ayudar a la startup a mejorar.</p>
+            </div>
+        </div>
+        
+        <div class="bg-white rounded-xl shadow-lg p-8 mb-8">
+            <div class="flex flex-col md:flex-row gap-8 mb-8">
+                <div class="w-full md:w-1/3">
+                    <div class="bg-gray-50 rounded-xl p-6 text-center">
+                        <div class="w-24 h-24 mx-auto mb-4 rounded-full overflow-hidden border-4 border-white shadow-lg">
+                            <img th:src="${startup.logoUrl != null ? startup.logoUrl : '/images/default-logo.png'}" 
+                                alt="Logo startup" class="w-full h-full object-cover" onerror="this.src='/images/default-logo.png'">
+                        </div>
+                        <h2 class="text-xl font-bold text-gray-800 mb-2" th:text="${startup.nombreStartup}">Nombre Startup</h2>
+                        <p class="text-gray-600 mb-1">
+                            <span class="font-medium">Sector:</span> 
+                            <span th:text="${startup.sector != null ? startup.sector : 'No especificado'}">Tecnología</span>
+                        </p>
+                        <p class="text-gray-600">
+                            <span class="font-medium">Estado:</span> 
+                            <span th:text="${startup.estado != null ? startup.estado : 'No especificado'}">Activo</span>
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="w-full md:w-2/3">
+                    <form th:action="@{/guardarFeedback}" th:object="${feedback}" method="post" id="feedbackForm">
+                        <input type="hidden" th:field="*{id}" />
+                        <input type="hidden" th:field="*{startup.id}" />
+                        <input type="hidden" th:field="*{mentor.documento}" />
+                        
+                        <div class="mb-6">
+                            <label for="comentarioMentor" class="block text-gray-700 font-medium mb-2">Comentario del Mentor</label>
+                            <textarea th:field="*{comentarioMentor}" id="comentarioMentor" rows="4" 
+                                      class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                      placeholder="Escribe tus comentarios, recomendaciones o sugerencias para la startup..."></textarea>
+                            <p th:if="${#fields.hasErrors('comentarioMentor')}" th:errors="*{comentarioMentor}" 
+                               class="text-red-500 text-sm mt-1">Error</p>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <label for="calificacionMentor" class="block text-gray-700 font-medium mb-2">Calificación (1-5)</label>
+                            <div class="rating-container flex gap-2">
+                                <div class="flex items-center">
+                                    <input type="radio" id="star5" name="calificacionMentor" value="5" th:field="*{calificacionMentor}" class="hidden" />
+                                    <label for="star5" class="cursor-pointer text-3xl text-gray-300 hover:text-yellow-400 peer-checked:text-yellow-400">★</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="radio" id="star4" name="calificacionMentor" value="4" th:field="*{calificacionMentor}" class="hidden" />
+                                    <label for="star4" class="cursor-pointer text-3xl text-gray-300 hover:text-yellow-400 peer-checked:text-yellow-400">★</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="radio" id="star3" name="calificacionMentor" value="3" th:field="*{calificacionMentor}" class="hidden" />
+                                    <label for="star3" class="cursor-pointer text-3xl text-gray-300 hover:text-yellow-400 peer-checked:text-yellow-400">★</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="radio" id="star2" name="calificacionMentor" value="2" th:field="*{calificacionMentor}" class="hidden" />
+                                    <label for="star2" class="cursor-pointer text-3xl text-gray-300 hover:text-yellow-400 peer-checked:text-yellow-400">★</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="radio" id="star1" name="calificacionMentor" value="1" th:field="*{calificacionMentor}" class="hidden" />
+                                    <label for="star1" class="cursor-pointer text-3xl text-gray-300 hover:text-yellow-400 peer-checked:text-yellow-400">★</label>
+                                </div>
+                            </div>
+                            <p th:if="${#fields.hasErrors('calificacionMentor')}" th:errors="*{calificacionMentor}" 
+                               class="text-red-500 text-sm mt-1">Error</p>
+                        </div>
+                        
+                        <div class="flex justify-end gap-3">
+                            <a th:href="@{/misStartups}" class="px-6 py-3 rounded-lg border border-gray-300 text-gray-700 font-medium hover:bg-gray-50 transition">
+                                Cancelar
+                            </a>
+                            <button type="button" onclick="confirmarEnvio()" class="px-6 py-3 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition">
+                                Guardar Feedback
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Comentarios previos de la startup (si existen) -->
+            <div th:if="${feedback.comentarioStartup != null && !feedback.comentarioStartup.isEmpty()}" 
+                 class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mt-4">
+                <h3 class="text-lg font-semibold text-yellow-800 mb-2">Comentarios de la Startup</h3>
+                <p class="text-yellow-700" th:text="${feedback.comentarioStartup}">Comentarios de la startup...</p>
+                <div class="mt-2" th:if="${feedback.calificacionStartup != null}">
+                    <span class="text-yellow-800 font-medium">Calificación de la Startup: </span>
+                    <span class="text-yellow-800" th:text="${feedback.calificacionStartup}">5</span>/5
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Función para validar el formulario
+        function validarFormulario() {
+            const comentario = document.getElementById('comentarioMentor').value.trim();
+            const calificacion = document.querySelector('input[name="calificacionMentor"]:checked');
+            
+            if (comentario.length < 20 || comentario.length > 200) {
+                Swal.fire({
+                    title: 'Error de validación',
+                    text: 'El comentario debe tener entre 20 y 200 caracteres',
+                    icon: 'error',
+                    confirmButtonColor: '#3085d6'
+                });
+                return false;
+            }
+            
+            if (!calificacion) {
+                Swal.fire({
+                    title: 'Error de validación',
+                    text: 'Por favor, selecciona una calificación',
+                    icon: 'error',
+                    confirmButtonColor: '#3085d6'
+                });
+                return false;
+            }
+            
+            return true;
+        }
+        
+        // Función para confirmar el envío
+        function confirmarEnvio() {
+            if (!validarFormulario()) return;
+            
+            Swal.fire({
+                title: '¿Confirmar envío?',
+                text: 'Una vez enviado, este feedback será visible para la startup',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, enviar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('feedbackForm').submit();
+                }
+            });
+        }
+        
+        // Estilos para las estrellas
+        document.addEventListener('DOMContentLoaded', function() {
+            const stars = document.querySelectorAll('input[name="calificacionMentor"]');
+            const labels = document.querySelectorAll('label[for^="star"]');
+            
+            // Inicializar estrellas según valor actual
+            const currentRating = document.querySelector('input[name="calificacionMentor"]:checked');
+            if (currentRating) {
+                const value = parseInt(currentRating.value);
+                labels.forEach((label, index) => {
+                    if (5 - index <= value) {
+                        label.classList.remove('text-gray-300');
+                        label.classList.add('text-yellow-400');
+                    }
+                });
+            }
+            
+            // Manejar eventos hover y click
+            stars.forEach((star, index) => {
+                const label = labels[index];
+                
+                star.addEventListener('change', function() {
+                    const value = parseInt(this.value);
+                    labels.forEach((l, i) => {
+                        if (5 - i <= value) {
+                            l.classList.remove('text-gray-300');
+                            l.classList.add('text-yellow-400');
+                        } else {
+                            l.classList.remove('text-yellow-400');
+                            l.classList.add('text-gray-300');
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+
+    <footer th:replace="~{layout/layout :: footer}"></footer>
+</body>
+
+</html>

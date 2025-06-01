@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{layout/layout :: head}"></head>
+
+<body class="bg-white font-sans">
+    <header th:replace="~{layout/layout :: header}"></header>
+    <div class="max-w-6xl mx-auto py-10 px-6">        <div class="relative w-full mb-10">
+            <img src="/images/bannerListar.jpg" alt="Banner startups"
+                class="w-full h-80 object-cover rounded-2xl shadow-lg">
+            <div class="absolute inset-0 flex flex-col justify-center items-center rounded-2xl"
+                style="background: rgba(0,0,0,0.45);">
+                <h2 class="text-4xl md:text-5xl font-extrabold text-white drop-shadow mb-2">Mis Startups</h2>
+                <p class="text-lg md:text-2xl text-white font-medium drop-shadow">Startups asignadas para mentoría</p>
+            </div>
+        </div>
+
+        <h1 class="text-4xl font-extrabold text-[#0369a1] mb-10 tracking-tight drop-shadow">Startups Asignadas</h1>
+        
+        <div class="section-header mb-6">
+            <div id="startups-header-container" class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div class="search-container flex items-center relative w-full md:w-80 md:mx-0 mx-auto">
+                    <i class="search-icon absolute left-4 top-1/2 -translate-y-1/2 text-pink-500 text-lg">🔍</i>
+                    <input id="buscar-startup" type="text" placeholder="Buscar por nombre..." 
+                        class="rounded-full pl-10 pr-4 py-2 border border-pink-300 shadow focus:outline-none focus:ring-2 focus:ring-pink-400 text-pink-800 font-medium w-full" 
+                        autocomplete="off">
+                </div>
+            </div>
+        </div>
+
+        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div th:each="startup: ${startups}" 
+                class="bg-white/80 rounded-2xl shadow-lg p-6 flex flex-col items-center border-t-4 border-pink-400 relative transition-transform duration-200 hover:scale-105 hover:shadow-2xl hover:border-pink-500 startup-card">
+                <!-- Logo de la startup -->
+                <div class="w-28 h-28 rounded-full overflow-hidden border-4 border-white shadow-lg mt-6 mb-2">
+                    <img th:src="${startup.logoUrl != null && !startup.logoUrl.isEmpty() ? startup.logoUrl : '/images/default-logo.png'}"
+                        alt="Logo" class="w-full h-full object-cover" onerror="this.src='/images/default-logo.png'">
+                </div>
+
+                <div class="text-center w-full">
+                    <h2 class="font-extrabold text-xl text-slate-900 mb-3 mt-2" th:text="${startup.nombreStartup}"></h2>
+                    <p class="text-base text-slate-600 mb-2">
+                        <span class="font-medium">Sector:</span> 
+                        <span th:text="${startup.sector != null ? startup.sector : 'No especificado'}"></span>
+                    </p>
+                    <p class="text-base text-slate-600 mb-2">
+                        <span class="font-medium">Estado:</span> 
+                        <span th:text="${startup.estado != null ? startup.estado : 'No especificado'}"></span>
+                    </p>
+                    <p class="text-base text-slate-600 mb-2">
+                        <span class="font-medium">Emprendedor:</span>
+                        <span th:text="${startup.emprendedor != null && startup.emprendedor.usuario != null ? 
+                           startup.emprendedor.usuario.nombreUsu : 'No asignado'}"></span>
+                    </p>
+                </div>                <!-- Botones de acción -->
+                <div class="flex gap-3 mt-4">
+                    <a th:href="@{/verStartup/{id}(id=${startup.id})}"
+                        class="bg-pink-500 hover:bg-pink-600 text-white font-semibold py-2 px-4 rounded-full shadow transition text-sm">
+                        Ver
+                    </a>
+                    <a th:href="@{'/feedbackStartup/' + ${startup.id}}"
+                        class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-full shadow transition text-sm">
+                        Feedback
+                    </a>
+                </div>
+            </div>
+
+            <!-- Mensaje si no hay startups -->
+            <div th:if="${#lists.isEmpty(startups)}" class="col-span-3 text-center py-12 bg-gray-50 rounded-xl shadow">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <h3 class="text-xl font-bold text-gray-700 mb-2">No hay startups asignadas</h3>
+                <p class="text-gray-500 mb-4">Aún no tienes startups asignadas para mentoría.</p>
+            </div>
+        </section>    </div>
+    <!-- Agregar SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const searchInput = document.getElementById('buscar-startup');
+            const startupCards = document.querySelectorAll('.startup-card');
+
+            // Mostrar mensaje de bienvenida
+            Swal.fire({
+                title: '¡Bienvenido a tus Startups!',
+                text: 'Aquí puedes ver las startups que te han sido asignadas para mentoría.',
+                icon: 'info',
+                confirmButtonColor: '#0ea5e9',
+                confirmButtonText: 'Entendido'
+            });
+
+            searchInput.addEventListener('input', function () {
+                const searchTerm = this.value.toLowerCase().trim();
+                let visibleCount = 0;
+
+                startupCards.forEach(card => {
+                    const startup = card.textContent.toLowerCase();
+                    if (startup.includes(searchTerm)) {
+                        card.style.display = 'flex';
+                        visibleCount++;
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+
+                // Mostrar mensaje si no hay resultados
+                if (visibleCount === 0 && searchTerm.length > 0) {
+                    // Verificar si ya existe el mensaje de no resultados
+                    let noResultsMsg = document.getElementById('no-results-message');
+                    if (!noResultsMsg) {
+                        noResultsMsg = document.createElement('div');
+                        noResultsMsg.id = 'no-results-message';
+                        noResultsMsg.className = 'col-span-3 text-center py-8 bg-gray-50 rounded-xl shadow mt-4';
+                        noResultsMsg.innerHTML = `
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-gray-400 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                            <p class="text-gray-600">No se encontraron startups que coincidan con "<span class="font-medium">${searchTerm}</span>"</p>
+                        `;
+                        document.querySelector('section').appendChild(noResultsMsg);
+                    } else {
+                        noResultsMsg.querySelector('span').textContent = searchTerm;
+                    }
+                    noResultsMsg.style.display = 'block';
+                } else {
+                    const noResultsMsg = document.getElementById('no-results-message');
+                    if (noResultsMsg) {
+                        noResultsMsg.style.display = 'none';
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
