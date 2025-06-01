@@ -62,9 +62,13 @@ public class StartupController {
     public String vitrina(Model model) {
         model.addAttribute("title", "Startups");
         model.addAttribute("urlRegistro", "/crearStartup");
-        List<StartupEntity> lista = startupService.findAll();
-        lista.sort(Comparator.comparing(StartupEntity::getId));
-        model.addAttribute("startups", lista);
+        List<EmprendedorEntity> emprendedores = emprendedorService.findAll();
+        List<StartupEntity> startups = startupService.findAll();
+
+        model.addAttribute("emprendedores", emprendedores);
+        model.addAttribute("startups", startups);
+        model.addAttribute("title", "Vitrina de Startups");
+
         return "vitrina";
     }
 

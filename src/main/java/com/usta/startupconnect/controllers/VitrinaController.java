@@ -18,12 +18,12 @@ public class VitrinaController {
     private EmprendedorService emprendedorService;
 
     @Autowired
-    private StartupService startupService;    
-    
+    private StartupService startupService;
+
     @GetMapping("/vitrina")
     public String mostrarVitrina(Model model) {
         List<EmprendedorEntity> emprendedores = emprendedorService.findAll();
-        List<StartupEntity> startups = startupService.findAllActive();
+        List<StartupEntity> startups = startupService.findAll();
 
         model.addAttribute("emprendedores", emprendedores);
         model.addAttribute("startups", startups);

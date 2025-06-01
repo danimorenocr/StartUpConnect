@@ -17,9 +17,11 @@ public interface FeedbackService {
     
     public List<StartupEntity> findStartupsByEtapa(EtapaEntity etapa);
 
-    public void save(FeedbackEntity feedback);
+    public void save(FeedbackEntity feedback);    public List<FeedbackEntity> findByMentor(MentorEntity mentor);
 
-    public List<FeedbackEntity> findByMentor(MentorEntity mentor);
+    public FeedbackEntity findById(Long id);
+
+    public void deleteById(Long id);
 
     public Collection<FeedbackEntity> findByStartup(StartupEntity startup);
 }
