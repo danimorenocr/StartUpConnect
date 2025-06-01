@@ -47,4 +47,8 @@ public class FeedbackEntity implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_mentor")
     private MentorEntity mentor;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_etapa")
+    private EtapaEntity etapa;
 }

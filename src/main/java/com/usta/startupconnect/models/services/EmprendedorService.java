@@ -12,7 +12,7 @@ public interface EmprendedorService {
 
     public EmprendedorEntity findById(String id);    public void deleteById(String id);
     
-    public EmprendedorEntity findByDocumento(String documento);
-    
     public EmprendedorEntity findByUsuarioEmail(String email);
+    
+    public EmprendedorEntity findByDocumento(String documento);
 }

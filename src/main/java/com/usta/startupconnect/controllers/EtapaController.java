@@ -1,44 +1,46 @@
 package com.usta.startupconnect.controllers;
 
 import com.usta.startupconnect.entities.EtapaEntity;
+import com.usta.startupconnect.entities.FeedbackEntity;
 import com.usta.startupconnect.entities.MentorEntity;
+import com.usta.startupconnect.entities.StartupEntity;
 import com.usta.startupconnect.entities.TareaEntity;
+import com.usta.startupconnect.entities.EmprendedorEntity;
 import com.usta.startupconnect.models.services.EtapaService;
 import com.usta.startupconnect.models.services.MentorService;
+import com.usta.startupconnect.models.services.FeedbackService;
 import com.usta.startupconnect.models.services.TareaService;
-import com.usta.startupconnect.security.JpaUserDetailsService;
-import com.usta.startupconnect.entities.UsuarioEntity;
+import com.usta.startupconnect.models.services.StartupService;
+import com.usta.startupconnect.models.services.EmprendedorService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.util.Comparator;
-import java.util.List;
-
 import javax.validation.Valid;
+import java.util.*;
 
 @Controller
-public class EtapaController {
+public class EtapaController {    
     @Autowired
     private EtapaService etapaService;
 
     @Autowired
     private MentorService mentorService;
-
+    
     @Autowired
-    private JpaUserDetailsService userDetailsService;
+    private FeedbackService feedbackService;
 
     @Autowired
     private TareaService tareaService;
+
+    @Autowired
+    private StartupService startupService;
+
+    @Autowired
+    private EmprendedorService emprendedorService;
 
     @GetMapping(value = "/etapa")
     public String listaEtapas(Model model, org.springframework.security.core.Authentication authentication) {
@@ -55,25 +57,34 @@ public class EtapaController {
             // Si es administrador, mostrar todas las etapas
             lista = etapaService.findAll();
         } else {
-            // Si es mentor, mostrar solo sus etapas
+            // Si es mentor, mostrar solo sus etapas a través de feedback
             String email = authentication.getName();
             MentorEntity mentor = mentorService.findByUsuarioEmail(email);
 
             if (mentor != null) {
-                lista = etapaService.findByMentor(mentor);
+                lista = feedbackService.findEtapasByMentor(mentor);
             } else {
-                // Si no se encuentra el mentor, mostrar lista vacía
                 lista = java.util.Collections.emptyList();
             }
         }
 
         lista.sort(Comparator.comparing(EtapaEntity::getId));
+
+        // Para cada etapa, obtenemos la startup asociada
+        Map<Long, List<StartupEntity>> etapaStartups = new HashMap<>();
+        for (EtapaEntity etapa : lista) {
+            List<StartupEntity> startups = feedbackService.findStartupsByEtapa(etapa);
+            etapaStartups.put(etapa.getId(), startups);
+        }
+        model.addAttribute("etapaStartups", etapaStartups);
         model.addAttribute("etapas", lista);
+        
         return "/etapa/listarEtapas";
     }
 
     @GetMapping(value = "/crearEtapa")
-    public String crearEtapa(Model model, org.springframework.security.core.Authentication authentication) {
+    public String crearEtapa(Model model, @RequestParam(required = true) Long startupId,
+            org.springframework.security.core.Authentication authentication) {
         // Verificar si el usuario es administrador o mentor
         boolean isAdmin = authentication.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
@@ -81,11 +92,18 @@ public class EtapaController {
                 .anyMatch(a -> a.getAuthority().equals("ROLE_MENTOR"));
 
         if (!isAdmin && !isMentor) {
-            // Si no es administrador ni mentor, redirigir a la lista de etapas
             return "redirect:/etapa";
         }
 
+        // Obtener la startup seleccionada
+        StartupEntity startup = startupService.findById(startupId);
+        if (startup == null) {
+            // Si no se encuentra la startup, redirigir a la lista de startups
+            return "redirect:/misStartupsAsignadas";
+        }
+
         model.addAttribute("title", "Crear Etapa");
+        model.addAttribute("startup", startup);
         EtapaEntity etapa = new EtapaEntity();
         model.addAttribute("etapa", etapa);
 
@@ -100,11 +118,18 @@ public class EtapaController {
 
         return "/etapa/crearEtapa";
     }
-
+    
     @PostMapping("/crearEtapa")
     public String crearEtapa(@Valid @ModelAttribute("etapa") EtapaEntity etapa,
-            BindingResult result, @RequestParam("mentorId") String mentorId,
+            BindingResult result, 
+            @RequestParam("mentorId") String mentorId,
+            @RequestParam("startupId") Long startupId,
+            RedirectAttributes redirectAttributes,
             org.springframework.security.core.Authentication authentication) {
+
+        if (result.hasErrors()) {
+            return "etapa/crearEtapa";
+        }
 
         // Verificar si el usuario es administrador o mentor
         boolean isAdmin = authentication.getAuthorities().stream()
@@ -113,40 +138,48 @@ public class EtapaController {
                 .anyMatch(a -> a.getAuthority().equals("ROLE_MENTOR"));
 
         if (!isAdmin && !isMentor) {
-            // Si no es administrador ni mentor, redirigir a la lista de etapas
             return "redirect:/etapa";
         }
 
-        if (result.hasErrors()) {
-            System.out.println(result.getFieldErrors());
-            return "etapa/crearEtapa";
-        }
-
+        // Obtener el mentor
         MentorEntity mentor;
-
-        // Si es mentor, asignarle la etapa a sí mismo
         if (isMentor && !isAdmin) {
             String email = authentication.getName();
             mentor = mentorService.findByUsuarioEmail(email);
-            if (mentor == null) {
-                result.rejectValue("mentor", "error.mentor", "No se pudo encontrar el perfil de mentor asociado");
-                return "etapa/crearEtapa";
-            }
         } else {
-            // Si es administrador, usar el mentor seleccionado
             mentor = mentorService.findById(mentorId);
-            if (mentor == null) {
-                result.rejectValue("mentor", "error.mentor", "El mentor especificado no existe");
-                return "etapa/crearEtapa";
-            }
         }
 
-        etapa.setMentor(mentor);
+        if (mentor == null) {
+            result.rejectValue("mentor", "error.mentor", "No se pudo encontrar el mentor");
+            return "etapa/crearEtapa";
+        }
 
-        etapaService.save(etapa);
-        System.out.println("Etapa guardada correctamente");
+        // Obtener la startup
+        StartupEntity startup = startupService.findById(startupId);
+        if (startup == null) {
+            result.rejectValue("startup", "error.startup", "No se pudo encontrar la startup");
+            return "etapa/crearEtapa";
+        }
 
-        return "redirect:/etapa";
+        try {
+            // Guardar la etapa
+            etapaService.save(etapa);
+
+            // Crear el feedback para establecer la relación
+            FeedbackEntity feedback = new FeedbackEntity();
+            feedback.setMentor(mentor);
+            feedback.setStartup(startup);
+            feedback.setEtapa(etapa);
+            feedback.setFechaCreacion(new Date());
+            feedbackService.save(feedback);
+
+            redirectAttributes.addFlashAttribute("mensajeExito", "Etapa creada exitosamente");
+            return "redirect:/etapa";
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Error al crear la etapa: " + e.getMessage());
+            return "etapa/crearEtapa";
+        }
     }
 
     @GetMapping(value = "/editarEtapa/{id}")
@@ -159,27 +192,32 @@ public class EtapaController {
                 .anyMatch(a -> a.getAuthority().equals("ROLE_MENTOR"));
 
         if (!isAdmin && !isMentor) {
-            // Si no es administrador ni mentor, redirigir a la lista de etapas
             return "redirect:/etapa";
         }
 
         EtapaEntity etapa = etapaService.findById(id);
+        if (etapa == null) {
+            return "redirect:/etapa";
+        }
+
+        // Obtener el mentor a través de feedback
+        MentorEntity mentor = feedbackService.findMentorByEtapa(etapa);
 
         // Si es mentor, verificar que la etapa le pertenezca
         if (isMentor && !isAdmin) {
             String email = authentication.getName();
-            MentorEntity mentor = mentorService.findByUsuarioEmail(email);
+            MentorEntity currentMentor = mentorService.findByUsuarioEmail(email);
 
-            if (mentor == null || !mentor.getDocumento().equals(etapa.getMentor().getDocumento())) {
-                // Si no es el mentor asignado, redirigir a la lista de etapas
+            if (currentMentor == null || mentor == null || !mentor.getDocumento().equals(currentMentor.getDocumento())) {
                 return "redirect:/etapa";
             }
         }
 
         model.addAttribute("title", "Editar etapa");
         model.addAttribute("etapaEditar", etapa);
-        // Agregar el ID del mentor actual para el formulario
-        model.addAttribute("mentorId", etapa.getMentor().getDocumento());
+        if (mentor != null) {
+            model.addAttribute("mentorId", mentor.getDocumento());
+        }
         return "etapa/editarEtapa";
     }
 
@@ -197,48 +235,84 @@ public class EtapaController {
                 .anyMatch(a -> a.getAuthority().equals("ROLE_MENTOR"));
 
         if (!isAdmin && !isMentor) {
-            // Si no es administrador ni mentor, redirigir a la lista de etapas
             return "redirect:/etapa";
         }
 
-        // Si es mentor, verificar que esté editando su propia etapa
-        if (isMentor && !isAdmin) {
-            // Obtener la etapa original
-            EtapaEntity etapaOriginal = etapaService.findById(etapa.getId());
-            if (etapaOriginal == null) {
-                return "redirect:/etapa";
-            }
-
-            // Verificar que sea el mentor asignado
-            String email = authentication.getName();
-            MentorEntity mentor = mentorService.findByUsuarioEmail(email);
-
-            if (mentor == null || !mentor.getDocumento().equals(etapaOriginal.getMentor().getDocumento())) {
-                // Si no es el mentor asignado, redirigir a la lista de etapas
-                return "redirect:/etapa";
-            }
-
-            // Asegurar que no se cambie el mentor asignado
-            mentorId = mentor.getDocumento();
-        }
-
         if (result.hasErrors()) {
-            System.out.println(result.getAllErrors());
             return "etapa/editarEtapa";
         }
 
-        // Buscar el mentor por ID
-        MentorEntity mentor = mentorService.findById(mentorId);
-        if (mentor == null) {
-            result.rejectValue("mentor", "error.mentor", "El mentor especificado no existe");
-            return "etapa/editarEtapa";
+        // Obtener el mentor actual a través de feedback
+        MentorEntity currentMentor = feedbackService.findMentorByEtapa(etapa);
+
+        // Si es mentor, verificar que esté editando su propia etapa y no cambiar el mentor
+        if (isMentor && !isAdmin) {
+            String email = authentication.getName();
+            MentorEntity userMentor = mentorService.findByUsuarioEmail(email);
+
+            if (userMentor == null || currentMentor == null || 
+                !currentMentor.getDocumento().equals(userMentor.getDocumento())) {
+                return "redirect:/etapa";
+            }
+
+            // Mantener el mismo mentor
+            mentorId = userMentor.getDocumento();
         }
 
-        etapa.setMentor(mentor);
-
+        // Actualizar la etapa
         etapaService.save(etapa);
+
+        // Si el mentor ha cambiado, actualizar el feedback
+        MentorEntity newMentor = mentorService.findById(mentorId);
+        if (newMentor != null && (currentMentor == null || 
+            !newMentor.getDocumento().equals(currentMentor.getDocumento()))) {
+            // Crear un nuevo feedback con el nuevo mentor
+            FeedbackEntity feedback = new FeedbackEntity();
+            feedback.setMentor(newMentor);
+            feedback.setEtapa(etapa);
+            feedback.setFechaCreacion(new Date());
+            feedbackService.save(feedback);
+        }
+
         redirectAttributes.addFlashAttribute("mensajeExito", "etapa actualizada exitosamente");
         return "redirect:/etapa";
+    }
+
+    @GetMapping(value = "/verEtapa/{id}")
+    public String verEtapa(Model model, @PathVariable(value = "id") Long id,
+            org.springframework.security.core.Authentication authentication) {
+        EtapaEntity etapa = etapaService.findById(id);
+        if (etapa == null) {
+            return "redirect:/etapa";
+        }
+
+        // Obtener el mentor a través de feedback
+        MentorEntity mentor = feedbackService.findMentorByEtapa(etapa);
+
+        // Verificar si el usuario tiene permiso para ver esta etapa
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+
+        if (!isAdmin) {
+            // Si es mentor, verificar que la etapa le pertenezca
+            String email = authentication.getName();
+            MentorEntity currentMentor = mentorService.findByUsuarioEmail(email);
+
+            if (currentMentor == null || mentor == null || 
+                !mentor.getDocumento().equals(currentMentor.getDocumento())) {
+                return "redirect:/etapa";
+            }
+        }
+
+        model.addAttribute("title", "Ver etapa");
+        model.addAttribute("etapaDetalle", etapa);
+        model.addAttribute("mentor", mentor);
+
+        // Obtener las tareas asociadas a esta etapa
+        List<TareaEntity> tareasAsociadas = tareaService.findByEtapa(etapa);
+        model.addAttribute("tareas", tareasAsociadas);
+
+        return "etapa/detalleEtapa";
     }
 
     @RequestMapping("/eliminarEtapa/{id}")
@@ -251,22 +325,24 @@ public class EtapaController {
                 .anyMatch(a -> a.getAuthority().equals("ROLE_MENTOR"));
 
         if (!isAdmin && !isMentor) {
-            // Si no es administrador ni mentor, redirigir a la lista de etapas
             return "redirect:/etapa";
         }
 
+        EtapaEntity etapa = etapaService.findById(idEtapa);
+        if (etapa == null) {
+            return "redirect:/etapa";
+        }
+
+        // Obtener el mentor a través de feedback
+        MentorEntity mentor = feedbackService.findMentorByEtapa(etapa);
+
         // Si es mentor, verificar que la etapa le pertenezca
         if (isMentor && !isAdmin) {
-            EtapaEntity etapa = etapaService.findById(idEtapa);
-            if (etapa == null) {
-                return "redirect:/etapa";
-            }
-
             String email = authentication.getName();
-            MentorEntity mentor = mentorService.findByUsuarioEmail(email);
+            MentorEntity currentMentor = mentorService.findByUsuarioEmail(email);
 
-            if (mentor == null || !mentor.getDocumento().equals(etapa.getMentor().getDocumento())) {
-                // Si no es el mentor asignado, redirigir a la lista de etapas
+            if (currentMentor == null || mentor == null || 
+                !mentor.getDocumento().equals(currentMentor.getDocumento())) {
                 return "redirect:/etapa";
             }
         }
@@ -275,50 +351,49 @@ public class EtapaController {
         return "redirect:/etapa";
     }
 
-    @GetMapping(value = "/verEtapa/{id}")
-    public String verEtapa(Model model, @PathVariable(value = "id") Long id,
-            org.springframework.security.core.Authentication authentication) {
-        EtapaEntity etapa = etapaService.findById(id);
+    @GetMapping("/etapasEmprendedor")
+    public String listarEtapasEmprendedor(Model model, org.springframework.security.core.Authentication authentication) {
+        // Verificar que el usuario sea un emprendedor
+        boolean isEmprendedor = authentication.getAuthorities().stream()
+            .anyMatch(a -> a.getAuthority().equals("ROLE_EMPRENDEDOR"));
 
-        // Verificar si el usuario tiene permiso para ver esta etapa
-        boolean isAdmin = authentication.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+        if (!isEmprendedor) {
+            return "redirect:/";
+        }
 
-        if (!isAdmin) {
-            // Si es mentor, verificar que la etapa le pertenezca
-            String email = authentication.getName();
-            MentorEntity mentor = mentorService.findByUsuarioEmail(email);
+        // Obtener el emprendedor actual
+        String email = authentication.getName();
+        EmprendedorEntity emprendedor = emprendedorService.findByUsuarioEmail(email);
 
-            if (mentor == null || !mentor.getDocumento().equals(etapa.getMentor().getDocumento())) {
-                // Si no es el mentor asignado, redirigir a la lista de etapas
-                return "redirect:/etapa";
+        if (emprendedor == null) {
+            return "redirect:/";
+        }
+
+        // Obtener las startups del emprendedor
+        List<StartupEntity> startups = startupService.findByEmprendedor(emprendedor);
+        
+        // Obtener etapas para todas las startups del emprendedor y sus mentores
+        List<EtapaEntity> etapas = new ArrayList<>();
+        Map<Long, MentorEntity> mentoresPorEtapa = new HashMap<>();
+        Map<Long, List<TareaEntity>> tareasPorEtapa = new HashMap<>();
+        
+        for (StartupEntity startup : startups) {
+            Collection<FeedbackEntity> feedbacks = feedbackService.findByStartup(startup);
+            for (FeedbackEntity feedback : feedbacks) {
+                if (feedback.getEtapa() != null) {
+                    etapas.add(feedback.getEtapa());
+                    mentoresPorEtapa.put(feedback.getEtapa().getId(), feedback.getMentor());
+                    // Obtener las tareas asociadas a esta etapa
+                    List<TareaEntity> tareas = tareaService.findByEtapa(feedback.getEtapa());
+                    tareasPorEtapa.put(feedback.getEtapa().getId(), tareas);
+                }
             }
         }
 
-        model.addAttribute("title", "Ver etapa");
-        model.addAttribute("etapaDetalle", etapa);
-
-        // Obtener las tareas asociadas a esta etapa
-        List<TareaEntity> tareasAsociadas = tareaService.findByEtapa(etapa);
-        model.addAttribute("tareas", tareasAsociadas);
-
-        return "etapa/detalleEtapa";
-    }
-
-    @GetMapping(value = "/etapasEmprendedor")
-    public String listaEtapasEmprendedor(Model model, org.springframework.security.core.Authentication authentication) {
-        if (authentication != null) {
-            List<EtapaEntity> etapas = etapaService.findAll();
-            List<MentorEntity> mentores = mentorService.findAll();
-            
-            // Sort etapas by ID
-            etapas.sort(Comparator.comparing(EtapaEntity::getId));
-            
-            model.addAttribute("etapas", etapas);
-            model.addAttribute("mentores", mentores);
-            model.addAttribute("title", "Mis Etapas");
-            return "etapa/listarEtapasEmprendedor";
-        }
-        return "redirect:/login";
+        model.addAttribute("etapas", etapas);
+        model.addAttribute("mentoresPorEtapa", mentoresPorEtapa);
+        model.addAttribute("tareasPorEtapa", tareasPorEtapa);
+        model.addAttribute("title", "Mis Etapas");
+        return "etapa/listarEtapasEmprendedor";
     }
 }

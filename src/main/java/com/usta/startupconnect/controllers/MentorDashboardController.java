@@ -11,7 +11,7 @@ import com.google.api.services.calendar.model.Event;
 import com.usta.startupconnect.entities.EtapaEntity;
 import com.usta.startupconnect.entities.MentorEntity;
 import com.usta.startupconnect.entities.UsuarioEntity;
-import com.usta.startupconnect.models.services.EtapaService;
+import com.usta.startupconnect.models.services.FeedbackService;
 import com.usta.startupconnect.models.services.GoogleMeetService;
 import com.usta.startupconnect.models.services.MentorService;
 import com.usta.startupconnect.models.services.UsuarioService;
@@ -34,7 +34,7 @@ public class MentorDashboardController {
     private MentorService mentorService;
     
     @Autowired
-    private EtapaService etapaService;
+    private FeedbackService feedbackService;
     
     @Autowired
     private GoogleMeetService googleMeetService;
@@ -53,13 +53,13 @@ public class MentorDashboardController {
                 MentorEntity mentor = mentorService.findByUsuarioEmail(email);
                 if (mentor != null) {
                     model.addAttribute("mentor", mentor);
-                      // Obtener etapas asignadas al mentor
-                    List<EtapaEntity> etapas = etapaService.findByMentor(mentor);
+                    // Obtener etapas asignadas al mentor a través de feedback
+                    List<EtapaEntity> etapas = feedbackService.findEtapasByMentor(mentor);
                     model.addAttribute("totalEtapas", etapas.size());
                     
                     // Creamos una clasificación simple basada en fechas en lugar de estado
                     java.util.Date fechaActual = new java.util.Date();
-                      Map<String, Long> etapasPorEstado = etapas.stream()
+                    Map<String, Long> etapasPorEstado = etapas.stream()
                             .collect(Collectors.groupingBy(
                                     etapa -> {
                                         if (etapa.getFechaInicio().after(fechaActual)) {

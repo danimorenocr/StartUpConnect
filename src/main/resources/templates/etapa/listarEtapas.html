@@ -43,6 +43,8 @@
                         <th sec:authorize="hasRole('ROLE_ADMIN')"
                             class="px-6 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">
                             Mentor</th>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">
+                            Startups</th>
                         <th
                             class="px-6 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">
                             Fecha Inicio</th>
@@ -57,7 +59,18 @@
                 <tbody class="bg-white divide-y divide-gray-100">
                     <tr th:each="etapa: ${etapas}" class="hover:bg-red-50 transition">
                         <td class="px-6 py-4 font-semibold text-gray-800">[[${etapa.titulo}]]</td>
-                        <td sec:authorize="hasRole('ROLE_ADMIN')" class="px-6 py-4 text-gray-700">[[${etapa.mentor.usuario.nombreUsu}]]
+                        <td sec:authorize="hasRole('ROLE_ADMIN')" class="px-6 py-4 text-gray-700">
+                            [[${feedbackService.findMentorByEtapa(etapa)?.usuario?.nombreUsu}]]
+                        </td>
+                        <td class="px-6 py-4">
+                            <div th:if="${etapaStartups.get(etapa.id)}" class="flex flex-wrap gap-2">
+                                <span th:each="startup : ${etapaStartups.get(etapa.id)}"
+                                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                    [[${startup.nombreStartup}]]
+                                </span>
+                            </div>
+                            <span th:unless="${etapaStartups.get(etapa.id)}" class="text-gray-400">Sin startups asignadas
+                            </span>
                         </td>
                         <td class="px-6 py-4 text-gray-700">[[${#dates.format(etapa.fechaInicio, 'dd MMM yyyy')}]]</td>
                         <td class="px-6 py-4 text-gray-700">[[${#dates.format(etapa.fechaFin, 'dd MMM yyyy')}]]</td>
@@ -69,6 +82,9 @@
                                 <a th:href="@{/editarEtapa/{id}(id=${etapa.id})}" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MENTOR')"
                                     class="inline-flex items-center px-4 py-2 bg-amber-100 text-amber-700 font-semibold rounded-full hover:bg-amber-200 transition">
                                     <i class="fas fa-edit mr-1"></i> Editar</a>
+                                <a th:href="@{/crearTarea(etapaId=${etapa.id})}"
+                                    class="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-700 font-semibold rounded-full hover:bg-blue-200 transition">
+                                    <i class="fas fa-plus mr-1"></i> Crear Tarea</a>
                                 <form th:action="@{/eliminarEtapa/{id}(id=${etapa.id})}" method="post"
                                     onsubmit="return confirmarEliminacion(event, this);" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MENTOR')"
                                     class="inline-block m-0 p-0">

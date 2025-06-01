@@ -9,8 +9,7 @@ import com.usta.startupconnect.entities.FeedbackEntity;
 import com.usta.startupconnect.models.services.MentorService;
 import com.usta.startupconnect.models.services.UsuarioService;
 import com.usta.startupconnect.models.services.TareaService;
-import com.usta.startupconnect.models.dao.EtapaDao;
-import com.usta.startupconnect.models.dao.FeedbackDao;
+import com.usta.startupconnect.models.services.FeedbackService;
 import com.usta.startupconnect.security.JpaUserDetailsService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,9 +43,7 @@ public class MentorController {
     @Autowired
     private TareaService tareaService;
     @Autowired
-    private EtapaDao etapaDao;
-    @Autowired
-    private FeedbackDao feedbackDao;
+    private FeedbackService feedbackService;
     @Autowired
     private JpaUserDetailsService userDetailsService;
     
@@ -71,8 +68,8 @@ public class MentorController {
         // Nombre para el banner de bienvenida
         model.addAttribute("nombreCompleto", usuario.getNombreUsu());
         
-        // Obtener las etapas del mentor
-        List<EtapaEntity> etapas = etapaDao.findByMentor(mentor);
+        // Obtener las etapas del mentor a través de feedback
+        List<EtapaEntity> etapas = feedbackService.findEtapasByMentor(mentor);
         model.addAttribute("totalEtapas", etapas.size());
         
         // Obtener tareas de las etapas del mentor
@@ -245,7 +242,7 @@ public class MentorController {
         }
         
         // Obtener los feedbacks del mentor
-        List<FeedbackEntity> feedbacks = feedbackDao.findByMentor(mentor);
+        List<FeedbackEntity> feedbacks = feedbackService.findByMentor(mentor);
         
         // Extraer las startups de los feedbacks
         List<StartupEntity> startups = feedbacks.stream()
@@ -259,5 +256,4 @@ public class MentorController {
         
         return "startup/listarStartupsMentor";
     }
-
 }

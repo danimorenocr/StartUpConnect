@@ -32,8 +32,16 @@
                         <label for="fechaEntrega" class="block text-sm font-semibold text-sky-700">Fecha de Entrega:</label>
                         <input type="date" class="w-full rounded-2xl border-0 bg-sky-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400 text-sky-800 font-semibold" id="fechaEntrega" name="fechaEntrega" th:field="*{fechaEntrega}" required>
                         <div class="text-danger" th:if="${#fields.hasErrors('fechaEntrega')}" th:errors="*{fechaEntrega}"></div>
+                    </div>                    <!-- Si la etapa viene predeterminada, mostrar el título y usar campo oculto -->
+                    <div th:if="${tarea.etapa != null}">
+                        <label class="block text-sm font-semibold text-sky-700">Etapa:</label>
+                        <div class="w-full px-4 py-2 bg-sky-50 text-sky-800 font-semibold rounded-2xl">
+                            [[${tarea.etapa.titulo}]]
+                        </div>
+                        <input type="hidden" name="etapa.id" th:value="${tarea.etapa.id}">
                     </div>
-                    <div>
+                    <!-- Si no viene predeterminada, mostrar el combo -->
+                    <div th:unless="${tarea.etapa != null}">
                         <label for="etapa" class="block text-sm font-semibold text-sky-700">Etapa:</label>
                         <select class="w-full rounded-2xl border-0 bg-sky-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400 text-sky-800 font-semibold" id="etapa" name="etapa.id" required>
                             <option value="">Seleccione una Etapa</option>

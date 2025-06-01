@@ -15,19 +15,19 @@ public class EmprendedorServiceImplement implements EmprendedorService {
     private EmprendedorDao emprendedorDao;
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<EmprendedorEntity> findAll() {
         return (List<EmprendedorEntity>) emprendedorDao.findAll();
     }
 
     @Override
-    @jakarta.transaction.Transactional
+    @Transactional
     public void save(EmprendedorEntity usuario) {
         emprendedorDao.save(usuario);
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public EmprendedorEntity findById(String id) {
         return emprendedorDao.findById(id).orElse(null);
     }
@@ -36,19 +36,16 @@ public class EmprendedorServiceImplement implements EmprendedorService {
     @Transactional
     public void deleteById(String id) {
         emprendedorDao.deleteById(id);
-    }    @Override
-    @Transactional
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public EmprendedorEntity findByDocumento(String documento) {
-        EmprendedorEntity emprendedor = emprendedorDao.findByDocumento(documento);
-        if (emprendedor != null) {
-            // Ensure the usuario is loaded
-            emprendedor.getUsuario();
-        }
-        return emprendedor;
+        return emprendedorDao.findById(documento).orElse(null);
     }
     
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public EmprendedorEntity findByUsuarioEmail(String email) {
         return emprendedorDao.findByUsuarioEmail(email);
     }

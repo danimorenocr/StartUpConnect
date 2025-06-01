@@ -51,19 +51,23 @@ public class TareaController {
         model.addAttribute("tareas", lista);
         return "/tarea/listarTareas";
     }    @GetMapping(value = "/crearTarea")
-    public String crearTarea(Model model) {
+    public String crearTarea(Model model, @RequestParam(required = false) Long etapaId) {
         List<EtapaEntity> etapas = etapaService.findAll();
         model.addAttribute("etapas", etapas);
         model.addAttribute("title", "Crear Tarea");
         TareaEntity tarea = new TareaEntity();
+        
+        // If etapaId is provided, pre-select the etapa
+        if (etapaId != null) {
+            EtapaEntity etapa = etapaService.findById(etapaId);
+            if (etapa != null) {
+                tarea.setEtapa(etapa);
+            }
+        }
+        
         model.addAttribute("tarea", tarea);
-        // Obtener miembros del equipo para reunión (implementar según tu modelo de datos)
-        // Ejemplo: List<MiembroEntity> miembros = miembroService.findAll();
-        // model.addAttribute("miembrosEquipo", miembros);
         return "/tarea/crearTarea";
-    }
-
-    @PostMapping("/crearTarea")
+    }    @PostMapping("/crearTarea")
     public String crearTarea(
             @Valid @ModelAttribute("tarea") TareaEntity tarea,
             BindingResult result,
@@ -72,8 +76,9 @@ public class TareaController {
             @RequestParam(required = false) String horaReunion,
             @RequestParam(required = false) Integer duracionReunion,
             @RequestParam(required = false) List<Long> participantesReunion,
+            @RequestParam(required = false) Long etapaId,
             Model model,
-            RedirectAttributes redirectAttributes) {
+            RedirectAttributes redirectAttributes){
         
         if (result.hasErrors()) {
             List<EtapaEntity> etapas = etapaService.findAll();
@@ -81,6 +86,12 @@ public class TareaController {
             // Volver a cargar lista de miembros si es necesario
             // model.addAttribute("miembrosEquipo", miembroService.findAll());
             return "tarea/crearTarea";
+        }        // If etapaId is provided, set the etapa
+        if (etapaId != null) {
+            EtapaEntity etapa = etapaService.findById(etapaId);
+            if (etapa != null) {
+                tarea.setEtapa(etapa);
+            }
         }
 
         // Guardar la tarea
@@ -146,11 +157,14 @@ public class TareaController {
             } catch (Exception e) {
                 redirectAttributes.addFlashAttribute("mensajeError", 
                     "Tarea creada pero ocurrió un error al crear la reunión: " + e.getMessage());
-            }
-        } else {
+            }        } else {
             redirectAttributes.addFlashAttribute("mensajeExito", "Tarea creada exitosamente.");
         }
         
+        // Redirect back to etapa's view if the task was created from an etapa
+        if (tarea.getEtapa() != null) {
+            return "redirect:/verEtapa/" + tarea.getEtapa().getId();
+        }
         return "redirect:/tarea";
     }
 
