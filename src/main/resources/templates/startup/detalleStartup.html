@@ -37,16 +37,37 @@
                         </div>
                     </div>
                 </div>
-                
-                <div class="stats-container">
-                    <div class="stat-item">
-                        <form th:action="@{/startup/{id}/like(id=${startupDetalle.id})}" method="post" class="like-form">
-                            <button type="submit" class="like-button" th:classappend="${hasLiked} ? 'liked' : ''">
-                                <i class="fas fa-heart" th:classappend="${hasLiked} ? 'liked-heart' : ''"></i>
+                  <div class="stats-container">                    <div class="stat-item">
+                        <!-- Mostrar botón de like solo para emprendedores e inversionistas -->
+                        <div sec:authorize="hasAnyRole('ADMIN', 'INVERSIONISTA', 'EMPRENDEDOR')">
+                            <form th:action="@{/startup/{id}/like(id=${startupDetalle.id})}" method="post" class="like-form">
+                                <button type="submit" class="like-button" th:classappend="${hasLiked} ? 'liked' : ''">
+                                    <i class="fas fa-heart" th:classappend="${hasLiked} ? 'liked-heart' : ''"></i>
+                                    <span class="stat-number" th:text="${startupDetalle.cantLikes}">0</span>
+                                </button>
+                            </form>
+                            <span class="stat-label" th:text="${hasLiked} ? 'Te gusta' : 'Likes'">Likes</span>
+                        </div>
+                        
+                        <!-- Mensaje para mentores -->
+                        <div sec:authorize="hasRole('MENTOR')" class="mentor-like-info">
+                            <div class="stat-display">
+                                <i class="fas fa-heart like-icon-disabled"></i>
                                 <span class="stat-number" th:text="${startupDetalle.cantLikes}">0</span>
-                            </button>
-                        </form>
-                        <span class="stat-label" th:text="${hasLiked} ? 'Te gusta' : 'Likes'">Likes</span>
+                            </div>
+                            <span class="stat-label">Likes</span>
+                            <small class="mentor-message">Los mentores no pueden dar like</small>
+                        </div>
+                        
+                        <!-- Mostrar solo el número de likes para usuarios no autenticados -->
+                        <div sec:authorize="!isAuthenticated()" class="guest-like-info">
+                            <div class="stat-display">
+                                <i class="fas fa-heart like-icon-disabled"></i>
+                                <span class="stat-number" th:text="${startupDetalle.cantLikes}">0</span>
+                            </div>
+                            <span class="stat-label">Likes</span>
+                            <small class="guest-message">Inicia sesión para dar like</small>
+                        </div>
                     </div>
                     <div class="stat-item">
                         <span class="stat-date" th:text="${#temporals.format(startupDetalle.fechaCreacion, 'dd/MM/yyyy')}">01/01/2023</span>
@@ -203,7 +224,7 @@
         </div>
         
         <!-- Formulario de comentarios -->
-        <div class="comment-form">
+        <div sec:authorize="hasRole('INVERSIONISTA')" class="comment-form">
             <form th:action="@{/startup/{id}/comentar(id=${startupDetalle.id})}" method="post">
                 <div class="form-group">
                     <textarea name="comentario" required class="form-control" 

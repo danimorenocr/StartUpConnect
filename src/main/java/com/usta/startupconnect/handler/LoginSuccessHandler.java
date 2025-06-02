@@ -30,8 +30,7 @@ public class LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessH
         FlashMap flashMap = new FlashMap();
         flashMap.put("success", "Has iniciado sesión correctamente, " + authentication.getName());
         flashMapManager.saveOutputFlashMap(flashMap, request, response);
-        
-        // Determinar la URL de redirección basada en el rol del usuario
+          // Determinar la URL de redirección basada en el rol del usuario
         String redirectUrl;
         if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
             redirectUrl = "/administrador";
@@ -39,6 +38,8 @@ public class LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessH
             redirectUrl = "/mentor/dashboardMentor";
         } else if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_EMPRENDEDOR"))) {
             redirectUrl = "/emprendedor/dashboardEmprendedor";
+        } else if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_INVERSIONISTA"))) {
+            redirectUrl = "/vitrina";
         } else {
             // Redirección por defecto si no se identifica un rol específico
             redirectUrl = "/";

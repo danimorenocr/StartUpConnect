@@ -31,13 +31,17 @@ public class ComentariosController {
     public String agregarComentario(@PathVariable("id") Long startupId,
                                   @RequestParam("comentario") String comentario,
                                   RedirectAttributes redirectAttributes) {
-        
-        // Obtener el usuario autenticado
+          // Obtener el usuario autenticado
         UsuarioEntity usuario = userDetailsService.obtenerUsuarioAutenticado();
         if (usuario == null) {
             redirectAttributes.addFlashAttribute("error", "Debes iniciar sesión para comentar");
             return "redirect:/verStartup/" + startupId;
-        }        // Verificar que el usuario sea inversor        // Se removió la verificación de rol para permitir que cualquier usuario pueda comentar
+        }
+          // Verificar que el usuario sea inversionista
+        if (usuario.getRol() == null || !"INVERSIONISTA".equals(usuario.getRol().getRol().toUpperCase())) {
+            redirectAttributes.addFlashAttribute("error", "Solo los inversionistas pueden comentar en las startups");
+            return "redirect:/verStartup/" + startupId;
+        }
 
         // Buscar la startup
         StartupEntity startup = startupService.findById(startupId);

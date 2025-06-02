@@ -29,10 +29,13 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-            .authorizeHttpRequests(auth -> auth
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {        http            .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/error", "/login", "/registro", "/css/**", "/js/**", "/images/**", "/uploads/**").permitAll()
+                  // Rutas públicas de startups (vitrina y detalles accesibles para todos)
+                .requestMatchers("/vitrina", "/vitrina-alt", "/verStartup/**", "/api/startup/**").permitAll()
+                  // Rutas de interacción (comentar solo inversionistas, likes inversionistas y emprendedores)
+                .requestMatchers("/startup/*/comentar").hasAnyRole("ADMIN", "INVERSIONISTA")
+                .requestMatchers("/startup/*/like").hasAnyRole("ADMIN", "INVERSIONISTA", "EMPRENDEDOR")
                 
                 // Rutas de administrador
                 .requestMatchers("/administrador", "/usuario/**", "/startup/**", "/startup/eliminar/**", "/entregable/actualizar/**").hasRole("ADMIN")
@@ -54,9 +57,8 @@ public class SecurityConfig {
                 .successHandler(loginSuccessHandler)
                 .failureUrl("/login?error=true")
                 .permitAll()
-            )
-            .logout(logout -> logout
-                .logoutSuccessUrl("/login?logout=true")
+            )            .logout(logout -> logout
+                .logoutSuccessUrl("/")
                 .permitAll()
             )
             .csrf(csrf -> csrf.ignoringRequestMatchers("/images/**", "/js/**", "/css/**", "/webjars/**", "/uploads/**"));

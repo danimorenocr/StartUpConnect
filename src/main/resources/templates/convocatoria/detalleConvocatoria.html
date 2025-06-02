@@ -9,18 +9,24 @@
 <body class="bg-stone-100 text-gray-900 font-[Poppins]">
     <header th:replace="~{layout/layout :: header}"></header>
     <!-- Botones de acción arriba -->
-    <div class="flex flex-col md:flex-row justify-end items-center gap-4 px-4 md:px-12 pt-8 pb-4 w-full max-w-7xl mx-auto">
+    <div
+        class="flex flex-col md:flex-row justify-end items-center gap-4 px-4 md:px-12 pt-8 pb-4 w-full max-w-7xl mx-auto">
         <div class="flex flex-wrap gap-3">
-            <a th:href="@{/convocatoria}" class="bg-white border border-gray-300 hover:border-orange-500 text-gray-700 font-medium py-2 px-4 rounded-lg transition flex items-center">
+            <a th:href="@{/convocatoria}"
+                class="bg-white border border-gray-300 hover:border-orange-500 text-gray-700 font-medium py-2 px-4 rounded-lg transition flex items-center">
                 <i class="fas fa-arrow-left mr-2"></i> Volver
-            </a>            <a th:href="@{/postulacion/convocatoria/{id}(id=${convocatoriaDetalle.id})}" class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-lg transition flex items-center">
+            </a> <a sec:authorize="hasRole('ADMIN')" th:href="@{/postulacion/convocatoria/{id}(id=${convocatoriaDetalle.id})}"
+                class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-lg transition flex items-center">
                 <i class="fas fa-list-ul mr-2"></i> Ver Postulaciones
             </a>
-            <a th:href="@{/editarConvocatoria/{id}(id=${convocatoriaDetalle.id})}" class="bg-amber-500 hover:bg-amber-600 text-white font-medium py-2 px-4 rounded-lg transition flex items-center">
+            <a sec:authorize="hasRole('ADMIN')" th:href="@{/editarConvocatoria/{id}(id=${convocatoriaDetalle.id})}"
+                class="bg-amber-500 hover:bg-amber-600 text-white font-medium py-2 px-4 rounded-lg transition flex items-center">
                 <i class="fas fa-edit mr-2"></i> Editar
             </a>
-            <form th:action="@{/eliminarConvocatoria/{id}(id=${convocatoriaDetalle.id})}" method="post" onsubmit="return confirmarEliminacion(event, this);">
-                <button type="submit" class="bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded-lg transition flex items-center">
+            <form th:action="@{/eliminarConvocatoria/{id}(id=${convocatoriaDetalle.id})}" method="post"
+                onsubmit="return confirmarEliminacion(event, this);">
+                <button sec:authorize="hasRole('ADMIN')" type="submit"
+                    class="bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded-lg transition flex items-center">
                     <i class="fas fa-trash mr-2"></i> Eliminar
                 </button>
             </form>
@@ -31,9 +37,10 @@
         <div class="flex flex-col md:flex-row gap-8">
             <!-- Banner lateral con icono -->
             <div class="w-full md:w-1/3 flex flex-col items-center justify-center min-h-[300px] md:min-h-0 rounded-2xl shadow-md p-8"
-                 th:style="'background: linear-gradient(135deg, ' + ${convocatoriaDetalle.sectorObjetivo == 'Tecnología' ? '#dbeafe, #93c5fd' : convocatoriaDetalle.sectorObjetivo == 'Salud' ? '#dcfce7, #86efac' : convocatoriaDetalle.sectorObjetivo == 'Educación' ? '#fef3c7, #fcd34d' : convocatoriaDetalle.sectorObjetivo == 'Finanzas' ? '#f3e8ff, #c4b5fd' : '#cffafe, #67e8f9'} + ');'">
+                th:style="'background: linear-gradient(135deg, ' + ${convocatoriaDetalle.sectorObjetivo == 'Tecnología' ? '#dbeafe, #93c5fd' : convocatoriaDetalle.sectorObjetivo == 'Salud' ? '#dcfce7, #86efac' : convocatoriaDetalle.sectorObjetivo == 'Educación' ? '#fef3c7, #fcd34d' : convocatoriaDetalle.sectorObjetivo == 'Finanzas' ? '#f3e8ff, #c4b5fd' : '#cffafe, #67e8f9'} + ');'">
                 <div class="mb-6">
-                    <div th:switch="${convocatoriaDetalle.sectorObjetivo}" class="w-24 h-24 flex items-center justify-center rounded-full bg-white shadow-lg">
+                    <div th:switch="${convocatoriaDetalle.sectorObjetivo}"
+                        class="w-24 h-24 flex items-center justify-center rounded-full bg-white shadow-lg">
                         <i th:case="'Tecnología'" class="fas fa-microchip text-blue-600 text-4xl"></i>
                         <i th:case="'Salud'" class="fas fa-heartbeat text-green-600 text-4xl"></i>
                         <i th:case="'Educación'" class="fas fa-graduation-cap text-amber-600 text-4xl"></i>
@@ -47,10 +54,12 @@
                 </div>
                 <!-- Estado de la convocatoria -->
                 <div class="mt-6">
-                    <div th:if="${convocatoriaDetalle.fechaFin.after(new java.util.Date())}" class="bg-green-100 text-green-700 px-4 py-2 rounded-full font-semibold flex items-center">
+                    <div th:if="${convocatoriaDetalle.fechaFin.after(new java.util.Date())}"
+                        class="bg-green-100 text-green-700 px-4 py-2 rounded-full font-semibold flex items-center">
                         <i class="fas fa-check-circle mr-2"></i> Convocatoria Activa
                     </div>
-                    <div th:unless="${convocatoriaDetalle.fechaFin.after(new java.util.Date())}" class="bg-red-100 text-red-700 px-4 py-2 rounded-full font-semibold flex items-center">
+                    <div th:unless="${convocatoriaDetalle.fechaFin.after(new java.util.Date())}"
+                        class="bg-red-100 text-red-700 px-4 py-2 rounded-full font-semibold flex items-center">
                         <i class="fas fa-clock mr-2"></i> Convocatoria Finalizada
                     </div>
                 </div>
@@ -58,7 +67,8 @@
             <!-- Contenido principal -->
             <div class="w-full md:w-2/3 flex flex-col justify-between">
                 <div class="flex justify-between items-start mb-6">
-                    <h1 class="text-3xl font-bold text-gray-800" th:text="${convocatoriaDetalle.titulo}">Título de la Convocatoria</h1>
+                    <h1 class="text-3xl font-bold text-gray-800" th:text="${convocatoriaDetalle.titulo}">Título de la
+                        Convocatoria</h1>
                 </div>
                 <!-- Organizador -->
                 <div class="flex items-center mb-6">
@@ -78,7 +88,9 @@
                         </div>
                         <div>
                             <div class="text-sm text-gray-500">Fecha de inicio:</div>
-                            <div class="font-medium" th:text="${#dates.format(convocatoriaDetalle.fechaInicio, 'dd MMM yyyy')}">01 Jun 2025</div>
+                            <div class="font-medium"
+                                th:text="${#dates.format(convocatoriaDetalle.fechaInicio, 'dd MMM yyyy')}">01 Jun 2025
+                            </div>
                         </div>
                     </div>
                     <div class="flex items-center">
@@ -87,7 +99,9 @@
                         </div>
                         <div>
                             <div class="text-sm text-gray-500">Fecha de cierre:</div>
-                            <div class="font-medium" th:text="${#dates.format(convocatoriaDetalle.fechaFin, 'dd MMM yyyy')}">30 Jul 2025</div>
+                            <div class="font-medium"
+                                th:text="${#dates.format(convocatoriaDetalle.fechaFin, 'dd MMM yyyy')}">30 Jul 2025
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -98,7 +112,9 @@
                     </div>
                     <div>
                         <div class="text-sm text-gray-500">Contacto:</div>
-                        <a href="tel:0180001234" th:href="'tel:' + ${convocatoriaDetalle.contacto}" class="font-medium text-blue-600 hover:underline" th:text="${convocatoriaDetalle.contacto}">0180001234</a>
+                        <a href="tel:0180001234" th:href="'tel:' + ${convocatoriaDetalle.contacto}"
+                            class="font-medium text-blue-600 hover:underline"
+                            th:text="${convocatoriaDetalle.contacto}">0180001234</a>
                     </div>
                 </div>
                 <!-- Descripción -->
@@ -109,8 +125,12 @@
                         </div>
                         Descripción
                     </h3>
-                    <div class="bg-gray-50 rounded-xl p-4 mt-2 text-gray-700 leading-relaxed" th:text="${convocatoriaDetalle.descripcion}">
-                        Esta convocatoria tiene como objetivo seleccionar y acompañar hasta quince (15) equipos emprendedores con ideas de negocio que le aporten a la sostenibilidad, en proceso de llevar su producto mínimo viable al mercado y estructurar modelo de negocio, mejorar su innovación y validar la viabilidad en el mercado.
+                    <div class="bg-gray-50 rounded-xl p-4 mt-2 text-gray-700 leading-relaxed"
+                        th:text="${convocatoriaDetalle.descripcion}">
+                        Esta convocatoria tiene como objetivo seleccionar y acompañar hasta quince (15) equipos
+                        emprendedores con ideas de negocio que le aporten a la sostenibilidad, en proceso de llevar su
+                        producto mínimo viable al mercado y estructurar modelo de negocio, mejorar su innovación y
+                        validar la viabilidad en el mercado.
                     </div>
                 </div>
                 <!-- Requisitos -->
@@ -122,10 +142,13 @@
                         Requisitos
                     </h3>
                     <div class="bg-gray-50 rounded-xl p-4 mt-2 text-gray-700">
-                        <div class="prose" th:utext="${#strings.replace(convocatoriaDetalle.requisitos, '\n', '&lt;br&gt;')}">
+                        <div class="prose"
+                            th:utext="${#strings.replace(convocatoriaDetalle.requisitos, '\n', '&lt;br&gt;')}">
                             <ol class="list-decimal list-inside space-y-2">
-                                <li>Ser un equipo emprendedor apasionado y decidido de mínimo 2 y máximo 4 personas.</li>
-                                <li>Contar con la disposición a validar su idea de negocio y su aporte desde la sostenibilidad.</li>
+                                <li>Ser un equipo emprendedor apasionado y decidido de mínimo 2 y máximo 4 personas.
+                                </li>
+                                <li>Contar con la disposición a validar su idea de negocio y su aporte desde la
+                                    sostenibilidad.</li>
                                 <li>Con un Producto Mínimo Viable (MVP) en mano que puedan llevar al mercado.</li>
                             </ol>
                         </div>
@@ -140,14 +163,17 @@
                         Beneficios
                     </h3>
                     <div class="bg-gray-50 rounded-xl p-4 mt-2 text-gray-700">
-                        <div class="prose" th:utext="${#strings.replace(convocatoriaDetalle.beneficios, '\n', '&lt;br&gt;')}">
-                            Acompañamiento personalizado, mentoría especializada, acceso a red de contactos, espacios de trabajo colaborativo, y oportunidades de financiación.
+                        <div class="prose"
+                            th:utext="${#strings.replace(convocatoriaDetalle.beneficios, '\n', '&lt;br&gt;')}">
+                            Acompañamiento personalizado, mentoría especializada, acceso a red de contactos, espacios de
+                            trabajo colaborativo, y oportunidades de financiación.
                         </div>
                     </div>
                 </div>
                 <!-- Botón Postularse -->
                 <div class="mt-8 flex justify-center">
-                    <a th:href="@{/crearPostulacion(idConvocatoria=${convocatoriaDetalle.id})}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full text-lg transition flex items-center">
+                    <a th:href="@{/crearPostulacion(idConvocatoria=${convocatoriaDetalle.id})}"
+                        class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full text-lg transition flex items-center">
                         <i class="fas fa-paper-plane mr-2"></i> ¡Postúlate Ahora!
                     </a>
                 </div>
@@ -174,4 +200,5 @@
         }
     </script>
 </body>
+
 </html>

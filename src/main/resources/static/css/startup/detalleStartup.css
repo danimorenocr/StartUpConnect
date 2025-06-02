@@ -1889,4 +1889,68 @@ body {
     margin-top: 5px;
 }
 
+/* Estilos para mentores que no pueden dar like */
+.mentor-like-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.stat-display {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(149, 165, 166, 0.3);
+}
+
+.like-icon-disabled {
+    font-size: 18px;
+    color: #bdc3c7;
+}
+
+.mentor-message {
+    color: #7f8c8d;
+    font-size: 10px;
+    font-style: italic;
+    margin-top: 2px;
+    text-transform: none;
+    letter-spacing: 0;
+}
+
+/* Estilos para usuarios no autenticados que ven el detalle de startup */
+.guest-like-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.guest-like-info .stat-display {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+}
+
+.guest-like-info .like-icon-disabled {
+    font-size: 18px;
+    color: #ecf0f1;
+}
+
+.guest-message {
+    color: #3498db;
+    font-size: 10px;
+    font-style: italic;
+    margin-top: 2px;
+    text-transform: none;
+    letter-spacing: 0;
+}
+
 /*# sourceMappingURL=styles.css.map */
