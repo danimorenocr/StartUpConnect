@@ -124,17 +124,20 @@
     </div>
 </div>
 
-                </div> <!-- Sección 3: Información del Equipo -->
-                <div class="section-card" data-section="3" style="display: none;">
+                </div> <!-- Sección 3: Información del Equipo -->                <div class="section-card" data-section="3" style="display: none;">
                     <h3 class="section-title text-2xl text-[#2376ad] font-semibold mb-6 pb-2 border-b-2 border-gray-200">Información del Equipo</h3>
                     <div class="form-group mb-6">
-                        <label for="numeroIntegrantes" class="form-label block mb-2 font-medium text-[#2376ad]">Número de Integrantes</label>
-                        <input type="number" class="form-control w-full px-4 py-3 rounded-lg border-2 border-[#2376ad] bg-indigo-50 text-gray-800 focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition" id="numeroIntegrantes" th:field="*{numeroIntegrantes}" required min="1">
+                        <label for="numeroIntegrantes" class="form-label block mb-2 font-medium text-[#2376ad]">Número de Integrantes <span class="text-red-500">*</span></label>
+                        <input type="number" class="form-control w-full px-4 py-3 rounded-lg border-2 border-[#2376ad] bg-indigo-50 text-gray-800 focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition" 
+                               id="numeroIntegrantes" th:field="*{numeroIntegrantes}" required min="1" max="100" 
+                               data-validate="required number min:1 max:100" placeholder="Ej: 5">
                         <div class="invalid-feedback text-red-600 text-sm mt-1 hidden">Por favor ingresa el número de integrantes.</div>
                     </div>
                     <div class="form-group mb-6">
-                        <label for="dineroVentas" class="form-label block mb-2 font-medium text-[#2376ad]">Dinero en Ventas (USD)</label>
-                        <input type="number" class="form-control w-full px-4 py-3 rounded-lg border-2 border-[#2376ad] bg-indigo-50 text-gray-800 focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition" id="dineroVentas" th:field="*{dineroVentas}" required step="0.01" min="0">
+                        <label for="dineroVentas" class="form-label block mb-2 font-medium text-[#2376ad]">Dinero en Ventas (USD) <span class="text-red-500">*</span></label>
+                        <input type="number" class="form-control w-full px-4 py-3 rounded-lg border-2 border-[#2376ad] bg-indigo-50 text-gray-800 focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition" 
+                               id="dineroVentas" th:field="*{dineroVentas}" required step="0.01" min="0" max="1000000000"
+                               data-validate="required number min:0" placeholder="Ej: 10000.50">
                         <div class="invalid-feedback text-red-600 text-sm mt-1 hidden">Por favor ingresa el monto de ventas.</div>
                     </div>
                     <div class="form-group mb-6">
@@ -174,18 +177,20 @@
                             <option value="MVP">MVP</option>
                             <option value="Tracción Inicial">Tracción Inicial</option>
                             <option value="Crecimiento">Crecimiento</option>
-                            <option value="Expansión">Expansión</option>
-                        </select>
+                            <option value="Expansión">Expansión</option>                        </select>
                         <div class="invalid-feedback text-red-600 text-sm mt-1 hidden">Por favor selecciona la etapa del proyecto.</div>
                     </div>
                     <div class="form-group mb-6">
-                        <label for="fechaPostulacion" class="form-label block mb-2 font-medium text-[#2376ad]">Fecha de Postulación</label>
-                        <input type="date" class="form-control w-full px-4 py-3 rounded-lg border-2 border-[#2376ad] bg-indigo-50 text-gray-800 focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition" id="fechaPostulacion" th:field="*{fechaPostulacion}" required>
+                        <label for="fechaPostulacion" class="form-label block mb-2 font-medium text-[#2376ad]">Fecha de Postulación <span class="text-red-500">*</span></label>
+                        <input type="date" class="form-control w-full px-4 py-3 rounded-lg border-2 border-[#2376ad] bg-indigo-50 text-gray-800 focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition" 
+                               id="fechaPostulacion" th:field="*{fechaPostulacion}" required data-validate="required date" placeholder="yyyy-mm-dd">
                         <div class="invalid-feedback text-red-600 text-sm mt-1 hidden">Por favor selecciona la fecha de postulación.</div>
                     </div>
                     <div class="form-group mb-6">
-                        <label for="necesidadesActuales" class="form-label block mb-2 font-medium text-[#2376ad]">Necesidades Actuales</label>
-                        <textarea class="form-control w-full px-4 py-3 rounded-lg border-2 border-[#2376ad] bg-indigo-50 text-gray-800 focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition min-h-[100px] resize-y" id="necesidadesActuales" th:field="*{necesidadesActuales}" rows="3" required placeholder="Ej: financiamiento, mentorías, conexiones, etc."></textarea>
+                        <label for="necesidadesActuales" class="form-label block mb-2 font-medium text-[#2376ad]">Necesidades Actuales <span class="text-red-500">*</span></label>
+                        <textarea class="form-control w-full px-4 py-3 rounded-lg border-2 border-[#2376ad] bg-indigo-50 text-gray-800 focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition min-h-[100px] resize-y" 
+                                  id="necesidadesActuales" th:field="*{necesidadesActuales}" rows="3" required data-validate="required minLength:10 maxLength:500" 
+                                  placeholder="Ej: financiamiento, mentorías, conexiones, etc."></textarea>
                         <div class="invalid-feedback text-red-600 text-sm mt-1 hidden">Por favor describe las necesidades actuales.</div>
                     </div>
 <div class="form-navigation flex flex-row justify-start items-center gap-60 mt-10">
@@ -211,21 +216,29 @@
                         <input type="url" class="form-control w-full px-4 py-3 rounded-lg border-2 border-[#2376ad] bg-indigo-50 text-gray-800 focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition" id="fotoUrl" th:field="*{fotoUrl}" readonly>
                         <small class="form-text block mt-1 text-gray-500 text-xs">La URL de la foto se cargará automáticamente según la Startup seleccionada.</small>
                     </div>
-                    <div class="form-group mb-6">
-                        <label for="enlacePaginaWeb" class="form-label block mb-2 font-medium text-[#2376ad]">Enlace a Página Web</label>
-                        <input type="url" class="form-control w-full px-4 py-3 rounded-lg border-2 border-[#2376ad] bg-indigo-50 text-gray-800 focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition" id="enlacePaginaWeb" th:field="*{enlacePaginaWeb}">
+                    <div class="form-group mb-6">                        <label for="enlacePaginaWeb" class="form-label block mb-2 font-medium text-[#2376ad]">Enlace a Página Web</label>
+                        <input type="url" class="form-control w-full px-4 py-3 rounded-lg border-2 border-[#2376ad] bg-indigo-50 text-gray-800 focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition" 
+                               id="enlacePaginaWeb" th:field="*{enlacePaginaWeb}" data-validate="url" 
+                               placeholder="https://www.ejemplo.com">
+                        <small class="form-text block mt-1 text-gray-500 text-xs">Ingrese la URL completa incluyendo https://</small>
                     </div>
                     <div class="form-group mb-6">
                         <label for="pitch" class="form-label block mb-2 font-medium text-[#2376ad]">Pitch (URL)</label>
-                        <input type="url" class="form-control w-full px-4 py-3 rounded-lg border-2 border-[#2376ad] bg-indigo-50 text-gray-800 focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition" id="pitch" th:field="*{pitch}">
+                        <input type="url" class="form-control w-full px-4 py-3 rounded-lg border-2 border-[#2376ad] bg-indigo-50 text-gray-800 focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition" 
+                               id="pitch" th:field="*{pitch}" data-validate="url" 
+                               placeholder="https://docs.google.com/presentation/...">
                     </div>
                     <div class="form-group mb-6">
                         <label for="documentoPropuesta" class="form-label block mb-2 font-medium text-[#2376ad]">Documento de Propuesta (URL)</label>
-                        <input type="url" class="form-control w-full px-4 py-3 rounded-lg border-2 border-[#2376ad] bg-indigo-50 text-gray-800 focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition" id="documentoPropuesta" th:field="*{documentoPropuesta}">
+                        <input type="url" class="form-control w-full px-4 py-3 rounded-lg border-2 border-[#2376ad] bg-indigo-50 text-gray-800 focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition" 
+                               id="documentoPropuesta" th:field="*{documentoPropuesta}" data-validate="url" 
+                               placeholder="https://docs.google.com/document/...">
                     </div>
                     <div class="form-group mb-6">
                         <label for="videoPitch" class="form-label block mb-2 font-medium text-[#2376ad]">Video Pitch (URL)</label>
-                        <input type="url" class="form-control w-full px-4 py-3 rounded-lg border-2 border-[#2376ad] bg-indigo-50 text-gray-800 focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition" id="videoPitch" th:field="*{videoPitch}">
+                        <input type="url" class="form-control w-full px-4 py-3 rounded-lg border-2 border-[#2376ad] bg-indigo-50 text-gray-800 focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition" 
+                               id="videoPitch" th:field="*{videoPitch}" data-validate="url" 
+                               placeholder="https://www.youtube.com/...">
                     </div>
                     <div class="form-group mb-6">
                         <label for="enlacesAdicionales" class="form-label block mb-2 font-medium text-[#2376ad]">Enlaces Adicionales</label>
@@ -373,6 +386,75 @@ function updatePrevButton() {
             }
         });
     }
+    
+    // Cargar el validador de formularios
+    const script = document.createElement('script');
+    script.src = '/js/formValidator.js';
+    script.onload = function() {
+        // Inicializar validación de formulario
+        FormValidator.init('#postulacion-form', {
+            onError: function() {
+                // Asegurarse de que la sección con errores esté visible
+                const invalidFields = document.querySelectorAll('.validation-error');
+                if (invalidFields.length > 0) {
+                    // Encontrar la sección que contiene el primer campo con error
+                    let sectionWithError = null;
+                    invalidFields.forEach(field => {
+                        const section = field.closest('.section-card');
+                        if (section && !sectionWithError) {
+                            sectionWithError = section;
+                        }
+                    });
+                    
+                    // Mostrar la sección con el error
+                    if (sectionWithError) {
+                        // Ocultar todas las secciones
+                        document.querySelectorAll('.section-card').forEach(section => {
+                            section.style.display = 'none';
+                        });
+                        
+                        // Mostrar la sección con error
+                        sectionWithError.style.display = 'block';
+                        
+                        // Actualizar la navegación
+                        const sectionId = sectionWithError.getAttribute('data-section');
+                        updateProgressBar(sectionId);
+                        
+                        // Mostrar alerta
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error de validación',
+                            text: 'Por favor corrija los campos marcados en rojo',
+                            confirmButtonColor: '#2376ad'
+                        });
+                    }
+                }
+            }
+        });
+        
+        // Inicializar validación de fechas
+        const fechaPostulacionInput = document.getElementById('fechaPostulacion');
+        if (fechaPostulacionInput) {
+            // Establecer fecha mínima y máxima
+            const today = new Date();
+            const maxDate = new Date();
+            maxDate.setDate(today.getDate() + 30); // Permitir hasta 30 días en el futuro
+            
+            const yyyy = today.getFullYear();
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            const dd = String(today.getDate()).padStart(2, '0');
+            const todayFormatted = `${yyyy}-${mm}-${dd}`;
+            
+            const maxYyyy = maxDate.getFullYear();
+            const maxMm = String(maxDate.getMonth() + 1).padStart(2, '0');
+            const maxDd = String(maxDate.getDate()).padStart(2, '0');
+            const maxDateFormatted = `${maxYyyy}-${maxMm}-${maxDd}`;
+            
+            fechaPostulacionInput.min = todayFormatted;
+            fechaPostulacionInput.max = maxDateFormatted;
+        }
+    };
+    document.head.appendChild(script);
 
     initializeSections();
 });

@@ -1,315 +1,757 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
+
 <head th:replace="~{layout/layout :: head}">
-    <title>Servicios de Render</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Servicios en Render - StartUp Connect</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- <link rel="stylesheet" th:href="@{/css/render/servicios.css}"> -->
 </head>
-<body>
+
+<body class="bg-white font-sans min-h-screen">
     <header th:replace="~{layout/layout :: header}"></header>
 
-    <div class="container mx-auto px-4 py-8">
-        <div class="text-center mb-10">
-            <h1 class="text-3xl font-bold text-blue-600 mb-2">Servicios de Render</h1>
-            <p class="text-gray-600 mb-4">Monitorea y administra todos tus servicios en la plataforma Render</p>
-            
-            <div class="flex flex-wrap justify-center gap-4 mt-6">
-                <div class="bg-white bg-opacity-60 backdrop-blur-sm p-3 rounded-lg shadow-sm flex items-center">
-                    <i class="fas fa-server text-blue-500 mr-2"></i>
-                    <span>Servicios Web</span>
+    <div class="max-w-6xl mx-auto py-10 px-6">
+        <!-- Banner Section -->
+        <div class="banner-render">
+            <img src="/images/bannerMentores.jpg" alt="Banner servicios Render" onerror="this.src='/images/bannerListar.jpg'" 
+                class="banner-image">
+            <div class="overlay">
+                <h2>Servicios Render</h2>
+                <p>Gestiona y despliega tus aplicaciones en la nube</p>
+            </div>
+        </div>
+
+        <h1 class="text-4xl font-extrabold text-[#0369a1] mb-10 tracking-tight drop-shadow">Servicios en Render</h1>
+
+        <!-- Resumen de servicios -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <div class="bg-white/80 rounded-lg shadow-lg p-5 border-t-4 border-blue-600">
+                <h3 class="text-gray-600 text-sm font-medium">Total de servicios</h3>
+                <p class="text-3xl font-bold text-blue-700" id="total-count">-</p>
+            </div>
+            <div class="bg-white/80 rounded-lg shadow-lg p-5 border-t-4 border-green-500">
+                <h3 class="text-gray-600 text-sm font-medium">Servicios activos</h3>
+                <p class="text-3xl font-bold text-green-600" id="active-count">-</p>
+            </div>
+            <div class="bg-white/80 rounded-lg shadow-lg p-5 border-t-4 border-red-500">
+                <h3 class="text-gray-600 text-sm font-medium">Servicios suspendidos</h3>
+                <p class="text-3xl font-bold text-red-600" id="suspended-count">-</p>
+            </div>
+            <div class="bg-white/80 rounded-lg shadow-lg p-5 border-t-4 border-purple-500">
+                <h3 class="text-gray-600 text-sm font-medium">Último actualizado</h3>
+                <p class="text-sm font-medium text-purple-600" id="last-updated">-</p>
+            </div>
+        </div>
+
+        <!-- Search and Create Section -->
+        <div class="section-header mb-6">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div class="search-container flex items-center relative w-full md:w-80 md:mx-0 mx-auto">
+                    <i class="search-icon absolute left-4 top-1/2 -translate-y-1/2 text-blue-500 text-lg fas fa-search"></i>
+                    <input id="buscar-servicio" type="text" placeholder="Buscar servicio..." 
+                        class="rounded-full pl-10 pr-4 py-2 border border-blue-300 shadow focus:outline-none focus:ring-2 focus:ring-blue-400 text-blue-800 font-medium w-full" 
+                        autocomplete="off">
                 </div>
-                <div class="bg-white bg-opacity-60 backdrop-blur-sm p-3 rounded-lg shadow-sm flex items-center">
-                    <i class="fas fa-file-code text-blue-500 mr-2"></i>
-                    <span>Sitios Estáticos</span>
-                </div>
-                <div class="bg-white bg-opacity-60 backdrop-blur-sm p-3 rounded-lg shadow-sm flex items-center">
-                    <i class="fas fa-cogs text-blue-500 mr-2"></i>
-                    <span>Workers</span>
-                </div>
-                <div class="bg-white bg-opacity-60 backdrop-blur-sm p-3 rounded-lg shadow-sm flex items-center">
-                    <i class="fas fa-database text-blue-500 mr-2"></i>
-                    <span>Bases de Datos</span>
+                <div class="flex justify-end w-full md:w-auto">
+                    <a href="#"
+                        class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-full shadow transition text-base">
+                        <i class="fas fa-plus mr-2"></i>
+                        Crear servicio
+                    </a>
                 </div>
             </div>
         </div>
 
-        <!-- Spinner de carga -->
+        <!-- Estado de carga -->
         <div id="loading" class="flex justify-center items-center py-10">
-            <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500"></div>
-            <p class="ml-4 text-lg text-gray-600">Cargando servicios...</p>
+            <div class="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-600"></div>
+            <p class="ml-4 text-lg font-medium text-gray-600">Cargando servicios...</p>
         </div>
 
         <!-- Contenedor de servicios -->
-        <div id="services-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 hidden">
-            <!-- Los servicios se cargarán aquí dinámicamente -->
-        </div>        <!-- Mensaje de error -->
-        <div id="error-message" class="hidden bg-red-100 border border-red-400 text-red-700 px-6 py-4 rounded-lg shadow-md" role="alert">
-            <div class="flex items-start">
-                <div class="flex-shrink-0">
-                    <i class="fas fa-exclamation-circle text-red-500 text-xl mr-3"></i>
-                </div>
-                <div>
-                    <h3 class="font-bold text-lg mb-2">Error al cargar los servicios</h3>
-                    <p class="text-md" id="error-text">Hubo un problema al comunicarse con la API de Render.</p>
-                    <div class="mt-4 text-sm text-red-600">
-                        <p>Posibles causas:</p>
-                        <ul class="list-disc list-inside ml-2 mt-1">
-                            <li>La API key de Render puede ser inválida o haber expirado</li>
-                            <li>El servidor de Render podría estar experimentando problemas</li>
-                            <li>Su conexión a internet podría estar teniendo problemas</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Botón para crear nuevo servicio -->
-        <div class="flex justify-end mb-6">
-            <a href="/render/crear-servicio" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                <i class="fas fa-plus mr-2"></i>
-                Crear nuevo servicio
-            </a>
-        </div>
-        
-        <!-- Mensaje de éxito -->
-        <div th:if="${mensaje}" class="mb-6 p-4 rounded-lg shadow-md" th:classappend="${alertClass}">
-            <p th:text="${mensaje}" class="font-medium"></p>
+        <section id="services-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></section>
+
+        <!-- Mensaje de error (oculto por defecto) -->
+        <div id="error-container" class="hidden bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-lg shadow-md"
+            role="alert">
+            <p class="font-bold">Error</p>
+            <p id="error-message"></p>
         </div>
     </div>
 
-    <script th:inline="javascript">
-        document.addEventListener('DOMContentLoaded', function() {
-            const loadingElement = document.getElementById('loading');
-            const servicesContainer = document.getElementById('services-container');
-            const errorMessage = document.getElementById('error-message');
-            const errorText = document.getElementById('error-text');            // Función para formatear fecha con manejo de errores
-            function formatDate(dateString) {
-                try {
-                    if (!dateString) return 'Fecha no disponible';
-                    
-                    const date = new Date(dateString);
-                    
-                    // Verificar si la fecha es válida (evitar 1969/1970)
-                    if (isNaN(date.getTime()) || date.getFullYear() < 2000) {
-                        return 'Fecha no disponible';
-                    }
-                    
-                    return date.toLocaleDateString('es-ES', {
-                        day: '2-digit',
-                        month: '2-digit',
-                        year: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit'
-                    });
-                } catch (e) {
-                    console.error('Error al formatear fecha:', e, dateString);
-                    return 'Fecha no disponible';
+    <!-- Modal de detalles (oculto por defecto) -->
+    <div id="service-details-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl mx-4 overflow-hidden">
+            <div class="flex items-center justify-between bg-blue-600 text-white px-6 py-4">
+                <h2 class="text-xl font-bold" id="modal-title">Detalles del servicio</h2>
+                <button onclick="closeServiceDetails()" class="text-white hover:text-gray-200 transition-colors duration-200">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <div class="p-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-4">
+                        <div class="bg-blue-50 p-3 rounded-lg">
+                            <h3 class="text-sm font-medium text-blue-800">ID del servicio</h3>
+                            <p id="detail-id" class="mt-1 text-sm text-gray-900 break-all"></p>
+                        </div>
+                        <div class="bg-blue-50 p-3 rounded-lg">
+                            <h3 class="text-sm font-medium text-blue-800">Nombre</h3>
+                            <p id="detail-name" class="mt-1 text-sm text-gray-900 font-medium"></p>
+                        </div>
+                        <div class="bg-blue-50 p-3 rounded-lg">
+                            <h3 class="text-sm font-medium text-blue-800">Tipo</h3>
+                            <p id="detail-type" class="mt-1 text-sm text-gray-900"></p>
+                        </div>
+                        <div class="bg-blue-50 p-3 rounded-lg">
+                            <h3 class="text-sm font-medium text-blue-800">Estado</h3>
+                            <p id="detail-status" class="mt-1 text-sm font-semibold"></p>
+                        </div>
+                        <div class="bg-blue-50 p-3 rounded-lg">
+                            <h3 class="text-sm font-medium text-blue-800">Plan</h3>
+                            <p id="detail-plan" class="mt-1 text-sm text-gray-900">-</p>
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="bg-blue-50 p-3 rounded-lg">
+                            <h3 class="text-sm font-medium text-blue-800">URL</h3>
+                            <a id="detail-url" href="#" target="_blank" class="mt-1 text-sm text-blue-600 hover:underline break-all">-</a>
+                        </div>
+                        <div class="bg-blue-50 p-3 rounded-lg">
+                            <h3 class="text-sm font-medium text-blue-800">Región</h3>
+                            <p id="detail-region" class="mt-1 text-sm text-gray-900">-</p>
+                        </div>
+                        <div class="bg-blue-50 p-3 rounded-lg">
+                            <h3 class="text-sm font-medium text-blue-800">Última actualización</h3>
+                            <p id="detail-updated" class="mt-1 text-sm text-gray-900">-</p>
+                        </div>
+                        <div class="bg-blue-50 p-3 rounded-lg">
+                            <h3 class="text-sm font-medium text-blue-800">Repositorio</h3>
+                            <p id="detail-repo" class="mt-1 text-sm text-gray-900 break-all">-</p>
+                        </div>
+                        <div class="bg-blue-50 p-3 rounded-lg">
+                            <h3 class="text-sm font-medium text-blue-800">Rama</h3>
+                            <p id="detail-branch" class="mt-1 text-sm text-gray-900">-</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-8 pt-4 border-t border-gray-200 flex justify-between">
+                    <button id="redeploy-button" onclick="redeployService()" class="px-5 py-2 bg-blue-600 text-white rounded-full shadow-md hover:bg-blue-700 transition-colors flex items-center">
+                        <i class="fas fa-rocket mr-2"></i>
+                        Re-deploy
+                    </button>
+                    <button onclick="closeServiceDetails()" class="px-5 py-2 bg-gray-200 text-gray-800 rounded-full shadow-md hover:bg-gray-300 transition-colors">
+                        Cerrar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        async function fetchRenderServices() {
+            try {
+                const response = await fetch('/render/api/services');
+                if (!response.ok) {
+                    throw new Error(`Error HTTP: ${response.status}`);
                 }
-            }
 
-            // Función para obtener el color de estado
-            function getStatusColor(status) {
-                switch(status) {
-                    case 'live':
-                        return 'bg-green-100 text-green-800 border-green-300';
-                    case 'building':
-                        return 'bg-yellow-100 text-yellow-800 border-yellow-300';
-                    case 'deploying':
-                        return 'bg-blue-100 text-blue-800 border-blue-300';
-                    case 'crashed':
-                        return 'bg-red-100 text-red-800 border-red-300';
-                    default:
-                        return 'bg-gray-100 text-gray-800 border-gray-300';
-                }
-            }
+                const services = await response.json();
+                console.log('Servicios recibidos:', services);
 
-            // Función para obtener un icono para cada tipo de servicio
-            function getServiceTypeIcon(type) {
-                switch(type) {
-                    case 'web_service':
-                        return 'fa-globe';
-                    case 'static_site':
-                        return 'fa-file-code';
-                    case 'background_worker':
-                        return 'fa-cogs';
-                    case 'cron_job':
-                        return 'fa-clock';
-                    case 'redis':
-                        return 'fa-database';
-                    case 'postgresql':
-                        return 'fa-database';
-                    default:
-                        return 'fa-server';
-                }
-            }            // Cargar los servicios
-            fetch('/render/api/services')
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Error al cargar los servicios: ' + response.statusText + ' (' + response.status + ')');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    loadingElement.classList.add('hidden');
-                    servicesContainer.classList.remove('hidden');
-                      console.log('Datos recibidos:', data);
-                    
-                    // Verificar la estructura del objeto de datos
-                    let servicesList = [];
-                    if (Array.isArray(data)) {
-                        // Si la respuesta es directamente un array
-                        servicesList = data;
-                    } else if (data && data.services && Array.isArray(data.services)) {
-                        // Si la respuesta es un objeto con una propiedad services que es un array
-                        servicesList = data.services;
-                    } else if (data) {
-                        // Si la respuesta es un objeto pero no tiene un array services
-                        servicesList = [data]; // Tratar el objeto como un único servicio
-                    }
-                    
-                    // Verificar si hay servicios
-                    if (servicesList.length === 0) {
-                        servicesContainer.innerHTML = '<p class="text-center col-span-full text-gray-500">No se encontraron servicios activos.</p>';
-                        return;
-                    }
-                    
-                    console.log('Servicios procesados:', servicesList);
+                const container = document.getElementById('services-container');
+                const loadingElement = document.getElementById('loading');
 
-                    // Ordenar servicios por actualización más reciente (si tienen fecha)
-                    servicesList.sort((a, b) => {
-                        const dateA = a.updatedAt ? new Date(a.updatedAt).getTime() : 0;
-                        const dateB = b.updatedAt ? new Date(b.updatedAt).getTime() : 0;
-                        return dateB - dateA;
-                    });
+                // Ocultar loader
+                loadingElement.style.display = 'none';
 
-                    // Renderizar cada servicio
-                    servicesList.forEach(service => {
-                        // Verificar si el servicio tiene datos válidos
-                        if (!service) return;
-                        
-                        const statusValue = service.status && service.status.status ? service.status.status : 'unknown';
-                        const statusColor = getStatusColor(statusValue);
-                        const typeIcon = getServiceTypeIcon(service.type || 'unknown');
-                          // Safecheck para valores posiblemente null o undefined
-                        const serviceName = service.name || 'Servicio sin nombre';
-                        const serviceId = service.id || 'ID no disponible';
-                        const serviceType = service.type || 'Tipo desconocido';
-                        const statusText = service.status && service.status.status ? service.status.status : 'Estado desconocido';
-                        const branch = service.branch || 'default';
-                        
-                        // Verificar las fechas para evitar 1969/1970 (timestamp 0 o negativo)
-                        let updatedDate = service.updatedAt;
-                        if (!updatedDate || new Date(updatedDate).getFullYear() < 2000) {
-                            updatedDate = new Date().toISOString(); // Usar fecha actual si es inválida
-                        }
-                        
-                        let createdDate = service.createdAt;
-                        if (!createdDate || new Date(createdDate).getFullYear() < 2000) {
-                            createdDate = new Date().toISOString(); // Usar fecha actual si es inválida
-                        }
-                        
-                        const serviceCard = document.createElement('div');
-                        serviceCard.className = 'bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow duration-300';
-                        serviceCard.innerHTML = `
-                            <div class="p-5">
-                                <div class="flex justify-between items-start mb-4">
-                                    <div>
-                                        <h2 class="text-xl font-semibold text-gray-800">${serviceName}</h2>
-                                        <p class="text-sm text-gray-500">ID: ${serviceId}</p>
-                                    </div>
-                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${statusColor}">
-                                        ${statusText}
-                                    </span>
-                                </div>
-                                
-                                <div class="mb-4">
-                                    <div class="flex items-center mb-2">
-                                        <i class="fas ${typeIcon} text-blue-500 mr-2"></i>
-                                        <p class="text-gray-700">${serviceType}</p>
-                                    </div>
-                                    ${service.repo ? `
-                                    <div class="flex items-center mb-2">
-                                        <i class="fas fa-code-branch text-blue-500 mr-2"></i>
-                                        <p class="text-gray-700">Rama: ${branch}</p>
-                                    </div>` : ''}
-                                    <div class="flex items-center">
-                                        <i class="fas fa-clock text-blue-500 mr-2"></i>
-                                        <p class="text-gray-700">Actualizado: ${formatDate(updatedDate)}</p>
-                                    </div>
-                                </div>
-                                
-                                <div class="flex justify-between items-center pt-3 border-t border-gray-200">
-                                    <span class="inline-flex items-center text-xs font-medium">
-                                        <i class="fas fa-calendar-alt text-blue-500 mr-1"></i>
-                                        Creado: ${formatDate(createdDate)}
-                                    </span>
-                                    <a href="https://dashboard.render.com/web/${serviceId}" target="_blank" class="inline-flex items-center px-3 py-1 border border-blue-500 text-blue-500 rounded-md hover:bg-blue-500 hover:text-white transition-colors duration-300">
-                                        <i class="fas fa-external-link-alt mr-1"></i>
-                                        Ver en Render
-                                    </a>
-                                </div>
+                // Actualizar contadores
+                updateCounters(services);
+
+                if (!services || services.length === 0) {
+                    container.innerHTML = `
+                        <div class="col-span-full text-center py-8">
+                            <div class="bg-blue-50 rounded-xl p-8 shadow-sm">
+                                <i class="fas fa-cloud text-4xl text-blue-400 mb-4"></i>
+                                <p class="text-lg text-gray-600 mb-4">No hay servicios disponibles en tu cuenta de Render.</p>
+                                <a href="#" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-full shadow transition text-base">
+                                    Crear mi primer servicio
+                                </a>
                             </div>
-                        `;
-                        
-                        servicesContainer.appendChild(serviceCard);
-                    });                })
-                .catch(error => {
-                    loadingElement.classList.add('hidden');
-                    errorMessage.classList.remove('hidden');
-                    errorText.textContent = error.message;
-                    console.error('Error:', error);
-                    
-                    // Mostrar opción para ver el JSON crudo (ayuda a depurar)
-                    const debugButton = document.createElement('button');
-                    debugButton.className = 'mt-4 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded';
-                    debugButton.textContent = 'Ver respuesta JSON (depuración)';
-                    debugButton.onclick = function() {
-                        fetch('/render/api/services/raw')
-                            .then(response => response.text())
-                            .then(text => {
-                                const pre = document.createElement('pre');
-                                pre.className = 'mt-4 bg-gray-800 text-white p-4 rounded overflow-auto max-h-96';
-                                pre.textContent = text || 'No hay respuesta disponible';
-                                errorMessage.appendChild(pre);
-                                debugButton.disabled = true;
-                            })
-                            .catch(e => {
-                                alert('Error al obtener el JSON: ' + e.message);
-                            });
-                    };
-                    errorMessage.appendChild(debugButton);
-                    
-                    // Mostrar botón para reintentar
-                    const retryButton = document.createElement('button');
-                    retryButton.className = 'ml-4 mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded';
-                    retryButton.textContent = 'Reintentar';
-                    retryButton.onclick = function() {
-                        window.location.reload();
-                    };
-                    errorMessage.appendChild(retryButton);
+                        </div>
+                    `;
+                    return;
+                }
+
+                // Limpiar contenedor
+                container.innerHTML = '';
+
+                // Ordenar servicios por nombre
+                const sortedServices = [...services].sort((a, b) => {
+                    return (a.name || '').localeCompare(b.name || '');
                 });
+
+                sortedServices.forEach(service => {
+                    const card = document.createElement('div');
+                    card.className = 'bg-white/80 rounded-2xl shadow-lg p-6 flex flex-col items-center border-t-4 border-blue-600 relative transition-transform duration-200 hover:scale-105 hover:shadow-2xl hover:border-blue-700 service-card';
+
+                    // Determinar color del estado
+                    let statusClass = 'text-gray-600';
+                    let statusText = 'Desconocido';
+                    let statusIcon = 'fa-question-circle';
+                    let statusBadgeColor = 'bg-gray-100 text-gray-600';
+
+                    if (service.suspended === 'false' || service.suspended === false) {
+                        statusClass = 'text-green-600 font-medium';
+                        statusText = 'Activo';
+                        statusIcon = 'fa-check-circle';
+                        statusBadgeColor = 'bg-green-100 text-green-600';
+                    } else if (service.suspended === 'true' || service.suspended === true) {
+                        statusClass = 'text-red-600 font-medium';
+                        statusText = 'Suspendido';
+                        statusIcon = 'fa-pause-circle';
+                        statusBadgeColor = 'bg-red-100 text-red-600';
+                    }
+
+                    // Tipo de servicio
+                    let typeIcon = 'fa-server';
+                    let typeIconBg = 'bg-blue-50';
+                    
+                    if (service.type) {
+                        if (service.type.includes('web')) {
+                            typeIcon = 'fa-globe';
+                            typeIconBg = 'bg-green-50';
+                        } else if (service.type.includes('static')) {
+                            typeIcon = 'fa-file-code';
+                            typeIconBg = 'bg-indigo-50';
+                        } else if (service.type.includes('database')) {
+                            typeIcon = 'fa-database';
+                            typeIconBg = 'bg-amber-50';
+                        } else if (service.type.includes('worker')) {
+                            typeIcon = 'fa-cogs';
+                            typeIconBg = 'bg-purple-50';
+                        }
+                    }
+
+                    // Construir URL de Render para el botón "Ver en Render"
+                    let renderUrl = 'https://dashboard.render.com/';
+                    if (service.type && service.type.includes('web')) {
+                        renderUrl += 'web/';
+                    } else if (service.type && service.type.includes('static')) {
+                        renderUrl += 'static/';
+                    } else if (service.type && service.type.includes('database')) {
+                        renderUrl += 'database/';
+                    } else {
+                        renderUrl += 'services/';
+                    }
+                    renderUrl += service.id;
+
+                    card.innerHTML = `
+                        <!-- Estado Badge -->
+                        <span class="absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-medium ${statusBadgeColor}">
+                            <i class="fas ${statusIcon} mr-1"></i>
+                            ${statusText}
+                        </span>
+                        
+                        <!-- Ícono -->
+                        <div class="w-24 h-24 flex items-center justify-center rounded-full ${typeIconBg} border-4 border-white shadow-lg mt-4 mb-2">
+                            <i class="fas ${typeIcon} text-3xl text-blue-600"></i>
+                        </div>
+
+                        <div class="text-center w-full mt-2">
+                            <h2 class="font-extrabold text-xl text-slate-900 mb-3">${service.name || 'Sin nombre'}</h2>
+                            
+                            <p class="text-base text-slate-600 mb-2">
+                                <span class="font-medium">Tipo:</span> 
+                                <span>${service.type || 'No especificado'}</span>
+                            </p>
+                            
+                            ${service.url ? `
+                            <p class="text-base text-slate-600 mb-2">
+                                <span class="font-medium">URL:</span> 
+                                <a href="${service.url}" target="_blank" class="text-blue-500 hover:underline truncate">${service.url}</a>
+                            </p>
+                            ` : ''}
+                            
+                            ${service.repo ? `
+                            <p class="text-base text-slate-600 mb-2">
+                                <span class="font-medium">Repo:</span> 
+                                <span>${service.repo.split('/').pop()} ${service.branch ? `(${service.branch})` : ''}</span>
+                            </p>
+                            ` : ''}
+                        </div>
+                        
+                        <!-- Botones de acción -->
+                        <div class="flex gap-3 mt-4">
+                            <button onclick="showServiceDetails('${service.id}', '${service.name}', '${service.type || 'No especificado'}', '${service.url || ''}', '${service.repo || ''}', '${service.branch || ''}', '${service.updatedAt || ''}', '${statusText}')" 
+                                class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-full shadow transition text-sm">
+                                <i class="fas fa-info-circle mr-1"></i>
+                                Detalles
+                            </button>
+                            <button onclick="quickRedeploy('${service.id}', '${service.name}')" 
+                                class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-full shadow transition text-sm">
+                                <i class="fas fa-rocket mr-1"></i>
+                                Re-deploy
+                            </button>
+                            <a href="${renderUrl}" target="_blank" 
+                                class="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-full shadow transition text-sm">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                    `;
+
+                    container.appendChild(card);
+                });
+
+            } catch (error) {
+                const loadingElement = document.getElementById('loading');
+                loadingElement.style.display = 'none';
+
+                const errorContainer = document.getElementById('error-container');
+                const errorMessage = document.getElementById('error-message');
+
+                errorContainer.classList.remove('hidden');
+                errorMessage.textContent = error.message || 'Ocurrió un error al cargar los servicios. Intenta nuevamente.';
+                console.error('Error al obtener servicios:', error);
+            }
+        }
+
+        function updateCounters(services) {
+            if (!services) return;
+
+            const totalCount = services.length;
+            let activeCount = 0;
+            let suspendedCount = 0;
+
+            services.forEach(service => {
+                if (service.suspended === 'false' || service.suspended === false) {
+                    activeCount++;
+                } else if (service.suspended === 'true' || service.suspended === true) {
+                    suspendedCount++;
+                }
+            });
+
+            document.getElementById('total-count').textContent = totalCount;
+            document.getElementById('active-count').textContent = activeCount;
+            document.getElementById('suspended-count').textContent = suspendedCount;
+            document.getElementById('last-updated').textContent = new Date().toLocaleString();
+        }
+
+        // Función para mostrar detalles del servicio
+        let currentServiceId = ''; // Variable global para almacenar el ID del servicio actual
+        
+        function showServiceDetails(id, name, type, url, repo, branch, updatedAt, status) {
+            currentServiceId = id; // Guardar el ID del servicio actual
+            const modal = document.getElementById('service-details-modal');
+            
+            // Actualizar datos en el modal
+            document.getElementById('modal-title').textContent = `Detalles: ${name}`;
+            document.getElementById('detail-id').textContent = id;
+            document.getElementById('detail-name').textContent = name;
+            document.getElementById('detail-type').textContent = type;
+            
+            // Establecer el estado con el color adecuado
+            const statusElement = document.getElementById('detail-status');
+            statusElement.textContent = status;
+            if (status === 'Activo') {
+                statusElement.className = 'mt-1 text-sm font-semibold text-green-600';
+            } else if (status === 'Suspendido') {
+                statusElement.className = 'mt-1 text-sm font-semibold text-red-600';
+            } else {
+                statusElement.className = 'mt-1 text-sm font-semibold text-gray-600';
+            }
+            
+            // URL
+            const urlElement = document.getElementById('detail-url');
+            if (url && url !== 'undefined' && url !== '') {
+                urlElement.textContent = url;
+                urlElement.href = url;
+                urlElement.style.display = 'inline';
+            } else {
+                urlElement.textContent = 'No disponible';
+                urlElement.removeAttribute('href');
+                urlElement.style.display = 'inline';
+            }
+            
+            // Actualizar otros detalles si están disponibles
+            document.getElementById('detail-updated').textContent = 
+                (updatedAt && updatedAt !== 'undefined') ? new Date(updatedAt).toLocaleString() : 'No disponible';
+            
+            document.getElementById('detail-repo').textContent = 
+                (repo && repo !== 'undefined') ? repo : 'No disponible';
+            
+            document.getElementById('detail-branch').textContent = 
+                (branch && branch !== 'undefined') ? branch : 'No disponible';
+            
+            // Obtener más detalles desde la API
+            fetchServiceDetails(id);
+            
+            // Mostrar el modal
+            modal.classList.remove('hidden');
+            
+            // Agregar animación de entrada
+            const modalContent = modal.querySelector('div');
+            modalContent.classList.add('animate-fadeIn');
+        }
+        
+        // Función para cerrar el modal de detalles
+        function closeServiceDetails() {
+            const modal = document.getElementById('service-details-modal');
+            modal.classList.add('hidden');
+        }
+        
+        // Función para obtener más detalles del servicio desde la API
+        async function fetchServiceDetails(serviceId) {
+            try {
+                const response = await fetch(`/render/api/services/${serviceId}`);
+                
+                if (!response.ok) {
+                    console.error(`Error al obtener detalles: ${response.status}`);
+                    return;
+                }
+                
+                const serviceDetails = await response.json();
+                console.log('Detalles del servicio:', serviceDetails);
+                
+                // Actualizar campos adicionales
+                if (serviceDetails.region) {
+                    document.getElementById('detail-region').textContent = serviceDetails.region;
+                }
+                
+                if (serviceDetails.plan) {
+                    document.getElementById('detail-plan').textContent = serviceDetails.plan;
+                }
+                
+            } catch (error) {
+                console.error('Error al obtener detalles del servicio:', error);
+            }
+        }
+        
+        // Función para redeploy desde el modal
+        async function redeployService() {
+            if (!currentServiceId) {
+                showNotification('Error', 'No se pudo identificar el servicio para re-deploy', 'error');
+                return;
+            }
+            
+            const redeployButton = document.getElementById('redeploy-button');
+            const originalText = redeployButton.innerHTML;
+            
+            Swal.fire({
+                title: '¿Iniciar Re-deploy?',
+                text: `¿Estás seguro de que deseas iniciar un re-deploy del servicio?`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#2563eb',
+                cancelButtonColor: '#f43f5e',
+                confirmButtonText: 'Sí, iniciar',
+                cancelButtonText: 'Cancelar'
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    try {
+                        // Cambiar el botón a estado de carga
+                        redeployButton.disabled = true;
+                        redeployButton.innerHTML = `<i class="fas fa-spinner fa-spin mr-2"></i> Procesando...`;
+                        
+                        const response = await fetch(`/render/api/services/${currentServiceId}/redeploy`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
+                        });
+                        
+                        if (!response.ok) {
+                            throw new Error(`Error al hacer redeploy: ${response.status}`);
+                        }
+                        
+                        const result = await response.json();
+                        console.log('Redeploy exitoso:', result);
+                        
+                        // Mostrar notificación de éxito
+                        showNotification('Éxito', 'Se ha iniciado el re-deploy del servicio', 'success');
+                        
+                        // Cerrar el modal después de un breve retraso
+                        setTimeout(() => {
+                            closeServiceDetails();
+                            // Recargar la lista de servicios para ver el estado actualizado
+                            fetchRenderServices();
+                        }, 2000);
+                        
+                    } catch (error) {
+                        console.error('Error al hacer redeploy:', error);
+                        showNotification('Error', `No se pudo realizar el re-deploy: ${error.message}`, 'error');
+                        
+                        // Restaurar el botón
+                        redeployButton.disabled = false;
+                        redeployButton.innerHTML = originalText;
+                    }
+                }
+            });
+        }
+        
+        // Función para mostrar notificaciones
+        function showNotification(title, message, type) {
+            // Crear el elemento de notificación
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 right-4 p-4 rounded-xl shadow-xl z-50 flex items-start space-x-4 
+                ${type === 'success' ? 'bg-green-100 border-l-4 border-green-500 text-green-700' : 
+                  type === 'error' ? 'bg-red-100 border-l-4 border-red-500 text-red-700' : 
+                  'bg-blue-100 border-l-4 border-blue-500 text-blue-700'}`;
+                  
+            // Icono según el tipo
+            const icon = type === 'success' ? 'fa-check-circle' : 
+                         type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle';
+            
+            notification.innerHTML = `
+                <div class="flex-shrink-0">
+                    <i class="fas ${icon} text-2xl"></i>
+                </div>
+                <div class="flex-1">
+                    <h3 class="font-medium text-lg">${title}</h3>
+                    <p class="text-sm">${message}</p>
+                </div>
+                <button onclick="this.parentElement.remove()" class="flex-shrink-0 text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            
+            // Añadir al DOM
+            document.body.appendChild(notification);
+            
+            // Animar entrada
+            notification.style.opacity = '0';
+            notification.style.transform = 'translateY(-20px)';
+            notification.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+            
+            setTimeout(() => {
+                notification.style.opacity = '1';
+                notification.style.transform = 'translateY(0)';
+            }, 10);
+            
+            // Auto eliminar después de 5 segundos
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateY(-20px)';
+                
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
+            }, 5000);
+        }
+
+        // Función para redeploy rápido desde la tarjeta
+        async function quickRedeploy(serviceId, serviceName) {
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'bg-blue-600 text-white font-bold py-2 px-6 rounded-full shadow mx-2',
+                    cancelButton: 'bg-red-500 text-white font-bold py-2 px-6 rounded-full shadow mx-2'
+                },
+                buttonsStyling: false
+            });
+            
+            swalWithBootstrapButtons.fire({
+                title: '¿Iniciar Re-deploy?',
+                text: `¿Estás seguro de que deseas iniciar un re-deploy del servicio "${serviceName}"?`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Sí, iniciar',
+                cancelButtonText: 'Cancelar',
+                reverseButtons: true
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    try {
+                        // Mostrar notificación de procesamiento
+                        showNotification('Procesando', `Iniciando re-deploy de "${serviceName}"...`, 'info');
+                        
+                        const response = await fetch(`/render/api/services/${serviceId}/redeploy`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
+                        });
+                        
+                        if (!response.ok) {
+                            throw new Error(`Error HTTP: ${response.status}`);
+                        }
+                        
+                        const result = await response.json();
+                        console.log('Redeploy exitoso:', result);
+                        
+                        // Mostrar notificación de éxito
+                        showNotification('Éxito', `Re-deploy de "${serviceName}" iniciado correctamente`, 'success');
+                        
+                        // Recargar la lista de servicios después de un breve retraso
+                        setTimeout(() => {
+                            fetchRenderServices();
+                        }, 2000);
+                        
+                    } catch (error) {
+                        console.error('Error al hacer redeploy:', error);
+                        showNotification('Error', `No se pudo iniciar el re-deploy: ${error.message}`, 'error');
+                    }
+                }
+            });
+        }
+
+        // Buscador de servicios
+        document.addEventListener('DOMContentLoaded', function () {
+            const searchInput = document.getElementById('buscar-servicio');
+            
+            if (searchInput) {
+                searchInput.addEventListener('input', function () {
+                    const searchTerm = this.value.toLowerCase().trim();
+                    const serviceCards = document.querySelectorAll('.service-card');
+                    const container = document.getElementById('services-container');
+                    let visibleCount = 0;
+
+                    serviceCards.forEach(card => {
+                        const serviceText = card.textContent.toLowerCase();
+                        if (serviceText.includes(searchTerm)) {
+                            card.style.display = 'flex';
+                            visibleCount++;
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                    
+                    // Verificar si hay resultados visibles
+                    const noResultsElement = document.getElementById('no-search-results');
+                    if (visibleCount === 0 && searchTerm !== '') {
+                        // No hay resultados para la búsqueda
+                        if (!noResultsElement) {
+                            const noResults = document.createElement('div');
+                            noResults.id = 'no-search-results';
+                            noResults.className = 'col-span-full text-center py-8';
+                            noResults.innerHTML = `
+                                <div class="bg-blue-50 rounded-xl p-8 shadow-sm">
+                                    <i class="fas fa-search text-4xl text-blue-400 mb-4"></i>
+                                    <p class="text-lg text-gray-600">No se encontraron servicios que coincidan con "<span class="font-medium">${searchTerm}</span>"</p>
+                                </div>
+                            `;
+                            container.appendChild(noResults);
+                        } else {
+                            noResultsElement.querySelector('p').innerHTML = `No se encontraron servicios que coincidan con "<span class="font-medium">${searchTerm}</span>"`;
+                        }
+                    } else if (noResultsElement) {
+                        // Hay resultados, eliminar mensaje
+                        noResultsElement.remove();
+                    }
+                });
+            }
         });
+
+        // Iniciar carga de servicios
+        fetchRenderServices();
     </script>
 
-    <!-- Estilos adicionales específicos para esta página -->
     <style>
-        body {
-            background-color: #f9fafb;
-        }
-        .container {
-            max-width: 1200px;
-        }
+        /* Animaciones para las tarjetas y elementos de la interfaz */
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
-        .grid > div {
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes slideInFromRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .animate-fadeIn {
+            animation: scaleIn 0.3s ease-out forwards;
+        }
+
+        #services-container > div {
+            opacity: 0;
             animation: fadeIn 0.5s ease-out forwards;
         }
-        .grid > div:nth-child(1) { animation-delay: 0.1s; }
-        .grid > div:nth-child(2) { animation-delay: 0.2s; }
-        .grid > div:nth-child(3) { animation-delay: 0.3s; }
-        .grid > div:nth-child(4) { animation-delay: 0.4s; }
-        .grid > div:nth-child(5) { animation-delay: 0.5s; }
-        .grid > div:nth-child(6) { animation-delay: 0.6s; }
+
+        #services-container > div:nth-child(1) { animation-delay: 0.05s; }
+        #services-container > div:nth-child(2) { animation-delay: 0.1s; }
+        #services-container > div:nth-child(3) { animation-delay: 0.15s; }
+        #services-container > div:nth-child(4) { animation-delay: 0.2s; }
+        #services-container > div:nth-child(5) { animation-delay: 0.25s; }
+        #services-container > div:nth-child(6) { animation-delay: 0.3s; }
+        #services-container > div:nth-child(7) { animation-delay: 0.35s; }
+        #services-container > div:nth-child(8) { animation-delay: 0.4s; }
+        #services-container > div:nth-child(9) { animation-delay: 0.45s; }
+
+        /* Hover effects para las tarjetas */
+        .service-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border-color: #2563eb;
+        }
+
+        /* Efectos para los botones */
+        .rounded-full {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .rounded-full:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        /* Animación para notificaciones */
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Pulso para elementos destacados */
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(37, 99, 235, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(37, 99, 235, 0);
+            }
+        }
+        
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
     </style>
 </body>
+
 </html>

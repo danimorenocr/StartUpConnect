@@ -18,23 +18,28 @@
         <form th:action="@{/crearTarea}" method="post" th:object="${tarea}" class="bg-white/90 rounded-2xl shadow-xl border-t-4 border-sky-400 p-8">
             <div class="flex flex-col gap-6">
                 <div>
-                    <label for="titulo" class="block text-sm font-semibold text-sky-700">Título:</label>
-                    <input type="text" class="w-full rounded-2xl border-0 bg-sky-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400 text-sky-800 font-semibold placeholder:text-sky-400" id="titulo" name="titulo" th:field="*{titulo}" required>
+                    <label for="titulo" class="block text-sm font-semibold text-sky-700">Título: <span class="text-red-500">*</span></label>
+                    <input type="text" class="w-full rounded-2xl border-0 bg-sky-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400 text-sky-800 font-semibold placeholder:text-sky-400" 
+                           id="titulo" name="titulo" th:field="*{titulo}" required data-validate="required minLength:3 maxLength:100" placeholder="Ingrese el título de la tarea">
                     <div class="text-danger" th:if="${#fields.hasErrors('titulo')}" th:errors="*{titulo}"></div>
                 </div>
                 <div>
-                    <label for="descripcion" class="block text-sm font-semibold text-sky-700">Descripción:</label>
-                    <textarea class="w-full rounded-2xl border-0 bg-sky-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400 text-sky-800 font-semibold placeholder:text-sky-400" id="descripcion" name="descripcion" th:field="*{descripcion}" rows="4"></textarea>
+                    <label for="descripcion" class="block text-sm font-semibold text-sky-700">Descripción: <span class="text-red-500">*</span></label>
+                    <textarea class="w-full rounded-2xl border-0 bg-sky-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400 text-sky-800 font-semibold placeholder:text-sky-400" 
+                              id="descripcion" name="descripcion" th:field="*{descripcion}" rows="4" required data-validate="required minLength:10" 
+                              placeholder="Describa detalladamente la tarea"></textarea>
                     <div class="text-danger" th:if="${#fields.hasErrors('descripcion')}" th:errors="*{descripcion}"></div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <label for="fechaEntrega" class="block text-sm font-semibold text-sky-700">Fecha de Entrega:</label>
-                        <input type="date" class="w-full rounded-2xl border-0 bg-sky-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400 text-sky-800 font-semibold" id="fechaEntrega" name="fechaEntrega" th:field="*{fechaEntrega}" required>
+                        <label for="fechaEntrega" class="block text-sm font-semibold text-sky-700">Fecha de Entrega: <span class="text-red-500">*</span></label>
+                        <input type="date" class="w-full rounded-2xl border-0 bg-sky-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400 text-sky-800 font-semibold" 
+                               id="fechaEntrega" name="fechaEntrega" th:field="*{fechaEntrega}" required data-validate="required date"
+                               min="" placeholder="yyyy-mm-dd">
                         <div class="text-danger" th:if="${#fields.hasErrors('fechaEntrega')}" th:errors="*{fechaEntrega}"></div>
                     </div>                    <!-- Si la etapa viene predeterminada, mostrar el título y usar campo oculto -->
                     <div th:if="${tarea.etapa != null}">
-                        <label class="block text-sm font-semibold text-sky-700">Etapa:</label>
+                        <label class="block text-sm font-semibold text-sky-700">Etapa: <span class="text-red-500">*</span></label>
                         <div class="w-full px-4 py-2 bg-sky-50 text-sky-800 font-semibold rounded-2xl">
                             [[${tarea.etapa.titulo}]]
                         </div>
