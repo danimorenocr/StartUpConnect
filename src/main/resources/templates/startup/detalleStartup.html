@@ -25,22 +25,25 @@
             <div class="profile-container">
                 <div class="profile-header">
                     <div class="profile-avatar">
-                        <img th:src="${startupDetalle.logoUrl != null ? startupDetalle.logoUrl : '/images/sinfoto.jpg'}" 
-                             alt="Logo de la startup" class="avatar-img">
+                        <img th:src="${startupDetalle.logoUrl != null ? startupDetalle.logoUrl : '/images/sinfoto.jpg'}"
+                            alt="Logo de la startup" class="avatar-img">
                         <div class="status-indicator active"></div>
-                    </div>                    
+                    </div>
                     <div class="profile-title">
                         <h2 class="profile-name" th:text="${startupDetalle.nombreStartup}">Nombre Startup</h2>
                         <div class="profile-badges">
-                            <span class="profile-badge sector"><span class="badge-label">Sector:</span> <span th:text="${startupDetalle.sector}">Energía Renovable</span></span>
-                            <span class="profile-badge estado"><span class="badge-label">Etapa:</span> <span th:text="${startupDetalle.estado}">Validación</span></span>
+                            <span class="profile-badge sector"><span class="badge-label">Sector:</span> <span
+                                    th:text="${startupDetalle.sector}">Energía Renovable</span></span>
+                            <span class="profile-badge estado"><span class="badge-label">Etapa:</span> <span
+                                    th:text="${startupDetalle.estado}">Validación</span></span>
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="stats-container">
                     <div class="stat-item">
-                        <form th:action="@{/startup/{id}/like(id=${startupDetalle.id})}" method="post" class="like-form">
+                        <form th:action="@{/startup/{id}/like(id=${startupDetalle.id})}" method="post"
+                            class="like-form">
                             <button type="submit" class="like-button" th:classappend="${hasLiked} ? 'liked' : ''">
                                 <i class="fas fa-heart" th:classappend="${hasLiked} ? 'liked-heart' : ''"></i>
                                 <span class="stat-number" th:text="${startupDetalle.cantLikes}">0</span>
@@ -49,151 +52,163 @@
                         <span class="stat-label" th:text="${hasLiked} ? 'Te gusta' : 'Likes'">Likes</span>
                     </div>
                     <div class="stat-item">
-                        <span class="stat-date" th:text="${#temporals.format(startupDetalle.fechaCreacion, 'dd/MM/yyyy')}">01/01/2023</span>
+                        <span class="stat-date"
+                            th:text="${#temporals.format(startupDetalle.fechaCreacion, 'dd/MM/yyyy')}">01/01/2023</span>
                         <span class="stat-label">Fecha creación</span>
                     </div>
                 </div>
-                
-<div class="info-cards-container">
-    <div class="top-cards">
-        <!-- Tarjeta de descripción -->
-        <div class="info-card description-info">
-            <div class="card-header">
-                <div class="header-icon">
-                    <i class="fas fa-info-circle"></i>
-                </div>
-                <h3>Descripción</h3>
-            </div>
-            <div class="card-body">
-                <p class="description-text" th:text="${startupDetalle.descripcion}">Descripción de la startup</p>
-            </div>
-        </div>
 
-        <!-- Tarjeta de Emprendedor -->
-        <div class="info-card emprendedor-info">
-            <div class="card-header">
-                <div class="header-icon">
-                    <i class="fas fa-user-tie"></i>
-                </div>
-                <h3>Emprendedor</h3>
-            </div>
-            <div class="card-body">
-                <div class="emprendedor-card">
-                    <div class="emprendedor-avatar">
-                        <img th:src="${startupDetalle.emprendedor != null && startupDetalle.emprendedor.usuario != null && startupDetalle.emprendedor.usuario.fotoUrl != null ? startupDetalle.emprendedor.usuario.fotoUrl : '/images/sinfoto.jpg'}" 
-                             alt="Foto del emprendedor">
+                <div class="info-cards-container">
+                    <div class="top-cards">
+                        <!-- Tarjeta de descripción -->
+                        <div class="info-card description-info">
+                            <div class="card-header">
+                                <div class="header-icon">
+                                    <i class="fas fa-info-circle"></i>
+                                </div>
+                                <h3>Descripción</h3>
+                            </div>
+                            <div class="card-body">
+                                <p class="description-text" th:text="${startupDetalle.descripcion}">Descripción de la
+                                    startup</p>
+                            </div>
+                        </div>
+
+                        <!-- Tarjeta de Emprendedor -->
+                        <div class="info-card emprendedor-info">
+                            <div class="card-header">
+                                <div class="header-icon">
+                                    <i class="fas fa-user-tie"></i>
+                                </div>
+                                <h3>Emprendedor</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="emprendedor-card">
+                                    <div class="emprendedor-avatar">
+                                        <img th:src="${startupDetalle.emprendedor != null && startupDetalle.emprendedor.usuario != null && startupDetalle.emprendedor.usuario.fotoUrl != null ? startupDetalle.emprendedor.usuario.fotoUrl : '/images/sinfoto.jpg'}"
+                                            alt="Foto del emprendedor">
+                                    </div>
+                                    <div class="emprendedor-details">
+                                        <h4
+                                            th:text="${startupDetalle.emprendedor != null && startupDetalle.emprendedor.usuario != null ? startupDetalle.emprendedor.usuario.nombreUsu : 'No disponible'}">
+                                            Nombre Emprendedor</h4>
+                                        <p><i class="fas fa-envelope"></i> <span
+                                                th:text="${startupDetalle.emprendedor != null && startupDetalle.emprendedor.usuario != null ? startupDetalle.emprendedor.usuario.emailUsu : 'No disponible'}">email@example.com</span>
+                                        </p>
+                                        <p><i class="fas fa-graduation-cap"></i> <span
+                                                th:text="${startupDetalle.emprendedor != null ? startupDetalle.emprendedor.universidad : 'No disponible'}">Universidad</span>
+                                        </p>
+                                        <p><i class="fas fa-book"></i> <span
+                                                th:text="${startupDetalle.emprendedor != null ? startupDetalle.emprendedor.programaEducativo : 'No disponible'}">Programa
+                                                Educativo</span></p>
+
+                                        <a th:if="${startupDetalle.emprendedor != null && startupDetalle.emprendedor.usuario != null && startupDetalle.emprendedor.usuario.emailUsu != null}"
+                                            th:href="@{'mailto:' + ${startupDetalle.emprendedor.usuario.emailUsu} + '?subject=Contacto sobre ' + ${startupDetalle.nombreStartup}}"
+                                            class="btn-contactar">
+                                            <i class="fas fa-envelope"></i> Contactar
+                                        </a>
+
+                                        <a th:if="${startupDetalle.emprendedor != null}"
+                                            th:href="@{/verEmprendedor/{id}(id=${startupDetalle.emprendedor.documento})}"
+                                            class="btn-ver-perfil">
+                                            <i class="fas fa-user"></i> Ver perfil
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="emprendedor-details">
-                        <h4 th:text="${startupDetalle.emprendedor != null && startupDetalle.emprendedor.usuario != null ? startupDetalle.emprendedor.usuario.nombreUsu : 'No disponible'}">Nombre Emprendedor</h4>
-                        <p><i class="fas fa-envelope"></i> <span th:text="${startupDetalle.emprendedor != null && startupDetalle.emprendedor.usuario != null ? startupDetalle.emprendedor.usuario.emailUsu : 'No disponible'}">email@example.com</span></p>
-                        <p><i class="fas fa-graduation-cap"></i> <span th:text="${startupDetalle.emprendedor != null ? startupDetalle.emprendedor.universidad : 'No disponible'}">Universidad</span></p>
-                        <p><i class="fas fa-book"></i> <span th:text="${startupDetalle.emprendedor != null ? startupDetalle.emprendedor.programaEducativo : 'No disponible'}">Programa Educativo</span></p>
 
-                        <a th:if="${startupDetalle.emprendedor != null && startupDetalle.emprendedor.usuario != null && startupDetalle.emprendedor.usuario.emailUsu != null}" 
-                           th:href="@{'mailto:' + ${startupDetalle.emprendedor.usuario.emailUsu} + '?subject=Contacto sobre ' + ${startupDetalle.nombreStartup}}" 
-                           class="btn-contactar">
-                           <i class="fas fa-envelope"></i> Contactar
-                        </a>
+                    <div class="bottom-cards">
+                        <!-- Tarjeta de Material Multimedia -->
+                        <div class="info-card multimedia-info">
+                            <div class="card-header">
+                                <div class="header-icon">
+                                    <i class="fas fa-photo-video"></i>
+                                </div>
+                                <h3>Material Multimedia</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="multimedia-links">
+                                    <a th:if="${startupDetalle.pitchUrl != null && !startupDetalle.pitchUrl.isEmpty()}"
+                                        th:href="${startupDetalle.pitchUrl}" class="multimedia-link" target="_blank">
+                                        <i class="fas fa-file-pdf"></i> Pitch Deck
+                                    </a>
 
-                        <a th:if="${startupDetalle.emprendedor != null}" 
-                           th:href="@{/verEmprendedor/{id}(id=${startupDetalle.emprendedor.documento})}" 
-                           class="btn-ver-perfil">
-                           <i class="fas fa-user"></i> Ver perfil
-                        </a>
+                                    <a th:if="${startupDetalle.videoPresentacion != null && !startupDetalle.videoPresentacion.isEmpty()}"
+                                        th:href="${startupDetalle.videoPresentacion}" class="multimedia-link"
+                                        target="_blank">
+                                        <i class="fas fa-video"></i> Video de presentación
+                                    </a>
+                                </div>
+
+                                <div th:if="${startupDetalle.videoPresentacion != null && !startupDetalle.videoPresentacion.isEmpty() && #strings.contains(startupDetalle.videoPresentacion, 'youtube')}"
+                                    class="video-container">
+                                    <iframe
+                                        th:src="${#strings.replace(startupDetalle.videoPresentacion, 'watch?v=', 'embed/')}"
+                                        frameborder="0"
+                                        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                                        allowfullscreen>
+                                    </iframe>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tarjeta de Sitio Web -->
+                        <div class="info-card website-info"
+                            th:if="${startupDetalle.paginaWeb != null && !startupDetalle.paginaWeb.isEmpty()}">
+                            <div class="card-header">
+                                <div class="header-icon">
+                                    <i class="fas fa-globe"></i>
+                                </div>
+                                <h3>Sitio Web</h3>
+                            </div>
+                            <div class="card-body">
+                                <a th:href="${startupDetalle.paginaWeb}" class="website-link" target="_blank">
+                                    <i class="fas fa-external-link-alt"></i>
+                                    <span th:text="${startupDetalle.paginaWeb}">https://ejemplo.com</span>
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
 
-    <div class="bottom-cards">
-        <!-- Tarjeta de Material Multimedia -->
-        <div class="info-card multimedia-info">
-            <div class="card-header">
-                <div class="header-icon">
-                    <i class="fas fa-photo-video"></i>
-                </div>
-                <h3>Material Multimedia</h3>
-            </div>
-            <div class="card-body">
-                <div class="multimedia-links">
-                    <a th:if="${startupDetalle.pitchUrl != null && !startupDetalle.pitchUrl.isEmpty()}"
-                       th:href="${startupDetalle.pitchUrl}" class="multimedia-link" target="_blank">
-                       <i class="fas fa-file-pdf"></i> Pitch Deck
-                    </a>
 
-                    <a th:if="${startupDetalle.videoPresentacion != null && !startupDetalle.videoPresentacion.isEmpty()}"
-                       th:href="${startupDetalle.videoPresentacion}" class="multimedia-link" target="_blank">
-                       <i class="fas fa-video"></i> Video de presentación
-                    </a>
-                </div>
-
-                <div th:if="${startupDetalle.videoPresentacion != null && !startupDetalle.videoPresentacion.isEmpty() && #strings.contains(startupDetalle.videoPresentacion, 'youtube')}"
-                     class="video-container">
-                    <iframe th:src="${#strings.replace(startupDetalle.videoPresentacion, 'watch?v=', 'embed/')}"
-                        frameborder="0"
-                        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen>
-                    </iframe>
-                </div>
-            </div>
-        </div>
-
-        <!-- Tarjeta de Sitio Web -->
-        <div class="info-card website-info" th:if="${startupDetalle.paginaWeb != null && !startupDetalle.paginaWeb.isEmpty()}">
-            <div class="card-header">
-                <div class="header-icon">
-                    <i class="fas fa-globe"></i>
-                </div>
-                <h3>Sitio Web</h3>
-            </div>
-            <div class="card-body">
-                <a th:href="${startupDetalle.paginaWeb}" class="website-link" target="_blank">
-                    <i class="fas fa-external-link-alt"></i>
-                    <span th:text="${startupDetalle.paginaWeb}">https://ejemplo.com</span>
-                </a>
-            </div>
-        </div>
-    </div>
-</div>
-
-                
                 <div class="social-section">
-                    <h3 class="social-title">Conéctate con <span th:text="${startupDetalle.nombreStartup}">la startup</span></h3>
+                    <h3 class="social-title">Conéctate con <span th:text="${startupDetalle.nombreStartup}">la
+                            startup</span></h3>
                     <div class="social-links-full">
                         <a th:if="${startupDetalle.github != null && !startupDetalle.github.isEmpty()}"
-                           th:href="${startupDetalle.github}" target="_blank" title="GitHub" class="social-icon github">
+                            th:href="${startupDetalle.github}" target="_blank" title="GitHub"
+                            class="social-icon github">
                             <i class="fab fa-github"></i>
                         </a>
                         <a th:if="${startupDetalle.linkedin != null && !startupDetalle.linkedin.isEmpty()}"
-                           th:href="${startupDetalle.linkedin}" target="_blank" title="LinkedIn" class="social-icon linkedin">
+                            th:href="${startupDetalle.linkedin}" target="_blank" title="LinkedIn"
+                            class="social-icon linkedin">
                             <i class="fab fa-linkedin"></i>
                         </a>
                         <a th:if="${startupDetalle.instagram != null && !startupDetalle.instagram.isEmpty()}"
-                           th:href="${startupDetalle.instagram}" target="_blank" title="Instagram" class="social-icon instagram">
+                            th:href="${startupDetalle.instagram}" target="_blank" title="Instagram"
+                            class="social-icon instagram">
                             <i class="fab fa-instagram"></i>
                         </a>
                         <a th:if="${startupDetalle.paginaWeb != null && !startupDetalle.paginaWeb.isEmpty()}"
-                           th:href="${startupDetalle.paginaWeb}" target="_blank" title="Sitio Web" class="social-icon website">
+                            th:href="${startupDetalle.paginaWeb}" target="_blank" title="Sitio Web"
+                            class="social-icon website">
                             <i class="fas fa-globe"></i>
                         </a>
                     </div>
                 </div>
             </div>
         </div>
-        
-        <div class="acciones">
-            <a th:href="@{/vitrina}">
-                <button type="button" class="btn-volver">
-                    <i class="fas fa-arrow-left"></i> Volver
-                </button>
-            </a>
-        </div>
+
+
     </div>
-      <!-- Sección de comentarios -->
+    <!-- Sección de comentarios -->
     <div class="comments-section">
         <h2 class="comments-title">Comentarios</h2>
-        
+
         <!-- Mensajes de éxito y error -->
         <div th:if="${error}" class="alert alert-danger" role="alert">
             <span th:text="${error}">Error</span>
@@ -201,13 +216,13 @@
         <div th:if="${mensajeExito}" class="alert alert-success" role="alert">
             <span th:text="${mensajeExito}">Éxito</span>
         </div>
-        
+
         <!-- Formulario de comentarios -->
         <div class="comment-form">
             <form th:action="@{/startup/{id}/comentar(id=${startupDetalle.id})}" method="post">
                 <div class="form-group">
-                    <textarea name="comentario" required class="form-control" 
-                            rows="4" placeholder="Escribe tu comentario aquí..."></textarea>
+                    <textarea name="comentario" required class="form-control" rows="4"
+                        placeholder="Escribe tu comentario aquí..."></textarea>
                 </div>
                 <button type="submit" class="btn-submit">
                     <i class="fas fa-paper-plane"></i>
@@ -220,13 +235,14 @@
         <div class="comments-list">
             <div th:each="comentario : ${comentarios}" class="comment">
                 <div class="comment-header">
-                    <img th:src="${comentario.usuario.fotoUrl != null ? comentario.usuario.fotoUrl : '/images/sinfoto.jpg'}" 
-                         alt="Foto de perfil" class="comment-avatar">
+                    <img th:src="${comentario.usuario.fotoUrl != null ? comentario.usuario.fotoUrl : '/images/sinfoto.jpg'}"
+                        alt="Foto de perfil" class="comment-avatar">
                     <div class="comment-info">
                         <div class="user-info">
-                            <h4 th:text="${comentario.usuario.nombreUsu}" class="comment-author">Nombre del Usuario</h4>                            
-                            <span th:with="pattern='dd/MM/yyyy HH:mm'" th:text="${#temporals.format(comentario.fechaComentario, pattern)}" 
-                                  class="comment-date">
+                            <h4 th:text="${comentario.usuario.nombreUsu}" class="comment-author">Nombre del Usuario</h4>
+                            <span th:with="pattern='dd/MM/yyyy HH:mm'"
+                                th:text="${#temporals.format(comentario.fechaComentario, pattern)}"
+                                class="comment-date">
                                 <i class="far fa-clock"></i> Fecha
                             </span>
                         </div>
@@ -271,8 +287,8 @@
             </div>
         </div>
         <div class="footer-bottom">
-        <p>&copy; 2025 StartUp Connect. Todos los derechos reservados.</p>
-      </div>
+            <p>&copy; 2025 StartUp Connect. Todos los derechos reservados.</p>
+        </div>
     </div>
 </body>
 

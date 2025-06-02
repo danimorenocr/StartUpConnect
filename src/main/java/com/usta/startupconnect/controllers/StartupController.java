@@ -367,13 +367,11 @@ public class StartupController {
 
             // Set startup metadata
             startup.setFechaCreacion(LocalDate.now());
-            startup.setEmprendedor(emprendedor);
-
-            // Save startup
+            startup.setEmprendedor(emprendedor);            // Save startup
             startupService.save(startup);
             redirectAttributes.addFlashAttribute("mensajeExito", "Startup creada exitosamente");
 
-            return "redirect:/startup/emprendedor/" + documento;
+            return "redirect:/misStartups";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Error al guardar la startup: " + e.getMessage());
             return "redirect:/crearStartupParaEmprendedor/" + documento;

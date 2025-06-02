@@ -1,45 +1,61 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
+
 <head th:replace="~{layout/layout :: head}"></head>
+
 <body class="bg-stone-100 text-gray-900 font-[Poppins] min-h-screen">
     <header th:replace="~{layout/layout :: header}"></header>
     <!-- Banner ancho -->
     <div class="relative w-full max-w-4xl mx-auto rounded-2xl overflow-hidden shadow mb-10 mt-8">
-        <img src="/images/bannerListar.jpg" alt="Banner Crear Tarea" class="w-full h-44 md:h-56 object-cover object-center">
-        <div class="absolute inset-0 bg-gradient-to-r from-sky-500/80 to-orange-400/60 flex items-center min-h-[10rem] md:min-h-[13rem]">
+        <img src="/images/bannerListar.jpg" alt="Banner Crear Tarea"
+            class="w-full h-44 md:h-56 object-cover object-center">
+        <div
+            class="absolute inset-0 bg-gradient-to-r from-sky-500/80 to-orange-400/60 flex items-center min-h-[10rem] md:min-h-[13rem]">
             <div class="px-10">
                 <h1 class="text-3xl md:text-4xl font-extrabold text-white drop-shadow-lg">Crear Nueva Tarea</h1>
-                <p class="text-lg text-white/80 font-medium mt-2">Registra una tarea y programa una reunión si lo necesitas</p>
+                <p class="text-lg text-white/80 font-medium mt-2">Registra una tarea y programa una reunión si lo
+                    necesitas</p>
             </div>
         </div>
     </div>
     <!-- Card principal -->
     <div class="max-w-2xl mx-auto px-2 md:px-0 -mt-10 md:-mt-6 relative z-10">
-        <form th:action="@{/crearTarea}" method="post" th:object="${tarea}" class="bg-white/90 rounded-2xl shadow-xl border-t-4 border-sky-400 p-8">
+        <form th:action="@{/crearTarea}" method="post" th:object="${tarea}"
+            class="bg-white/90 rounded-2xl shadow-xl border-t-4 border-sky-400 p-8">
             <div class="flex flex-col gap-6">
                 <div>
-                    <label for="titulo" class="block text-sm font-semibold text-sky-700">Título: <span class="text-red-500">*</span></label>
-                    <input type="text" class="w-full rounded-2xl border-0 bg-sky-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400 text-sky-800 font-semibold placeholder:text-sky-400" 
-                           id="titulo" name="titulo" th:field="*{titulo}" required data-validate="required minLength:3 maxLength:100" placeholder="Ingrese el título de la tarea">
+                    <label for="titulo" class="block text-sm font-semibold text-sky-700">Título: <span
+                            class="text-red-500">*</span></label>
+                    <input type="text"
+                        class="w-full rounded-2xl border-0 bg-sky-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400 text-sky-800 font-semibold placeholder:text-sky-400"
+                        id="titulo" name="titulo" th:field="*{titulo}" required
+                        data-validate="required minLength:3 maxLength:100" placeholder="Ingrese el título de la tarea">
                     <div class="text-danger" th:if="${#fields.hasErrors('titulo')}" th:errors="*{titulo}"></div>
                 </div>
                 <div>
-                    <label for="descripcion" class="block text-sm font-semibold text-sky-700">Descripción: <span class="text-red-500">*</span></label>
-                    <textarea class="w-full rounded-2xl border-0 bg-sky-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400 text-sky-800 font-semibold placeholder:text-sky-400" 
-                              id="descripcion" name="descripcion" th:field="*{descripcion}" rows="4" required data-validate="required minLength:10" 
-                              placeholder="Describa detalladamente la tarea"></textarea>
-                    <div class="text-danger" th:if="${#fields.hasErrors('descripcion')}" th:errors="*{descripcion}"></div>
+                    <label for="descripcion" class="block text-sm font-semibold text-sky-700">Descripción: <span
+                            class="text-red-500">*</span></label>
+                    <textarea
+                        class="w-full rounded-2xl border-0 bg-sky-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400 text-sky-800 font-semibold placeholder:text-sky-400"
+                        id="descripcion" name="descripcion" th:field="*{descripcion}" rows="4" required
+                        data-validate="required minLength:10" placeholder="Describa detalladamente la tarea"></textarea>
+                    <div class="text-danger" th:if="${#fields.hasErrors('descripcion')}" th:errors="*{descripcion}">
+                    </div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <label for="fechaEntrega" class="block text-sm font-semibold text-sky-700">Fecha de Entrega: <span class="text-red-500">*</span></label>
-                        <input type="date" class="w-full rounded-2xl border-0 bg-sky-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400 text-sky-800 font-semibold" 
-                               id="fechaEntrega" name="fechaEntrega" th:field="*{fechaEntrega}" required data-validate="required date"
-                               min="" placeholder="yyyy-mm-dd">
-                        <div class="text-danger" th:if="${#fields.hasErrors('fechaEntrega')}" th:errors="*{fechaEntrega}"></div>
-                    </div>                    <!-- Si la etapa viene predeterminada, mostrar el título y usar campo oculto -->
+                        <label for="fechaEntrega" class="block text-sm font-semibold text-sky-700">Fecha de Entrega:
+                            <span class="text-red-500">*</span></label>
+                        <input type="date"
+                            class="w-full rounded-2xl border-0 bg-sky-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400 text-sky-800 font-semibold"
+                            id="fechaEntrega" name="fechaEntrega" th:field="*{fechaEntrega}" required
+                            data-validate="required date" min="" placeholder="yyyy-mm-dd">
+                        <div class="text-danger" th:if="${#fields.hasErrors('fechaEntrega')}"
+                            th:errors="*{fechaEntrega}"></div>
+                    </div> <!-- Si la etapa viene predeterminada, mostrar el título y usar campo oculto -->
                     <div th:if="${tarea.etapa != null}">
-                        <label class="block text-sm font-semibold text-sky-700">Etapa: <span class="text-red-500">*</span></label>
+                        <label class="block text-sm font-semibold text-sky-700">Etapa: <span
+                                class="text-red-500">*</span></label>
                         <div class="w-full px-4 py-2 bg-sky-50 text-sky-800 font-semibold rounded-2xl">
                             [[${tarea.etapa.titulo}]]
                         </div>
@@ -48,9 +64,12 @@
                     <!-- Si no viene predeterminada, mostrar el combo -->
                     <div th:unless="${tarea.etapa != null}">
                         <label for="etapa" class="block text-sm font-semibold text-sky-700">Etapa:</label>
-                        <select class="w-full rounded-2xl border-0 bg-sky-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400 text-sky-800 font-semibold" id="etapa" name="etapa.id" required>
+                        <select
+                            class="w-full rounded-2xl border-0 bg-sky-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400 text-sky-800 font-semibold"
+                            id="etapa" name="etapa.id" required>
                             <option value="">Seleccione una Etapa</option>
-                            <option th:each="etapa : ${etapas}" th:value="${etapa.id}" th:text="${etapa.titulo}"></option>
+                            <option th:each="etapa : ${etapas}" th:value="${etapa.id}" th:text="${etapa.titulo}">
+                            </option>
                         </select>
                         <div class="text-danger" th:if="${#fields.hasErrors('etapa')}" th:errors="*{etapa}"></div>
                     </div>
@@ -59,22 +78,32 @@
                 <div class="bg-stone-50 border border-orange-200 rounded-xl shadow-inner p-6">
                     <div class="flex items-center mb-4">
                         <input class="accent-orange-500 mr-3" type="checkbox" id="crearReunion" name="crearReunion">
-                        <label for="crearReunion" class="font-semibold text-orange-700">Crear reunión de Google Meet para esta tarea</label>
+                        <label for="crearReunion" class="font-semibold text-orange-700">Crear reunión de Google Meet
+                            para esta tarea</label>
                     </div>
                     <div id="reunionDetails" style="display: none;">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <label for="fechaReunion" class="block text-sm font-semibold text-orange-600">Fecha de la reunión:</label>
-                                <input type="date" class="w-full rounded-2xl border-0 bg-stone-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-300 text-gray-800 font-semibold" id="fechaReunion" name="fechaReunion">
+                                <label for="fechaReunion" class="block text-sm font-semibold text-orange-600">Fecha de
+                                    la reunión:</label>
+                                <input type="date"
+                                    class="w-full rounded-2xl border-0 bg-stone-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-300 text-gray-800 font-semibold"
+                                    id="fechaReunion" name="fechaReunion">
                             </div>
                             <div>
-                                <label for="horaReunion" class="block text-sm font-semibold text-orange-600">Hora de la reunión:</label>
-                                <input type="time" class="w-full rounded-2xl border-0 bg-stone-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-300 text-gray-800 font-semibold" id="horaReunion" name="horaReunion">
+                                <label for="horaReunion" class="block text-sm font-semibold text-orange-600">Hora de la
+                                    reunión:</label>
+                                <input type="time"
+                                    class="w-full rounded-2xl border-0 bg-stone-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-300 text-gray-800 font-semibold"
+                                    id="horaReunion" name="horaReunion">
                             </div>
                         </div>
                         <div class="mt-4">
-                            <label for="duracionReunion" class="block text-sm font-semibold text-orange-600">Duración (minutos):</label>
-                            <select class="w-full rounded-2xl border-0 bg-stone-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-300 text-gray-800 font-semibold" id="duracionReunion" name="duracionReunion">
+                            <label for="duracionReunion" class="block text-sm font-semibold text-orange-600">Duración
+                                (minutos):</label>
+                            <select
+                                class="w-full rounded-2xl border-0 bg-stone-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-300 text-gray-800 font-semibold"
+                                id="duracionReunion" name="duracionReunion">
                                 <option value="15">15 minutos</option>
                                 <option value="30" selected>30 minutos</option>
                                 <option value="45">45 minutos</option>
@@ -83,39 +112,37 @@
                                 <option value="120">2 horas</option>
                             </select>
                         </div>
+
                         <div class="mt-4">
-                            <label class="block text-sm font-semibold text-orange-600">Participantes:</label>
-                            <div class="max-h-40 overflow-y-auto border border-orange-200 rounded-lg p-3 bg-white">
-                                <div th:if="${miembrosEquipo != null}">
-                                    <div class="flex items-center mb-2" th:each="miembro : ${miembrosEquipo}">
-                                        <input class="accent-orange-500 mr-2" type="checkbox" th:id="${'miembro_' + miembro.id}" th:name="participantesReunion" th:value="${miembro.id}">
-                                        <label th:for="${'miembro_' + miembro.id}" th:text="${miembro.nombre + ' ' + miembro.apellido + ' (' + miembro.email + ')'}"></label>
-                                    </div>
-                                </div>
-                                <div th:if="${miembrosEquipo == null}" class="text-orange-700 bg-orange-100 border border-orange-200 rounded p-2 text-sm text-center">
-                                    No hay miembros del equipo disponibles para invitar.
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mt-4">
-                            <label for="enlaceReunion" class="block text-sm font-semibold text-orange-600">Enlace de la reunión:</label>
+                            <label for="enlaceReunion" class="block text-sm font-semibold text-orange-600">Enlace de la
+                                reunión:</label>
                             <div class="flex w-full gap-2">
-                                <input type="text" class="w-full rounded-2xl border-0 bg-stone-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-300 text-gray-800 font-semibold" id="enlaceReunion" name="enlaceReunion" readonly>
-                                <button class="inline-flex items-center gap-2 border border-orange-400 text-orange-500 bg-white font-semibold px-4 py-2 rounded-full shadow-sm transition hover:bg-orange-50 hover:text-orange-600" type="button" id="generarEnlace">
+                                <input type="text"
+                                    class="w-full rounded-2xl border-0 bg-stone-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-300 text-gray-800 font-semibold"
+                                    id="enlaceReunion" name="enlaceReunion" readonly>
+                                <button
+                                    class="inline-flex items-center gap-2 border border-orange-400 text-orange-500 bg-white font-semibold px-4 py-2 rounded-full shadow-sm transition hover:bg-orange-50 hover:text-orange-600"
+                                    type="button" id="generarEnlace">
                                     <i class="fas fa-link"></i> Generar enlace
                                 </button>
                             </div>
-                            <small class="text-xs text-gray-500 mt-1 block">El enlace se generará automáticamente al guardar la tarea.</small>
+                            <small class="text-xs text-gray-500 mt-1 block">El enlace se generará automáticamente al
+                                guardar la tarea.</small>
                         </div>
                     </div>
                 </div>
                 <!-- Botones -->
                 <div class="flex flex-col md:flex-row gap-4 justify-end mt-8">
-                    <button type="submit" class="bg-sky-400 hover:bg-sky-500 text-white font-extrabold text-xl py-3 px-10 rounded-full shadow transition w-full md:w-auto min-w-[180px] text-center">
+                    <button type="submit"
+                        class="bg-sky-400 hover:bg-sky-500 text-white font-extrabold text-xl py-3 px-10 rounded-full shadow transition w-full md:w-auto min-w-[180px] text-center">
                         <i class="fas fa-save mr-2"></i> Guardar Tarea
                     </button>
-                    <a th:href="@{/tarea}" class="flex items-center justify-center gap-2 border border-orange-500 text-orange-500 bg-white font-semibold text-xl py-3 px-10 rounded-full shadow-sm transition hover:bg-orange-50 hover:text-orange-600 w-full md:w-auto min-w-[180px] text-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+                    <a th:href="@{/tarea}"
+                        class="flex items-center justify-center gap-2 border border-orange-500 text-orange-500 bg-white font-semibold text-xl py-3 px-10 rounded-full shadow-sm transition hover:bg-orange-50 hover:text-orange-600 w-full md:w-auto min-w-[180px] text-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
                         Volver
                     </a>
                 </div>
@@ -124,7 +151,7 @@
     </div>
     <script>
         // Establecer la fecha mínima como hoy para evitar fechas pasadas
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const today = new Date();
             const dd = String(today.getDate()).padStart(2, '0');
             const mm = String(today.getMonth() + 1).padStart(2, '0');
@@ -138,7 +165,7 @@
             const crearReunionCheckbox = document.getElementById('crearReunion');
             const reunionDetails = document.getElementById('reunionDetails');
             if (crearReunionCheckbox && reunionDetails) {
-                crearReunionCheckbox.addEventListener('change', function() {
+                crearReunionCheckbox.addEventListener('change', function () {
                     reunionDetails.style.display = this.checked ? 'block' : 'none';
                     if (this.checked) {
                         document.getElementById('fechaReunion').value = todayFormatted;
@@ -153,7 +180,7 @@
             // Funcionalidad para el botón de generar enlace
             const generarEnlaceBtn = document.getElementById('generarEnlace');
             if (generarEnlaceBtn) {
-                generarEnlaceBtn.addEventListener('click', function() {
+                generarEnlaceBtn.addEventListener('click', function () {
                     const enlaceInput = document.getElementById('enlaceReunion');
                     const meetId = Math.random().toString(36).substring(2, 10);
                     enlaceInput.value = `https://meet.google.com/${meetId}`;
@@ -162,4 +189,5 @@
         });
     </script>
 </body>
+
 </html>

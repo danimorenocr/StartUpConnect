@@ -39,9 +39,10 @@ public class SecurityConfig {
                 
                 // Rutas de mentor
                 .requestMatchers("/mentor/**", "/mentor/detalle/**", "/mentor/feedback/**", "/etapa/**", "/convocatoria/detalles/**", "/feedback/crear/**").hasAnyRole("ADMIN", "MENTOR")
-                
-                // Rutas de emprendedor
-                .requestMatchers("/emprendedor/**", "/startup/crear/**", "/startup/editar/**", "/startup/eliminar/**", "/postulacion/**", "/startup/emprendedor/{documento}").hasAnyRole("ADMIN", "EMPRENDEDOR")
+                  // Rutas de emprendedor
+                .requestMatchers("/emprendedor/**", "/startup/crear/**", "/startup/editar/**", "/startup/eliminar/**", 
+                                "/postulacion/**", "/startup/emprendedor/{documento}", "/crearStartupParaEmprendedor/**", 
+                                "/misStartups").hasAnyRole("ADMIN", "EMPRENDEDOR")
                 
                 // Rutas compartidas
                 .requestMatchers("/convocatoria/**", "/evento/**").hasAnyRole("ADMIN", "MENTOR", "EMPRENDEDOR")

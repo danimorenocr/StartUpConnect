@@ -117,13 +117,15 @@
                     <p class="dashboard-banner-subtitle">Panel de control de Emprendedor</p>
                 </div>
             </div>
-        </div>        <!-- Dashboard principal con cuadrícula de tarjetas -->        <section class="w-full">
+        </div> <!-- Dashboard principal con cuadrícula de tarjetas -->
+        <section class="w-full">
             <h2 class="text-2xl font-bold mb-6">Panel de Control Emprendedor</h2>
-              <!-- Cuadrícula principal con layout compacto -->
+            <!-- Cuadrícula principal con layout compacto -->
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                
+
                 <!-- Tarjeta Startups Activas - Fila superior izquierda -->
-                <div class="bg-cyan-200 rounded-xl p-4 shadow flex flex-col justify-between h-48"><div>
+                <div class="bg-cyan-200 rounded-xl p-4 shadow flex flex-col justify-between h-48">
+                    <div>
                         <h3 class="text-base font-bold">Startups Activas</h3>
                         <p class="text-xs text-gray-600 mb-2">Startups registradas</p>
                         <div class="flex justify-between items-center mb-2">
@@ -132,8 +134,7 @@
                                 <i class="fa-solid fa-arrow-up mr-1"></i>12%
                             </div>
                         </div>
-                        <div class="space-y-1"
-                            th:if="${startupsPorSector != null && !startupsPorSector.isEmpty()}">
+                        <div class="space-y-1" th:if="${startupsPorSector != null && !startupsPorSector.isEmpty()}">
                             <div th:each="sector : ${startupsPorSector.entrySet()}"
                                 class="flex items-center justify-between">
                                 <span class="text-xs" th:text="${sector.key}">Sector</span>
@@ -141,8 +142,7 @@
                             </div>
                         </div>
                         <!-- Contenido estático en caso de no haber datos -->
-                        <div class="space-y-1"
-                            th:if="${startupsPorSector == null || startupsPorSector.isEmpty()}">
+                        <div class="space-y-1" th:if="${startupsPorSector == null || startupsPorSector.isEmpty()}">
                             <div class="flex items-center justify-between">
                                 <span class="text-xs">Tecnología</span>
                                 <span class="text-xs font-semibold">18</span>
@@ -156,7 +156,8 @@
                     <a href="/startup"
                         class="bg-white text-cyan-600 font-semibold border border-cyan-300 rounded-full px-3 py-1 text-xs hover:bg-cyan-50 transition self-end">
                         Gestionar
-                    </a>                </div>
+                    </a>
+                </div>
 
                 <!-- Tarjeta Convocatorias Activas - Fila superior centro -->
                 <div class="bg-orange-100 rounded-xl p-4 shadow flex flex-col justify-between h-48">
@@ -189,14 +190,19 @@
                     <a href="/convocatoria"
                         class="bg-white text-orange-600 font-semibold border border-orange-300 rounded-full px-3 py-1 text-xs hover:bg-orange-50 transition self-end">
                         Gestionar
-                    </a>                </div>
+                    </a>
+                </div>
 
                 <!-- Tarjeta Notificaciones - Fila completa derecha -->
-                <div class="md:col-span-2 md:row-span-2 bg-purple-200 rounded-xl p-4 shadow min-h-[400px] flex flex-col"><h3 class="text-lg font-bold mb-3 text-purple-800">Notificaciones</h3>
+                <div
+                    class="md:col-span-2 md:row-span-2 bg-purple-200 rounded-xl p-4 shadow min-h-[400px] flex flex-col">
+                    <h3 class="text-lg font-bold mb-3 text-purple-800">Notificaciones</h3>
                     <div class="flex-1 space-y-2 overflow-y-auto">
                         <!-- Alerta 1 - Nueva startup -->
-                        <div class="flex items-center bg-white bg-opacity-70 rounded-lg px-3 py-2 shadow-sm hover:shadow-md transition">
-                            <span class="bg-blue-500 rounded-full p-1.5 mr-2 flex items-center justify-center flex-shrink-0">
+                        <div
+                            class="flex items-center bg-white bg-opacity-70 rounded-lg px-3 py-2 shadow-sm hover:shadow-md transition">
+                            <span
+                                class="bg-blue-500 rounded-full p-1.5 mr-2 flex items-center justify-center flex-shrink-0">
                                 <i class="fa-solid fa-rocket text-white text-xs"></i>
                             </span>
                             <div class="flex-1 min-w-0">
@@ -210,8 +216,10 @@
                         </div>
 
                         <!-- Alerta 2 - Mentor esperando aprobación -->
-                        <div class="flex items-center bg-white bg-opacity-70 rounded-lg px-3 py-2 shadow-sm hover:shadow-md transition">
-                            <span class="bg-amber-500 rounded-full p-1.5 mr-2 flex items-center justify-center flex-shrink-0">
+                        <div
+                            class="flex items-center bg-white bg-opacity-70 rounded-lg px-3 py-2 shadow-sm hover:shadow-md transition">
+                            <span
+                                class="bg-amber-500 rounded-full p-1.5 mr-2 flex items-center justify-center flex-shrink-0">
                                 <i class="fa-solid fa-user-check text-white text-xs"></i>
                             </span>
                             <div class="flex-1 min-w-0">
@@ -225,8 +233,10 @@
                         </div>
 
                         <!-- Alerta 3 - Convocatoria próxima a cerrar -->
-                        <div class="flex items-center bg-white bg-opacity-70 rounded-lg px-3 py-2 shadow-sm hover:shadow-md transition">
-                            <span class="bg-red-500 rounded-full p-1.5 mr-2 flex items-center justify-center flex-shrink-0">
+                        <div
+                            class="flex items-center bg-white bg-opacity-70 rounded-lg px-3 py-2 shadow-sm hover:shadow-md transition">
+                            <span
+                                class="bg-red-500 rounded-full p-1.5 mr-2 flex items-center justify-center flex-shrink-0">
                                 <i class="fa-solid fa-hourglass-end text-white text-xs"></i>
                             </span>
                             <div class="flex-1 min-w-0">
@@ -240,8 +250,10 @@
                         </div>
 
                         <!-- Alerta 4 - Sistema -->
-                        <div class="flex items-center bg-white bg-opacity-70 rounded-lg px-3 py-2 shadow-sm hover:shadow-md transition">
-                            <span class="bg-purple-500 rounded-full p-1.5 mr-2 flex items-center justify-center flex-shrink-0">
+                        <div
+                            class="flex items-center bg-white bg-opacity-70 rounded-lg px-3 py-2 shadow-sm hover:shadow-md transition">
+                            <span
+                                class="bg-purple-500 rounded-full p-1.5 mr-2 flex items-center justify-center flex-shrink-0">
                                 <i class="fa-solid fa-chart-line text-white text-xs"></i>
                             </span>
                             <div class="flex-1 min-w-0">
@@ -255,8 +267,10 @@
                         </div>
 
                         <!-- Alerta 5 - Evento -->
-                        <div class="flex items-center bg-white bg-opacity-70 rounded-lg px-3 py-2 shadow-sm hover:shadow-md transition">
-                            <span class="bg-green-500 rounded-full p-1.5 mr-2 flex items-center justify-center flex-shrink-0">
+                        <div
+                            class="flex items-center bg-white bg-opacity-70 rounded-lg px-3 py-2 shadow-sm hover:shadow-md transition">
+                            <span
+                                class="bg-green-500 rounded-full p-1.5 mr-2 flex items-center justify-center flex-shrink-0">
                                 <i class="fa-solid fa-calendar-check text-white text-xs"></i>
                             </span>
                             <div class="flex-1 min-w-0">
@@ -268,12 +282,15 @@
                                 Ver
                             </a>
                         </div>
-                    </div>                </div>
+                    </div>
+                </div>
 
                 <!-- Tarjeta Servicios de Render - Fila inferior izquierda -->
-                <div class="bg-gradient-to-r from-emerald-500 to-teal-600 rounded-xl p-4 shadow text-white relative overflow-hidden h-48">
-                    <div class="absolute top-0 right-0 -mt-4 -mr-4 w-16 h-16 rounded-full bg-emerald-400 opacity-20"></div>
-                    
+                <div
+                    class="bg-gradient-to-r from-emerald-500 to-teal-600 rounded-xl p-4 shadow text-white relative overflow-hidden h-48">
+                    <div class="absolute top-0 right-0 -mt-4 -mr-4 w-16 h-16 rounded-full bg-emerald-400 opacity-20">
+                    </div>
+
                     <div class="relative z-10 h-full flex flex-col justify-between">
                         <div>
                             <div class="flex items-center mb-2">
@@ -282,11 +299,11 @@
                                 </div>
                                 <h3 class="text-base font-bold">Render</h3>
                             </div>
-                            
+
                             <p class="mb-3 text-white text-opacity-90 text-xs leading-relaxed">
                                 Despliega tu startup en la nube con facilidad.
                             </p>
-                            
+
                             <div class="space-y-1">
                                 <div class="flex items-center">
                                     <i class="fas fa-check-circle mr-2 text-emerald-200 text-xs"></i>
@@ -296,17 +313,19 @@
                                     <i class="fas fa-check-circle mr-2 text-emerald-200 text-xs"></i>
                                     <span class="text-xs">SSL automático</span>
                                 </div>
-                            </div>                        </div>
-                        
-                        <a href="http://localhost:8080/render/servicios" 
-                           class="bg-white text-teal-700 rounded-full px-3 py-1 text-xs font-bold hover:bg-opacity-90 transition text-center">
+                            </div>
+                        </div>
+
+                        <a href="http://localhost:8080/render/servicios"
+                            class="bg-white text-teal-700 rounded-full px-3 py-1 text-xs font-bold hover:bg-opacity-90 transition text-center">
                             Acceder
                         </a>
                     </div>
                 </div><!-- Tarjeta StartUp AI - Fila inferior derecha -->
-                <div class="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl p-4 shadow text-white relative overflow-hidden h-48">
+                <div
+                    class="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl p-4 shadow text-white relative overflow-hidden h-48">
                     <div class="absolute top-0 right-0 -mt-4 -mr-4 w-16 h-16 rounded-full bg-blue-400 opacity-20"></div>
-                    
+
                     <div class="relative z-10 h-full flex flex-col justify-between">
                         <div>
                             <div class="flex items-center mb-2">
@@ -449,7 +468,8 @@
                                     th:style="${'animation-delay: ' + (eventStat.index * 0.1) + 's'}">
 
                                     <!-- Cabecera del evento -->
-                                    <div class="flex items-center mb-3">                                        <div th:class="${event.conferenceData != null ? 'bg-gradient-to-br from-purple-500 to-indigo-600' : 'bg-gradient-to-br from-blue-500 to-indigo-600'}"
+                                    <div class="flex items-center mb-3">
+                                        <div th:class="${event.conferenceData != null ? 'bg-gradient-to-br from-purple-500 to-indigo-600' : 'bg-gradient-to-br from-blue-500 to-indigo-600'}"
                                             class="text-white rounded-lg p-2 mr-3 flex-shrink-0 shadow-md">
                                             <i
                                                 th:class="${event.conferenceData != null ? 'fa-solid fa-video-plus' : 'fa-solid fa-calendar-star'}"></i>
