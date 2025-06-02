@@ -226,14 +226,18 @@ public class StartupController {
     public String eliminarStratup(@PathVariable("id") Long idStartup) {
         startupService.deleteById(idStartup);
         return "redirect:/startup";
-    }
-
-    @PostMapping("/startup/{id}/like")
+    }    @PostMapping("/startup/{id}/like")
     public String toggleLike(@PathVariable("id") Long startupId, RedirectAttributes redirectAttributes) {
         // Obtener el usuario autenticado
         UsuarioEntity usuario = userDetailsService.obtenerUsuarioAutenticado();
         if (usuario == null) {
             redirectAttributes.addFlashAttribute("error", "Debes iniciar sesión para dar like");
+            return "redirect:/verStartup/" + startupId;
+        }
+
+        // Verificar que el usuario no sea mentor
+        if (usuario.getRol() != null && "MENTOR".equals(usuario.getRol().getRol().toUpperCase())) {
+            redirectAttributes.addFlashAttribute("error", "Los mentores no pueden dar like a las startups");
             return "redirect:/verStartup/" + startupId;
         }
 

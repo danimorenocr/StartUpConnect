@@ -24,7 +24,7 @@
                        class="rounded-full pl-10 pr-4 py-2 border border-orange-300 shadow focus:outline-none focus:ring-2 focus:ring-orange-400 text-orange-800 font-medium w-full" 
                        autocomplete="off">
             </div>
-            <a th:href="@{/crearEvento}"
+            <a sec:authorize="hasRole('ADMIN')" th:href="@{/crearEvento}"
                 class="bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-6 rounded-full shadow transition text-base">
                 Crear
             </a>
@@ -57,14 +57,14 @@
                 </div>
                 <!-- Acciones -->
                 <div class="w-32 flex justify-center gap-2">
-                    <a th:href="@{/editarEvento/{id}(id=${evento.id})}"
+                    <a sec:authorize="hasRole('ADMIN')" th:href="@{/editarEvento/{id}(id=${evento.id})}"
                        class="bg-yellow-400 hover:bg-yellow-500 text-white font-semibold py-1.5 px-3 rounded-full shadow transition text-xs flex items-center gap-1"
                        title="Editar">
                         <i class="fas fa-edit"></i>
                     </a>
                     <form th:action="@{/eliminarEvento/{id}(id=${evento.id})}" method="post"
                           onsubmit="return confirmarEliminacion(event, this);" style="display: inline;">
-                        <button type="submit"
+                        <button sec:authorize="hasRole('ADMIN')" type="submit"
                                 class="bg-red-500 hover:bg-red-600 text-white font-semibold py-1.5 px-3 rounded-full shadow transition text-xs flex items-center gap-1"
                                 title="Eliminar">
                             <i class="fas fa-trash-alt"></i>
