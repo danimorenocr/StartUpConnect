@@ -26,17 +26,12 @@ public class NotificacionEntity implements Serializable {
     @Column(name = "mensaje", columnDefinition = "TEXT")
     private String mensaje;
 
-    /**
-     * Ejemplo: 'tarea', 'evento', 'convocatoria'
-     */
+
     @NotNull
     @Size(min = 3, max = 50)
     @Column(name = "tipo_entidad")
     private String tipoEntidad;
 
-    /**
-     * ID del objeto referenciado (en su tabla original)
-     */
     @NotNull
     @Column(name = "entidad_id")
     private Long entidadId;

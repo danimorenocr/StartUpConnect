@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.validation.Valid;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -28,6 +29,15 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.UUID;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONObject;
 
 @Controller
 public class PerfilController {
@@ -164,6 +174,9 @@ public class PerfilController {
                 return "redirect:/perfil";
             }
 
+            // Verificar si el correo ha cambiado
+            boolean emailChanged = !usuarioActual.getEmailUsu().equals(usuario.getEmailUsu());
+            
             // Actualizar datos básicos del usuario
             usuarioActual.setNombreUsu(usuario.getNombreUsu());
             usuarioActual.setEmailUsu(usuario.getEmailUsu());
@@ -171,6 +184,13 @@ public class PerfilController {
 
             // Guardar cambios del usuario
             usuarioService.save(usuarioActual);
+
+            // Si el correo cambió, redirigir al login
+            if (emailChanged) {
+                flash.addFlashAttribute("success", "Perfil actualizado correctamente. Por favor, inicia sesión nuevamente con tu nuevo correo.");
+                SecurityContextHolder.clearContext(); // Cerrar sesión
+                return "redirect:/login";
+            }
 
             // Actualizar información específica según el rol
             if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_MENTOR"))) {
@@ -234,12 +254,13 @@ public class PerfilController {
             @RequestParam("passwordActual") String passwordActual,
             @RequestParam("passwordNueva") String passwordNueva,
             @RequestParam("confirmarPassword") String confirmarPassword,
-            RedirectAttributes flash) {
+            RedirectAttributes flash,
+            Authentication authentication) {
         try {
-            // Verificar que el usuario exista
+            // Verificar que el usuario exista y coincida con el usuario autenticado
             UsuarioEntity usuario = usuarioService.findById(documento);
-            if (usuario == null) {
-                flash.addFlashAttribute("error", "No se encontró el usuario");
+            if (usuario == null || !usuario.getEmailUsu().equals(authentication.getName())) {
+                flash.addFlashAttribute("error", "No se encontró el usuario o no tienes permisos para realizar esta operación");
                 return "redirect:/perfil";
             }
 
@@ -255,16 +276,24 @@ public class PerfilController {
                 return "redirect:/cambiarPassword";
             }
 
-            // Verificar la longitud mínima de la contraseña
+            // Verificar que la nueva contraseña no sea igual a la actual
+            if (passwordEncoder.matches(passwordNueva, usuario.getContrasenna())) {
+                flash.addFlashAttribute("error", "La nueva contraseña debe ser diferente a la actual");
+                return "redirect:/cambiarPassword";
+            }
+
+            // Verificar la longitud mínima y requisitos de la contraseña
             if (passwordNueva.length() < 6) {
                 flash.addFlashAttribute("error", "La contraseña debe tener al menos 6 caracteres");
                 return "redirect:/cambiarPassword";
             }
 
-            // Actualizar la contraseña
-            usuario.setContrasenna(passwordEncoder.encode(passwordNueva));
+            // Actualizar la contraseña manteniendo la sesión del usuario
+            String newHashedPassword = passwordEncoder.encode(passwordNueva);
+            usuario.setContrasenna(newHashedPassword);
             usuarioService.save(usuario);
 
+            // No cerrar la sesión, solo redirigir al perfil con mensaje de éxito
             flash.addFlashAttribute("success", "Contraseña actualizada correctamente");
             return "redirect:/perfil";
         } catch (Exception e) {
@@ -331,47 +360,51 @@ public class PerfilController {
                 return "redirect:/cambiarFoto";
             }
 
-            // Crear directorio base si no existe
-            Path uploadDir = Paths.get("src", "main", "resources", "static", "uploads", "usuarios").toAbsolutePath();
-            Files.createDirectories(uploadDir);
+            try {
+                // Upload to imgBB
+                CloseableHttpClient httpClient = HttpClients.createDefault();
+                HttpPost httpPost = new HttpPost("https://api.imgbb.com/1/upload");
 
-            // Eliminar foto anterior si existe
-            if (usuario.getFotoUrl() != null && !usuario.getFotoUrl().isEmpty()) {
-                try {
-                    String oldPath = usuario.getFotoUrl().replace("/", File.separator);
-                    Path fullPath = Paths.get(uploadDir.getParent().getParent().toString(), "static", oldPath);
-                    Files.deleteIfExists(fullPath);
-                    log.info("Foto anterior eliminada: " + fullPath);
-                } catch (IOException e) {
-                    log.warn("No se pudo eliminar la foto anterior: " + e.getMessage());
+                MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+                builder.addTextBody("key", "dc172a14793a0bf9b87a96f1f2e5b4be", ContentType.TEXT_PLAIN);
+                builder.addBinaryBody("image", foto.getInputStream(), ContentType.DEFAULT_BINARY, foto.getOriginalFilename());
+
+                HttpEntity multipart = builder.build();
+                httpPost.setEntity(multipart);
+
+                HttpResponse response = httpClient.execute(httpPost);
+                HttpEntity responseEntity = response.getEntity();
+
+                if (response.getStatusLine().getStatusCode() == 200) {
+                    String responseString = EntityUtils.toString(responseEntity);
+                    JSONObject jsonResponse = new JSONObject(responseString);
+                    boolean success = jsonResponse.getBoolean("success");
+
+                    if (success) {
+                        JSONObject data = jsonResponse.getJSONObject("data");
+                        String imageUrl = data.getString("url");
+                        usuario.setFotoUrl(imageUrl);
+                        usuarioService.save(usuario);
+                        flash.addFlashAttribute("success", "Foto de perfil actualizada correctamente");
+                        return "redirect:/perfil";
+                    } else {
+                        log.error("Error al subir la imagen: " + jsonResponse.optString("error", "Error desconocido"));
+                        flash.addFlashAttribute("error", "Error al subir la imagen");
+                        return "redirect:/cambiarFoto";
+                    }
+                } else {
+                    log.error("Error al subir la imagen: Código de respuesta " + response.getStatusLine().getStatusCode());
+                    flash.addFlashAttribute("error", "Error al subir la imagen");
+                    return "redirect:/cambiarFoto";
                 }
+            } catch (IOException e) {
+                log.error("Error al subir la foto: ", e);
+                flash.addFlashAttribute("error", "Error al subir la foto");
+                return "redirect:/cambiarFoto";
             }
-
-            // Generar nombre único para la foto
-            String originalFilename = foto.getOriginalFilename();
-            String extension = originalFilename != null ? originalFilename.substring(originalFilename.lastIndexOf(".")) : ".jpg";
-            String uniqueFilename = UUID.randomUUID().toString() + extension;
-
-            // Construir la ruta completa
-            Path destinationFile = uploadDir.resolve(uniqueFilename);
-
-            // Guardar el archivo usando REPLACE_EXISTING para evitar conflictos
-            Files.copy(foto.getInputStream(), destinationFile, StandardCopyOption.REPLACE_EXISTING);
-            log.info("Foto guardada en: " + destinationFile);
-
-            // Actualizar ruta de la foto en la BD (usar forward slashes para URLs)
-            usuario.setFotoUrl("/uploads/usuarios/" + uniqueFilename);
-            usuarioService.save(usuario);
-
-            flash.addFlashAttribute("success", "Foto de perfil actualizada correctamente");
-            return "redirect:/perfil";
-        } catch (IOException e) {
-            log.error("Error al subir la foto: ", e);
-            flash.addFlashAttribute("error", "Error al subir la foto: No se pudo guardar el archivo");
-            return "redirect:/cambiarFoto";
         } catch (Exception e) {
-            log.error("Error al actualizar la foto: ", e);
-            flash.addFlashAttribute("error", "Error al actualizar la foto: Error interno del servidor");
+            log.error("Error al procesar la actualización de foto: ", e);
+            flash.addFlashAttribute("error", "Error interno al procesar la foto");
             return "redirect:/cambiarFoto";
         }
     }

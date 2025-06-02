@@ -1,14 +1,17 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-<head th:replace="layout/layout :: head">
+<head th:replace="~{layout/layout :: head}">
     <title>Editar Perfil</title>
 </head>
 
 <body>
-    <header th:replace="layout/layout :: header"></header>
+    <header th:replace="~{layout/layout :: header}"></header>
 
     <main class="content">
+
+                <div class="w-64 bg-gradient-to-b from-[#043A68] to-[#52ACC4] h-screen fixed left-0 top-0"></div>
+
         <div class="container mx-auto px-4 py-8">
             <div class="bg-white rounded-lg shadow-lg overflow-hidden max-w-4xl mx-auto">
                 <div class="p-6 bg-gradient-to-r from-[#043A68] to-[#52ACC4] text-white">
@@ -114,7 +117,6 @@
         </div>
     </main>
 
-    <footer th:replace="layout/layout :: footer"></footer>
 </body>
 
 </html>

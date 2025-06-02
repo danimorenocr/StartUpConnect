@@ -8,16 +8,21 @@
 <body>
     <header th:replace="layout/layout :: header"></header>
 
-    <main class="content">
-        <div class="container mx-auto px-4 py-8">
-            <div class="bg-white rounded-lg shadow-lg overflow-hidden max-w-4xl mx-auto">
-                <div class="p-6 bg-gradient-to-r from-[#043A68] to-[#52ACC4] text-white">
-                    <h1 class="text-3xl font-bold">Mi Perfil</h1>
-                    <p class="text-lg opacity-80">Información personal</p>
-                </div>
+    <div class="flex">
+        <!-- Barra vertical lateral izquierda -->
+        <div class="w-64 bg-gradient-to-b from-[#043A68] to-[#52ACC4] h-screen fixed left-0 top-0"></div>
+        
+        <main class="content ml-64">
+            <div class="container mx-auto px-4 py-8">
+                <div class="bg-white rounded-lg shadow-lg max-w-4xl mx-auto">
+                    <div class="p-6 bg-gradient-to-r from-[#043A68] to-[#52ACC4] text-white">
+                        <h1 class="text-3xl font-bold">Mi Perfil</h1>
+                        <p class="text-lg opacity-80">Información personal</p>
+                    </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 p-6">
-                    <!-- Columna izquierda - Foto de perfil -->                    <div class="flex flex-col items-center">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 md:border-l-8 md:border-[#043A68] bg-white">
+                    <!-- Columna izquierda - Foto de perfil -->
+                    <div class="flex flex-col items-center">
                         <div class="w-48 h-48 rounded-full overflow-hidden mb-4 border-4 border-[#E79938] shadow-lg">
                             <img th:if="${usuario.fotoUrl != null && !usuario.fotoUrl.isEmpty()}"
                                 th:src="@{${usuario.fotoUrl}}" alt="Foto de perfil"
@@ -107,8 +112,8 @@
             </div>
         </div>
     </main>
+    </div>
 
-    <footer th:replace="layout/layout :: footer"></footer>
 </body>
 
 </html>

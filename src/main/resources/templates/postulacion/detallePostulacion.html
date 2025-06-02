@@ -2,7 +2,7 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 
 <head th:replace="~{layout/layout :: head}"></head>
-<link rel="stylesheet" th:href="@{/css/postulacion/crearPostulacion.css}">
+<link rel="stylesheet" th:href="@{/css/postulacion/detallePostulacion.css}">
 
 <body>
 
@@ -10,11 +10,7 @@
 
     <main class="main-content">
         <div class="form-container">
-            <div class="back-navigation">
-                <a th:href="@{/postulacion}" class="btn btn-outline-secondary btn-sm">
-                    <i class="fas fa-arrow-left"></i> Volver a mis postulaciones
-                </a>
-            </div>
+         
 
             <h1 class="form-title">
                 <span th:text="${postulacionDetalle.nombreProyecto}"></span>
@@ -120,25 +116,25 @@
                     <div class="links-docs">
                         <div class="detail-item" th:if="${postulacionDetalle.enlacePaginaWeb != null && !postulacionDetalle.enlacePaginaWeb.isEmpty()}">
                             <h4>Página web</h4>
-                            <a th:href="${postulacionDetalle.enlacePaginaWeb}" target="_blank" class="btn btn-link">
+                            <a th:href="${postulacionDetalle.enlacePaginaWeb}" target="_blank" class="simple-link">
                                 <i class="fas fa-globe"></i> Visitar página web
                             </a>
                         </div>
                         <div class="detail-item" th:if="${postulacionDetalle.pitch != null && !postulacionDetalle.pitch.isEmpty()}">
                             <h4>Pitch</h4>
-                            <a th:href="${postulacionDetalle.pitch}" target="_blank" class="btn btn-link">
+                            <a th:href="${postulacionDetalle.pitch}" target="_blank" class="simple-link">
                                 <i class="fas fa-file-powerpoint"></i> Ver pitch
                             </a>
                         </div>
                         <div class="detail-item" th:if="${postulacionDetalle.documentoPropuesta != null && !postulacionDetalle.documentoPropuesta.isEmpty()}">
                             <h4>Documento de propuesta</h4>
-                            <a th:href="${postulacionDetalle.documentoPropuesta}" target="_blank" class="btn btn-link">
+                            <a th:href="${postulacionDetalle.documentoPropuesta}" target="_blank" class="simple-link">
                                 <i class="fas fa-file-pdf"></i> Ver documento
                             </a>
                         </div>
                         <div class="detail-item" th:if="${postulacionDetalle.videoPitch != null && !postulacionDetalle.videoPitch.isEmpty()}">
                             <h4>Video pitch</h4>
-                            <a th:href="${postulacionDetalle.videoPitch}" target="_blank" class="btn btn-link">
+                            <a th:href="${postulacionDetalle.videoPitch}" target="_blank" class="simple-link">
                                 <i class="fas fa-video"></i> Ver video
                             </a>
                         </div>
@@ -150,194 +146,61 @@
                 </div>
             </div>
 
-            <!-- Acciones -->
-            <div class="actions-container">
-                <a th:href="@{/editarPostulacion/{id}(id=${postulacionDetalle.id})}" class="btn btn-primary">
-                    <i class="fas fa-edit"></i> Editar postulación
-                </a>
-                <a th:href="@{/eliminarPostulacion/{id}(id=${postulacionDetalle.id})}" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar esta postulación?')">
-                    <i class="fas fa-trash"></i> Eliminar
+               <div class="back-navigation">
+                <a th:href="@{/postulacion}" class="btn-back">
+                    <i class="fas fa-arrow-left"></i> Volver
                 </a>
             </div>
         </div>
     </main>
 
-    <footer th:replace="~{layout/layout :: footer}"></footer>
+    <!-- Custom Delete Modal -->
+    <div id="deleteModal" class="custom-modal">
+        <div class="modal-content">
+            <div class="modal-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h3 class="modal-title">¿Confirmar eliminación?</h3>
+            <p class="modal-text">
+                Esta acción no se puede deshacer. La postulación será eliminada permanentemente.
+            </p>
+            <div class="modal-actions">
+                <button class="modal-btn modal-btn-cancel" onclick="hideDeleteModal()">
+                    Cancelar
+                </button>
+                <a th:href="@{/eliminarPostulacion/{id}(id=${postulacionDetalle.id})}" class="modal-btn modal-btn-confirm">
+                    Sí, eliminar
+                </a>
+            </div>
+        </div>
+    </div>
 
-    <!-- Agregar CSS adicional -->
-    <style>
-        .status-badge {
-            display: inline-block;
-            font-size: 0.8rem;
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-            margin-left: 0.5rem;
-            font-weight: 500;
-            vertical-align: middle;
+    <script>
+        function showDeleteModal() {
+            document.getElementById('deleteModal').classList.add('show');
+            document.body.style.overflow = 'hidden';
         }
-
-        .status-badge.approved {
-            background-color: rgba(40, 167, 69, 0.1);
-            color: #28a745;
-            border: 1px solid rgba(40, 167, 69, 0.2);
+        
+        function hideDeleteModal() {
+            document.getElementById('deleteModal').classList.remove('show');
+            document.body.style.overflow = 'auto';
         }
-
-        .status-badge.rejected {
-            background-color: rgba(220, 53, 69, 0.1);
-            color: #dc3545;
-            border: 1px solid rgba(220, 53, 69, 0.2);
-        }
-
-        .status-badge.pending {
-            background-color: rgba(255, 193, 7, 0.1);
-            color: #ffc107;
-            border: 1px solid rgba(255, 193, 7, 0.2);
-        }
-
-        .postulacion-meta {
-            background-color: #f8f9fa;
-            border-radius: 8px;
-            padding: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        .meta-item {
-            margin-bottom: 0.5rem;
-            display: flex;
-            align-items: center;
-        }
-
-        .meta-item i {
-            margin-right: 0.5rem;
-            color: #2376ad;
-            width: 20px;
-            text-align: center;
-        }
-
-        .meta-item span:first-of-type {
-            font-weight: 600;
-            margin-right: 0.5rem;
-        }
-
-        .detail-section {
-            margin-bottom: 2.5rem;
-            border: 1px solid #e9ecef;
-            border-radius: 8px;
-            padding: 1.5rem;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        }
-
-        .section-title {
-            color: #2376ad;
-            border-bottom: 2px solid #e9ecef;
-            padding-bottom: 0.8rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .detail-item {
-            margin-bottom: 1.5rem;
-        }
-
-        .detail-item:last-child {
-            margin-bottom: 0;
-        }
-
-        .detail-item h4 {
-            font-size: 1rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: #343a40;
-        }
-
-        .detail-item p {
-            color: #495057;
-            line-height: 1.6;
-        }
-
-        .detail-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-        }
-
-        .startup-logo {
-            text-align: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .startup-logo img {
-            max-width: 200px;
-            max-height: 200px;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .actions-container {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-
-        .back-navigation {
-            margin-bottom: 1.5rem;
-        }
-
-        .status {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            border-radius: 15px;
-            font-weight: 500;
-        }
-
-        .status.approved {
-            background-color: rgba(40, 167, 69, 0.1);
-            color: #28a745;
-        }
-
-        .status.rejected {
-            background-color: rgba(220, 53, 69, 0.1);
-            color: #dc3545;
-        }
-
-        .status.pending {
-            background-color: rgba(255, 193, 7, 0.1);
-            color: #ffc107;
-        }
-
-        .btn-link {
-            color: #2376ad;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            transition: all 0.3s ease;
-        }
-
-        .btn-link i {
-            margin-right: 0.5rem;
-        }
-
-        .btn-link:hover {
-            color: #1a5a8a;
-            text-decoration: underline;
-        }
-
-        @media (max-width: 768px) {
-            .detail-grid {
-                grid-template-columns: 1fr;
-                gap: 1rem;
+        
+        // Close modal when clicking outside
+        document.getElementById('deleteModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                hideDeleteModal();
             }
-
-            .actions-container {
-                flex-direction: column;
+        });
+        
+        // Close modal with ESC key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                hideDeleteModal();
             }
+        });
+    </script>
 
-            .actions-container .btn {
-                width: 100%;
-                margin-bottom: 0.5rem;
-            }
-        }
-    </style>
 </body>
 
 </html>

@@ -1,297 +1,318 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="${title}">Gestionar Postulación</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        .admin-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 30px 0;
-            margin-bottom: 30px;
-        }
+<head th:replace="~{layout/layout :: head}"></head>
+<body class="font-['Poppins'] bg-gradient-to-br from-slate-50 to-slate-200 min-h-screen overflow-x-hidden">
+        <header th:replace="~{layout/layout :: header}"></header>
         
-        .postulacion-card {
-            border: none;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            margin-bottom: 30px;
-        }
-        
-        .status-badge {
-            font-size: 0.9rem;
-            padding: 8px 16px;
-            border-radius: 25px;
-            font-weight: 600;
-        }
-        
-        .status-pendiente { background-color: #fff3cd; color: #856404; }
-        .status-aprobada { background-color: #d1e7dd; color: #0f5132; }
-        .status-rechazada { background-color: #f8d7da; color: #721c24; }
-        .status-revision { background-color: #d1ecf1; color: #0c5460; }
-        
-        .action-section {
-            background-color: #f8f9fa;
-            border-radius: 10px;
-            padding: 25px;
-            margin-top: 20px;
-        }
-        
-        .btn-estado {
-            border-radius: 25px;
-            padding: 10px 20px;
-            font-weight: 600;
-            margin: 5px;
-            transition: all 0.3s ease;
-        }
-        
-        .btn-aprobar {
-            background: linear-gradient(45deg, #28a745, #20c997);
-            border: none;
-            color: white;
-        }
-        
-        .btn-rechazar {
-            background: linear-gradient(45deg, #dc3545, #e74c3c);
-            border: none;
-            color: white;
-        }
-        
-        .btn-revision {
-            background: linear-gradient(45deg, #17a2b8, #3498db);
-            border: none;
-            color: white;
-        }
-        
-        .btn-estado:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-        
-        .info-section h5 {
-            color: #495057;
-            border-bottom: 2px solid #e9ecef;
-            padding-bottom: 10px;
-            margin-bottom: 15px;
-        }
-        
-        .info-item {
-            margin-bottom: 10px;
-        }
-        
-        .info-label {
-            font-weight: 600;
-            color: #6c757d;
-            margin-right: 10px;
-        }
-        
-        .project-description {
-            background-color: #f8f9fa;
-            border-left: 4px solid #007bff;
-            padding: 15px;
-            border-radius: 5px;
-            margin: 15px 0;
-        }
-    </style>
-</head>
-<body>
-    <header th:replace="~{layout/layout :: header}"></header>
-    
-    <div class="admin-header">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-md-8">
-                    <h1 class="mb-0">
-                        <i class="fas fa-clipboard-check me-3"></i>
-                        Gestionar Postulación
-                    </h1>
-                    <p class="mb-0 mt-2">Panel de administración para revisar y cambiar estado de postulaciones</p>
-                </div>
-                <div class="col-md-4 text-end">
-                    <a th:href="@{/postulacion/convocatoria/{id}(id=${postulacion.convocatoria?.id})}" 
-                       class="btn btn-light btn-lg">
-                        <i class="fas fa-arrow-left me-2"></i>Volver a Postulaciones
-                    </a>
+        <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
+            <!-- Admin Header Banner -->
+            <div class="relative bg-gradient-to-r from-teal-500 via-sky-500 to-blue-500 text-white px-4 sm:px-6 md:px-10 py-6 sm:py-8 md:py-12 my-6 sm:my-8 w-full max-w-6xl mx-auto rounded-xl sm:rounded-2xl shadow-2xl overflow-hidden">
+                <!-- Background overlay -->
+                <div class="absolute inset-0 bg-[url('/images/bannerGestion.jpg')] bg-cover bg-center opacity-10 rounded-xl sm:rounded-2xl"></div>
+                
+                <div class="relative z-10">
+                    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                        <div class="flex-1 min-w-0">
+                            <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold mb-2 drop-shadow-lg break-words">
+                                <i class="fas fa-clipboard-check mr-2 sm:mr-3 text-xl sm:text-2xl md:text-3xl lg:text-4xl"></i>
+                                Gestionar Postulación
+                            </h1>
+                            <p class="text-sm sm:text-base md:text-lg font-medium opacity-90">Panel de administración para revisar y cambiar estado de postulaciones</p>
+                        </div>
+                        <div class="flex-shrink-0">
+                            <a th:href="@{/postulacion/convocatoria/{id}(id=${postulacion.convocatoria?.id})}" 
+                            class="inline-flex items-center bg-white/95 hover:bg-white text-slate-800 font-semibold px-3 sm:px-4 md:px-6 py-2 md:py-3 rounded-full shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 text-xs sm:text-sm md:text-base">
+                                <i class="fas fa-arrow-left mr-1 sm:mr-2"></i>
+                                <span class="hidden sm:inline">Volver a  Postulaciones</span>   
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <div class="container">
-        <!-- Mensajes de éxito y error -->
-        <div class="alert alert-success alert-dismissible fade show" th:if="${mensajeExito}" role="alert">
-            <i class="fas fa-check-circle me-2"></i>
-            <span th:text="${mensajeExito}"></span>
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-        
-        <div class="alert alert-danger alert-dismissible fade show" th:if="${error}" role="alert">
-            <i class="fas fa-exclamation-circle me-2"></i>
-            <span th:text="${error}"></span>
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-
-        <!-- Información de la Postulación -->
-        <div class="card postulacion-card">
-            <div class="card-header bg-white py-3">
-                <div class="row align-items-center">
-                    <div class="col-md-8">
-                        <h3 class="mb-0" th:text="${postulacion.nombreProyecto}">Nombre del Proyecto</h3>
-                        <p class="text-muted mb-0">
-                            <i class="fas fa-calendar me-2"></i>
-                            Postulado el <span th:text="${#dates.format(postulacion.fechaPostulacion, 'dd/MM/yyyy')}"></span>
-                        </p>
-                    </div>
-                    <div class="col-md-4 text-end">
-                        <span class="status-badge" th:classappend="${
-                            postulacion.estado == 'Aprobada' ? 'status-aprobada' : 
-                            postulacion.estado == 'Rechazada' ? 'status-rechazada' : 
-                            postulacion.estado == 'En revisión' ? 'status-revision' : 'status-pendiente'
-                        }" th:text="${postulacion.estado}">
-                        </span>
-                    </div>
-                </div>
+            <!-- Mensajes de éxito y error -->
+            <div th:if="${mensajeExito}" class="bg-gradient-to-r from-green-50 to-green-100 border-l-4 border-green-500 text-green-800 px-6 py-4 mb-6 rounded-2xl shadow-lg font-medium flex items-center">
+                <i class="fas fa-check-circle mr-3 text-lg"></i>
+                <span th:text="${mensajeExito}"></span>
+                <button type="button" class="ml-auto text-green-600 hover:text-green-800" data-bs-dismiss="alert">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
             
-            <div class="card-body">
-                <!-- Información general -->
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="info-section">
-                            <h5><i class="fas fa-info-circle me-2"></i>Información General</h5>
-                            <div class="info-item">
-                                <span class="info-label">Startup:</span>
-                                <span th:text="${postulacion.startup?.nombreStartup ?: 'No asignada'}"></span>
-                            </div>
-                            <div class="info-item">
-                                <span class="info-label">Convocatoria:</span>
-                                <span th:text="${postulacion.convocatoria?.titulo ?: 'No asignada'}"></span>
-                            </div>
-                            <div class="info-item">
-                                <span class="info-label">Etapa del Proyecto:</span>
-                                <span th:text="${postulacion.etapaProyecto}"></span>
-                            </div>
-                            <div class="info-item">
-                                <span class="info-label">Número de Integrantes:</span>
-                                <span th:text="${postulacion.numeroIntegrantes}"></span>
+            <div th:if="${error}" class="bg-gradient-to-r from-red-50 to-red-100 border-l-4 border-red-500 text-red-800 px-6 py-4 mb-6 rounded-2xl shadow-lg font-medium flex items-center">
+                <i class="fas fa-exclamation-circle mr-3 text-lg"></i>
+                <span th:text="${error}"></span>
+                <button type="button" class="ml-auto text-red-600 hover:text-red-800" data-bs-dismiss="alert">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <!-- Información de la Postulación -->
+            <div class="bg-white rounded-xl sm:rounded-2xl shadow-2xl mb-6 sm:mb-8 border-t-4 border-green-500 overflow-hidden w-full max-w-6xl mx-auto">
+                <div class="bg-gradient-to-r from-green-50 to-green-100 border-b border-green-200 px-4 sm:px-6 md:px-8 py-4 sm:py-6 md:py-8">
+                    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                        <div class="flex-1 min-w-0">
+                            <h3 class="text-xl sm:text-2xl md:text-3xl font-bold text-green-800 mb-2 break-words" th:text="${postulacion.nombreProyecto}">Nombre del Proyecto</h3>
+                            <p class="text-green-600 font-medium text-sm sm:text-base md:text-lg flex items-center flex-wrap">
+                                <i class="fas fa-calendar mr-2"></i>
+                                <span>Postulado el</span>
+                                <span th:text="${#dates.format(postulacion.fechaPostulacion, 'dd/MM/yyyy')}" class="ml-1"></span>
+                            </p>
+                        </div>
+                        <div class="flex-shrink-0">
+                            <span class="inline-block px-3 sm:px-4 md:px-6 py-2 md:py-3 rounded-full font-semibold text-xs md:text-sm uppercase tracking-wide shadow-lg" 
+                                  th:classappend="${
+                                      postulacion.estado == 'Aprobada' ? 'bg-gradient-to-r from-green-100 to-green-200 text-green-800 shadow-green-300' : 
+                                      postulacion.estado == 'Rechazada' ? 'bg-gradient-to-r from-red-100 to-red-200 text-red-800 shadow-red-300' : 
+                                      postulacion.estado == 'En revisión' ? 'bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800 shadow-blue-300' : 
+                                      'bg-gradient-to-r from-yellow-100 to-yellow-200 text-yellow-800 shadow-yellow-300'
+                                  }" 
+                                  th:text="${postulacion.estado}">
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-gradient-to-br from-white to-gray-50 px-4 sm:px-6 md:px-10 py-4 sm:py-6 md:py-8">
+                    <!-- Información general -->
+                    <div class="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6">
+                        <div class="bg-gradient-to-br from-white to-slate-50 rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-7 border-l-4 border-green-500 shadow-lg">
+                            <h5 class="text-green-800 font-bold text-base sm:text-lg md:text-xl border-b-2 border-green-500 pb-3 mb-4 sm:mb-5 flex items-center">
+                                <i class="fas fa-info-circle mr-2"></i>Información General
+                            </h5>
+                            <div class="space-y-3 sm:space-y-4">
+                                <div class="bg-gradient-to-r from-green-50 to-green-100 border-l-3 border-green-500 rounded-xl p-3">
+                                    <span class="font-bold text-green-800 text-xs uppercase tracking-wider block sm:inline mr-0 sm:mr-3 mb-1 sm:mb-0">Startup:</span>
+                                    <span class="text-gray-700 font-medium break-words" th:text="${postulacion.startup?.nombreStartup ?: 'No asignada'}"></span>
+                                </div>
+                                <div class="bg-gradient-to-r from-green-50 to-green-100 border-l-3 border-green-500 rounded-xl p-3">
+                                    <span class="font-bold text-green-800 text-xs uppercase tracking-wider block sm:inline mr-0 sm:mr-3 mb-1 sm:mb-0">Convocatoria:</span>
+                                    <span class="text-gray-700 font-medium break-words" th:text="${postulacion.convocatoria?.titulo ?: 'No asignada'}"></span>
+                                </div>
+                                <div class="bg-gradient-to-r from-green-50 to-green-100 border-l-3 border-green-500 rounded-xl p-3">
+                                    <span class="font-bold text-green-800 text-xs uppercase tracking-wider block sm:inline mr-0 sm:mr-3 mb-1 sm:mb-0">Etapa del Proyecto:</span>
+                                    <span class="text-gray-700 font-medium break-words" th:text="${postulacion.etapaProyecto}"></span>
+                                </div>
+                                <div class="bg-gradient-to-r from-green-50 to-green-100 border-l-3 border-green-500 rounded-xl p-3">
+                                    <span class="font-bold text-green-800 text-xs uppercase tracking-wider block sm:inline mr-0 sm:mr-3 mb-1 sm:mb-0">Número de Integrantes:</span>
+                                    <span class="text-gray-700 font-medium break-words" th:text="${postulacion.numeroIntegrantes}"></span>
+                                </div>
                             </div>
                         </div>
+                        
+                        <div class="bg-gradient-to-br from-white to-slate-50 rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-7 border-l-4 border-green-500 shadow-lg">
+                            <h5 class="text-green-800 font-bold text-base sm:text-lg md:text-xl border-b-2 border-green-500 pb-3 mb-4 sm:mb-5 flex items-center">
+                                <i class="fas fa-dollar-sign mr-2"></i>Información Financiera
+                            </h5>
+                            <div class="space-y-3 sm:space-y-4">
+                                <div class="bg-gradient-to-r from-green-50 to-green-100 border-l-3 border-green-500 rounded-xl p-3">
+                                    <span class="font-bold text-green-800 text-xs uppercase tracking-wider block sm:inline mr-0 sm:mr-3 mb-1 sm:mb-0">Dinero en Ventas:</span>
+                                    <span class="text-gray-700 font-medium break-words" th:text="${postulacion.dineroVentas != null ? #numbers.formatCurrency(postulacion.dineroVentas) : 'No especificado'}"></span>
+                                </div>
+                                <div class="bg-gradient-to-r from-green-50 to-green-100 border-l-3 border-green-500 rounded-xl p-3">
+                                    <span class="font-bold text-green-800 text-xs uppercase tracking-wider block sm:inline mr-0 sm:mr-3 mb-1 sm:mb-0">Clientes Objetivo:</span>
+                                    <span class="text-gray-700 font-medium break-words" th:text="${postulacion.clientesObjetivo ?: 'No especificado'}"></span>
+                                </div>
+                                <div class="bg-gradient-to-r from-green-50 to-green-100 border-l-3 border-green-500 rounded-xl p-3">
+                                    <span class="font-bold text-green-800 text-xs uppercase tracking-wider block sm:inline mr-0 sm:mr-3 mb-1 sm:mb-0">Diferenciador:</span>
+                                    <span class="text-gray-700 font-medium break-words" th:text="${postulacion.diferenciador ?: 'No especificado'}"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                     <!-- Descripción del proyecto -->
+                    <div th:if="${postulacion.problemaASolucionar != null and !postulacion.problemaASolucionar.isEmpty()}" class="mt-4 sm:mt-6">
+                        <h5 class="text-green-800 font-bold text-base sm:text-lg md:text-xl mb-3 sm:mb-4 flex items-center">
+                            <i class="fas fa-lightbulb mr-2"></i>Problema a Solucionar
+                        </h5>
+                        <div class="bg-gradient-to-r from-green-50 to-green-100 border-l-4 border-green-500 rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 shadow-lg text-green-800 font-medium leading-relaxed break-words" th:text="${postulacion.problemaASolucionar}"></div>
                     </div>
                     
-                    <div class="col-md-6">
-                        <div class="info-section">
-                            <h5><i class="fas fa-dollar-sign me-2"></i>Información Financiera</h5>
-                            <div class="info-item">
-                                <span class="info-label">Dinero en Ventas:</span>
-                                <span th:text="${postulacion.dineroVentas != null ? #numbers.formatCurrency(postulacion.dineroVentas) : 'No especificado'}"></span>
-                            </div>
-                            <div class="info-item">
-                                <span class="info-label">Clientes Objetivo:</span>
-                                <span th:text="${postulacion.clientesObjetivo ?: 'No especificado'}"></span>
-                            </div>
-                            <div class="info-item">
-                                <span class="info-label">Diferenciador:</span>
-                                <span th:text="${postulacion.diferenciador ?: 'No especificado'}"></span>
-                            </div>
-                        </div>
+                    <div th:if="${postulacion.solucion != null and !postulacion.solucion.isEmpty()}" class="mt-4 sm:mt-6">
+                        <h5 class="text-green-800 font-bold text-base sm:text-lg md:text-xl mb-3 sm:mb-4 flex items-center">
+                            <i class="fas fa-cogs mr-2"></i>Solución Propuesta
+                        </h5>
+                        <div class="bg-gradient-to-r from-green-50 to-green-100 border-l-4 border-green-500 rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 shadow-lg text-green-800 font-medium leading-relaxed break-words" th:text="${postulacion.solucion}"></div>
                     </div>
-                </div>
-                
-                <!-- Descripción del proyecto -->
-                <div th:if="${postulacion.problemaASolucionar != null and !postulacion.problemaASolucionar.isEmpty()}">
-                    <h5><i class="fas fa-lightbulb me-2"></i>Problema a Solucionar</h5>
-                    <div class="project-description" th:text="${postulacion.problemaASolucionar}"></div>
-                </div>
-                
-                <div th:if="${postulacion.solucion != null and !postulacion.solucion.isEmpty()}">
-                    <h5><i class="fas fa-cogs me-2"></i>Solución Propuesta</h5>
-                    <div class="project-description" th:text="${postulacion.solucion}"></div>
-                </div>
-                
-                <!-- Enlaces y recursos -->
-                <div class="row mt-4" th:if="${postulacion.enlacePaginaWeb != null or postulacion.videoPitch != null}">
-                    <div class="col-12">
-                        <h5><i class="fas fa-link me-2"></i>Enlaces y Recursos</h5>
-                        <div class="d-flex flex-wrap gap-2">
+                    
+                    <!-- Enlaces y recursos -->
+                    <div th:if="${postulacion.enlacePaginaWeb != null or postulacion.videoPitch != null}" class="mt-6 sm:mt-8">
+                        <h5 class="text-green-800 font-bold text-base sm:text-lg md:text-xl mb-3 sm:mb-4 flex items-center">
+                            <i class="fas fa-link mr-2"></i>Enlaces y Recursos
+                        </h5>
+                        <div class="flex flex-col sm:flex-row flex-wrap gap-3">
                             <a th:if="${postulacion.enlacePaginaWeb != null and !postulacion.enlacePaginaWeb.isEmpty()}" 
-                               th:href="${postulacion.enlacePaginaWeb}" 
-                               target="_blank" 
-                               class="btn btn-outline-primary btn-sm">
-                                <i class="fas fa-globe me-1"></i>Página Web
+                            th:href="${postulacion.enlacePaginaWeb}" 
+                            target="_blank" 
+                            class="inline-flex items-center justify-center border-2 border-blue-500 text-blue-600 hover:bg-blue-500 hover:text-white px-4 py-2 rounded-full font-semibold transition-all duration-300 hover:-translate-y-1 hover:shadow-lg text-sm">
+                                <i class="fas fa-globe mr-2"></i>Página Web
                             </a>
                             <a th:if="${postulacion.videoPitch != null and !postulacion.videoPitch.isEmpty()}" 
-                               th:href="${postulacion.videoPitch}" 
-                               target="_blank" 
-                               class="btn btn-outline-danger btn-sm">
-                                <i class="fas fa-video me-1"></i>Video Pitch
+                            th:href="${postulacion.videoPitch}" 
+                            target="_blank"
+                            class="inline-flex items-center justify-center border-2 border-red-500 text-red-600 hover:bg-red-500 hover:text-white px-4 py-2 rounded-full font-semibold transition-all duration-300 hover:-translate-y-1 hover:shadow-lg text-sm">
+                                <i class="fas fa-video mr-2"></i>Video Pitch
                             </a>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Sección de Acciones de Administrador -->
-        <div class="action-section">
-            <h4 class="mb-4">
-                <i class="fas fa-tools me-2"></i>
-                Acciones de Administrador
-            </h4>
-            
-            <form th:action="@{/cambiarEstadoPostulacion/{id}(id=${postulacion.id})}" method="post">
-                <div class="row">
-                    <div class="col-md-6">
-                        <label for="nuevoEstado" class="form-label fw-bold">Cambiar Estado:</label>
-                        <div class="d-flex flex-wrap gap-2 mt-2">
-                            <button type="submit" name="nuevoEstado" value="Aprobada" 
-                                    class="btn btn-estado btn-aprobar"
-                                    th:disabled="${postulacion.estado == 'Aprobada'}">
-                                <i class="fas fa-check me-2"></i>Aprobar
-                            </button>
-                            <button type="submit" name="nuevoEstado" value="Rechazada" 
-                                    class="btn btn-estado btn-rechazar"
-                                    th:disabled="${postulacion.estado == 'Rechazada'}">
-                                <i class="fas fa-times me-2"></i>Rechazar
-                            </button>
-                            <button type="submit" name="nuevoEstado" value="En revisión" 
-                                    class="btn btn-estado btn-revision"
-                                    th:disabled="${postulacion.estado == 'En revisión'}">
-                                <i class="fas fa-clock me-2"></i>En Revisión
-                            </button>
+            <!-- Sección de Acciones de Administrador -->
+            <div class="bg-gradient-to-br from-white to-slate-50 rounded-xl sm:rounded-2xl px-4 sm:px-6 md:px-10 py-6 sm:py-8 mt-6 sm:mt-8 border-t-4 border-sky-500 shadow-2xl w-full max-w-6xl mx-auto">
+                <h4 class="text-sky-900 font-bold text-xl sm:text-2xl mb-4 sm:mb-6 flex items-center">
+                    <i class="fas fa-tools mr-2 sm:mr-3"></i>
+                    Acciones de Administrador
+                </h4>
+                
+                <form th:action="@{/cambiarEstadoPostulacion/{id}(id=${postulacion.id})}" method="post">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
+                        <div>
+                            <label for="nuevoEstado" class="block text-gray-700 font-semibold mb-3">Cambiar Estado:</label>
+                            <div class="flex flex-col sm:flex-row sm:flex-wrap gap-3">
+                                <button type="submit" name="nuevoEstado" value="Aprobada" 
+                                        class="btn-estado bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold px-4 sm:px-6 py-3 rounded-full transition-all duration-300 hover:-translate-y-1 hover:shadow-lg shadow-lg uppercase text-xs sm:text-sm tracking-wide border-0 disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto"
+                                        th:disabled="${postulacion.estado == 'Aprobada'}">
+                                    <i class="fas fa-check mr-2"></i>Aprobar
+                                </button>
+                                <button type="submit" name="nuevoEstado" value="Rechazada" 
+                                        class="btn-estado bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-semibold px-4 sm:px-6 py-3 rounded-full transition-all duration-300 hover:-translate-y-1 hover:shadow-lg shadow-lg uppercase text-xs sm:text-sm tracking-wide border-0 disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto"
+                                        th:disabled="${postulacion.estado == 'Rechazada'}">
+                                    <i class="fas fa-times mr-2"></i>Rechazar
+                                </button>
+                                <button type="submit" name="nuevoEstado" value="En revisión" 
+                                        class="btn-estado bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold px-4 sm:px-6 py-3 rounded-full transition-all duration-300 hover:-translate-y-1 hover:shadow-lg shadow-lg uppercase text-xs sm:text-sm tracking-wide border-0 disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto"
+                                        th:disabled="${postulacion.estado == 'En revisión'}">
+                                    <i class="fas fa-clock mr-2"></i>En Revisión
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label for="comentarios" class="block text-gray-700 font-semibold mb-3">Comentarios (Opcional):</label>
+                            <textarea id="comentarios" name="comentarios" 
+                                    class="w-full rounded-xl border-2 border-slate-200 focus:border-sky-500 focus:ring-4 focus:ring-sky-100 px-4 py-3 font-medium transition-all duration-300 text-sm sm:text-base" 
+                                    rows="3" 
+                                    placeholder="Agregar comentarios sobre la decisión..."></textarea>
                         </div>
                     </div>
-                    
-                    <div class="col-md-6">
-                        <label for="comentarios" class="form-label fw-bold">Comentarios (Opcional):</label>
-                        <textarea id="comentarios" name="comentarios" class="form-control" rows="3" 
-                                  placeholder="Agregar comentarios sobre la decisión..."></textarea>
+                </form>
+                
+                <div class="bg-gradient-to-r from-blue-50 to-blue-100 border-l-4 border-blue-500 text-blue-800 px-4 sm:px-6 py-4 mt-4 sm:mt-6 rounded-xl sm:rounded-2xl shadow-lg flex items-start">
+                    <i class="fas fa-info-circle mr-2 sm:mr-3 text-base sm:text-lg mt-1 flex-shrink-0"></i>
+                    <div class="text-sm sm:text-base">
+                        <strong>Nota:</strong> Los cambios de estado son inmediatos y se notificarán al emprendedor correspondiente.
                     </div>
                 </div>
-            </form>
-            
-            <div class="alert alert-info mt-3" role="alert">
-                <i class="fas fa-info-circle me-2"></i>
-                <strong>Nota:</strong> Los cambios de estado son inmediatos y se notificarán al emprendedor correspondiente.
             </div>
         </div>
-    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        // Confirmación antes de cambiar estado
-        document.querySelectorAll('.btn-estado').forEach(button => {
-            button.addEventListener('click', function(e) {
-                const estado = this.getAttribute('value');
-                const nombreProyecto = '[[${postulacion.nombreProyecto}]]';
-                
-                if (!confirm(`¿Estás seguro de que quieres ${estado.toLowerCase()} la postulación "${nombreProyecto}"?`)) {
+        <!-- Modal de confirmación personalizado con Tailwind -->
+        <div class="modal fade" id="confirmModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-0 rounded-2xl shadow-2xl overflow-hidden">
+                    <div class="bg-gradient-to-r from-slate-50 to-slate-100 border-b border-slate-200 px-8 py-8 text-center">
+                        <div class="confirmation-icon w-20 h-20 rounded-full bg-gradient-to-r from-red-100 to-red-200 flex items-center justify-center mx-auto mb-4 shadow-lg">
+                            <i class="fas fa-exclamation-triangle text-3xl text-red-600"></i>
+                        </div>
+                        <h5 class="text-slate-800 font-bold text-xl">Confirmar Acción</h5>
+                    </div>
+                    <div class="bg-white px-8 py-6 text-center">
+                        <p class="confirmation-message text-slate-600 text-lg font-medium mb-4 leading-relaxed" id="confirmMessage"></p>
+                        <div class="project-name text-slate-800 text-xl font-bold px-4 py-3 bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl border-l-4 border-blue-500" id="projectName"></div>
+                    </div>
+                    <div class="bg-gradient-to-r from-slate-50 to-slate-100 border-t border-slate-200 px-8 py-6 flex justify-center gap-4">
+                        <button type="button" class="btn-cancelar bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white font-semibold px-6 py-3 rounded-full transition-all duration-300 hover:-translate-y-1 hover:shadow-lg min-w-[120px]" data-bs-dismiss="modal">
+                            <i class="fas fa-times mr-2"></i>Cancelar
+                        </button>
+                        <button type="button" class="btn-confirmar font-semibold px-6 py-3 rounded-full transition-all duration-300 hover:-translate-y-1 hover:shadow-lg min-w-[120px]" id="confirmBtn">
+                            <i class="fas fa-check mr-2"></i>Confirmar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            // Variables globales para el modal de confirmación
+            let currentForm = null;
+            let currentAction = null;
+
+            // Confirmación antes de cambiar estado
+            document.querySelectorAll('.btn-estado').forEach(button => {
+                button.addEventListener('click', function(e) {
                     e.preventDefault();
+                    
+                    const estado = this.getAttribute('value');
+                    const nombreProyecto = '[[${postulacion.nombreProyecto}]]';
+                    const form = this.closest('form');
+                    
+                    // Configurar el modal
+                    currentForm = form;
+                    currentAction = estado;
+                    
+                    // Configurar el mensaje según el estado
+                    let mensaje = '';
+                    let iconClass = '';
+                    let confirmBtnClass = '';
+                    let iconContainerClass = '';
+                    
+                    switch(estado) {
+                        case 'Aprobada':
+                            mensaje = '¿Estás seguro de que quieres aprobar esta postulación?';
+                            iconClass = 'fas fa-check-circle text-3xl text-green-600';
+                            confirmBtnClass = 'bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold px-6 py-3 rounded-full transition-all duration-300 hover:-translate-y-1 hover:shadow-lg min-w-[120px]';
+                            iconContainerClass = 'w-20 h-20 rounded-full bg-gradient-to-r from-green-100 to-green-200 flex items-center justify-center mx-auto mb-4 shadow-lg';
+                            break;
+                        case 'Rechazada':
+                            mensaje = '¿Estás seguro de que quieres rechazar esta postulación?';
+                            iconClass = 'fas fa-times-circle text-3xl text-red-600';
+                            confirmBtnClass = 'bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-semibold px-6 py-3 rounded-full transition-all duration-300 hover:-translate-y-1 hover:shadow-lg min-w-[120px]';
+                            iconContainerClass = 'w-20 h-20 rounded-full bg-gradient-to-r from-red-100 to-red-200 flex items-center justify-center mx-auto mb-4 shadow-lg';
+                            break;
+                        case 'En revisión':
+                            mensaje = '¿Estás seguro de que quieres marcar esta postulación como en revisión?';
+                            iconClass = 'fas fa-clock text-3xl text-yellow-600';
+                            confirmBtnClass = 'bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white font-semibold px-6 py-3 rounded-full transition-all duration-300 hover:-translate-y-1 hover:shadow-lg min-w-[120px]';
+                            iconContainerClass = 'w-20 h-20 rounded-full bg-gradient-to-r from-yellow-100 to-yellow-200 flex items-center justify-center mx-auto mb-4 shadow-lg';
+                            break;
+                    }
+                    
+                    // Actualizar el contenido del modal
+                    document.getElementById('confirmMessage').innerHTML = mensaje;
+                    document.getElementById('projectName').innerHTML = `<strong>"${nombreProyecto}"</strong>`;
+                    
+                    // Actualizar el icono y su fondo
+                    const iconElement = document.querySelector('.confirmation-icon i');
+                    const iconContainer = document.querySelector('.confirmation-icon');
+                    iconElement.className = iconClass;
+                    iconContainer.className = iconContainerClass;
+                    
+                    // Actualizar clase del botón confirmar
+                    const confirmBtn = document.getElementById('confirmBtn');
+                    confirmBtn.className = confirmBtnClass;
+                    
+                    // Mostrar el modal
+                    const modal = new bootstrap.Modal(document.getElementById('confirmModal'));
+                    modal.show();
+                });
+            });
+            
+            // Manejar la confirmación
+            document.getElementById('confirmBtn').addEventListener('click', function() {
+                if (currentForm && currentAction) {
+                    // Crear un input hidden con el valor del estado
+                    const hiddenInput = document.createElement('input');
+                    hiddenInput.type = 'hidden';
+                    hiddenInput.name = 'nuevoEstado';
+                    hiddenInput.value = currentAction;
+                    currentForm.appendChild(hiddenInput);
+                    
+                    // Enviar el formulario
+                    currentForm.submit();
                 }
             });
-        });
-    </script>
-</body>
-</html>
+        </script>
+    </body>
+    </html>

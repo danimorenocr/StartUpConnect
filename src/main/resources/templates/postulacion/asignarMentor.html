@@ -1,290 +1,185 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="${title}">Asignar Mentor</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        .main-container {
-            padding: 2rem 0;
-        }
-
-        .assignment-card {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            overflow: hidden;
-        }
-
-        .card-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 2rem;
-            border: none;
-            text-align: center;
-        }
-
-        .card-header h2 {
-            margin: 0;
-            font-weight: 600;
-            font-size: 1.8rem;
-        }
-
-        .postulation-info {
-            background: linear-gradient(135deg, #f8f9ff 0%, #e8f0ff 100%);
-            padding: 1.5rem;
-            margin: 1.5rem;
-            border-radius: 15px;
-            border-left: 5px solid #667eea;
-        }
-
-        .info-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 0.8rem;
-        }
-
-        .info-item:last-child {
-            margin-bottom: 0;
-        }
-
-        .info-icon {
-            color: #667eea;
-            margin-right: 0.8rem;
-            width: 20px;
-            text-align: center;
-        }
-
-        .info-label {
-            font-weight: 600;
-            color: #495057;
-            margin-right: 0.5rem;
-        }
-
-        .info-value {
-            color: #6c757d;
-        }        .mentor-selection {
-            padding: 1.5rem;
-        }
-
-        .form-label {
-            font-weight: 600;
-            color: #495057;
-            margin-bottom: 0.8rem;
-            font-size: 1.1rem;
-        }
-
-        .form-control {
-            border-radius: 10px;
-            border: 2px solid #e9ecef;
-            padding: 0.8rem 1rem;
-            transition: all 0.3s ease;
-            font-size: 1rem;
-            background-color: #fff;
-        }
-
-        .form-control:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
-            outline: none;
-        }
-
-        .btn-group {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            padding: 1.5rem;
-        }
-
-        .btn {
-            padding: 0.8rem 2rem;
-            border-radius: 10px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            transition: all 0.3s ease;
-            border: none;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn-secondary {
-            background: #6c757d;
-            color: white;
-        }
-
-        .btn-secondary:hover {
-            background: #5a6268;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(108, 117, 125, 0.4);
-        }
-
-        .status-badge {
-            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-            color: white;
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .no-mentors {
-            text-align: center;
-            padding: 2rem;
-            color: #6c757d;
-        }
-
-        .no-mentors i {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            color: #dee2e6;
-        }
-
-        @media (max-width: 768px) {
-            .main-container {
-                padding: 1rem;
-            }
-
-            .card-header {
-                padding: 1.5rem 1rem;
-            }
-
-            .card-header h2 {
-                font-size: 1.5rem;
-            }
-
-            .mentor-info {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .mentor-avatar {
-                margin-right: 0;
-                margin-bottom: 0.8rem;
-            }
-
-            .btn-group {
-                flex-direction: column;
-            }
-        }
-    </style>
+<head th:replace="~{layout/layout :: head}">
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-material-ui/material-ui.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
-<body>
-    <div class="container main-container">
-        <div class="row justify-content-center">
-            <div class="col-lg-8 col-md-10">
-                <div class="assignment-card">
-                    <div class="card-header">
-                        <h2><i class="fas fa-user-tie me-2"></i>Asignar Mentor</h2>
-                        <p class="mb-0 mt-2 opacity-75">Selecciona un mentor para la startup aprobada</p>
-                    </div>
-
-                    <!-- Información de la postulación -->
-                    <div class="postulation-info">
-                        <h4 class="mb-3"><i class="fas fa-info-circle me-2"></i>Información de la Postulación</h4>
-                        <div class="info-item">
-                            <i class="fas fa-rocket info-icon"></i>
-                            <span class="info-label">Proyecto:</span>
-                            <span class="info-value" th:text="${postulacion.nombreProyecto}">Nombre del Proyecto</span>
-                        </div>                        <div class="info-item">
-                            <i class="fas fa-building info-icon"></i>
-                            <span class="info-label">Startup:</span>
-                            <span class="info-value" th:text="${postulacion.startup.nombreStartup}">Nombre de la Startup</span>
-                        </div>
-                        <div class="info-item">
-                            <i class="fas fa-bullhorn info-icon"></i>
-                            <span class="info-label">Convocatoria:</span>
-                            <span class="info-value" th:text="${postulacion.convocatoria.titulo}">Título de la Convocatoria</span>
-                        </div>
-                        <div class="info-item">
-                            <i class="fas fa-check-circle info-icon"></i>
-                            <span class="info-label">Estado:</span>
-                            <span class="status-badge" th:text="${postulacion.estado}">Aprobada</span>
-                        </div>                        <div class="info-item">
-                            <i class="fas fa-align-left info-icon"></i>
-                            <span class="info-label">Problema a Solucionar:</span>
-                            <span class="info-value" th:text="${postulacion.problemaASolucionar}">Descripción del problema</span>
-                        </div>
-                    </div>                    <!-- Formulario de asignación -->
-                    <form th:action="@{'/asignarMentor/' + ${postulacion.id}}" method="post">
-                        <div class="mentor-selection">
-                            <label class="form-label" for="idMentor">
-                                <i class="fas fa-users me-2"></i>Seleccionar Mentor
-                            </label>
-                              <div th:if="${mentores != null and not #lists.isEmpty(mentores)}">
-                                <select class="form-control" id="idMentor" name="idMentor" required>
-                                    <option value="">-- Selecciona un mentor --</option>
-                                    <option th:each="mentor : ${mentores}" 
-                                            th:value="${mentor.documento}" 
-                                            th:text="${mentor.usuario.nombreUsu + ' - ' + mentor.especialidad + ' (' + mentor.anosExperiencia + ' años de experiencia)'}">
-                                        Mentor - Especialidad
-                                    </option>
-                                </select>
-                            </div>
-                              <div th:if="${mentores == null or #lists.isEmpty(mentores)}" class="no-mentors">
-                                <i class="fas fa-user-slash"></i>
-                                <h5>No hay mentores disponibles</h5>
-                                <p>Actualmente no hay mentores registrados en el sistema.</p>
-                            </div>
-                        </div><!-- Botones de acción -->
-                        <div class="btn-group" th:if="${mentores != null and not #lists.isEmpty(mentores)}">
-                            <button type="submit" class="btn btn-primary" id="assignBtn">
-                                <i class="fas fa-user-check me-2"></i>Asignar Mentor
-                            </button>
-                            <a th:href="@{'/postulacion/convocatoria/' + ${postulacion.convocatoria.id}}" class="btn btn-secondary">
-                                <i class="fas fa-arrow-left me-2"></i>Cancelar
-                            </a>
-                        </div>
-                        
-                        <div class="btn-group" th:if="${mentores == null or #lists.isEmpty(mentores)}">
-                            <a th:href="@{'/postulacion/convocatoria/' + ${postulacion.convocatoria.id}}" class="btn btn-secondary">
-                                <i class="fas fa-arrow-left me-2"></i>Volver
-                            </a>
-                        </div>
-                    </form>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen font-['Poppins']">
+    <header th:replace="~{layout/layout :: header}"></header>
+    
+    <div class="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+        <!-- Banner Header -->
+        <div class="relative w-full max-w-4xl mx-auto rounded-2xl overflow-hidden shadow-2xl mb-8">
+            <img src="/images/bannerMentores.jpg" alt="Banner Asignar Mentor" class="w-full h-48 md:h-56 object-cover object-center">
+            <div class="absolute inset-0 bg-gradient-to-br from-blue-600/80 via-indigo-600/70 to-purple-600/60 flex items-center">
+                <div class="px-8 md:px-12">
+                    <h1 class="text-3xl md:text-4xl font-extrabold text-white drop-shadow-lg">
+                        <i class="fas fa-user-tie mr-3"></i>Asignar Mentor
+                    </h1>
+                    <p class="text-lg text-white/90 font-medium mt-2">Selecciona un mentor para la startup aprobada</p>
                 </div>
             </div>
         </div>
-    </div>    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+        <!-- Main Card -->
+        <div class="bg-white/95 backdrop-blur-sm rounded-3xl shadow-2xl border border-white/20 overflow-hidden">
+            <!-- Card Header -->
+            <div class="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white p-8">
+                <h2 class="text-2xl font-bold text-center flex items-center justify-center">
+                    <i class="fas fa-handshake mr-3"></i>
+                    Asignación de Mentor
+                </h2>
+                <p class="text-center text-white/90 mt-2">Conecta la startup con el mentor ideal</p>
+            </div>
+
+            <!-- Información de la postulación -->
+            <div class="p-8">
+                <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-6 mb-8 border-l-4 border-blue-500">
+                    <h3 class="text-xl font-bold text-blue-900 mb-4 flex items-center">
+                        <i class="fas fa-info-circle mr-2"></i>
+                        Información de la Postulación
+                    </h3>
+                    
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div class="space-y-4">
+                            <div class="flex items-center">
+                                <i class="fas fa-rocket text-blue-500 mr-3 w-5"></i>
+                                <span class="font-semibold text-gray-700 mr-2">Proyecto:</span>
+                                <span class="text-gray-600" th:text="${postulacion.nombreProyecto}">Nombre del Proyecto</span>
+                            </div>
+                            
+                            <div class="flex items-center">
+                                <i class="fas fa-building text-blue-500 mr-3 w-5"></i>
+                                <span class="font-semibold text-gray-700 mr-2">Startup:</span>
+                                <span class="text-gray-600" th:text="${postulacion.startup.nombreStartup}">Nombre de la Startup</span>
+                            </div>
+                            
+                            <div class="flex items-center">
+                                <i class="fas fa-bullhorn text-blue-500 mr-3 w-5"></i>
+                                <span class="font-semibold text-gray-700 mr-2">Convocatoria:</span>
+                                <span class="text-gray-600" th:text="${postulacion.convocatoria.titulo}">Título de la Convocatoria</span>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <div class="flex items-center">
+                                <i class="fas fa-check-circle text-blue-500 mr-3 w-5"></i>
+                                <span class="font-semibold text-gray-700 mr-2">Estado:</span>
+                                <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold" th:text="${postulacion.estado}">Aprobada</span>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <i class="fas fa-lightbulb text-blue-500 mr-3 w-5 mt-1"></i>
+                                <div>
+                                    <span class="font-semibold text-gray-700 mr-2">Problema a Solucionar:</span>
+                                    <p class="text-gray-600 text-sm mt-1" th:text="${postulacion.problemaASolucionar}">Descripción del problema</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Formulario de asignación -->
+                <form th:action="@{'/asignarMentor/' + ${postulacion.id}}" method="post" class="space-y-6">
+                    <div>
+                        <label class="block text-lg font-semibold text-gray-700 mb-4" for="idMentor">
+                            <i class="fas fa-users mr-2 text-blue-500"></i>
+                            Seleccionar Mentor
+                        </label>
+                        
+                        <div th:if="${mentores != null and not #lists.isEmpty(mentores)}">
+                            <select class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 bg-white text-gray-700" 
+                                    id="idMentor" name="idMentor" required>
+                                <option value="">-- Selecciona un mentor --</option>
+                                <option th:each="mentor : ${mentores}" 
+                                        th:value="${mentor.documento}" 
+                                        th:text="${mentor.usuario.nombreUsu + ' - ' + mentor.especialidad + ' (' + mentor.anosExperiencia + ' años de experiencia)'}">
+                                    Mentor - Especialidad
+                                </option>
+                            </select>
+                        </div>
+                        
+                        <div th:if="${mentores == null or #lists.isEmpty(mentores)}" 
+                             class="text-center py-12 bg-gray-50 rounded-xl border-2 border-dashed border-gray-300">
+                            <i class="fas fa-user-slash text-6xl text-gray-300 mb-4"></i>
+                            <h4 class="text-xl font-semibold text-gray-600 mb-2">No hay mentores disponibles</h4>
+                            <p class="text-gray-500">Actualmente no hay mentores registrados en el sistema.</p>
+                        </div>
+                    </div>
+
+                    <!-- Botones de acción -->
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center pt-6" th:if="${mentores != null and not #lists.isEmpty(mentores)}">
+                        <button type="submit" 
+                                class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-3 px-8 rounded-full shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200 flex items-center justify-center">
+                            <i class="fas fa-user-check mr-2"></i>
+                            Asignar Mentor
+                        </button>
+                        <a th:href="@{'/postulacion/convocatoria/' + ${postulacion.convocatoria.id}}" 
+                           class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-8 rounded-full shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200 flex items-center justify-center text-center">
+                            <i class="fas fa-arrow-left mr-2"></i>
+                            Cancelar
+                        </a>
+                    </div>
+                    
+                    <div class="flex justify-center pt-6" th:if="${mentores == null or #lists.isEmpty(mentores)}">
+                        <a th:href="@{'/postulacion/convocatoria/' + ${postulacion.convocatoria.id}}" 
+                           class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-8 rounded-full shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200 flex items-center justify-center">
+                            <i class="fas fa-arrow-left mr-2"></i>
+                            Volver
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // Confirmar antes de asignar
+        // Confirmar antes de asignar con SweetAlert2
         document.querySelector('form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
             const selectedMentorId = document.getElementById('idMentor').value;
             if (selectedMentorId) {
                 const selectedOption = document.querySelector('#idMentor option:checked');
                 const mentorName = selectedOption ? selectedOption.text.split(' - ')[0] : 'el mentor seleccionado';
-                if (!confirm(`¿Estás seguro de que deseas asignar a ${mentorName} como mentor para esta startup?`)) {
-                    e.preventDefault();
-                }
+                
+                Swal.fire({
+                    title: '¿Confirmar asignación?',
+                    html: `¿Estás seguro de que deseas asignar a <strong>${mentorName}</strong> como mentor para esta startup?`,
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3B82F6',
+                    cancelButtonColor: '#6B7280',
+                    confirmButtonText: 'Sí, asignar',
+                    cancelButtonText: 'Cancelar',
+                    reverseButtons: true,
+                    customClass: {
+                        popup: 'rounded-lg shadow-xl',
+                        title: 'text-xl text-gray-800 font-bold',
+                        htmlContainer: 'text-base text-gray-600'
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        this.submit();
+                    }
+                });
             } else {
-                e.preventDefault();
-                alert('Por favor, selecciona un mentor antes de continuar.');
+                Swal.fire({
+                    title: 'Mentor requerido',
+                    text: 'Por favor, selecciona un mentor antes de continuar.',
+                    icon: 'warning',
+                    confirmButtonColor: '#F59E0B',
+                    customClass: {
+                        popup: 'rounded-lg shadow-xl',
+                        title: 'text-xl text-gray-800 font-bold',
+                        content: 'text-base text-gray-600'
+                    }
+                });
             }
         });
     </script>
 </body>
-
 </html>

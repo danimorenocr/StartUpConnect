@@ -31,30 +31,16 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .authorizeHttpRequests(authorize -> authorize
-                // Rutas públicas y recursos estáticos
-                .requestMatchers(
-                    "/",
-                    "/css/**",
-                    "/js/**", 
-                    "/images/**",
-                    "/webjars/**",
-                    "/favicon.ico",
-                    "/error",
-                    "/login",
-                    "/vitrina-alt",
-                    "/registro",
-                    "/verStartup/**",
-                    "/startup/{id}/comentar"
-                ).permitAll()
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/error", "/login", "/registro", "/css/**", "/js/**", "/images/**", "/uploads/**").permitAll()
                 
-                // Rutas para administradores
-                .requestMatchers("/administrador/**", "/usuario/**").hasRole("ADMIN")
+                // Rutas de administrador
+                .requestMatchers("/administrador", "/usuario/**", "/startup/**", "/startup/eliminar/**", "/entregable/actualizar/**").hasRole("ADMIN")
                 
-                // Rutas para mentores
-                .requestMatchers("/mentor/**", "/etapa/**", "/feedback/**").hasAnyRole("ADMIN", "MENTOR")
+                // Rutas de mentor
+                .requestMatchers("/mentor/**", "/mentor/detalle/**", "/mentor/feedback/**", "/etapa/**", "/convocatoria/detalles/**", "/feedback/crear/**").hasAnyRole("ADMIN", "MENTOR")
                 
-                // Rutas para emprendedores
+                // Rutas de emprendedor
                 .requestMatchers("/emprendedor/**", "/startup/crear/**", "/startup/editar/**", "/startup/eliminar/**", "/postulacion/**", "/startup/emprendedor/{documento}").hasAnyRole("ADMIN", "EMPRENDEDOR")
                 
                 // Rutas compartidas
@@ -73,7 +59,7 @@ public class SecurityConfig {
                 .logoutSuccessUrl("/login?logout=true")
                 .permitAll()
             )
-            .csrf(csrf -> csrf.ignoringRequestMatchers("/images/**", "/js/**", "/css/**", "/webjars/**"));
+            .csrf(csrf -> csrf.ignoringRequestMatchers("/images/**", "/js/**", "/css/**", "/webjars/**", "/uploads/**"));
         
         return http.build();
     }

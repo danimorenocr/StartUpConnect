@@ -40,11 +40,14 @@ document.addEventListener('DOMContentLoaded', function () {
         let isValid = true;
 
         inputs.forEach(input => {
+            const errorDiv = input.parentElement.querySelector('.invalid-feedback');
             if (input.required && !input.value) {
                 isValid = false;
-                input.classList.add('is-invalid');
+                input.classList.add('border-red-500', 'focus:border-red-500', 'focus:ring-red-200');
+                if (errorDiv) errorDiv.classList.remove('hidden');
             } else {
-                input.classList.remove('is-invalid');
+                input.classList.remove('border-red-500', 'focus:border-red-500', 'focus:ring-red-200');
+                if (errorDiv) errorDiv.classList.add('hidden');
             }
         });
 
@@ -80,7 +83,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Validación del formulario completo
     form.addEventListener('submit', function (event) {
-        if (!form.checkValidity()) {
+        let valid = true;
+        sections.forEach((section, idx) => {
+            if (!validateSection(idx)) valid = false;
+        });
+        if (!valid || !form.checkValidity()) {
             event.preventDefault();
             event.stopPropagation();
         }
