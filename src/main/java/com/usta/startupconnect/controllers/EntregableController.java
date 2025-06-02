@@ -12,11 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -25,8 +21,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Controller
@@ -373,6 +371,30 @@ public class EntregableController {
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Error al eliminar el entregable: " + e.getMessage());
             return "redirect:/entregable";
+        }
+    }
+    
+    @PostMapping("/actualizarEstadoEntregable/{id}")
+    @ResponseBody
+    public ResponseEntity<?> actualizarEstadoEntregable(@PathVariable Long id, @RequestBody Map<String, String> body) {
+        try {
+            String nuevoEstado = body.get("estado");
+            if (nuevoEstado == null || nuevoEstado.isEmpty()) {
+                return ResponseEntity.badRequest().body(Collections.singletonMap("error", "El estado no puede estar vacío"));
+            }
+
+            EntregableEntity entregable = entregablesService.findById(id);
+            if (entregable == null) {
+                return ResponseEntity.notFound().build();
+            }
+
+            entregable.setEstado(nuevoEstado);
+            entregablesService.save(entregable);
+
+            return ResponseEntity.ok(Collections.singletonMap("mensaje", "Estado actualizado correctamente"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Collections.singletonMap("error", "Error al actualizar el estado: " + e.getMessage()));
         }
     }
 }

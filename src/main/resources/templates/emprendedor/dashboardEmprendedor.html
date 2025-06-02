@@ -117,326 +117,234 @@
                     <p class="dashboard-banner-subtitle">Panel de control de Emprendedor</p>
                 </div>
             </div>
-        </div><!-- Contenedor principal -->
-        <div class="flex flex-col md:flex-row gap-8 w-full">
-            <!-- Sección de estadísticas -->
-            <section class="flex-1">
-                <h2 class="text-2xl font-bold mb-4">Estadísticas de la Plataforma</h2>
-                <div class="grid grid-cols-2 gap-6"> <!-- Tarjeta 1 (verde) - Total Users -->
-                    <div class="bg-green-100 rounded-2xl p-5 shadow flex flex-col justify-between">
-                        <div>
-                            <h3 class="text-lg font-bold">Crecimiento de Usuarios</h3>
-                            <p class="text-sm text-gray-600 mb-3">Total de usuarios registrados en la plataforma</p>
-                            <div class="flex justify-between items-center">
-                                <div class="text-3xl font-bold text-green-700" th:text="${totalUsers}">127</div>
-                                <div class="bg-green-200 text-green-800 rounded-full px-2 py-1 text-xs font-medium">
-                                    <i class="fa-solid fa-arrow-up mr-1"></i><span
-                                        th:text="${crecimientoUsuarios != null ? crecimientoUsuarios : '24'}">24</span>%
-                                    este mes
-                                </div>
-                            </div>
-                            <div class="mb-2 mt-3">
-                                <span class="text-xs font-semibold">Objetivo completado</span>
-                                <div class="w-full bg-white rounded-full h-2.5 mt-1">
-                                    <div class="bg-green-500 h-2.5 rounded-full"
-                                        th:style="${'width: ' + (objetivoUsuarios != null ? objetivoUsuarios : '85') + '%'}"
-                                        style="width: 85%"></div>
-                                </div>
-                                <div class="text-right text-xs font-bold mt-1"
-                                    th:text="${objetivoUsuarios != null ? objetivoUsuarios : '85'} + '%'">85%</div>
+        </div>        <!-- Dashboard principal con cuadrícula de tarjetas -->        <section class="w-full">
+            <h2 class="text-2xl font-bold mb-6">Panel de Control Emprendedor</h2>
+              <!-- Cuadrícula principal con layout compacto -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                
+                <!-- Tarjeta Startups Activas - Fila superior izquierda -->
+                <div class="bg-cyan-200 rounded-xl p-4 shadow flex flex-col justify-between h-48"><div>
+                        <h3 class="text-base font-bold">Startups Activas</h3>
+                        <p class="text-xs text-gray-600 mb-2">Startups registradas</p>
+                        <div class="flex justify-between items-center mb-2">
+                            <div class="text-2xl font-bold text-cyan-700" th:text="${totalStartups}">42</div>
+                            <div class="bg-cyan-100 text-cyan-800 rounded-full px-2 py-1 text-xs font-medium">
+                                <i class="fa-solid fa-arrow-up mr-1"></i>12%
                             </div>
                         </div>
-                        <a href="/usuario"
-                            class="bg-white text-green-600 font-semibold border border-green-300 rounded-full px-4 py-1 text-xs hover:bg-green-50 transition mt-2 self-end">
-                            Ver Usuarios
-                        </a>
-                    </div> <!-- Tarjeta 2 (azul) - Startups -->
-                    <div class="bg-cyan-200 rounded-2xl p-5 shadow flex flex-col justify-between">
-                        <div>
-                            <h3 class="text-lg font-bold">Startups Activas</h3>
-                            <p class="text-sm text-gray-600 mb-3">Startups registradas por categoría</p>
-                            <div class="flex justify-between items-center">
-                                <div class="text-3xl font-bold text-cyan-700" th:text="${totalStartups}">42</div>
-                                <div class="bg-cyan-100 text-cyan-800 rounded-full px-2 py-1 text-xs font-medium">
-                                    <i class="fa-solid fa-arrow-up mr-1"></i>12% este mes
-                                </div>
-                            </div>
-                            <div class="space-y-2 mt-3"
-                                th:if="${startupsPorSector != null && !startupsPorSector.isEmpty()}">
-                                <div th:each="sector : ${startupsPorSector.entrySet()}"
-                                    class="flex items-center justify-between">
-                                    <span class="text-xs" th:text="${sector.key}">Sector</span>
-                                    <span class="text-xs font-semibold" th:text="${sector.value}">0</span>
-                                </div>
-                                <div th:each="sector : ${startupsPorSector.entrySet()}"
-                                    class="w-full bg-white rounded-full h-2">
-                                    <div class="bg-cyan-500 h-2 rounded-full"
-                                        th:style="'width: ' + (${sector.value} * 100 / ${totalStartups}) + '%'"></div>
-                                </div>
-                            </div>
-                            <!-- Contenido estático en caso de no haber datos -->
-                            <div class="space-y-2 mt-3"
-                                th:if="${startupsPorSector == null || startupsPorSector.isEmpty()}">
-                                <div class="flex items-center justify-between">
-                                    <span class="text-xs">Tecnología</span>
-                                    <span class="text-xs font-semibold">18</span>
-                                </div>
-                                <div class="w-full bg-white rounded-full h-2">
-                                    <div class="bg-cyan-500 h-2 rounded-full" style="width: calc(18 / 42 * 100%)"></div>
-                                </div>
-                                <div class="flex items-center justify-between">
-                                    <span class="text-xs">Sostenibilidad</span>
-                                    <span class="text-xs font-semibold">15</span>
-                                </div>
-                                <div class="w-full bg-white rounded-full h-2">
-                                    <div class="bg-cyan-500 h-2 rounded-full" style="width: calc(15 / 42 * 100%)"></div>
-                                </div>
-                                <div class="flex items-center justify-between">
-                                    <span class="text-xs">Otros</span>
-                                    <span class="text-xs font-semibold">9</span>
-                                </div>
-                                <div class="w-full bg-white rounded-full h-2">
-                                    <div class="bg-cyan-500 h-2 rounded-full" style="width: calc(9 / 42 * 100%)"></div>
-                                </div>
+                        <div class="space-y-1"
+                            th:if="${startupsPorSector != null && !startupsPorSector.isEmpty()}">
+                            <div th:each="sector : ${startupsPorSector.entrySet()}"
+                                class="flex items-center justify-between">
+                                <span class="text-xs" th:text="${sector.key}">Sector</span>
+                                <span class="text-xs font-semibold" th:text="${sector.value}">0</span>
                             </div>
                         </div>
-                        <a href="/startup"
-                            class="bg-white text-cyan-600 font-semibold border border-cyan-300 rounded-full px-4 py-1 text-xs hover:bg-cyan-50 transition mt-3 self-end">
-                            Gestionar Startups
-                        </a>
-                    </div> <!-- Tarjeta 3 (rosada) - Mentors -->
-                    <div class="bg-pink-200 rounded-2xl p-5 shadow flex flex-col justify-between">
-                        <div>
-                            <h3 class="text-lg font-bold">Red de Mentores</h3>
-                            <p class="text-sm text-gray-600 mb-3">Mentores activos por especialidad</p>
-                            <div class="flex justify-between items-center">
-                                <div class="text-3xl font-bold text-pink-700" th:text="${totalMentors}">24</div>
-                                <div class="bg-pink-100 text-pink-800 rounded-full px-2 py-1 text-xs font-medium">
-                                    <i class="fa-solid fa-arrow-up mr-1"></i>8% este mes
-                                </div>
+                        <!-- Contenido estático en caso de no haber datos -->
+                        <div class="space-y-1"
+                            th:if="${startupsPorSector == null || startupsPorSector.isEmpty()}">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs">Tecnología</span>
+                                <span class="text-xs font-semibold">18</span>
                             </div>
-                            <div class="grid grid-cols-2 gap-2 mt-3"
-                                th:if="${mentoresPorEspecialidad != null && !mentoresPorEspecialidad.isEmpty()}">
-                                <div th:each="especialidad : ${mentoresPorEspecialidad.entrySet()}"
-                                    class="bg-white bg-opacity-70 rounded-lg p-2 text-center">
-                                    <div class="text-xl font-bold text-pink-700" th:text="${especialidad.value}">0</div>
-                                    <div class="text-xs" th:text="${especialidad.key}">Especialidad</div>
-                                </div>
-                            </div>
-                            <!-- Contenido estático en caso de no haber datos -->
-                            <div class="grid grid-cols-2 gap-2 mt-3"
-                                th:if="${mentoresPorEspecialidad == null || mentoresPorEspecialidad.isEmpty()}">
-                                <div class="bg-white bg-opacity-70 rounded-lg p-2 text-center">
-                                    <div class="text-xl font-bold text-pink-700">12</div>
-                                    <div class="text-xs">Tecnología</div>
-                                </div>
-                                <div class="bg-white bg-opacity-70 rounded-lg p-2 text-center">
-                                    <div class="text-xl font-bold text-pink-700">7</div>
-                                    <div class="text-xs">Negocios</div>
-                                </div>
-                                <div class="bg-white bg-opacity-70 rounded-lg p-2 text-center">
-                                    <div class="text-xl font-bold text-pink-700">3</div>
-                                    <div class="text-xs">Finanzas</div>
-                                </div>
-                                <div class="bg-white bg-opacity-70 rounded-lg p-2 text-center">
-                                    <div class="text-xl font-bold text-pink-700">2</div>
-                                    <div class="text-xs">Marketing</div>
-                                </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs">Sostenibilidad</span>
+                                <span class="text-xs font-semibold">15</span>
                             </div>
                         </div>
-                        <a href="/mentor"
-                            class="bg-white text-pink-600 font-semibold border border-pink-300 rounded-full px-4 py-1 text-xs hover:bg-pink-50 transition mt-3 self-end">
-                            Ver Mentores
-                        </a>
-                    </div> <!-- Tarjeta 4 (naranja) - Open Calls -->
-                    <div class="bg-orange-100 rounded-2xl p-5 shadow flex flex-col justify-between">
-                        <div>
-                            <h3 class="text-lg font-bold">Convocatorias Activas</h3>
-                            <p class="text-sm text-gray-600 mb-3">Convocatorias abiertas por estado</p>
-                            <div class="flex justify-between items-center">
-                                <div class="text-3xl font-bold text-orange-700" th:text="${totalConvocatorias}">8</div>
-                                <div class="bg-orange-200 text-orange-800 rounded-full px-2 py-1 text-xs font-medium">
-                                    <i class="fa-solid fa-arrow-up mr-1"></i>2 nuevas este mes
-                                </div>
-                            </div>
-                            <div class="mt-3 space-y-2">
-                                <div class="flex justify-between items-center">
-                                    <div class="flex items-center">
-                                        <div class="w-3 h-3 rounded-full bg-green-500 mr-2"></div>
-                                        <span class="text-xs">Activas</span>
-                                    </div>
-                                    <span class="text-xs font-semibold" th:text="${convocatoriasActivas}">5</span>
-                                </div>
-                                <div class="flex justify-between items-center">
-                                    <div class="flex items-center">
-                                        <div class="w-3 h-3 rounded-full bg-yellow-500 mr-2"></div>
-                                        <span class="text-xs">Próximas a cerrar</span>
-                                    </div>
-                                    <span class="text-xs font-semibold"
-                                        th:text="${convocatoriasProximasACerrar}">2</span>
-                                </div>
-                                <div class="flex justify-between items-center">
-                                    <div class="flex items-center">
-                                        <div class="w-3 h-3 rounded-full bg-blue-500 mr-2"></div>
-                                        <span class="text-xs">En revisión</span>
-                                    </div>
-                                    <span class="text-xs font-semibold" th:text="${convocatoriasEnRevision}">1</span>
-                                </div>
-                            </div>
-                            <div class="mt-2" th:if="${proximaConvocatoria != null}">
-                                <div class="text-sm font-semibold mt-2">Próxima fecha límite:</div>
-                                <div class="bg-white rounded-lg p-2 mt-1 text-sm">
-                                    <div class="font-medium" th:text="${proximaConvocatoria.titulo}">Nombre de la
-                                        convocatoria</div>
-                                    <div class="text-xs text-gray-600"
-                                        th:text="${#dates.format(proximaConvocatoria.fechaFin, 'dd MMM yyyy')}">Fecha
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Contenido estático en caso de no haber datos -->
-                            <div class="mt-2" th:if="${proximaConvocatoria == null}">
-                                <div class="text-sm font-semibold mt-2">Próxima fecha límite:</div>
-                                <div class="bg-white rounded-lg p-2 mt-1 text-sm">
-                                    <div class="font-medium">Crecimiento Sostenible</div>
-                                    <div class="text-xs text-gray-600">15 Sept 2025</div>
-                                </div>
-                            </div>
-                        </div>
-                        <a href="/convocatoria"
-                            class="bg-white text-orange-600 font-semibold border border-orange-300 rounded-full px-4 py-1 text-xs hover:bg-orange-50 transition mt-3 self-end">
-                            Gestionar Convocatorias
-                        </a>
                     </div>
-                </div>
-            </section> <!-- Sección de alertas y notificaciones -->
-            <section class="flex-1">
-                <h2 class="text-2xl font-bold mb-4">Notificaciones de la Plataforma</h2>
-                <div class="bg-purple-200 rounded-2xl p-5 shadow min-h-[300px] flex flex-col gap-4 overflow-y-auto">
-                    <!-- Alerta 1 - Nueva startup -->
-                    <div
-                        class="flex items-center bg-white bg-opacity-70 rounded-lg px-4 py-2 shadow-sm hover:shadow-md transition">
-                        <span class="bg-blue-500 rounded-full p-2 mr-3 flex items-center justify-center">
-                            <i class="fa-solid fa-rocket text-white text-sm"></i>
-                        </span>
-                        <div class="flex-1">
-                            <div class="font-bold text-sm">Nueva Startup Registrada</div>
-                            <div class="text-xs text-gray-600">EcoVentures se unió a la plataforma</div>
-                        </div>
-                        <div class="text-blue-600 font-semibold text-xs mr-3">hace 2 horas</div>
-                        <a href="/startup"
-                            class="bg-blue-500 text-white font-bold rounded-full px-4 py-1 text-xs hover:bg-blue-600 transition">
-                            Ver
-                        </a>
-                    </div>
-                    <!-- Alerta 2 - Mentor esperando aprobación -->
-                    <div
-                        class="flex items-center bg-white bg-opacity-70 rounded-lg px-4 py-2 shadow-sm hover:shadow-md transition">
-                        <span class="bg-amber-500 rounded-full p-2 mr-3 flex items-center justify-center">
-                            <i class="fa-solid fa-user-check text-white text-sm"></i>
-                        </span>
-                        <div class="flex-1">
-                            <div class="font-bold text-sm">Aprobación de Mentor Pendiente</div>
-                            <div class="text-xs text-gray-600">Carlos Díaz necesita verificación</div>
-                        </div>
-                        <div class="text-amber-600 font-semibold text-xs mr-3">hace 1 día</div>
-                        <a href="/mentor"
-                            class="bg-amber-500 text-white font-bold rounded-full px-4 py-1 text-xs hover:bg-amber-600 transition">
-                            Revisar
-                        </a>
-                    </div>
+                    <a href="/startup"
+                        class="bg-white text-cyan-600 font-semibold border border-cyan-300 rounded-full px-3 py-1 text-xs hover:bg-cyan-50 transition self-end">
+                        Gestionar
+                    </a>                </div>
 
-                    <!-- Alerta 3 - Convocatoria próxima a cerrar -->
-                    <div
-                        class="flex items-center bg-white bg-opacity-70 rounded-lg px-4 py-2 shadow-sm hover:shadow-md transition">
-                        <span class="bg-red-500 rounded-full p-2 mr-3 flex items-center justify-center">
-                            <i class="fa-solid fa-hourglass-end text-white text-sm"></i>
-                        </span>
-                        <div class="flex-1">
-                            <div class="font-bold text-sm">Convocatoria Próxima a Cerrar</div>
-                            <div class="text-xs text-gray-600">"Innovación en Tecnología" cierra en 2 días</div>
-                        </div>
-                        <div class="text-red-600 font-semibold text-xs mr-3">quedan 2 días</div>
-                        <a href="/convocatoria"
-                            class="bg-red-500 text-white font-bold rounded-full px-4 py-1 text-xs hover:bg-red-600 transition">
-                            Gestionar
-                        </a>
-                    </div>
-                    <!-- Alerta 4 - Sistema -->
-                    <div
-                        class="flex items-center bg-white bg-opacity-70 rounded-lg px-4 py-2 shadow-sm hover:shadow-md transition">
-                        <span class="bg-purple-500 rounded-full p-2 mr-3 flex items-center justify-center">
-                            <i class="fa-solid fa-chart-line text-white text-sm"></i>
-                        </span>
-                        <div class="flex-1">
-                            <div class="font-bold text-sm">Informe Semanal Listo</div>
-                            <div class="text-xs text-gray-600">Informe de actividad del 22-28 Mayo</div>
-                        </div>
-                        <div class="text-purple-600 font-semibold text-xs mr-3">Ahora mismo</div>
-                        <button
-                            class="bg-purple-500 text-white font-bold rounded-full px-4 py-1 text-xs hover:bg-purple-600 transition">
-                            Ver
-                        </button>
-                    </div>
-
-                    <!-- Alerta 5 - Evento -->
-                    <div
-                        class="flex items-center bg-white bg-opacity-70 rounded-lg px-4 py-2 shadow-sm hover:shadow-md transition">
-                        <span class="bg-green-500 rounded-full p-2 mr-3 flex items-center justify-center">
-                            <i class="fa-solid fa-calendar-check text-white text-sm"></i>
-                        </span>
-                        <div class="flex-1">
-                            <div class="font-bold text-sm">Nuevo Evento Creado</div>
-                            <div class="text-xs text-gray-600">"Encuentro de Networking" programado</div>
-                        </div>
-                        <div class="text-green-600 font-semibold text-xs mr-3">hace 4 horas</div>
-                        <a href="/evento"
-                            class="bg-green-500 text-white font-bold rounded-full px-4 py-1 text-xs hover:bg-green-600 transition">
-                            Detalles
-                        </a>
-                    </div>
-                </div>
-                <!-- Tarjeta CTA para acceder al Chatbot -->
-                <div
-                    class="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl p-5 shadow text-white relative overflow-hidden mt-6">
-                    <div class="absolute top-0 right-0 -mt-6 -mr-6 w-24 h-24 rounded-full bg-blue-400 opacity-20"></div>
-                    <div class="absolute bottom-0 left-0 -mb-6 -ml-6 w-20 h-20 rounded-full bg-indigo-400 opacity-20">
-                    </div>
-                    <div class="relative z-10">
-                        <div class="flex items-center mb-3">
-                            <div class="bg-white bg-opacity-20 rounded-full p-2 mr-3">
-                                <i class="fas fa-robot text-xl"></i>
+                <!-- Tarjeta Convocatorias Activas - Fila superior centro -->
+                <div class="bg-orange-100 rounded-xl p-4 shadow flex flex-col justify-between h-48">
+                    <div>
+                        <h3 class="text-base font-bold">Convocatorias</h3>
+                        <p class="text-xs text-gray-600 mb-2">Abiertas por estado</p>
+                        <div class="flex justify-between items-center mb-2">
+                            <div class="text-2xl font-bold text-orange-700" th:text="${totalConvocatorias}">8</div>
+                            <div class="bg-orange-200 text-orange-800 rounded-full px-2 py-1 text-xs font-medium">
+                                <i class="fa-solid fa-arrow-up mr-1"></i>2 nuevas
                             </div>
-                            <h3 class="text-lg font-bold">StartUp AI</h3>
+                        </div>
+                        <div class="space-y-1">
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center">
+                                    <div class="w-2 h-2 rounded-full bg-green-500 mr-2"></div>
+                                    <span class="text-xs">Activas</span>
+                                </div>
+                                <span class="text-xs font-semibold" th:text="${convocatoriasActivas}">5</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center">
+                                    <div class="w-2 h-2 rounded-full bg-yellow-500 mr-2"></div>
+                                    <span class="text-xs">Por cerrar</span>
+                                </div>
+                                <span class="text-xs font-semibold" th:text="${convocatoriasProximasACerrar}">2</span>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="/convocatoria"
+                        class="bg-white text-orange-600 font-semibold border border-orange-300 rounded-full px-3 py-1 text-xs hover:bg-orange-50 transition self-end">
+                        Gestionar
+                    </a>                </div>
+
+                <!-- Tarjeta Notificaciones - Fila completa derecha -->
+                <div class="md:col-span-2 md:row-span-2 bg-purple-200 rounded-xl p-4 shadow min-h-[400px] flex flex-col"><h3 class="text-lg font-bold mb-3 text-purple-800">Notificaciones</h3>
+                    <div class="flex-1 space-y-2 overflow-y-auto">
+                        <!-- Alerta 1 - Nueva startup -->
+                        <div class="flex items-center bg-white bg-opacity-70 rounded-lg px-3 py-2 shadow-sm hover:shadow-md transition">
+                            <span class="bg-blue-500 rounded-full p-1.5 mr-2 flex items-center justify-center flex-shrink-0">
+                                <i class="fa-solid fa-rocket text-white text-xs"></i>
+                            </span>
+                            <div class="flex-1 min-w-0">
+                                <div class="font-bold text-xs">Nueva Startup</div>
+                                <div class="text-xs text-gray-600">EcoVentures se unió</div>
+                            </div>
+                            <a href="/startup"
+                                class="bg-blue-500 text-white font-bold rounded-full px-2 py-1 text-xs hover:bg-blue-600 transition flex-shrink-0">
+                                Ver
+                            </a>
                         </div>
 
-                        <h4 class="text-base font-bold mb-2">Asistente Inteligente</h4>
-                        <p class="text-sm mb-4 opacity-90">Resuelve dudas, genera ideas y obtén recomendaciones
-                            personalizadas para tu equipo con nuestro asistente AI.</p>
+                        <!-- Alerta 2 - Mentor esperando aprobación -->
+                        <div class="flex items-center bg-white bg-opacity-70 rounded-lg px-3 py-2 shadow-sm hover:shadow-md transition">
+                            <span class="bg-amber-500 rounded-full p-1.5 mr-2 flex items-center justify-center flex-shrink-0">
+                                <i class="fa-solid fa-user-check text-white text-xs"></i>
+                            </span>
+                            <div class="flex-1 min-w-0">
+                                <div class="font-bold text-xs">Mentor Pendiente</div>
+                                <div class="text-xs text-gray-600">Carlos Díaz</div>
+                            </div>
+                            <a href="/mentor"
+                                class="bg-amber-500 text-white font-bold rounded-full px-2 py-1 text-xs hover:bg-amber-600 transition flex-shrink-0">
+                                Ver
+                            </a>
+                        </div>
 
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-4 text-sm">
-                            <div class="flex items-center">
-                                <i class="fas fa-check-circle mr-2 text-blue-200"></i>
-                                <span>Respuestas instantáneas</span>
+                        <!-- Alerta 3 - Convocatoria próxima a cerrar -->
+                        <div class="flex items-center bg-white bg-opacity-70 rounded-lg px-3 py-2 shadow-sm hover:shadow-md transition">
+                            <span class="bg-red-500 rounded-full p-1.5 mr-2 flex items-center justify-center flex-shrink-0">
+                                <i class="fa-solid fa-hourglass-end text-white text-xs"></i>
+                            </span>
+                            <div class="flex-1 min-w-0">
+                                <div class="font-bold text-xs">Cierra Pronto</div>
+                                <div class="text-xs text-gray-600">Innovación Tech</div>
                             </div>
-                            <div class="flex items-center">
-                                <i class="fas fa-check-circle mr-2 text-blue-200"></i>
-                                <span>Generar documentos</span>
+                            <a href="/convocatoria"
+                                class="bg-red-500 text-white font-bold rounded-full px-2 py-1 text-xs hover:bg-red-600 transition flex-shrink-0">
+                                Ver
+                            </a>
+                        </div>
+
+                        <!-- Alerta 4 - Sistema -->
+                        <div class="flex items-center bg-white bg-opacity-70 rounded-lg px-3 py-2 shadow-sm hover:shadow-md transition">
+                            <span class="bg-purple-500 rounded-full p-1.5 mr-2 flex items-center justify-center flex-shrink-0">
+                                <i class="fa-solid fa-chart-line text-white text-xs"></i>
+                            </span>
+                            <div class="flex-1 min-w-0">
+                                <div class="font-bold text-xs">Informe Listo</div>
+                                <div class="text-xs text-gray-600">Semana 22-28 Mayo</div>
                             </div>
-                            <div class="flex items-center">
-                                <i class="fas fa-check-circle mr-2 text-blue-200"></i>
-                                <span>Asistencia 24/7</span>
+                            <button
+                                class="bg-purple-500 text-white font-bold rounded-full px-2 py-1 text-xs hover:bg-purple-600 transition flex-shrink-0">
+                                Ver
+                            </button>
+                        </div>
+
+                        <!-- Alerta 5 - Evento -->
+                        <div class="flex items-center bg-white bg-opacity-70 rounded-lg px-3 py-2 shadow-sm hover:shadow-md transition">
+                            <span class="bg-green-500 rounded-full p-1.5 mr-2 flex items-center justify-center flex-shrink-0">
+                                <i class="fa-solid fa-calendar-check text-white text-xs"></i>
+                            </span>
+                            <div class="flex-1 min-w-0">
+                                <div class="font-bold text-xs">Nuevo Evento</div>
+                                <div class="text-xs text-gray-600">Networking</div>
+                            </div>
+                            <a href="/evento"
+                                class="bg-green-500 text-white font-bold rounded-full px-2 py-1 text-xs hover:bg-green-600 transition flex-shrink-0">
+                                Ver
+                            </a>
+                        </div>
+                    </div>                </div>
+
+                <!-- Tarjeta Servicios de Render - Fila inferior izquierda -->
+                <div class="bg-gradient-to-r from-emerald-500 to-teal-600 rounded-xl p-4 shadow text-white relative overflow-hidden h-48">
+                    <div class="absolute top-0 right-0 -mt-4 -mr-4 w-16 h-16 rounded-full bg-emerald-400 opacity-20"></div>
+                    
+                    <div class="relative z-10 h-full flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center mb-2">
+                                <div class="bg-white bg-opacity-20 rounded-full p-2 mr-2">
+                                    <i class="fas fa-cloud text-sm"></i>
+                                </div>
+                                <h3 class="text-base font-bold">Render</h3>
+                            </div>
+                            
+                            <p class="mb-3 text-white text-opacity-90 text-xs leading-relaxed">
+                                Despliega tu startup en la nube con facilidad.
+                            </p>
+                            
+                            <div class="space-y-1">
+                                <div class="flex items-center">
+                                    <i class="fas fa-check-circle mr-2 text-emerald-200 text-xs"></i>
+                                    <span class="text-xs">Deploy desde GitHub</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-check-circle mr-2 text-emerald-200 text-xs"></i>
+                                    <span class="text-xs">SSL automático</span>
+                                </div>
+                            </div>                        </div>
+                        
+                        <a href="http://localhost:8080/render/services" 
+                           class="bg-white text-teal-700 rounded-full px-3 py-1 text-xs font-bold hover:bg-opacity-90 transition text-center">
+                            Acceder
+                        </a>
+                    </div>
+                </div><!-- Tarjeta StartUp AI - Fila inferior derecha -->
+                <div class="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl p-4 shadow text-white relative overflow-hidden h-48">
+                    <div class="absolute top-0 right-0 -mt-4 -mr-4 w-16 h-16 rounded-full bg-blue-400 opacity-20"></div>
+                    
+                    <div class="relative z-10 h-full flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center mb-2">
+                                <div class="bg-white bg-opacity-20 rounded-full p-2 mr-2">
+                                    <i class="fas fa-robot text-sm"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-base font-bold">StartUp AI</h3>
+                                    <h4 class="text-xs opacity-90">Asistente IA</h4>
+                                </div>
+                            </div>
+
+                            <p class="text-xs mb-3 opacity-90 leading-relaxed">
+                                Resuelve dudas y obtén recomendaciones personalizadas.
+                            </p>
+
+                            <div class="grid grid-cols-1 gap-1">
+                                <div class="flex items-center bg-white bg-opacity-10 rounded p-1">
+                                    <i class="fas fa-check-circle mr-1 text-blue-200 text-xs"></i>
+                                    <span class="text-xs">Respuestas 24/7</span>
+                                </div>
+                                <div class="flex items-center bg-white bg-opacity-10 rounded p-1">
+                                    <i class="fas fa-check-circle mr-1 text-blue-200 text-xs"></i>
+                                    <span class="text-xs">Genera documentos</span>
+                                </div>
                             </div>
                         </div>
 
                         <a href="/chatbot"
-                            class="inline-flex items-center justify-center bg-white text-indigo-600 rounded-full px-5 py-2 font-bold hover:bg-opacity-90 transition transform hover:-translate-y-1 shadow-md w-full text-sm">
-                            <i class="fas fa-comments mr-2"></i>
-                            Iniciar chat ahora
+                            class="bg-white text-indigo-600 rounded-full px-3 py-1 text-xs font-bold hover:bg-opacity-90 transition text-center">
+                            <i class="fas fa-comments mr-1"></i>
+                            Iniciar chat
                         </a>
                     </div>
                 </div>
-            </section>
-        </div>
+
+            </div>
+        </section>
 
         <!-- Sección de Calendario de Google -->
         <section class="mt-8 w-full">

@@ -1,184 +1,111 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
-  <head th:replace="~{layout/layout :: head}"></head>
-  <body class="bg-stone-100 text-gray-900 font-[Poppins] min-h-screen">
-    <header th:replace="~{layout/layout :: header}"></header>
-    <!-- Banner moderno -->
-    <div class="relative w-full max-w-5xl mx-auto rounded-2xl overflow-hidden shadow mb-10 mt-8">
-      <img
-        src="/images/bannerListar.jpg"
-        alt="Banner Crear Entregable"
-        class="w-full h-48 md:h-56 object-cover object-center"
-      />
-      <div class="absolute inset-0 bg-gradient-to-r from-sky-500/80 to-orange-400/60 flex items-center min-h-[10rem] md:min-h-[13rem]">
-        <div class="px-10">
-          <h1 class="text-4xl md:text-5xl font-extrabold text-white drop-shadow-lg">
-            Crear Nuevo Entregable
-          </h1>
-          <p class="text-lg text-white/80 font-medium mt-2">
-            Sube y asocia un entregable a una tarea
-          </p>
-        </div>
-      </div>
-    </div>
-    <div class="max-w-5xl mx-auto px-2 md:px-0 -mt-6 md:-mt-2 relative z-10">
-      <div class="bg-white rounded-2xl shadow-xl border-t-4 border-sky-400 p-4 sm:p-6 md:p-8">
-        <!-- Mensajes Flash -->
-        <div th:if="${success}" class="mb-4">
-          <div
-            class="bg-green-100 text-green-800 px-4 py-3 rounded-lg font-semibold"
-            th:text="${success}"
-          ></div>
-        </div>
-        <div th:if="${error}" class="mb-4">
-          <div
-            class="bg-red-100 text-red-800 px-4 py-3 rounded-lg font-semibold"
-            th:text="${error}"
-          ></div>
-        </div>
-        <form
-          th:action="@{/guardarEntregable}"
-          method="post"
-          enctype="multipart/form-data"
-          th:object="${entregable}"
-          class="space-y-6"
-        >
-          <div>
-            <label
-              for="nombreArchivo"
-              class="block font-bold text-sky-700 mb-1"
-            >
-              Nombre del archivo:
-            </label>
-            <input
-              type="text"
-              class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-sky-400 outline-none"
-              id="nombreArchivo"
-              th:field="*{nombreArchivo}"
-              required
-            />
-            <div
-              class="text-red-600 text-sm mt-1"
-              th:if="${#fields.hasErrors('nombreArchivo')}"
-              th:errors="*{nombreArchivo}"
-            ></div>
-          </div>
-          <div>
-            <label for="archivo" class="block font-bold text-sky-700 mb-1">
-              Archivo:
-            </label>
-            <div class="flex items-center gap-4">
-              <label
-                for="archivo"
-                class="inline-flex items-center gap-2 bg-sky-500 hover:bg-sky-600 text-white font-semibold px-6 py-2.5 rounded-full shadow transition cursor-pointer"
-              >
-                <i class="fas fa-upload"></i> Seleccionar archivo
-                <input
-                  type="file"
-                  class="hidden"
-                  id="archivo"
-                  name="archivo"
-                  required
-                />
-              </label>
-              <span id="archivo-nombre" class="text-gray-700 text-sm"></span>
-            </div>
-            <small class="text-gray-500"
-              >Seleccione un archivo para subir</small
-            >
-          </div>
-          <div>
-            <label for="estado" class="block font-bold text-sky-700 mb-1">
-              Estado:
-            </label>
-            <select
-              class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-sky-400 outline-none"
-              id="estado"
-              th:field="*{estado}"
-              required
-            >
-              <option value="">Seleccionar estado</option>
-              <option value="Pendiente">Pendiente</option>
-              <option value="En revisión">En revisión</option>
-              <option value="Aprobado">Aprobado</option>
-              <option value="Rechazado">Rechazado</option>
-            </select>
-            <div
-              class="text-red-600 text-sm mt-1"
-              th:if="${#fields.hasErrors('estado')}"
-              th:errors="*{estado}"
-            ></div>
-          </div>
-          <div th:if="${param.idTarea == null}">
-            <label for="tarea" class="block font-bold text-sky-700 mb-1">
-              Tarea asociada:
-            </label>
-            <select
-              class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-sky-400 outline-none"
-              id="tarea"
-              name="idTarea"
-              required
-            >
-              <option value="">Seleccione una Tarea</option>
-              <option
-                th:each="tarea : ${tareas}"
-                th:value="${tarea.id}"
-                th:text="${tarea.titulo}"
-              ></option>
-            </select>
-            <div
-              class="text-red-600 text-sm mt-1"
-              th:if="${#fields.hasErrors('tarea')}"
-              th:errors="*{tarea}"
-            ></div>
-          </div>
-          <div th:if="${param.idTarea != null}">
-            <label for="tareaSeleccionada" class="block font-bold text-sky-700 mb-1">
-              Tarea asociada:
-            </label>
-            <input type="hidden" name="idTarea" th:value="${param.idTarea}" />
-            <input
-              type="text"
-              class="w-full px-4 py-2 rounded-lg border border-gray-300 bg-gray-100"
-              id="tareaSeleccionada"
-              th:value="${tareaNombre}"
-              readonly
-            />
-            <small class="text-gray-500"
-              >Esta entrega está asociada a la tarea seleccionada</small
-            >
-          </div>
-          <div class="flex justify-end gap-4 pt-4">
-            <a
-              th:href="@{/entregable}"
-              class="inline-flex items-center gap-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold px-6 py-2.5 rounded-full shadow transition text-base"
-            >
-              <i class="fas fa-arrow-left"></i> Volver
-            </a>
-            <button
-              type="submit"
-              class="inline-flex items-center gap-2 bg-sky-500 hover:bg-sky-600 text-white font-semibold px-6 py-2.5 rounded-full shadow transition text-base"
-            >
-              <i class="fas fa-save"></i> Guardar Entregable
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
 
-    <script>
-      // Mostrar nombre del archivo seleccionado automáticamente y botón personalizado
-      document.getElementById("archivo")?.addEventListener("change", function () {
-        const fileName = this.files[0]?.name || "";
-        const fileNameField = document.getElementById("nombreArchivo");
-        const archivoNombre = document.getElementById("archivo-nombre");
-        if (fileNameField && !fileNameField.value) {
-          fileNameField.value = fileName;
-        }
-        if (archivoNombre) {
-          archivoNombre.textContent = fileName;
-        }
-      });
-    </script>
-  </body>
+<head th:replace="~{layout/layout :: head}"></head>
+
+<body class="bg-stone-100 text-gray-900 font-[Poppins] min-h-screen">
+  <header th:replace="~{layout/layout :: header}"></header>
+  <!-- Banner moderno -->
+  <div class="relative w-full max-w-5xl mx-auto rounded-2xl overflow-hidden shadow mb-10 mt-8">
+    <img src="/images/bannerListar.jpg" alt="Banner Crear Entregable"
+      class="w-full h-48 md:h-56 object-cover object-center" />
+    <div
+      class="absolute inset-0 bg-gradient-to-r from-sky-500/80 to-orange-400/60 flex items-center min-h-[10rem] md:min-h-[13rem]">
+      <div class="px-10">
+        <h1 class="text-4xl md:text-5xl font-extrabold text-white drop-shadow-lg">
+          Crear Nuevo Entregable
+        </h1>
+        <p class="text-lg text-white/80 font-medium mt-2">
+          Sube y asocia un entregable a una tarea
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="max-w-5xl mx-auto px-2 md:px-0 -mt-6 md:-mt-2 relative z-10">
+    <div class="bg-white rounded-2xl shadow-xl border-t-4 border-sky-400 p-4 sm:p-6 md:p-8">
+      <!-- Mensajes Flash -->
+      <div th:if="${success}" class="mb-4">
+        <div class="bg-green-100 text-green-800 px-4 py-3 rounded-lg font-semibold" th:text="${success}"></div>
+      </div>
+      <div th:if="${error}" class="mb-4">
+        <div class="bg-red-100 text-red-800 px-4 py-3 rounded-lg font-semibold" th:text="${error}"></div>
+      </div>
+      <form th:action="@{/guardarEntregable}" method="post" enctype="multipart/form-data" th:object="${entregable}"
+        class="space-y-6">
+        <div>
+          <label for="nombreArchivo" class="block font-bold text-sky-700 mb-1">
+            Nombre del archivo:
+          </label>
+          <input type="text"
+            class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-sky-400 outline-none"
+            id="nombreArchivo" th:field="*{nombreArchivo}" required />
+          <div class="text-red-600 text-sm mt-1" th:if="${#fields.hasErrors('nombreArchivo')}"
+            th:errors="*{nombreArchivo}"></div>
+        </div>
+        <div>
+          <label for="archivo" class="block font-bold text-sky-700 mb-1">
+            Archivo:
+          </label>
+          <div class="flex items-center gap-4">
+            <label for="archivo"
+              class="inline-flex items-center gap-2 bg-sky-500 hover:bg-sky-600 text-white font-semibold px-6 py-2.5 rounded-full shadow transition cursor-pointer">
+              <i class="fas fa-upload"></i> Seleccionar archivo
+              <input type="file" class="hidden" id="archivo" name="archivo" required />
+            </label>
+            <span id="archivo-nombre" class="text-gray-700 text-sm"></span>
+          </div>
+          <small class="text-gray-500">Seleccione un archivo para subir</small>
+        </div>
+       
+        <div th:if="${param.idTarea == null}">
+          <label for="tarea" class="block font-bold text-sky-700 mb-1">
+            Tarea asociada:
+          </label>
+          <select
+            class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-sky-400 outline-none"
+            id="tarea" name="idTarea" required>
+            <option value="">Seleccione una Tarea</option>
+            <option th:each="tarea : ${tareas}" th:value="${tarea.id}" th:text="${tarea.titulo}"></option>
+          </select>
+          <div class="text-red-600 text-sm mt-1" th:if="${#fields.hasErrors('tarea')}" th:errors="*{tarea}"></div>
+        </div>
+        <div th:if="${param.idTarea != null}">
+          <label for="tareaSeleccionada" class="block font-bold text-sky-700 mb-1">
+            Tarea asociada:
+          </label>
+          <input type="hidden" name="idTarea" th:value="${param.idTarea}" />
+          <input type="text" class="w-full px-4 py-2 rounded-lg border border-gray-300 bg-gray-100"
+            id="tareaSeleccionada" th:value="${tareaNombre}" readonly />
+          <small class="text-gray-500">Esta entrega está asociada a la tarea seleccionada</small>
+        </div>
+        <div class="flex justify-end gap-4 pt-4">
+          <a th:href="@{/entregable}"
+            class="inline-flex items-center gap-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold px-6 py-2.5 rounded-full shadow transition text-base">
+            <i class="fas fa-arrow-left"></i> Volver
+          </a>
+          <button type="submit"
+            class="inline-flex items-center gap-2 bg-sky-500 hover:bg-sky-600 text-white font-semibold px-6 py-2.5 rounded-full shadow transition text-base">
+            <i class="fas fa-save"></i> Guardar Entregable
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Mostrar nombre del archivo seleccionado automáticamente y botón personalizado
+    document.getElementById("archivo")?.addEventListener("change", function () {
+      const fileName = this.files[0]?.name || "";
+      const fileNameField = document.getElementById("nombreArchivo");
+      const archivoNombre = document.getElementById("archivo-nombre");
+      if (fileNameField && !fileNameField.value) {
+        fileNameField.value = fileName;
+      }
+      if (archivoNombre) {
+        archivoNombre.textContent = fileName;
+      }
+    });
+  </script>
+</body>
+
 </html>

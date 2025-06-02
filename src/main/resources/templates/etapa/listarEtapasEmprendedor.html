@@ -1,7 +1,24 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{layout/layout :: head}"></head>
+<head th:replace="~{layout/layout :: head}">
+    <style>
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #ccd6e0;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #93a5b9;
+        }
+    </style>
+</head>
 
 <body class="bg-white font-sans">
     <header th:replace="~{layout/layout :: header}"></header>
@@ -33,25 +50,59 @@
                         <!-- Estado de la etapa -->
                         <div class="flex items-center gap-2 mb-4">
                             <span class="text-sm font-medium text-gray-600">Estado:</span>
-                             
-                        </div>                        <!-- Lista de tareas -->
-                        <div class="space-y-2">
-                            <h4 class="text-lg font-semibold text-gray-700 mb-2">Tareas Asignadas:</h4>
-                            <div th:if="${not #lists.isEmpty(tareasPorEtapa.get(etapa.id))}" class="space-y-2">
-                                <div th:each="tarea : ${tareasPorEtapa.get(etapa.id)}" class="flex items-center gap-2 text-gray-600">
-                                    <i class="fas fa-tasks text-blue-500"></i>
-                                    <span th:text="${tarea.descripcion}">Descripción de la tarea</span>
+
+                        </div> <!-- Lista detallada de tareas -->
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center mb-4">
+                                <h4 class="text-lg font-semibold text-gray-700 flex items-center">
+                                    <i class="fas fa-clipboard-list text-blue-500 mr-2"></i>
+                                    Tareas Asignadas
+                                </h4>
+                                <span class="text-sm text-gray-500">
+                                    <i class="fas fa-tasks mr-1"></i>
+                                    <span th:text="${#lists.size(tareasPorEtapa.get(etapa.id))}">0</span> tareas
+                                </span>
+                            </div>
+
+                            <!-- Contenedor con scroll -->
+                            <div class="max-h-[400px] overflow-y-auto pr-2 space-y-4 custom-scrollbar">
+                                <div th:if="${not #lists.isEmpty(tareasPorEtapa.get(etapa.id))}" class="space-y-4">
+                                    <div th:each="tarea : ${tareasPorEtapa.get(etapa.id)}"
+                                        class="bg-white rounded-xl p-4 border border-blue-100 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+                                        <div class="flex items-start justify-between">
+                                            <div class="space-y-3 flex-grow">
+                                                <div class="flex items-start justify-between">
+                                                    <h5 class="font-semibold text-gray-800 text-lg" th:text="${tarea.titulo}">Título de
+                                                        la tarea</h5>
+                                                    
+                                                </div>
+
+                                                <p class="text-gray-600 text-sm" th:text="${tarea.descripcion}">Descripción
+                                                    detallada de la tarea</p>
+
+                                                <div class="flex items-center gap-4 text-sm">
+                                                    <span class="flex items-center text-gray-600 bg-gray-100 px-3 py-1 rounded-full">
+                                                        <i class="far fa-calendar mr-1"></i>
+                                                        <span th:text="${#dates.format(tarea.fechaEntrega, 'dd/MM/yyyy')}">01/06/2025</span>
+                                                    </span>
+                                                </div>
+
+                                                <div class="flex items-center gap-2 mt-2">
+                                                    <a th:href="@{/verTarea/{id}(id=${tarea.id})}"
+                                                        class="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-700 font-semibold rounded-full hover:bg-blue-200 transition-all duration-300">
+                                                        <i class="fas fa-eye mr-2"></i>
+                                                        Ver Detalles
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>                            <p th:if="${#lists.isEmpty(tareasPorEtapa.get(etapa.id))}" class="text-gray-500 italic">No hay tareas
-                                asignadas</p>
-                            
-                            <!-- Botón para crear tarea -->
-                            <div class="mt-4">
-                                <a th:href="@{/crearTarea(etapaId=${etapa.id})}" 
-                                   class="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-700 font-semibold rounded-full hover:bg-blue-200 transition">
-                                    <i class="fas fa-plus mr-2"></i>
-                                    Agregar Tarea
-                                </a>
+                                <div th:if="${#lists.isEmpty(tareasPorEtapa.get(etapa.id))}"
+                                    class="bg-gray-50 rounded-lg p-6 text-center">
+                                    <i class="fas fa-clipboard text-gray-400 text-3xl mb-2"></i>
+                                    <p class="text-gray-500">No hay tareas asignadas para esta etapa</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -59,22 +110,26 @@
                     <!-- Información del mentor -->
                     <div class="lg:w-80 flex flex-col items-center p-4 bg-gray-50 rounded-xl">
                         <div class="text-center">
-                            <h4 class="text-lg font-semibold text-gray-800 mb-4">Mentor Asignado</h4>                            <div th:if="${mentoresPorEtapa.get(etapa.id) != null}" class="space-y-3">
+                            <h4 class="text-lg font-semibold text-gray-800 mb-4">Mentor Asignado</h4>
+                            <div th:if="${mentoresPorEtapa.get(etapa.id) != null}" class="space-y-3">
                                 <img th:src="${mentoresPorEtapa.get(etapa.id).usuario != null && mentoresPorEtapa.get(etapa.id).usuario.fotoUrl != null ? mentoresPorEtapa.get(etapa.id).usuario.fotoUrl : '/images/default-profile.jpg'}"
                                     alt="Foto del mentor"
                                     class="w-24 h-24 rounded-full mx-auto object-cover border-4 border-white shadow-lg">
                                 <h5 class="font-bold text-gray-800"
                                     th:text="${mentoresPorEtapa.get(etapa.id).usuario != null ? mentoresPorEtapa.get(etapa.id).usuario.nombreUsu : 'Nombre no disponible'}">
                                     Nombre del Mentor</h5>
-                                <p class="text-sm text-gray-600" th:text="${mentoresPorEtapa.get(etapa.id).especialidad}">Especialidad del
+                                <p class="text-sm text-gray-600"
+                                    th:text="${mentoresPorEtapa.get(etapa.id).especialidad}">Especialidad del
                                     mentor</p>
-                                <a th:if="${mentoresPorEtapa.get(etapa.id).linkedin != null}" th:href="${mentoresPorEtapa.get(etapa.id).linkedin}"
-                                    target="_blank" class="inline-flex items-center text-blue-600 hover:text-blue-700">
+                                <a th:if="${mentoresPorEtapa.get(etapa.id).linkedin != null}"
+                                    th:href="${mentoresPorEtapa.get(etapa.id).linkedin}" target="_blank"
+                                    class="inline-flex items-center text-blue-600 hover:text-blue-700">
                                     <i class="fab fa-linkedin mr-2"></i>
                                     <span>Ver perfil profesional</span>
                                 </a>
                             </div>
-                            <p th:unless="${mentoresPorEtapa.get(etapa.id) != null}" class="text-gray-500 italic">No hay mentor asignado
+                            <p th:unless="${mentoresPorEtapa.get(etapa.id) != null}" class="text-gray-500 italic">No hay
+                                mentor asignado
                             </p>
                         </div>
                     </div>
