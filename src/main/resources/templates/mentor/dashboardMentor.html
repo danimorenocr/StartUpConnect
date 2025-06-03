@@ -6,8 +6,8 @@
 </head>
 
 <body class="bg-stone-100 text-gray-900 min-h-screen w-screen flex flex-col items-center py-6 font-[Poppins]">
-   <div th:replace="~{layout/layout :: header}"></div>
-    
+    <div th:replace="~{layout/layout :: header}"></div>
+
     <!-- Cargar hoja de estilo específica para el dashboard -->
     <link rel="stylesheet" th:href="@{/css/mentor/dashboardMentor.css}">
     <!-- Estilos adicionales para animaciones y efectos visuales -->
@@ -228,88 +228,8 @@
             <section class="flex-1">
                 <h2 class="text-2xl font-bold mb-4">Notificaciones de la Plataforma</h2>
                 <div class="bg-purple-200 rounded-2xl p-5 shadow min-h-[300px] flex flex-col gap-4 overflow-y-auto">
-                    <!-- Alerta 1 - Nueva startup -->
-                    <div
-                        class="flex items-center bg-white bg-opacity-70 rounded-lg px-4 py-2 shadow-sm hover:shadow-md transition">
-                        <span class="bg-blue-500 rounded-full p-2 mr-3 flex items-center justify-center">
-                            <i class="fa-solid fa-rocket text-white text-sm"></i>
-                        </span>
-                        <div class="flex-1">
-                            <div class="font-bold text-sm">Nueva Startup Registrada</div>
-                            <div class="text-xs text-gray-600">EcoVentures se unió a la plataforma</div>
-                        </div>
-                        <div class="text-blue-600 font-semibold text-xs mr-3">hace 2 horas</div>
-                        <a href="/startup"
-                            class="bg-blue-500 text-white font-bold rounded-full px-4 py-1 text-xs hover:bg-blue-600 transition">
-                            Ver
-                        </a>
-                    </div>
-                    <!-- Alerta 2 - Mentor esperando aprobación -->
-                    <div
-                        class="flex items-center bg-white bg-opacity-70 rounded-lg px-4 py-2 shadow-sm hover:shadow-md transition">
-                        <span class="bg-amber-500 rounded-full p-2 mr-3 flex items-center justify-center">
-                            <i class="fa-solid fa-user-check text-white text-sm"></i>
-                        </span>
-                        <div class="flex-1">
-                            <div class="font-bold text-sm">Aprobación de Mentor Pendiente</div>
-                            <div class="text-xs text-gray-600">Carlos Díaz necesita verificación</div>
-                        </div>
-                        <div class="text-amber-600 font-semibold text-xs mr-3">hace 1 día</div>
-                        <a href="/mentor"
-                            class="bg-amber-500 text-white font-bold rounded-full px-4 py-1 text-xs hover:bg-amber-600 transition">
-                            Revisar
-                        </a>
-                    </div>
 
-                    <!-- Alerta 3 - Convocatoria próxima a cerrar -->
-                    <div
-                        class="flex items-center bg-white bg-opacity-70 rounded-lg px-4 py-2 shadow-sm hover:shadow-md transition">
-                        <span class="bg-red-500 rounded-full p-2 mr-3 flex items-center justify-center">
-                            <i class="fa-solid fa-hourglass-end text-white text-sm"></i>
-                        </span>
-                        <div class="flex-1">
-                            <div class="font-bold text-sm">Convocatoria Próxima a Cerrar</div>
-                            <div class="text-xs text-gray-600">"Innovación en Tecnología" cierra en 2 días</div>
-                        </div>
-                        <div class="text-red-600 font-semibold text-xs mr-3">quedan 2 días</div>
-                        <a href="/convocatoria"
-                            class="bg-red-500 text-white font-bold rounded-full px-4 py-1 text-xs hover:bg-red-600 transition">
-                            Gestionar
-                        </a>
-                    </div>
-                    <!-- Alerta 4 - Sistema -->
-                    <div
-                        class="flex items-center bg-white bg-opacity-70 rounded-lg px-4 py-2 shadow-sm hover:shadow-md transition">
-                        <span class="bg-purple-500 rounded-full p-2 mr-3 flex items-center justify-center">
-                            <i class="fa-solid fa-chart-line text-white text-sm"></i>
-                        </span>
-                        <div class="flex-1">
-                            <div class="font-bold text-sm">Informe Semanal Listo</div>
-                            <div class="text-xs text-gray-600">Informe de actividad del 22-28 Mayo</div>
-                        </div>
-                        <div class="text-purple-600 font-semibold text-xs mr-3">Ahora mismo</div>
-                        <button
-                            class="bg-purple-500 text-white font-bold rounded-full px-4 py-1 text-xs hover:bg-purple-600 transition">
-                            Ver
-                        </button>
-                    </div>
 
-                    <!-- Alerta 5 - Evento -->
-                    <div
-                        class="flex items-center bg-white bg-opacity-70 rounded-lg px-4 py-2 shadow-sm hover:shadow-md transition">
-                        <span class="bg-green-500 rounded-full p-2 mr-3 flex items-center justify-center">
-                            <i class="fa-solid fa-calendar-check text-white text-sm"></i>
-                        </span>
-                        <div class="flex-1">
-                            <div class="font-bold text-sm">Nuevo Evento Creado</div>
-                            <div class="text-xs text-gray-600">"Encuentro de Networking" programado</div>
-                        </div>
-                        <div class="text-green-600 font-semibold text-xs mr-3">hace 4 horas</div>
-                        <a href="/evento"
-                            class="bg-green-500 text-white font-bold rounded-full px-4 py-1 text-xs hover:bg-green-600 transition">
-                            Detalles
-                        </a>
-                    </div>
                 </div>
                 <!-- Tarjeta CTA para acceder al Chatbot -->
                 <div
@@ -457,7 +377,8 @@
                                     th:style="${'animation-delay: ' + (eventStat.index * 0.1) + 's'}">
 
                                     <!-- Cabecera del evento -->
-                                    <div class="flex items-center mb-3">                                        <div th:class="${event.conferenceData != null ? 'bg-gradient-to-br from-purple-500 to-indigo-600' : 'bg-gradient-to-br from-blue-500 to-indigo-600'}"
+                                    <div class="flex items-center mb-3">
+                                        <div th:class="${event.conferenceData != null ? 'bg-gradient-to-br from-purple-500 to-indigo-600' : 'bg-gradient-to-br from-blue-500 to-indigo-600'}"
                                             class="text-white rounded-lg p-2 mr-3 flex-shrink-0 shadow-md">
                                             <i
                                                 th:class="${event.conferenceData != null ? 'fa-solid fa-video-plus' : 'fa-solid fa-calendar-star'}"></i>
@@ -753,7 +674,7 @@
                                     const label = context.label || '';
                                     const value = context.raw || 0;
                                     const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                    const percentage = Math.round((value / total) * 100); 
+                                    const percentage = Math.round((value / total) * 100);
                                     return `${label}: ${value} (${percentage}%)`;
                                 }
                             }

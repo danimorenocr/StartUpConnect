@@ -118,11 +118,11 @@
                 </div>
             </div>
         </div><!-- Contenedor principal -->
-        <div class="flex flex-col md:flex-row gap-8 w-full">
+        <div class="flex flex-col lg:flex-row gap-8 w-full">
             <!-- Sección de estadísticas -->
-            <section class="flex-1">
+            <section class="flex-1 min-w-[340px]">
                 <h2 class="text-2xl font-bold mb-4">Estadísticas de la Plataforma</h2>
-                <div class="grid grid-cols-2 gap-6"> <!-- Tarjeta 1 (verde) - Total Users -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6"> <!-- Tarjeta 1 (verde) - Total Users -->
                     <div class="bg-green-100 rounded-2xl p-5 shadow flex flex-col justify-between">
                         <div>
                             <h3 class="text-lg font-bold">Crecimiento de Usuarios</h3>
@@ -309,91 +309,10 @@
                     </div>
                 </div>
             </section> <!-- Sección de alertas y notificaciones -->
-            <section class="flex-1">
+            <section class="flex-1 min-w-[340px]">
                 <h2 class="text-2xl font-bold mb-4">Notificaciones de la Plataforma</h2>
                 <div class="bg-purple-200 rounded-2xl p-5 shadow min-h-[300px] flex flex-col gap-4 overflow-y-auto">
-                    <!-- Alerta 1 - Nueva startup -->
-                    <div
-                        class="flex items-center bg-white bg-opacity-70 rounded-lg px-4 py-2 shadow-sm hover:shadow-md transition">
-                        <span class="bg-blue-500 rounded-full p-2 mr-3 flex items-center justify-center">
-                            <i class="fa-solid fa-rocket text-white text-sm"></i>
-                        </span>
-                        <div class="flex-1">
-                            <div class="font-bold text-sm">Nueva Startup Registrada</div>
-                            <div class="text-xs text-gray-600">EcoVentures se unió a la plataforma</div>
-                        </div>
-                        <div class="text-blue-600 font-semibold text-xs mr-3">hace 2 horas</div>
-                        <a href="/startup"
-                            class="bg-blue-500 text-white font-bold rounded-full px-4 py-1 text-xs hover:bg-blue-600 transition">
-                            Ver
-                        </a>
-                    </div>
-                    <!-- Alerta 2 - Mentor esperando aprobación -->
-                    <div
-                        class="flex items-center bg-white bg-opacity-70 rounded-lg px-4 py-2 shadow-sm hover:shadow-md transition">
-                        <span class="bg-amber-500 rounded-full p-2 mr-3 flex items-center justify-center">
-                            <i class="fa-solid fa-user-check text-white text-sm"></i>
-                        </span>
-                        <div class="flex-1">
-                            <div class="font-bold text-sm">Aprobación de Mentor Pendiente</div>
-                            <div class="text-xs text-gray-600">Carlos Díaz necesita verificación</div>
-                        </div>
-                        <div class="text-amber-600 font-semibold text-xs mr-3">hace 1 día</div>
-                        <a href="/mentor"
-                            class="bg-amber-500 text-white font-bold rounded-full px-4 py-1 text-xs hover:bg-amber-600 transition">
-                            Revisar
-                        </a>
-                    </div>
 
-                    <!-- Alerta 3 - Convocatoria próxima a cerrar -->
-                    <div
-                        class="flex items-center bg-white bg-opacity-70 rounded-lg px-4 py-2 shadow-sm hover:shadow-md transition">
-                        <span class="bg-red-500 rounded-full p-2 mr-3 flex items-center justify-center">
-                            <i class="fa-solid fa-hourglass-end text-white text-sm"></i>
-                        </span>
-                        <div class="flex-1">
-                            <div class="font-bold text-sm">Convocatoria Próxima a Cerrar</div>
-                            <div class="text-xs text-gray-600">"Innovación en Tecnología" cierra en 2 días</div>
-                        </div>
-                        <div class="text-red-600 font-semibold text-xs mr-3">quedan 2 días</div>
-                        <a href="/convocatoria"
-                            class="bg-red-500 text-white font-bold rounded-full px-4 py-1 text-xs hover:bg-red-600 transition">
-                            Gestionar
-                        </a>
-                    </div>
-                    <!-- Alerta 4 - Sistema -->
-                    <div
-                        class="flex items-center bg-white bg-opacity-70 rounded-lg px-4 py-2 shadow-sm hover:shadow-md transition">
-                        <span class="bg-purple-500 rounded-full p-2 mr-3 flex items-center justify-center">
-                            <i class="fa-solid fa-chart-line text-white text-sm"></i>
-                        </span>
-                        <div class="flex-1">
-                            <div class="font-bold text-sm">Informe Semanal Listo</div>
-                            <div class="text-xs text-gray-600">Informe de actividad del 22-28 Mayo</div>
-                        </div>
-                        <div class="text-purple-600 font-semibold text-xs mr-3">Ahora mismo</div>
-                        <button
-                            class="bg-purple-500 text-white font-bold rounded-full px-4 py-1 text-xs hover:bg-purple-600 transition">
-                            Ver
-                        </button>
-                    </div>
-
-                    <!-- Alerta 5 - Evento -->
-                    <div
-                        class="flex items-center bg-white bg-opacity-70 rounded-lg px-4 py-2 shadow-sm hover:shadow-md transition">
-                        <span class="bg-green-500 rounded-full p-2 mr-3 flex items-center justify-center">
-                            <i class="fa-solid fa-calendar-check text-white text-sm"></i>
-                        </span>
-                        <div class="flex-1">
-                            <div class="font-bold text-sm">Nuevo Evento Creado</div>
-                            <div class="text-xs text-gray-600">"Encuentro de Networking" programado</div>
-                        </div>
-                        <div class="text-green-600 font-semibold text-xs mr-3">hace 4 horas</div>
-                        <a href="/evento"
-                            class="bg-green-500 text-white font-bold rounded-full px-4 py-1 text-xs hover:bg-green-600 transition">
-                            Detalles
-                        </a>
-                    </div>
                 </div>
                 <!-- Tarjeta CTA para acceder al Chatbot -->
                 <div
@@ -403,8 +322,8 @@
                     </div>
                     <div class="relative z-10">
                         <div class="flex items-center mb-3">
-                            <div class="bg-white bg-opacity-20 rounded-full p-2 mr-3">
-                                <i class="fas fa-robot text-xl"></i>
+                            <div class="bg-white bg-opacity-20 rounded-full p-2 mr-3 flex items-center justify-center">
+                                <i class="fa-solid fa-robot text-2xl text-indigo-600"></i>
                             </div>
                             <h3 class="text-lg font-bold">StartUp AI</h3>
                         </div>
@@ -541,7 +460,8 @@
                                     th:style="${'animation-delay: ' + (eventStat.index * 0.1) + 's'}">
 
                                     <!-- Cabecera del evento -->
-                                    <div class="flex items-center mb-3">                                        <div th:class="${event.conferenceData != null ? 'bg-gradient-to-br from-purple-500 to-indigo-600' : 'bg-gradient-to-br from-blue-500 to-indigo-600'}"
+                                    <div class="flex items-center mb-3">
+                                        <div th:class="${event.conferenceData != null ? 'bg-gradient-to-br from-purple-500 to-indigo-600' : 'bg-gradient-to-br from-blue-500 to-indigo-600'}"
                                             class="text-white rounded-lg p-2 mr-3 flex-shrink-0 shadow-md">
                                             <i
                                                 th:class="${event.conferenceData != null ? 'fa-solid fa-video-plus' : 'fa-solid fa-calendar-star'}"></i>
@@ -820,16 +740,32 @@
             if (calendarIframe) {
                 calendarIframe.addEventListener('load', adjustCalendarHeight);
             }
+        });
+    </script>
 
+    <!-- Variables JS para analíticas dinámicas -->
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        // Startups por sector
+        var startupsSectorLabels = /*[[${startupsPorSector != null ? #lists.newArrayList(startupsPorSector.keySet()) : '[]'}]]*/ [];
+        var startupsSectorData = /*[[${startupsPorSector != null ? #lists.newArrayList(startupsPorSector.values()) : '[]'}]]*/ [];
+        // Crecimiento de usuarios por mes
+        var userGrowthLabels = /*[[${userGrowthLabels != null ? userGrowthLabels : "['Ene','Feb','Mar','Abr','May','Jun']"}]]*/ ['Ene','Feb','Mar','Abr','May','Jun'];
+        var userGrowthEmprendedores = /*[[${userGrowthEmprendedores != null ? userGrowthEmprendedores : '[0,0,0,0,0,0]'}]]*/ [0,0,0,0,0,0];
+        var userGrowthMentores = /*[[${userGrowthMentores != null ? userGrowthMentores : '[0,0,0,0,0,0]'}]]*/ [0,0,0,0,0,0];
+        /*]]>*/
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
             // Gráfico de Startups por Sector
             const startupsSectorCtx = document.getElementById('startupsBySectorChart').getContext('2d');
             const startupsBySectorChart = new Chart(startupsSectorCtx, {
                 type: 'pie',
                 data: {
-                    labels: ['Tecnología', 'Sostenibilidad', 'Salud', 'Educación', 'Finanzas', 'Otros'],
+                    labels: startupsSectorLabels,
                     datasets: [{
                         label: 'Startups por Sector',
-                        data: [18, 15, 12, 9, 7, 4],
+                        data: startupsSectorData,
                         backgroundColor: [
                             'rgba(54, 162, 235, 0.8)',
                             'rgba(75, 192, 192, 0.8)',
@@ -858,9 +794,7 @@
                             labels: {
                                 boxWidth: 15,
                                 padding: 15,
-                                font: {
-                                    size: 11
-                                }
+                                font: { size: 11 }
                             }
                         },
                         tooltip: {
@@ -876,24 +810,23 @@
                     }
                 }
             });
-
             // Gráfico de Crecimiento de Usuarios
             const userGrowthCtx = document.getElementById('userGrowthChart').getContext('2d');
             const userGrowthChart = new Chart(userGrowthCtx, {
                 type: 'line',
                 data: {
-                    labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
+                    labels: userGrowthLabels,
                     datasets: [
                         {
                             label: 'Emprendedores',
-                            data: [42, 49, 65, 75, 92, 105],
+                            data: userGrowthEmprendedores,
                             borderColor: 'rgba(75, 192, 192, 1)',
                             backgroundColor: 'rgba(75, 192, 192, 0.2)',
                             tension: 0.3,
                             fill: true
                         }, {
                             label: 'Mentores',
-                            data: [12, 15, 18, 19, 22, 24],
+                            data: userGrowthMentores,
                             borderColor: 'rgba(255, 99, 132, 1)',
                             backgroundColor: 'rgba(255, 99, 132, 0.2)',
                             tension: 0.3,
@@ -907,26 +840,14 @@
                     scales: {
                         y: {
                             beginAtZero: true,
-                            grid: {
-                                drawBorder: false
-                            }
+                            grid: { drawBorder: false }
                         },
-                        x: {
-                            grid: {
-                                display: false
-                            }
-                        }
+                        x: { grid: { display: false } }
                     },
                     plugins: {
                         legend: {
                             position: 'top',
-                            labels: {
-                                boxWidth: 15,
-                                padding: 15,
-                                font: {
-                                    size: 11
-                                }
-                            }
+                            labels: { boxWidth: 15, padding: 15, font: { size: 11 } }
                         }
                     }
                 }

@@ -69,6 +69,10 @@ public class UsuarioController {
 
     @Autowired
     private EmprendedorService emprendedorService;
+    @Autowired
+    private com.usta.startupconnect.models.services.FeedbackService feedbackService;
+    @Autowired
+    private com.usta.startupconnect.models.services.PostulacionService postuService;
 
     @GetMapping(value = "/administrador")
     public String administrador(Model model, org.springframework.security.core.Authentication authentication) {
@@ -90,6 +94,26 @@ public class UsuarioController {
         // 1. Total de usuarios
         List<UsuarioEntity> usuarios = usuarioService.findAll();
         model.addAttribute("totalUsers", usuarios.size());
+
+        // Crecimiento de usuarios este mes (usuarios creados en el mes actual)
+        long usuariosEsteMes = usuarios.stream()
+                .filter(u -> u.getFecha_creacion() != null &&
+                        u.getFecha_creacion().getMonthValue() == LocalDate.now().getMonthValue() &&
+                        u.getFecha_creacion().getYear() == LocalDate.now().getYear())
+                .count();
+        long usuariosMesAnterior = usuarios.stream()
+                .filter(u -> u.getFecha_creacion() != null &&
+                        u.getFecha_creacion().getMonthValue() == LocalDate.now().minusMonths(1).getMonthValue() &&
+                        u.getFecha_creacion().getYear() == LocalDate.now().minusMonths(1).getYear())
+                .count();
+        int crecimientoUsuarios = (usuariosMesAnterior > 0)
+                ? (int) Math.round((usuariosEsteMes - usuariosMesAnterior) * 100.0 / usuariosMesAnterior)
+                : 100;
+        model.addAttribute("crecimientoUsuarios", crecimientoUsuarios);
+
+        // Objetivo de usuarios (ejemplo: meta de 200 usuarios)
+        int objetivoUsuarios = (int) Math.round(usuarios.size() * 100.0 / 200);
+        model.addAttribute("objetivoUsuarios", objetivoUsuarios);
 
         // 2. Startups - Total y distribución por sector
         List<StartupEntity> startups = startupService.findAll();
@@ -178,6 +202,84 @@ public class UsuarioController {
             model.addAttribute("calendarEmbedUrl", "about:blank");
             model.addAttribute("calendars", Collections.emptyList());
         }
+
+        // Conexiones Startup-Mentor (porcentaje de startups con al menos un feedback
+        // con mentor asignado)
+        List<com.usta.startupconnect.entities.FeedbackEntity> feedbacks = feedbackService.findAll();
+        long startupsConMentor = startups.stream().filter(s -> feedbacks.stream().anyMatch(
+                f -> f.getStartup() != null && f.getStartup().getId().equals(s.getId()) && f.getMentor() != null))
+                .count();
+        int conexionesStartupMentor = startups.size() > 0
+                ? (int) Math.round(startupsConMentor * 100.0 / startups.size())
+                : 0;
+        model.addAttribute("conexionesStartupMentor", conexionesStartupMentor);
+
+        // Solicitudes Exitosas (porcentaje de postulaciones aceptadas)
+        List<com.usta.startupconnect.entities.PostulacionEntity> postulaciones = postuService.findAll();
+        long exitosas = postulaciones.stream()
+                .filter(p -> p.getEstado() != null && p.getEstado().equalsIgnoreCase("ACEPTADA")).count();
+        int solicitudesExitosas = postulaciones.size() > 0 ? (int) Math.round(exitosas * 100.0 / postulaciones.size())
+                : 0;
+        model.addAttribute("solicitudesExitosas", solicitudesExitosas);
+
+        // Participación de Mentores (mentores con al menos 1 feedback / total mentores)
+        long mentoresConFeedback = mentores.stream().filter(m -> !feedbackService.findByMentor(m).isEmpty()).count();
+        int participacionMentores = mentores.size() > 0
+                ? (int) Math.round(mentoresConFeedback * 100.0 / mentores.size())
+                : 0;
+        model.addAttribute("participacionMentores", participacionMentores);
+
+        // Satisfacción de la Plataforma (promedio de calificacion_startup y
+        // calificacion_mentor en feedbacks)
+        double sumaCalificaciones = feedbacks.stream()
+                .mapToInt(f -> (f.getCalificacionStartup() != null ? f.getCalificacionStartup() : 0)
+                        + (f.getCalificacionMentor() != null ? f.getCalificacionMentor() : 0))
+                .sum();
+        long totalCalificaciones = feedbacks.stream().filter(f -> f.getCalificacionStartup() != null).count()
+                + feedbacks.stream().filter(f -> f.getCalificacionMentor() != null).count();
+        int satisfaccionPlataforma = totalCalificaciones > 0
+                ? (int) Math.round(sumaCalificaciones * 100.0 / (totalCalificaciones * 5))
+                : 0;
+        model.addAttribute("satisfaccionPlataforma", satisfaccionPlataforma);
+
+        // Proyectos Activos (startups activas)
+        long proyectosActivos = startups.stream()
+                .filter(s -> s.getEstado() != null && s.getEstado().equalsIgnoreCase("ACTIVA")).count();
+        model.addAttribute("proyectosActivos", proyectosActivos);
+
+        // Tasa de Éxito (porcentaje de startups que han completado al menos una etapa)
+        // Suponiendo que existe una relación entre Startup y Etapa, si no, ajustar
+        // lógica
+        // Aquí se asume que si hay feedbacks para una startup, ha completado al menos
+        // una etapa
+        long startupsConEtapa = startups.stream().filter(s -> feedbacks.stream()
+                .anyMatch(f -> f.getStartup() != null && f.getStartup().getId().equals(s.getId()))).count();
+        int tasaExito = startups.size() > 0 ? (int) Math.round(startupsConEtapa * 100.0 / startups.size()) : 0;
+        model.addAttribute("tasaExito", tasaExito);
+
+        // Analíticas: crecimiento de usuarios por mes y por rol
+        // Generar los últimos 6 meses
+        java.time.format.DateTimeFormatter mesFormatter = java.time.format.DateTimeFormatter.ofPattern("MMM");
+        java.util.List<String> userGrowthLabels = new java.util.ArrayList<>();
+        java.util.List<Integer> userGrowthEmprendedores = new java.util.ArrayList<>();
+        java.util.List<Integer> userGrowthMentores = new java.util.ArrayList<>();
+        for (int i = 5; i >= 0; i--) {
+            LocalDate mes = LocalDate.now().minusMonths(i);
+            userGrowthLabels.add(mes.format(mesFormatter));
+            int emprendedoresMes = (int) usuarios.stream().filter(u -> u.getFecha_creacion() != null &&
+                    u.getFecha_creacion().getMonthValue() == mes.getMonthValue() &&
+                    u.getFecha_creacion().getYear() == mes.getYear() &&
+                    u.getRol() != null && u.getRol().getIdRol() == 3L).count();
+            int mentoresMes = (int) usuarios.stream().filter(u -> u.getFecha_creacion() != null &&
+                    u.getFecha_creacion().getMonthValue() == mes.getMonthValue() &&
+                    u.getFecha_creacion().getYear() == mes.getYear() &&
+                    u.getRol() != null && u.getRol().getIdRol() == 2L).count();
+            userGrowthEmprendedores.add(emprendedoresMes);
+            userGrowthMentores.add(mentoresMes);
+        }
+        model.addAttribute("userGrowthLabels", userGrowthLabels);
+        model.addAttribute("userGrowthEmprendedores", userGrowthEmprendedores);
+        model.addAttribute("userGrowthMentores", userGrowthMentores);
 
         return "/administrador/dashboardAdmin";
     }
