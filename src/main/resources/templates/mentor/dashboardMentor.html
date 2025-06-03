@@ -67,11 +67,7 @@
                                     <span class="text-xs" th:text="${estado.key}">Estado</span>
                                     <span class="text-xs font-semibold" th:text="${estado.value}">0</span>
                                 </div>
-                                <!-- <div th:each="estado : ${etapasPorEstado.entrySet()}"
-                                    class="w-full bg-white rounded-full h-2">
-                                    <div class="bg-green-500 h-2 rounded-full"
-                                        th:style="'width: ' + (${estado.value} * 100 / ${totalEtapas}) + '%'"></div>
-                                </div> -->
+                         
                             </div>
                             <!-- Contenido estático en caso de no haber datos -->
                             <div class="space-y-2 mt-3" th:if="${etapasPorEstado == null || etapasPorEstado.isEmpty()}">
@@ -210,31 +206,79 @@
                                 </a>
                             </div>
                         </div>
-                    </div> <!-- Tarjeta 4 (amber) - Etapas Activas -->
-                    <div class="bg-amber-100 rounded-2xl p-5 shadow flex flex-col justify-between">
+                    </div>
+                     <!-- Tarjeta 4 (amber) - Etapas Activas -->                    <div class="bg-amber-100 rounded-2xl p-5 shadow flex flex-col justify-between">
                         <div>
-                            <h3 class="text-lg font-bold">Etapas Activas</h3>
-                            <p class="text-sm text-gray-600 mb-3">Etapas en curso actualmente</p>
+                            <h3 class="text-lg font-bold">Mis Etapas</h3>
+                            <p class="text-sm text-gray-600 mb-3">Total de etapas asignadas</p>
                             <div class="flex justify-between items-center">
-                                <div class="text-3xl font-bold text-amber-700" th:text="${etapasActivas}">3</div>
+                                <div class="text-3xl font-bold text-amber-700" th:text="${totalEtapas}">5</div>
                                 <div class="bg-amber-200 text-amber-800 rounded-full px-2 py-1 text-xs font-medium">
-                                    <i class="fa-solid fa-clock mr-1"></i>En progreso
+                                    <i class="fa-solid fa-list-check mr-1"></i>Total
                                 </div>
                             </div>
                         </div>
+                        <a href="/etapa" 
+                           class="bg-white text-amber-600 font-semibold border border-amber-300 rounded-full px-4 py-1 text-xs hover:bg-amber-50 transition mt-3 self-end">
+                            Ver Todas mis Etapas
+                        </a>
                     </div>
                 </div>
             </section> <!-- Sección de alertas y notificaciones -->
             <section class="flex-1">
                 <h2 class="text-2xl font-bold mb-4">Notificaciones de la Plataforma</h2>
-                <div id="notificaciones-container" class="bg-purple-200 rounded-2xl p-5 shadow min-h-[300px] flex flex-col gap-4 overflow-y-auto">
+                <div id="notificaciones-container"
+                    class="bg-purple-200 rounded-2xl p-5 shadow min-h-[300px] flex flex-col gap-4 overflow-y-auto">
                     <!-- Mensaje cuando no hay notificaciones -->
-                    <div class="flex flex-col items-center justify-center text-center h-full py-8" id="no-notificaciones">
+                    <div class="flex flex-col items-center justify-center text-center h-full py-8"
+                        id="no-notificaciones">
                         <div class="bg-white rounded-full p-5 mb-4 shadow-md">
                             <i class="fas fa-bell-slash text-purple-500 text-3xl"></i>
                         </div>
                         <p class="text-purple-800 font-medium mb-2">No tienes notificaciones</p>
-                        <p class="text-gray-600 text-sm">Te notificaremos cuando haya novedades</p>
+                        <p class="text-gray-600 text-sm">Te notificaremos cuando haya novedades</p>                    </div>                </div>
+                
+                <!-- Tarjeta de IA debajo de notificaciones -->
+                <div class="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl p-5 shadow text-white relative overflow-hidden mt-4 min-h-[250px]">
+                    <div class="absolute top-0 right-0 -mt-4 -mr-4 w-16 h-16 rounded-full bg-blue-400 opacity-20"></div>
+                    <div class="absolute bottom-0 left-0 -mb-4 -ml-4 w-16 h-16 rounded-full bg-indigo-400 opacity-20"></div>
+
+                    <div class="relative z-10 h-full flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center mb-3">                                <div class="bg-white bg-opacity-20 rounded-full p-3 mr-3">
+                                    <i class="fas fa-brain text-lg"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-bold">StartUp AI</h3>
+                                    <h4 class="text-xs opacity-90">Asistente IA</h4>
+                                </div>
+                            </div>
+
+                            <p class="text-sm mb-4 opacity-90 leading-relaxed">
+                                Resuelve dudas y obtén recomendaciones personalizadas para tu labor como mentor.
+                            </p>
+
+                            <div class="grid grid-cols-1 gap-2 mb-4">
+                                <div class="flex items-center bg-white bg-opacity-10 rounded p-2">
+                                    <i class="fas fa-check-circle mr-2 text-blue-200 text-xs"></i>
+                                    <span class="text-sm">Respuestas 24/7</span>
+                                </div>
+                                <div class="flex items-center bg-white bg-opacity-10 rounded p-2">
+                                    <i class="fas fa-check-circle mr-2 text-blue-200 text-xs"></i>
+                                    <span class="text-sm">Genera documentos</span>
+                                </div>
+                                <div class="flex items-center bg-white bg-opacity-10 rounded p-2">
+                                    <i class="fas fa-check-circle mr-2 text-blue-200 text-xs"></i>
+                                    <span class="text-sm">Análisis de startups</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <a href="/chatbot"
+                            class="bg-white text-indigo-600 rounded-lg px-4 py-2 text-sm font-bold hover:bg-opacity-90 transition text-center">
+                            <i class="fas fa-comments mr-2"></i>
+                            Iniciar chat
+                        </a>
                     </div>
                 </div>
             </section>
@@ -582,8 +626,8 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </div>        </section>
+        <!-- La sección de IA Mejorada se ha movido al panel de notificaciones -->
     </main>
 
     <!-- Script para los gráficos -->

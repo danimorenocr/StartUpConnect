@@ -117,4 +117,38 @@ public class NotificacionController {
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    
+    @GetMapping("/mentor")
+    public ResponseEntity<?> obtenerNotificacionesMentor(Authentication authentication) {
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            String email = authentication.getName();
+            UsuarioEntity usuario = usuarioService.findByEmail(email);
+
+            if (usuario == null || !usuario.getRol().getRol().equals("MENTOR")) {
+                response.put("mensaje", "No tienes permiso para realizar esta acción");
+                return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
+            }
+
+            List<Map<String, Object>> notificaciones = notificacionService.obtenerNotificacionesPorUsuario(usuario.getDocumento())
+                .stream()
+                .map(notificacion -> {
+                    Map<String, Object> dto = new HashMap<>();
+                    dto.put("id", notificacion.getId());
+                    dto.put("titulo", notificacion.getTipoEntidad()); // Usar tipoEntidad como título
+                    dto.put("mensaje", notificacion.getMensaje());
+                    dto.put("fecha", notificacion.getFecha());
+                    return dto;
+                })
+                .collect(Collectors.toList());
+
+            return new ResponseEntity<>(notificaciones, HttpStatus.OK);
+
+        } catch (Exception e) {
+            response.put("mensaje", "Error al obtener las notificaciones");
+            response.put("error", e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
