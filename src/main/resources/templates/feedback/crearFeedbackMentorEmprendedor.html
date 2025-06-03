@@ -53,12 +53,26 @@
                         Calificación (1-5 estrellas)
                     </label>
                     <div class="rating-container flex gap-2 justify-center">
-                        <span th:each="star : ${#numbers.sequence(1,5)}">
-                            <input type="radio" th:id="${'star' + star}" th:field="*{calificacionStartup}" th:value="${star}" class="hidden" />
-                            <label th:for="${'star' + star}"
-                                   th:classappend="*{calificacionStartup} >= ${star} ? 'text-yellow-400 scale-110' : 'text-gray-300'"
-                                   class="cursor-pointer text-4xl transition-colors duration-200 hover:text-yellow-400 hover:scale-110 transform">★</label>
-                        </span>
+                        <div class="flex items-center">
+                            <input type="radio" id="star1" name="calificacionStartup" value="1" th:field="*{calificacionStartup}" class="hidden" />
+                            <label for="star1" class="cursor-pointer text-4xl text-gray-300 hover:text-yellow-400 transition-colors duration-200 hover:scale-110 transform">★</label>
+                        </div>
+                        <div class="flex items-center">
+                            <input type="radio" id="star2" name="calificacionStartup" value="2" th:field="*{calificacionStartup}" class="hidden" />
+                            <label for="star2" class="cursor-pointer text-4xl text-gray-300 hover:text-yellow-400 transition-colors duration-200 hover:scale-110 transform">★</label>
+                        </div>
+                        <div class="flex items-center">
+                            <input type="radio" id="star3" name="calificacionStartup" value="3" th:field="*{calificacionStartup}" class="hidden" />
+                            <label for="star3" class="cursor-pointer text-4xl text-gray-300 hover:text-yellow-400 transition-colors duration-200 hover:scale-110 transform">★</label>
+                        </div>
+                        <div class="flex items-center">
+                            <input type="radio" id="star4" name="calificacionStartup" value="4" th:field="*{calificacionStartup}" class="hidden" />
+                            <label for="star4" class="cursor-pointer text-4xl text-gray-300 hover:text-yellow-400 transition-colors duration-200 hover:scale-110 transform">★</label>
+                        </div>
+                        <div class="flex items-center">
+                            <input type="radio" id="star5" name="calificacionStartup" value="5" th:field="*{calificacionStartup}" class="hidden" />
+                            <label for="star5" class="cursor-pointer text-4xl text-gray-300 hover:text-yellow-400 transition-colors duration-200 hover:scale-110 transform">★</label>
+                        </div>
                     </div>
                     <p th:if="${#fields.hasErrors('calificacionStartup')}" th:errors="*{calificacionStartup}"
                        class="text-red-500 text-sm mt-1 flex items-center justify-center">
@@ -80,5 +94,73 @@
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const stars = document.querySelectorAll('.rating-container input[type="radio"]');
+    const labels = document.querySelectorAll('.rating-container label');
+    
+    // Función para actualizar las estrellas
+    function updateStars(selectedValue) {
+        labels.forEach((label, index) => {
+            if (index < selectedValue) {
+                label.classList.remove('text-gray-300');
+                label.classList.add('text-yellow-400');
+            } else {
+                label.classList.remove('text-yellow-400');
+                label.classList.add('text-gray-300');
+            }
+        });
+    }
+    
+    // Agregar event listeners a cada radio button
+    stars.forEach((star, index) => {
+        star.addEventListener('change', function() {
+            if (this.checked) {
+                updateStars(index + 1);
+            }
+        });
+    });
+    
+    // Hover effect
+    labels.forEach((label, index) => {
+        label.addEventListener('mouseenter', function() {
+            // Mostrar preview del hover
+            labels.forEach((l, i) => {
+                if (i <= index) {
+                    l.classList.add('text-yellow-400');
+                    l.classList.remove('text-gray-300');
+                } else {
+                    l.classList.add('text-gray-300');
+                    l.classList.remove('text-yellow-400');
+                }
+            });
+        });
+        
+        label.addEventListener('mouseleave', function() {
+            // Restaurar al estado seleccionado
+            const checkedStar = document.querySelector('.rating-container input[type="radio"]:checked');
+            if (checkedStar) {
+                const checkedIndex = Array.from(stars).indexOf(checkedStar);
+                updateStars(checkedIndex + 1);
+            } else {
+                // Si no hay ninguna seleccionada, todas grises
+                labels.forEach(l => {
+                    l.classList.add('text-gray-300');
+                    l.classList.remove('text-yellow-400');
+                });
+            }
+        });
+    });
+    
+    // Verificar si hay una estrella ya seleccionada al cargar la página
+    const checkedStar = document.querySelector('.rating-container input[type="radio"]:checked');
+    if (checkedStar) {
+        const checkedIndex = Array.from(stars).indexOf(checkedStar);
+        updateStars(checkedIndex + 1);
+    }
+});
+</script>
+
 </body>
 </html>

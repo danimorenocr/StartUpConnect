@@ -176,6 +176,6 @@ public class FeedbackController {
         }
         feedbackService.save(feedback);
         redirectAttributes.addFlashAttribute("mensajeExito", "¡Calificación de mentor guardada correctamente!");
-         return "etapa/listarEtapasEmprendedor";
+        return "redirect:/etapasEmprendedor";
     }
 }
