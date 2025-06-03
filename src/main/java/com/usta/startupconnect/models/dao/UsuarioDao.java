@@ -36,6 +36,6 @@ public interface UsuarioDao extends JpaRepository<UsuarioEntity, String> {
     @Query("SELECT u FROM UsuarioEntity u WHERE u.emailUsu = ?1 AND u.contrasenna = ?2")
     UsuarioEntity findByEmailAndContrasenna(String email, String contrasenna);
 
-    List<UsuarioEntity> findByRol(String rol);
+    List<UsuarioEntity> findByRol_Rol(String rol);
 
 }

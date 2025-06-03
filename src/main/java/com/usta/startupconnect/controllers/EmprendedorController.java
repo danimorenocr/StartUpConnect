@@ -6,7 +6,9 @@ import com.usta.startupconnect.entities.UsuarioEntity;
 import com.usta.startupconnect.models.services.EmprendedorService;
 import com.usta.startupconnect.models.services.StartupService;
 import com.usta.startupconnect.models.services.UsuarioService;
+import com.usta.startupconnect.security.JpaUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -32,6 +34,10 @@ public class EmprendedorController {
 
     @Autowired
     private StartupService startupService;
+
+    @Autowired
+    @Qualifier("jpaUserDetailsService")
+    private JpaUserDetailsService userDetailsService;
 
     @GetMapping(value = "/emprendedor")
     public String listarEmprendedores(Model model) {
@@ -145,6 +151,31 @@ public class EmprendedorController {
 
         redirectAttributes.addFlashAttribute("mensajeExito", "Emprendedor actualizado exitosamente");
         return "redirect:/emprendedor";
+    }    @GetMapping("/dashboardEmprendedor")
+    public String dashboardEmprendedor(Model model) {
+        System.out.println("========== MÉTODO dashboardEmprendedor EN EmprendedorController ==========");
+        UsuarioEntity usuario = userDetailsService.obtenerUsuarioAutenticado();
+        if (usuario == null) {
+            System.out.println("Usuario no encontrado, redirigiendo a login");
+            return "redirect:/login";
+        }
+        System.out.println("Usuario encontrado con documento: " + usuario.getDocumento());
+        
+        // Buscar el emprendedor asociado al usuario
+        EmprendedorEntity emprendedor = emprendedorService.findById(usuario.getDocumento());
+        if (emprendedor == null) {
+            System.out.println("Emprendedor no encontrado, redirigiendo a login");
+            return "redirect:/login";
+        }
+        System.out.println("Emprendedor encontrado con documento: " + emprendedor.getDocumento());
+        
+        model.addAttribute("nombreCompleto", usuario.getNombreUsu());
+        model.addAttribute("documentoUsuario", usuario.getDocumento());
+        System.out.println("Documento de usuario añadido al modelo: " + usuario.getDocumento());
+        System.out.println("=================================================================");
+        
+        // Puedes agregar más atributos al modelo si lo necesitas
+        return "emprendedor/dashboardEmprendedor";
     }
 
 }

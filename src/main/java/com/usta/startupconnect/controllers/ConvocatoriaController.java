@@ -1,8 +1,9 @@
 package com.usta.startupconnect.controllers;
 
 import com.usta.startupconnect.entities.ConvocatoriaEntity;
-import com.usta.startupconnect.entities.EmprendedorEntity;
 import com.usta.startupconnect.models.services.ConvocatoriaService;
+import com.usta.startupconnect.models.services.NotificacionService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,7 +22,12 @@ import javax.validation.Valid;
 @Controller
 public class ConvocatoriaController {
     @Autowired
-    ConvocatoriaService convocatoriaService;    @GetMapping(value = "/convocatoria")
+    ConvocatoriaService convocatoriaService;
+    
+    @Autowired
+    NotificacionService notificacionService;
+
+    @GetMapping(value = "/convocatoria")
     public String listarConvocatorias(Model model) {
         model.addAttribute("title", "Convocatorias");
         model.addAttribute("urlRegistro", "/crearConvocatoria");
@@ -48,6 +54,7 @@ public class ConvocatoriaController {
             return "convocatoria/crearConvocatoria";
         }
         convocatoriaService.save(convocatoria);
+        notificacionService.notificarNuevaConvocatoriaATodosLosEmprendedores("¡Nueva convocatoria disponible!");
         System.out.println("SHDFNKSDKFJSDJFSDJFKSKJDF YS FUNCIONA");
         return "redirect:/convocatoria";
     }
