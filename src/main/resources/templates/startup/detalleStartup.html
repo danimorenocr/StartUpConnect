@@ -280,6 +280,42 @@
         </div>
     </div>
 
+    <!-- Tarjeta de Feedbacks y Calificación -->
+    <div class="info-card feedback-info">
+        <div class="card-header">
+            <div class="header-icon">
+                <i class="fas fa-star"></i>
+            </div>
+            <h3>Calificación y Feedback</h3>
+        </div>
+        <div class="card-body">
+            <div class="feedback-rating">
+                <span th:if="${promedioCalificacion != null}" class="stat-number" th:text="${#numbers.formatDecimal(promedioCalificacion, 1, 1)} + ' / 5'">4.5 / 5</span>
+                <span th:if="${promedioCalificacionMentor != null}" class="stat-number" style="color:#2b7a78;">
+                    Calificación Mentor: <span th:text="${#numbers.formatDecimal(promedioCalificacionMentor, 1, 1)} + ' / 5'">4.5 / 5</span>
+                </span>
+                <span th:if="${promedioCalificacion == null} and ${promedioCalificacionMentor == null}" class="stat-number">Esta startup no ha sido calificada</span>
+            </div>
+            <div class="feedback-list">
+                <div th:each="feedback : ${feedbacks}" class="feedback-item">
+                    <div class="feedback-header">
+                        <span class="feedback-score" th:if="${feedback.calificacionStartup != null}">
+                            <i class="fas fa-star"></i>
+                            <span th:text="${feedback.calificacionStartup}">5</span>/5
+                        </span>
+                    </div>
+                    <div class="feedback-comment" th:if="${feedback.comentarioStartup != null}" th:text="${feedback.comentarioStartup}">Comentario del feedback</div>
+                    <div class="feedback-comment-mentor" th:if="${feedback.comentarioMentor != null}" style="color:#2b7a78; font-style:italic; margin-top:2px;">
+                        <b>Comentario Mentor:</b> <span th:text="${feedback.comentarioMentor}">Comentario del mentor</span>
+                    </div>
+                </div>
+                <div th:if="${feedbacks == null or #lists.isEmpty(feedbacks)}" class="no-feedback">
+                    <i class="far fa-comment-dots"></i> No hay feedbacks registrados.
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="footer">
         <div class="footer-content">
             <div class="footer-brand">

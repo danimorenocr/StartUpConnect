@@ -65,7 +65,7 @@
             </div>
             <!-- Botón Crear Entrega -->
             <div class="flex justify-center mb-8">
-                <a th:href="@{/crearEntregable(idTarea=${tareaDetalle.id})}"
+                <a sec:authorize="hasRole('EMPRENDEDOR')" th:href="@{/crearEntregable(idTarea=${tareaDetalle.id})}"
                     class="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white font-semibold px-6 sm:px-8 py-2.5 sm:py-3 rounded-full shadow transition text-base sm:text-lg">
                     <i class="fas fa-upload"></i> Crear Entrega
                 </a>
@@ -85,10 +85,10 @@
                                 th:text="${entregable.nombreArchivo}"></span>
                         </div>
                         <div class="flex items-center gap-3">
-                            <select th:id="'estado-' + ${entregable.id}"
+                            <select sec:authorize="hasRole('MENTOR')" th:id="'estado-' + ${entregable.id}"
                                 class="estado-select px-3 py-1.5 rounded-full text-sm font-semibold border-2 transition-all duration-300"
                                 th:data-id="${entregable.id}" th:value="${entregable.estado}"
-                                onchange="actualizarEstado(this)">
+                                onchange="actualizarEstado(this); this.form && this.form.submit && this.form.submit();">
                                 <option value="Pendiente" th:selected="${entregable.estado == 'Pendiente'}"
                                     class="bg-yellow-50 text-yellow-800">Pendiente</option>
                                 <option value="En revisión" th:selected="${entregable.estado == 'En revisión'}"
@@ -98,7 +98,7 @@
                                 <option value="Rechazado" th:selected="${entregable.estado == 'Rechazado'}"
                                     class="bg-red-50 text-red-800">Rechazado</option>
                             </select>
-                            <span id="status-indicator"
+                            <span sec:authorize="hasRole('EMPRENDEDOR')"   id="status-indicator"
                                 class="inline-flex items-center px-2 py-1 rounded-full text-xs font-bold transition-all duration-300"
                                 th:classappend="${entregable.estado == 'Pendiente' ? 'bg-yellow-100 text-yellow-800' :
                                                    (entregable.estado == 'En revisión' ? 'bg-sky-100 text-sky-800' :

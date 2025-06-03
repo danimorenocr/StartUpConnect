@@ -36,7 +36,8 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 
 @Controller
-public class PostulacionController {    @Autowired
+public class PostulacionController {
+    @Autowired
     private PostulacionService postulacionService;
 
     @Autowired
@@ -46,25 +47,30 @@ public class PostulacionController {    @Autowired
     private StartupService startupService;
 
     @Autowired
-    private EmprendedorService emprendedorService;    @Autowired
+    private EmprendedorService emprendedorService;
+    @Autowired
     private MentorService mentorService;
 
     @Autowired
     private FeedbackService feedbackService;
 
     @Autowired
-    private JpaUserDetailsService userDetailsService;@GetMapping(value = {"/postulacion", "/postulacion/convocatoria/{idConvocatoria}"})
+    private JpaUserDetailsService userDetailsService;
+
+    @GetMapping(value = { "/postulacion", "/postulacion/convocatoria/{idConvocatoria}" })
     public String listarPostulaciones(Model model, @PathVariable(required = false) Long idConvocatoria,
             org.springframework.security.core.Authentication authentication) {
         model.addAttribute("urlRegistro", "/crearPostulacion");
 
         List<PostulacionEntity> listaPostulaciones;
         if (idConvocatoria != null) {
-            // Si se especifica una convocatoria, obtener las postulaciones de esa convocatoria
+            // Si se especifica una convocatoria, obtener las postulaciones de esa
+            // convocatoria
             ConvocatoriaEntity convocatoria = convocatoriaService.findById(idConvocatoria);
             if (convocatoria != null) {
                 listaPostulaciones = postulacionService.findByConvocatoria(convocatoria);
-                System.out.println("🔍 DEBUG: Encontradas " + listaPostulaciones.size() + " postulaciones para la convocatoria: " + convocatoria.getTitulo());
+                System.out.println("🔍 DEBUG: Encontradas " + listaPostulaciones.size()
+                        + " postulaciones para la convocatoria: " + convocatoria.getTitulo());
                 model.addAttribute("title", "Postulaciones - " + convocatoria.getTitulo());
                 model.addAttribute("convocatoriaActual", convocatoria);
             } else {
@@ -77,25 +83,29 @@ public class PostulacionController {    @Autowired
             listaPostulaciones = postulacionService.findAll();
             System.out.println("🔍 DEBUG: Cargadas " + listaPostulaciones.size() + " postulaciones totales");
         }
-        
+
         // Verificar si el usuario es administrador
         boolean isAdmin = authentication.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
-        
+
         System.out.println("👤 DEBUG: Usuario es admin: " + isAdmin);
         System.out.println("👤 DEBUG: Authorities: " + authentication.getAuthorities());
-        
+
         List<PostulacionEntity> postulacionesFiltradas;
-        
+
         if (isAdmin && idConvocatoria != null) {
-            // Si es administrador y está viendo una convocatoria específica, mostrar todas las postulaciones
+            // Si es administrador y está viendo una convocatoria específica, mostrar todas
+            // las postulaciones
             postulacionesFiltradas = listaPostulaciones;
-            System.out.println("✅ DEBUG: Admin viendo convocatoria específica - Mostrando " + postulacionesFiltradas.size() + " postulaciones");
-            model.addAttribute("title", "Todas las Postulaciones - " + 
-                (model.getAttribute("convocatoriaActual") != null ? 
-                    ((ConvocatoriaEntity) model.getAttribute("convocatoriaActual")).getTitulo() : "Convocatoria"));
+            System.out.println("✅ DEBUG: Admin viendo convocatoria específica - Mostrando "
+                    + postulacionesFiltradas.size() + " postulaciones");
+            model.addAttribute("title", "Todas las Postulaciones - " +
+                    (model.getAttribute("convocatoriaActual") != null
+                            ? ((ConvocatoriaEntity) model.getAttribute("convocatoriaActual")).getTitulo()
+                            : "Convocatoria"));
         } else {
-            // Si no es administrador o no está viendo una convocatoria específica, filtrar por usuario
+            // Si no es administrador o no está viendo una convocatoria específica, filtrar
+            // por usuario
             postulacionesFiltradas = new ArrayList<>();
             System.out.println("🔒 DEBUG: Filtrando postulaciones por usuario...");
 
@@ -118,7 +128,8 @@ public class PostulacionController {    @Autowired
                     }
                 }
             }
-        }        postulacionesFiltradas.sort(Comparator.comparing(PostulacionEntity::getId));
+        }
+        postulacionesFiltradas.sort(Comparator.comparing(PostulacionEntity::getId));
         model.addAttribute("postulaciones", postulacionesFiltradas);
         model.addAttribute("isAdmin", isAdmin); // Agregar información de admin al modelo
         return "/postulacion/listarPostulaciones";
@@ -200,12 +211,12 @@ public class PostulacionController {    @Autowired
         // Establecer el estado inicial como "Pendiente" si no está establecido
         if (postulacion.getEstado() == null || postulacion.getEstado().isEmpty()) {
             postulacion.setEstado("Pendiente");
-        }        // Asegurarse de que la convocatoria esté correctamente enlazada
+        } // Asegurarse de que la convocatoria esté correctamente enlazada
         System.out.println("🔍 DEBUG CONVOCATORIA: postulacion.getConvocatoria() = " + postulacion.getConvocatoria());
         if (postulacion.getConvocatoria() != null) {
             System.out.println("🔍 DEBUG CONVOCATORIA ID: " + postulacion.getConvocatoria().getId());
         }
-        
+
         if (postulacion.getConvocatoria() != null && postulacion.getConvocatoria().getId() != null) {
             ConvocatoriaEntity convocatoria = convocatoriaService.findById(postulacion.getConvocatoria().getId());
             System.out.println("✅ DEBUG: Convocatoria encontrada y asignada: " + convocatoria.getTitulo());
@@ -399,56 +410,57 @@ public class PostulacionController {    @Autowired
         model.addAttribute("postulacionDetalle", postulacion);
         return "postulacion/detallePostulacion";
     }
-    
+
     @PostMapping("/cambiarEstadoPostulacion/{id}")
     public String cambiarEstadoPostulacion(@PathVariable("id") Long idPostulacion,
             @RequestParam("nuevoEstado") String nuevoEstado,
             @RequestParam(value = "comentarios", required = false) String comentarios,
             RedirectAttributes redirectAttributes,
             org.springframework.security.core.Authentication authentication) {
-        
+
         // Verificar que el usuario es administrador
         boolean isAdmin = authentication.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
-        
+
         if (!isAdmin) {
             redirectAttributes.addFlashAttribute("error", "No tienes permisos para realizar esta acción");
             return "redirect:/postulacion";
         }
-        
+
         // Verificar que la postulación existe
         PostulacionEntity postulacion = postulacionService.findById(idPostulacion);
         if (postulacion == null) {
             redirectAttributes.addFlashAttribute("error", "La postulación no existe");
             return "redirect:/postulacion";
         }
-        
+
         // Validar el nuevo estado
         if (!nuevoEstado.equals("Aprobada") && !nuevoEstado.equals("Rechazada") && !nuevoEstado.equals("En revisión")) {
             redirectAttributes.addFlashAttribute("error", "Estado no válido");
             return "redirect:/postulacion";
         }
-        
+
         // Cambiar el estado
         String estadoAnterior = postulacion.getEstado();
         postulacion.setEstado(nuevoEstado);
-        
-        // Si hay comentarios, agregarlos (podríamos crear un campo para esto en el futuro)
+
+        // Si hay comentarios, agregarlos (podríamos crear un campo para esto en el
+        // futuro)
         // Por ahora los guardamos en un log del sistema
         if (comentarios != null && !comentarios.trim().isEmpty()) {
-            System.out.println("📝 ADMIN COMMENT: Estado de postulación " + idPostulacion + 
-                " cambiado de '" + estadoAnterior + "' a '" + nuevoEstado + "'. Comentarios: " + comentarios);
+            System.out.println("📝 ADMIN COMMENT: Estado de postulación " + idPostulacion +
+                    " cambiado de '" + estadoAnterior + "' a '" + nuevoEstado + "'. Comentarios: " + comentarios);
         }
-          postulacionService.save(postulacion);
-        
-        redirectAttributes.addFlashAttribute("mensajeExito", 
-            "Estado de la postulación cambiado exitosamente de '" + estadoAnterior + "' a '" + nuevoEstado + "'");
-        
+        postulacionService.save(postulacion);
+
+        redirectAttributes.addFlashAttribute("mensajeExito",
+                "Estado de la postulación cambiado exitosamente de '" + estadoAnterior + "' a '" + nuevoEstado + "'");
+
         // Si la postulación fue aprobada, redirigir a la página de asignación de mentor
         if ("Aprobada".equals(nuevoEstado)) {
             return "redirect:/asignarMentor/" + idPostulacion;
         }
-        
+
         // Redirigir de vuelta a la vista de postulaciones de la convocatoria
         if (postulacion.getConvocatoria() != null) {
             return "redirect:/postulacion/convocatoria/" + postulacion.getConvocatoria().getId();
@@ -456,140 +468,135 @@ public class PostulacionController {    @Autowired
             return "redirect:/postulacion";
         }
     }
-    
+
     @GetMapping("/gestionarPostulacion/{id}")
     public String gestionarPostulacion(@PathVariable("id") Long idPostulacion, Model model,
             org.springframework.security.core.Authentication authentication) {
-        
+
         // Verificar que el usuario es administrador
         boolean isAdmin = authentication.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
-        
+
         if (!isAdmin) {
             return "redirect:/postulacion";
         }
-        
+
         PostulacionEntity postulacion = postulacionService.findById(idPostulacion);
         if (postulacion == null) {
             return "redirect:/postulacion";
         }
-        
+
         model.addAttribute("title", "Gestionar Postulación - " + postulacion.getNombreProyecto());
         model.addAttribute("postulacion", postulacion);
-        
+
         return "postulacion/gestionarPostulacion";
     }
-    
+
     @GetMapping("/asignarMentor/{id}")
     public String asignarMentorForm(@PathVariable("id") Long idPostulacion, Model model,
             org.springframework.security.core.Authentication authentication) {
-        
+
         // Verificar que el usuario es administrador
         boolean isAdmin = authentication.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
-        
+
         if (!isAdmin) {
             return "redirect:/postulacion";
         }
-        
+
         PostulacionEntity postulacion = postulacionService.findById(idPostulacion);
         if (postulacion == null) {
             return "redirect:/postulacion";
         }
-        
+
         // Verificar que la postulación está aprobada
         if (!"Aprobada".equals(postulacion.getEstado())) {
             return "redirect:/postulacion";
-        }        // Obtener todos los mentores disponibles
+        } // Obtener todos los mentores disponibles
         List<MentorEntity> mentores = mentorService.findAll();
-        
+
         System.out.println("🔍 DEBUG MENTORES: Total de mentores encontrados: " + mentores.size());
         for (MentorEntity mentor : mentores) {
-            System.out.println("📋 MENTOR: " + mentor.getDocumento() + " - " + 
-                (mentor.getUsuario() != null ? mentor.getUsuario().getNombreUsu() : "Sin usuario") + 
-                " - " + mentor.getEspecialidad());
-            
+            System.out.println("📋 MENTOR: " + mentor.getDocumento() + " - " +
+                    (mentor.getUsuario() != null ? mentor.getUsuario().getNombreUsu() : "Sin usuario") +
+                    " - " + mentor.getEspecialidad());
+
             // Debug adicional de la relación usuario
             if (mentor.getUsuario() == null) {
                 System.out.println("⚠️ WARNING: Mentor " + mentor.getDocumento() + " no tiene usuario asociado");
             }
         }
-          // Filtrar mentores que tengan usuario asociado
+        // Filtrar mentores que tengan usuario asociado
         List<MentorEntity> mentoresConUsuario = mentores.stream()
-            .filter(mentor -> mentor.getUsuario() != null)
-            .collect(Collectors.toList());
-        
+                .filter(mentor -> mentor.getUsuario() != null)
+                .collect(Collectors.toList());
+
         System.out.println("✅ MENTORES CON USUARIO: " + mentoresConUsuario.size() + " de " + mentores.size());
-        
+
         model.addAttribute("title", "Asignar Mentor - " + postulacion.getNombreProyecto());
         model.addAttribute("postulacion", postulacion);
         model.addAttribute("mentores", mentoresConUsuario);
-        
+
         return "postulacion/asignarMentor";
     }
-      @PostMapping("/asignarMentor/{id}")
+
+    @PostMapping("/asignarMentor/{id}")
     public String procesarAsignacionMentor(@PathVariable("id") Long idPostulacion,
             @RequestParam("idMentor") String idMentor,
             @RequestParam(value = "comentarios", required = false) String comentarios,
             RedirectAttributes redirectAttributes,
             org.springframework.security.core.Authentication authentication) {
-        
+
         // Verificar que el usuario es administrador
         boolean isAdmin = authentication.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
-        
+
         if (!isAdmin) {
             redirectAttributes.addFlashAttribute("error", "No tienes permisos para realizar esta acción");
             return "redirect:/postulacion";
         }
-        
+
         PostulacionEntity postulacion = postulacionService.findById(idPostulacion);
         if (postulacion == null) {
             redirectAttributes.addFlashAttribute("error", "La postulación no existe");
             return "redirect:/postulacion";
         }
-        
+
         MentorEntity mentor = mentorService.findById(idMentor);
         if (mentor == null) {
             redirectAttributes.addFlashAttribute("error", "El mentor seleccionado no existe");
             return "redirect:/asignarMentor/" + idPostulacion;
         }
-        
+
         // Verificar que la postulación está aprobada
         if (!"Aprobada".equals(postulacion.getEstado())) {
             redirectAttributes.addFlashAttribute("error", "Solo se pueden asignar mentores a postulaciones aprobadas");
             return "redirect:/postulacion";
         }
-        
+
         try {
             // Crear la conexión feedback entre mentor y startup
             FeedbackEntity feedback = new FeedbackEntity();
             feedback.setMentor(mentor);
             feedback.setStartup(postulacion.getStartup());
             feedback.setFechaCreacion(new Date());
-            
-            // Si hay comentarios del admin, los guardamos como comentario inicial
-            if (comentarios != null && !comentarios.trim().isEmpty()) {
-                feedback.setComentarioMentor("Asignación inicial - Admin: " + comentarios);
-            } else {
-                feedback.setComentarioMentor("Asignación inicial de mentorización");
-            }
-            
+
             // Guardar la relación feedback
             feedbackService.save(feedback);
-              redirectAttributes.addFlashAttribute("mensajeExito", 
-                "Mentor " + mentor.getUsuario().getNombreUsu() + 
-                " asignado exitosamente a la startup " + postulacion.getStartup().getNombreStartup());
-            
-            System.out.println("✅ MENTOR ASSIGNMENT: Mentor " + mentor.getUsuario().getNombreUsu() + 
-                " asignado a startup " + postulacion.getStartup().getNombreStartup() + " (Postulación ID: " + idPostulacion + ")");
-            
+            redirectAttributes.addFlashAttribute("mensajeExito",
+                    "Mentor " + mentor.getUsuario().getNombreUsu() +
+                            " asignado exitosamente a la startup " + postulacion.getStartup().getNombreStartup());
+
+            System.out.println("✅ MENTOR ASSIGNMENT: Mentor " + mentor.getUsuario().getNombreUsu() +
+                    " asignado a startup " + postulacion.getStartup().getNombreStartup() + " (Postulación ID: "
+                    + idPostulacion + ")");
+
         } catch (Exception e) {
             System.err.println("❌ ERROR: Error al asignar mentor: " + e.getMessage());
             redirectAttributes.addFlashAttribute("error", "Error al asignar el mentor. Inténtalo de nuevo.");
             return "redirect:/asignarMentor/" + idPostulacion;
         }
-        
+
         // Redirigir de vuelta a la vista de postulaciones de la convocatoria
         if (postulacion.getConvocatoria() != null) {
             return "redirect:/postulacion/convocatoria/" + postulacion.getConvocatoria().getId();
@@ -597,18 +604,18 @@ public class PostulacionController {    @Autowired
             return "redirect:/postulacion";
         }
     }
-    
+
     @GetMapping("/test/mentores")
     public String testMentores(Model model) {
         List<MentorEntity> mentores = mentorService.findAll();
-        
+
         System.out.println("🧪 TEST MENTORES: Total encontrados: " + mentores.size());
         for (MentorEntity mentor : mentores) {
-            System.out.println("📋 MENTOR TEST: " + mentor.getDocumento() + " - " + 
-                (mentor.getUsuario() != null ? mentor.getUsuario().getNombreUsu() : "Sin usuario") + 
-                " - " + mentor.getEspecialidad());
+            System.out.println("📋 MENTOR TEST: " + mentor.getDocumento() + " - " +
+                    (mentor.getUsuario() != null ? mentor.getUsuario().getNombreUsu() : "Sin usuario") +
+                    " - " + mentor.getEspecialidad());
         }
-          model.addAttribute("mentores", mentores);
+        model.addAttribute("mentores", mentores);
         model.addAttribute("title", "Test Mentores");
         return "postulacion/testMentores";
     }

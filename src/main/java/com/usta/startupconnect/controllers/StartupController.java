@@ -8,6 +8,7 @@ import com.usta.startupconnect.entities.UsuarioEntity;
 import com.usta.startupconnect.models.dao.LikeDao;
 import com.usta.startupconnect.models.services.ComentariosService;
 import com.usta.startupconnect.models.services.EmprendedorService;
+import com.usta.startupconnect.models.services.FeedbackService;
 import com.usta.startupconnect.models.services.StartupService;
 import com.usta.startupconnect.security.JpaUserDetailsService;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -36,6 +37,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 
@@ -57,6 +59,9 @@ public class StartupController {
 
     @Autowired
     private ComentariosService comentariosService;
+
+    @Autowired
+    private FeedbackService feedbackService;
 
     @GetMapping(value = "/vitrina-alt")
     public String vitrina(Model model) {
@@ -211,6 +216,43 @@ public class StartupController {
             comentarios = new ArrayList<>();
         }
         model.addAttribute("comentarios", comentarios);
+
+        // Obtener todos los feedbacks de la startup
+        List<com.usta.startupconnect.entities.FeedbackEntity> feedbacksAll = new ArrayList<>(feedbackService.findByStartup(startup));
+        model.addAttribute("feedbacks", feedbacksAll);
+
+        // Calcular promedio solo con los que tienen calificación de mentor válida
+        double sumaMentor = 0;
+        int countMentor = 0;
+        for (com.usta.startupconnect.entities.FeedbackEntity f : feedbacksAll) {
+            if (f.getCalificacionMentor() != null && f.getCalificacionMentor() > 0) {
+                sumaMentor += f.getCalificacionMentor();
+                countMentor++;
+            }
+        }
+        if (countMentor > 0) {
+            double promedioMentor = sumaMentor / countMentor;
+            model.addAttribute("promedioCalificacionMentor", promedioMentor);
+        } else {
+            model.addAttribute("promedioCalificacionMentor", null);
+        }
+
+        // Calcular promedio solo con los que tienen calificación de startup válida (opcional, si quieres mostrar ambos)
+        double suma = 0;
+        int count = 0;
+        for (com.usta.startupconnect.entities.FeedbackEntity f : feedbacksAll) {
+            if (f.getCalificacionStartup() != null && f.getCalificacionStartup() > 0) {
+                suma += f.getCalificacionStartup();
+                count++;
+            }
+        }
+        if (count > 0) {
+            double promedio = suma / count;
+            model.addAttribute("promedioCalificacion", promedio);
+        } else {
+            model.addAttribute("promedioCalificacion", null);
+        }
+
         // Verificar si el usuario actual ha dado like a esta startup
         UsuarioEntity usuario = userDetailsService.obtenerUsuarioAutenticado();
         boolean hasLiked = false;
@@ -226,7 +268,9 @@ public class StartupController {
     public String eliminarStratup(@PathVariable("id") Long idStartup) {
         startupService.deleteById(idStartup);
         return "redirect:/startup";
-    }    @PostMapping("/startup/{id}/like")
+    }
+
+    @PostMapping("/startup/{id}/like")
     public String toggleLike(@PathVariable("id") Long startupId, RedirectAttributes redirectAttributes) {
         // Obtener el usuario autenticado
         UsuarioEntity usuario = userDetailsService.obtenerUsuarioAutenticado();
@@ -371,7 +415,7 @@ public class StartupController {
 
             // Set startup metadata
             startup.setFechaCreacion(LocalDate.now());
-            startup.setEmprendedor(emprendedor);            // Save startup
+            startup.setEmprendedor(emprendedor); // Save startup
             startupService.save(startup);
             redirectAttributes.addFlashAttribute("mensajeExito", "Startup creada exitosamente");
 

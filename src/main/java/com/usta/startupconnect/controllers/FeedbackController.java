@@ -43,6 +43,12 @@ public class FeedbackController {
     @Autowired
     private JpaUserDetailsService userDetailsService;
     
+    @Autowired
+    private com.usta.startupconnect.models.services.EtapaService etapaService;
+    
+    @Autowired
+    private com.usta.startupconnect.models.services.EmprendedorService emprendedorService;
+
     @GetMapping("/feedbackStartup/{id}")
     public String mostrarFormularioFeedback(@PathVariable("id") Long idStartup, Model model, RedirectAttributes redirectAttributes) {        // Obtener la startup
         StartupEntity startup = startupService.findById(idStartup);
@@ -107,5 +113,69 @@ public class FeedbackController {
         
         redirectAttributes.addFlashAttribute("mensajeExito", "Feedback guardado correctamente");
         return "redirect:/misStartupsAsignadas";
+    }
+
+    @GetMapping("/feedback/calificarMentor/{etapaId}")
+    public String mostrarFormularioCalificarMentor(@PathVariable("etapaId") Long etapaId, Model model, RedirectAttributes redirectAttributes) {
+        // Obtener la etapa
+        com.usta.startupconnect.entities.EtapaEntity etapa = etapaService.findById(etapaId);
+        if (etapa == null) {
+            redirectAttributes.addFlashAttribute("error", "La etapa no existe");
+            return "redirect:/misEtapas";
+        }
+        // Obtener el usuario autenticado (emprendedor)
+        com.usta.startupconnect.entities.UsuarioEntity usuario = userDetailsService.obtenerUsuarioAutenticado();
+        if (usuario == null) {
+            return "redirect:/login";
+        }
+        com.usta.startupconnect.entities.EmprendedorEntity emprendedor = emprendedorService.findById(usuario.getDocumento());
+        if (emprendedor == null) {
+            redirectAttributes.addFlashAttribute("error", "No tienes permisos de emprendedor");
+            return "redirect:/misEtapas";
+        }
+        // Obtener el mentor de la etapa
+        com.usta.startupconnect.entities.MentorEntity mentor = feedbackService.findMentorByEtapa(etapa);
+        if (mentor == null) {
+            redirectAttributes.addFlashAttribute("error", "No hay mentor asignado a esta etapa");
+            return "redirect:/misEtapas";
+        }
+        // Buscar si ya existe un feedback para esta etapa y este mentor
+        java.util.List<com.usta.startupconnect.entities.FeedbackEntity> feedbacksMentor = feedbackDao.findByMentor(mentor);
+        com.usta.startupconnect.entities.FeedbackEntity feedbackExistente = null;
+        for (com.usta.startupconnect.entities.FeedbackEntity feedback : feedbacksMentor) {
+            if (feedback.getEtapa() != null && feedback.getEtapa().getId().equals(etapaId)) {
+                feedbackExistente = feedback;
+                break;
+            }
+        }
+        if (feedbackExistente == null) {
+            feedbackExistente = new com.usta.startupconnect.entities.FeedbackEntity();
+            feedbackExistente.setMentor(mentor);
+            feedbackExistente.setEtapa(etapa);
+        }
+        model.addAttribute("feedback", feedbackExistente);
+        model.addAttribute("mentor", mentor);
+        model.addAttribute("etapa", etapa);
+        return "feedback/crearFeedbackMentorEmprendedor";
+    }
+
+    @PostMapping("/feedback/guardarCalificacionMentor")
+    public String guardarCalificacionMentor(@Valid @ModelAttribute("feedback") com.usta.startupconnect.entities.FeedbackEntity feedback,
+                                            BindingResult result,
+                                            Model model,
+                                            RedirectAttributes redirectAttributes) {
+        if (result.hasErrors()) {
+            model.addAttribute("mentor", feedback.getMentor());
+            model.addAttribute("etapa", feedback.getEtapa());
+            return "feedback/crearFeedbackMentorEmprendedor";
+        }
+        // Asegurar que la startup esté completamente cargada
+        if (feedback.getStartup() != null && feedback.getStartup().getId() != null) {
+            com.usta.startupconnect.entities.StartupEntity startup = startupService.findById(feedback.getStartup().getId());
+            feedback.setStartup(startup);
+        }
+        feedbackService.save(feedback);
+        redirectAttributes.addFlashAttribute("mensajeExito", "¡Calificación de mentor guardada correctamente!");
+         return "etapa/listarEtapasEmprendedor";
     }
 }

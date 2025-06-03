@@ -172,7 +172,7 @@
                 </div>
                 <!-- Botón Postularse -->
                 <div class="mt-8 flex justify-center">
-                    <a th:href="@{/crearPostulacion(idConvocatoria=${convocatoriaDetalle.id})}"
+                    <a sec:authorize="hasRole('EMPRENDEDOR')" th:href="@{/crearPostulacion(idConvocatoria=${convocatoriaDetalle.id})}"
                         class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full text-lg transition flex items-center">
                         <i class="fas fa-paper-plane mr-2"></i> ¡Postúlate Ahora!
                     </a>

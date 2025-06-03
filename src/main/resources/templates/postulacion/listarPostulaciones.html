@@ -11,24 +11,29 @@
     <header th:replace="~{layout/layout :: header}"></header>
     <div class="max-w-6xl mx-auto py-10 px-6">
         <div class="relative w-full max-w-5xl mx-auto rounded-2xl overflow-hidden shadow mb-10 mt-8">
-            <img src="/images/bannerListar.jpg" alt="Banner Postulaciones" class="w-full h-48 md:h-56 object-cover object-center">
-            <div class="absolute inset-0 bg-gradient-to-br from-violet-400/70 via-purple-300/60 to-fuchsia-300/50 flex items-center min-h-[10rem] md:min-h-[13rem]">
+            <img src="/images/bannerListar.jpg" alt="Banner Postulaciones"
+                class="w-full h-48 md:h-56 object-cover object-center">
+            <div
+                class="absolute inset-0 bg-gradient-to-br from-violet-400/70 via-purple-300/60 to-fuchsia-300/50 flex items-center min-h-[10rem] md:min-h-[13rem]">
                 <div class="px-10">
-                    <h1 class="text-4xl md:text-5xl font-extrabold text-white drop-shadow-lg">Listado de Postulaciones</h1>
-                    <p class="text-lg text-white/90 font-medium mt-2">Gestiona y visualiza las postulaciones del sistema</p>
+                    <h1 class="text-4xl md:text-5xl font-extrabold text-white drop-shadow-lg">Listado de Postulaciones
+                    </h1>
+                    <p class="text-lg text-white/90 font-medium mt-2">Gestiona y visualiza las postulaciones del sistema
+                    </p>
                 </div>
             </div>
         </div>
 
         <h1 class="text-4xl font-extrabold text-blue-900 mb-10 tracking-tight drop-shadow">Listado de Postulaciones</h1>
-        
+
         <!-- Header con búsqueda y botón crear -->
         <div class="section-header mb-6">
-            <div id="postulaciones-header-container" class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div id="postulaciones-header-container"
+                class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div class="search-container flex items-center relative w-full md:w-80 md:mx-0 mx-auto">
                     <i class="search-icon absolute left-4 top-1/2 -translate-y-1/2 text-purple-400 text-lg">🔍</i>
-                    <input id="searchInput" type="text" placeholder="Buscar postulación..." 
-                        class="rounded-full pl-10 pr-4 py-2 border border-purple-200 shadow focus:outline-none focus:ring-2 focus:ring-purple-300 text-purple-700 font-medium w-full" 
+                    <input id="searchInput" type="text" placeholder="Buscar postulación..."
+                        class="rounded-full pl-10 pr-4 py-2 border border-purple-200 shadow focus:outline-none focus:ring-2 focus:ring-purple-300 text-purple-700 font-medium w-full"
                         autocomplete="off">
                 </div>
                 <div class="flex justify-end w-full md:w-auto">
@@ -41,48 +46,53 @@
         </div>
 
         <!-- Información adicional para administradores -->
-        <div th:if="${isAdmin}" class="bg-gradient-to-r from-blue-100 to-blue-200 border-l-4 border-blue-500 text-blue-800 p-6 rounded-xl shadow-lg mb-6">
+        <div th:if="${isAdmin}"
+            class="bg-gradient-to-r from-blue-100 to-blue-200 border-l-4 border-blue-500 text-blue-800 p-6 rounded-xl shadow-lg mb-6">
             <div class="flex items-center mb-2">
                 <i class="fas fa-user-shield text-xl mr-3 text-blue-600"></i>
                 <span class="font-bold text-lg text-blue-900">Modo Administrador</span>
             </div>
-            <p class="text-sm text-blue-700 opacity-90">Como administrador, puedes gestionar el estado de todas las postulaciones directamente desde esta vista o acceder a la gestión detallada.</p>
+            <p class="text-sm text-blue-700 opacity-90">Como administrador, puedes gestionar el estado de todas las
+                postulaciones directamente desde esta vista o acceder a la gestión detallada.</p>
         </div>
 
         <!-- Alertas -->
-        <div th:if="${mensajeExito}" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-xl mb-6" role="alert">
+        <div th:if="${mensajeExito}"
+            class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-xl mb-6" role="alert">
             <i class="fas fa-check-circle mr-2"></i>
             <span class="block sm:inline" th:text="${mensajeExito}"></span>
         </div>
-        
-        <div th:if="${error}" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-xl mb-6" role="alert">
+
+        <div th:if="${error}" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-xl mb-6"
+            role="alert">
             <i class="fas fa-exclamation-circle mr-2"></i>
             <span class="block sm:inline" th:text="${error}"></span>
         </div>
 
         <!-- Grid de postulaciones -->
         <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div th:each="postulacion: ${postulaciones}" 
+            <div th:each="postulacion: ${postulaciones}"
                 class="bg-white/80 rounded-2xl shadow-lg p-6 flex flex-col border-t-4 border-purple-300 relative transition-transform duration-200 hover:scale-105 hover:shadow-2xl hover:border-purple-400 postulacion-card"
-                th:data-nombre="${postulacion.nombreProyecto}"
-                th:data-estado="${postulacion.estado}"
+                th:data-nombre="${postulacion.nombreProyecto}" th:data-estado="${postulacion.estado}"
                 th:data-etapa="${postulacion.etapaProyecto}">
-                
-                <img th:src="${postulacion.fotoUrl != null ? postulacion.fotoUrl : '/images/sinfoto.jpg'}" 
+
+                <img th:src="${postulacion.fotoUrl != null ? postulacion.fotoUrl : '/images/sinfoto.jpg'}"
                     alt="Imagen del proyecto"
                     class="w-28 h-28 rounded-full object-cover border-4 border-white shadow-lg mt-6 mb-2 mx-auto" />
 
-                <h2 class="font-extrabold text-xl text-slate-900 mb-3 mt-2 text-center" th:text="${postulacion.nombreProyecto}">
+                <h2 class="font-extrabold text-xl text-slate-900 mb-3 mt-2 text-center"
+                    th:text="${postulacion.nombreProyecto}">
                     Nombre del Proyecto
                 </h2>
-                
+
                 <div class="space-y-3">
                     <p class="text-base text-slate-600 flex items-center">
                         <i class="fas fa-building mr-2 text-purple-400"></i>
                         <span class="font-medium">Startup:</span>
-                        <span class="ml-2" th:text="${postulacion.startup != null ? postulacion.startup.nombreStartup : 'No asignada'}"></span>
+                        <span class="ml-2"
+                            th:text="${postulacion.startup != null ? postulacion.startup.nombreStartup : 'No asignada'}"></span>
                     </p>
-                    
+
                     <p class="text-base text-slate-600 flex items-center">
                         <i class="fas fa-tasks mr-2 text-purple-400"></i>
                         <span class="font-medium">Etapa:</span>
@@ -92,18 +102,17 @@
                     <p class="text-base text-slate-600 flex items-center">
                         <i class="fas fa-calendar mr-2 text-purple-400"></i>
                         <span class="font-medium">Fecha:</span>
-                        <span class="ml-2" th:text="${#dates.format(postulacion.fechaPostulacion, 'dd/MM/yyyy')}"></span>
+                        <span class="ml-2"
+                            th:text="${#dates.format(postulacion.fechaPostulacion, 'dd/MM/yyyy')}"></span>
                     </p>
 
                     <div class="mt-2">
-                        <span class="px-3 py-1 rounded-full text-sm font-semibold" 
-                            th:classappend="${
+                        <span class="px-3 py-1 rounded-full text-sm font-semibold" th:classappend="${
                                 postulacion.estado == 'Aprobada' ? 'bg-green-100 text-green-800' : 
                                 postulacion.estado == 'Rechazada' ? 'bg-red-100 text-red-800' : 
                                 postulacion.estado == 'En revisión' ? 'bg-yellow-100 text-yellow-800' : 
                                 'bg-purple-50 text-purple-600'
-                            }" 
-                            th:text="${postulacion.estado}">
+                            }" th:text="${postulacion.estado}">
                         </span>
                     </div>
                 </div>
@@ -111,25 +120,30 @@
                 <div class="flex gap-3 mt-4 justify-center">
                     <!-- Botón Ver para usuarios no admin -->
                     <th:block th:if="${!isAdmin}">
-                        <a th:href="@{/verPostulacion/{id}(id=${postulacion.id})}" class="bg-purple-400 hover:bg-purple-500 text-white font-semibold py-2 px-4 rounded-full shadow transition text-sm">
+                        <a th:href="@{/verPostulacion/{id}(id=${postulacion.id})}"
+                            class="bg-purple-400 hover:bg-purple-500 text-white font-semibold py-2 px-4 rounded-full shadow transition text-sm">
                             Ver
                         </a>
                     </th:block>
 
                     <!-- Botón Ver para administradores - va a gestión -->
                     <th:block th:if="${isAdmin}">
-                        <a th:href="@{/gestionarPostulacion/{id}(id=${postulacion.id})}" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-full shadow transition text-sm">
+                        <a th:href="@{/gestionarPostulacion/{id}(id=${postulacion.id})}"
+                            class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-full shadow transition text-sm">
                             Ver Detalle
                         </a>
                     </th:block>
 
                     <!-- Botones de edición y eliminación solo para usuarios no admin o para sus propias postulaciones -->
                     <th:block th:if="${!isAdmin}">
-                        <a th:href="@{/editarPostulacion/{id}(id=${postulacion.id})}" class="bg-yellow-400 hover:bg-yellow-500 text-white font-semibold py-2 px-4 rounded-full shadow transition text-sm">
+                        <a th:href="@{/editarPostulacion/{id}(id=${postulacion.id})}"
+                            class="bg-yellow-400 hover:bg-yellow-500 text-white font-semibold py-2 px-4 rounded-full shadow transition text-sm">
                             &#9998;
                         </a>
-                        <form th:action="@{/eliminarPostulacion/{id}(id=${postulacion.id})}" method="post" class="inline-block">
-                            <button type="button" class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-full shadow transition text-sm"
+                        <form th:action="@{/eliminarPostulacion/{id}(id=${postulacion.id})}" method="post"
+                            class="inline-block">
+                            <button type="button"
+                                class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-full shadow transition text-sm"
                                 onclick="confirmarAccion('¿Estás seguro que deseas eliminar esta postulación? Esta acción no se puede deshacer.', 'error', () => this.closest('form').submit())">
                                 &#10005;
                             </button>
@@ -140,9 +154,10 @@
                     <th:block th:if="${isAdmin}">
                         <!-- Botones de cambio de estado rápido -->
                         <th:block th:if="${postulacion.estado != 'Aprobada'}">
-                            <form th:action="@{/cambiarEstadoPostulacion/{id}(id=${postulacion.id})}" method="post" class="inline-block">
+                            <form th:action="@{/cambiarEstadoPostulacion/{id}(id=${postulacion.id})}" method="post"
+                                class="inline-block">
                                 <input type="hidden" name="nuevoEstado" value="Aprobada">
-                                <button type="button" 
+                                <button type="button"
                                     class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-full shadow transition text-sm"
                                     onclick="confirmarAccion('¿Confirmas que deseas aprobar esta postulación?', 'success', () => this.closest('form').submit())">
                                     <i class="fas fa-check"></i>
@@ -151,9 +166,10 @@
                         </th:block>
 
                         <th:block th:if="${postulacion.estado != 'Rechazada'}">
-                            <form th:action="@{/cambiarEstadoPostulacion/{id}(id=${postulacion.id})}" method="post" class="inline-block">
+                            <form th:action="@{/cambiarEstadoPostulacion/{id}(id=${postulacion.id})}" method="post"
+                                class="inline-block">
                                 <input type="hidden" name="nuevoEstado" value="Rechazada">
-                                <button type="button" 
+                                <button type="button"
                                     class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-full shadow transition text-sm"
                                     onclick="confirmarAccion('¿Confirmas que deseas rechazar esta postulación?', 'warning', () => this.closest('form').submit())">
                                     <i class="fas fa-times"></i>
@@ -162,9 +178,10 @@
                         </th:block>
 
                         <th:block th:if="${postulacion.estado != 'En revisión'}">
-                            <form th:action="@{/cambiarEstadoPostulacion/{id}(id=${postulacion.id})}" method="post" class="inline-block">
+                            <form th:action="@{/cambiarEstadoPostulacion/{id}(id=${postulacion.id})}" method="post"
+                                class="inline-block">
                                 <input type="hidden" name="nuevoEstado" value="En revisión">
-                                <button type="button" 
+                                <button type="button"
                                     class="bg-yellow-400 hover:bg-yellow-500 text-white font-semibold py-2 px-4 rounded-full shadow transition text-sm"
                                     onclick="confirmarAccion('¿Confirmas que deseas poner esta postulación en revisión?', 'info', () => this.closest('form').submit())">
                                     <i class="fas fa-clock"></i>
@@ -207,9 +224,9 @@
                 },
                 buttonsStyling: true
             };
-            
+
             // Personalización según el tipo de acción
-            switch(icono) {
+            switch (icono) {
                 case 'success':
                     config.confirmButtonColor = '#10B981'; // Verde
                     config.title = '¿Confirmar aprobación?';
@@ -229,10 +246,10 @@
                 default:
                     config.confirmButtonColor = '#6B7280'; // Gris
             }
-            
+
             // Cancelar siempre en gris
             config.cancelButtonColor = '#9CA3AF';
-            
+
             const result = await Swal.fire(config);
 
             if (result.isConfirmed) {
@@ -240,17 +257,17 @@
             }
         };
 
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             document.querySelectorAll('form[action^="/cambiarEstadoPostulacion/"]').forEach(form => {
-                form.addEventListener('submit', function(e) {
+                form.addEventListener('submit', function (e) {
                     e.preventDefault();
                     const action = form.getAttribute('action');
                     const estado = action.split('/').pop();
-                    
+
                     let mensaje = '';
                     let icono = 'question';
-                    
-                    switch(estado) {
+
+                    switch (estado) {
                         case 'APROBADO':
                             mensaje = 'Esta acción aprobará la postulación y notificará al usuario.<br><br><span class="text-green-600 font-semibold">La postulación estará disponible para su proceso inmediatamente.</span>';
                             icono = 'success';
@@ -268,7 +285,7 @@
                             icono = 'error';
                             break;
                     }
-                    
+
                     confirmarAccion(mensaje, icono, () => {
                         form.submit();
                     });
@@ -276,7 +293,7 @@
             });
 
             // Agregar manejo de mensajes flash si existen
-            const mensajeExito = [[${mensajeExito}]];
+            const mensajeExito = [[${ mensajeExito }]];
             if (mensajeExito) {
                 Swal.fire({
                     title: '¡Éxito!',
@@ -291,7 +308,7 @@
                 });
             }
 
-            const error = [[${error}]];
+            const error = [[${ error }]];
             if (error) {
                 Swal.fire({
                     title: '¡Atención!',
@@ -307,5 +324,6 @@
             }
         });
     </script>
-    </body>
+</body>
+
 </html>

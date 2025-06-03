@@ -1,0 +1,611 @@
+/* Estilos personalizados para listarEtapasEmprendedor.html */
+
+.main-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 32px 24px;
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 4px 24px 0 rgba(0,0,0,0.08);
+}
+
+.etapa-card {
+    background: #f7faff;
+    border-radius: 14px;
+    box-shadow: 0 2px 8px 0 rgba(0,0,0,0.04);
+    margin-bottom: 36px;
+    padding: 28px 24px;
+    border-left: 6px solid #2563eb;
+}
+
+.etapa-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 18px;
+}
+
+.etapa-titulo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #1e293b;
+    margin-bottom: 4px;
+}
+.etapa-desc {
+    color: #64748b;
+    font-size: 1rem;
+}
+.etapa-num {
+    background: #e0e7ff;
+    color: #3730a3;
+    font-weight: 600;
+    padding: 6px 18px;
+    border-radius: 999px;
+    font-size: 0.95rem;
+    box-shadow: 0 1px 4px 0 rgba(55,48,163,0.08);
+}
+
+/* Conteo de etapas más organizado */
+.etapa-num-organizada {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+}
+.etapa-num-circulo {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    background: #2563eb;
+    color: #fff;
+    font-size: 1.25rem;
+    font-weight: bold;
+    border-radius: 50%;
+    box-shadow: 0 2px 8px 0 rgba(37,99,235,0.10);
+}
+.etapa-num-label {
+    color: #2563eb;
+    font-weight: 600;
+    font-size: 1.05rem;
+    letter-spacing: 0.5px;
+}
+
+.tareas-header {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #2563eb;
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
+.tareas-header i {
+    margin-right: 8px;
+}
+.tareas-count {
+    background: #dbeafe;
+    color: #2563eb;
+    font-weight: 600;
+    padding: 4px 14px;
+    border-radius: 999px;
+    font-size: 0.95rem;
+    display: inline-block;
+    margin-bottom: 18px;
+}
+.tareas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 18px;
+}
+.tarea-card {
+    background: #fff;
+    border-radius: 10px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 1px 4px 0 rgba(0,0,0,0.04);
+    padding: 18px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.tarea-titulo {
+    font-size: 1.08rem;
+    font-weight: bold;
+    color: #1e293b;
+}
+.tarea-estado {
+    background: #fef9c3;
+    color: #b45309;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 2px 10px;
+    border-radius: 999px;
+    display: inline-block;
+    margin-bottom: 4px;
+}
+.tarea-desc {
+    color: #64748b;
+    font-size: 0.97rem;
+    margin-bottom: 6px;
+}
+.tarea-fecha {
+    color: #64748b;
+    font-size: 0.93rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+}
+.tarea-detalles {
+    color: #2563eb;
+    font-weight: 500;
+    font-size: 0.97rem;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    transition: color 0.2s;
+}
+.tarea-detalles:hover {
+    color: #1e40af;
+}
+.tarea-detalles i {
+    margin-right: 5px;
+}
+
+.mentor-section {
+    margin-top: 32px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+}
+.mentor-img-box {
+    position: relative;
+}
+.mentor-img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #fff;
+    box-shadow: 0 2px 8px 0 rgba(0,0,0,0.08);
+}
+.mentor-status {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 20px;
+    height: 20px;
+    background: #22c55e;
+    border-radius: 50%;
+    border: 2px solid #fff;
+}
+.mentor-info {
+    min-width: 120px;
+}
+.mentor-nombre {
+    font-size: 1.05rem;
+    font-weight: bold;
+    color: #1e293b;
+}
+.mentor-especialidad {
+    color: #64748b;
+    font-size: 0.95rem;
+    margin-bottom: 2px;
+}
+.mentor-linkedin {
+    color: #2563eb;
+    font-size: 0.97rem;
+    text-decoration: none;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    margin-top: 4px;
+    transition: color 0.2s;
+}
+.mentor-linkedin:hover {
+    color: #1e40af;
+}
+.mentor-linkedin i {
+    margin-right: 5px;
+}
+
+.mentor-sin {
+    text-align: center;
+    color: #64748b;
+    margin-top: 18px;
+}
+.mentor-sin i {
+    font-size: 2rem;
+    color: #cbd5e1;
+    margin-bottom: 6px;
+}
+
+.sin-etapas {
+    text-align: center;
+    margin-top: 60px;
+}
+.sin-etapas-box {
+    background: #fff;
+    padding: 40px 32px;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px 0 rgba(0,0,0,0.07);
+    display: inline-block;
+}
+.sin-etapas-icon {
+    width: 70px;
+    height: 70px;
+    background: #f1f5f9;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 18px auto;
+}
+.sin-etapas-icon i {
+    font-size: 2rem;
+    color: #94a3b8;
+}
+.sin-etapas-titulo {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #334155;
+    margin-bottom: 8px;
+}
+.sin-etapas-desc {
+    color: #64748b;
+    font-size: 1rem;
+}
+
+/* Banner estilo 'Mis Startups' */
+.banner-etapas {
+    position: relative;
+    width: 100vw;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+    max-width: 100vw;
+    height: 220px;
+    margin-bottom: 36px;
+    overflow: hidden;
+}
+.banner-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.7);
+}
+.banner-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    background: rgba(0,0,0,0.35);
+    text-align: center;
+}
+.banner-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 8px;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.18);
+}
+.banner-desc {
+    font-size: 1.2rem;
+    font-weight: 500;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.13);
+}
+
+/* Lista de tareas rectangular tipo lista */
+.tareas-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+.tarea-lista-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    background: #fff;
+    border-radius: 10px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 1px 4px 0 rgba(0,0,0,0.04);
+    padding: 18px 20px;
+    gap: 18px;
+    transition: box-shadow 0.2s;
+}
+.tarea-lista-item:hover {
+    box-shadow: 0 4px 16px 0 rgba(37,99,235,0.10);
+}
+.tarea-lista-info {
+    flex: 1 1 0%;
+    min-width: 0;
+}
+.tarea-lista-datos {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+    min-width: 120px;
+}
+@media (max-width: 700px) {
+    .tarea-lista-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    .tarea-lista-datos {
+        align-items: flex-start;
+    }
+}
+
+.mentor-section-top {
+    margin-bottom: 18px;
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+@media (max-width: 700px) {
+    .mentor-section-top {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+}
+
+/* Minimalista */
+.minimal-main {
+    max-width: 700px;
+    margin: 40px auto;
+    padding: 0 0 40px 0;
+    background: none;
+    box-shadow: none;
+}
+.minimal-etapa-card {
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 2px 12px 0 rgba(0,0,0,0.04);
+    margin-bottom: 36px;
+    padding: 28px 24px 18px 24px;
+    border: none;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+.minimal-mentor {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    border-bottom: 1px solid #f1f5f9;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+.minimal-mentor .mentor-img {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: none;
+    box-shadow: 0 1px 4px 0 rgba(0,0,0,0.06);
+}
+.minimal-mentor .mentor-info {
+    min-width: 0;
+}
+.minimal-mentor .mentor-nombre {
+    font-size: 1.08rem;
+    font-weight: 600;
+    color: #22223b;
+    margin-bottom: 2px;
+}
+.minimal-mentor .mentor-especialidad {
+    color: #64748b;
+    font-size: 0.97rem;
+    margin-bottom: 2px;
+}
+.minimal-mentor .mentor-linkedin {
+    color: #2563eb;
+    font-size: 0.97rem;
+    text-decoration: none;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    margin-top: 2px;
+    transition: color 0.2s;
+}
+.minimal-mentor .mentor-linkedin:hover {
+    color: #1e40af;
+}
+
+.minimal-etapa-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 12px;
+    border: none;
+    margin-bottom: 0;
+}
+.minimal-etapa-titulo {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #22223b;
+    margin-bottom: 2px;
+}
+.minimal-etapa-desc {
+    color: #64748b;
+    font-size: 0.97rem;
+    margin-bottom: 0;
+}
+.minimal-etapa-num {
+    display: flex;
+    align-items: center;
+    gap: 0;
+}
+.minimal-etapa-num .etapa-num-circulo {
+    width: 32px;
+    height: 32px;
+    font-size: 1.1rem;
+    background: #f1f5f9;
+    color: #2563eb;
+    font-weight: 700;
+    border-radius: 50%;
+    box-shadow: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.minimal-etapa-num .etapa-num-label {
+    display: none;
+}
+
+.minimal-tareas-header {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #2563eb;
+    display: flex;
+    align-items: center;
+    margin-bottom: 2px;
+    gap: 6px;
+}
+.minimal-tareas-header i {
+    margin-right: 4px;
+}
+.minimal-tareas-count {
+    color: #64748b;
+    font-size: 0.97rem;
+    margin-bottom: 10px;
+    background: none;
+    font-weight: 400;
+    padding: 0;
+    border-radius: 0;
+    display: block;
+}
+.minimal-tareas-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.minimal-tarea-item {
+    background: #f8fafc;
+    border-radius: 8px;
+    border: 1px solid #f1f5f9;
+    box-shadow: none;
+    padding: 14px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    transition: background 0.18s;
+}
+.minimal-tarea-item:hover {
+    background: #f1f5f9;
+}
+.minimal-tarea-info {
+    flex: 1 1 0%;
+    min-width: 0;
+}
+.minimal-tarea-titulo {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #22223b;
+    margin-bottom: 2px;
+}
+.minimal-tarea-desc {
+    color: #64748b;
+    font-size: 0.95rem;
+    margin-bottom: 0;
+}
+.minimal-tarea-datos {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+    min-width: 80px;
+}
+.minimal-tarea-fecha {
+    color: #94a3b8;
+    font-size: 0.93rem;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.minimal-tarea-detalles {
+    color: #2563eb;
+    font-size: 1.1rem;
+    text-decoration: none;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    transition: color 0.2s;
+    padding: 2px 0;
+}
+.minimal-tarea-detalles:hover {
+    color: #1e40af;
+}
+.minimal-tarea-detalles i {
+    margin-right: 0;
+}
+.minimal-tarea-vacia {
+    background: #f8fafc;
+    border-radius: 8px;
+    border: 1px solid #f1f5f9;
+    color: #b0b7c3;
+    font-size: 0.98rem;
+    padding: 18px 0;
+    text-align: center;
+    box-shadow: none;
+}
+
+.minimal-sin-etapas {
+    text-align: center;
+    margin-top: 60px;
+}
+.minimal-sin-etapas-box {
+    background: #fff;
+    padding: 32px 24px;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px 0 rgba(0,0,0,0.04);
+    display: inline-block;
+}
+.minimal-sin-etapas-icon {
+    width: 54px;
+    height: 54px;
+    background: #f1f5f9;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 14px auto;
+}
+.minimal-sin-etapas-icon i {
+    font-size: 1.5rem;
+    color: #94a3b8;
+}
+.minimal-sin-etapas-titulo {
+    font-size: 1.08rem;
+    font-weight: 600;
+    color: #334155;
+    margin-bottom: 6px;
+}
+.minimal-sin-etapas-desc {
+    color: #64748b;
+    font-size: 0.97rem;
+}
+
+@media (max-width: 700px) {
+    .minimal-main {
+        max-width: 98vw;
+        padding: 0 2vw 40px 2vw;
+    }
+    .minimal-etapa-card {
+        padding: 18px 6px 12px 6px;
+    }
+}

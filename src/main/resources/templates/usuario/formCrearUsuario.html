@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
+
 <head th:replace="~{layout/layout :: head}">
 
 
@@ -8,65 +9,73 @@
 </head>
 
 <body class="bg-white font-sans">
-<header th:replace="~{layout/layout :: header}"></header>
+  <header th:replace="~{layout/layout :: header}"></header>
 
   <div class="max-w-6xl mx-auto py-10 px-6">
     <h1 class="text-4xl font-extrabold text-sky-700 mb-10 tracking-tight drop-shadow">Crear Usuario</h1>
 
-    <form th:action="@{/crearUsuario}" method="post" enctype="multipart/form-data" th:object="${usuario}" id="formUsuario" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <form th:action="@{/crearUsuario}" method="post" enctype="multipart/form-data" th:object="${usuario}"
+      id="formUsuario" class="grid grid-cols-1 md:grid-cols-3 gap-8">
 
-      <!-- Columna izquierda: campos -->
+
       <div class="space-y-4 col-span-2">
-        <!-- Selector de roles fuera del contenedor de campos, con más separación -->
-       <!-- Selector de roles fuera del contenedor de campos, con más separación -->
-<div class="flex gap-4 mb-20 justify-center" id="roleSelector">
-  <div class="w-full flex flex-row gap-4 justify-center items-center flex-nowrap" id="roleSelectorContainer" style="overflow-x:auto; padding-bottom:0.2rem; margin-bottom:0.5rem; margin-top:1.2rem;">
-    <button type="button"
-      class="role-btn min-w-[160px] bg-gradient-to-r from-gray-600 to-gray-800 text-white px-4 py-2 text-sm rounded-full shadow font-semibold hover:scale-105 transition-all duration-200"
-      data-id="1" data-nombre="Administrador">Administrador</button>
-    <button type="button"
-      class="role-btn min-w-[160px] bg-gradient-to-r from-blue-500 to-blue-700 text-white px-4 py-2 text-sm rounded-full shadow font-semibold hover:scale-105 transition-all duration-200"
-      data-id="2" data-nombre="Mentor">Mentor</button>
-    <button type="button"
-      class="role-btn min-w-[160px] bg-gradient-to-r from-orange-500 to-yellow-500 text-white px-4 py-2 text-sm rounded-full shadow font-semibold hover:scale-105 transition-all duration-200"
-      data-id="3" data-nombre="Emprendedor">Emprendedor</button>
-  </div>
-</div>
+
+        <div class="flex gap-4 mb-20 justify-center" id="roleSelector">
+          <div class="w-full flex flex-row gap-4 justify-center items-center flex-nowrap" id="roleSelectorContainer"
+            style="overflow-x:auto; padding-bottom:0.2rem; margin-bottom:0.5rem; margin-top:1.2rem;">
+            <button type="button"
+              class="role-btn min-w-[160px] bg-gradient-to-r from-gray-600 to-gray-800 text-white px-4 py-2 text-sm rounded-full shadow font-semibold hover:scale-105 transition-all duration-200"
+              data-id="1" data-nombre="Administrador">Administrador</button>
+            <button type="button"
+              class="role-btn min-w-[160px] bg-gradient-to-r from-blue-500 to-blue-700 text-white px-4 py-2 text-sm rounded-full shadow font-semibold hover:scale-105 transition-all duration-200"
+              data-id="2" data-nombre="Mentor" id="mentorRoleBtn">Mentor</button>
+            <button type="button"
+              class="role-btn min-w-[160px] bg-gradient-to-r from-orange-500 to-yellow-500 text-white px-4 py-2 text-sm rounded-full shadow font-semibold hover:scale-105 transition-all duration-200"
+              data-id="3" data-nombre="Emprendedor">Emprendedor</button>
+          </div>
+        </div>
         <!-- Contenedor de campos del formulario -->
         <div class="bg-white/80 rounded-xl shadow p-6 mb-6 relative border-t-4 border-orange-400">
-          <div class="absolute -top-5 left-1/2 -translate-x-1/2 flex items-center gap-2 z-10 bg-white/90 px-4 py-1 rounded-full shadow-lg border border-orange-200">
-            <span class="inline-block w-8 h-1.5 rounded bg-gradient-to-r from-orange-400 to-orange-600 shadow-md"></span>
+          <div
+            class="absolute -top-5 left-1/2 -translate-x-1/2 flex items-center gap-2 z-10 bg-white/90 px-4 py-1 rounded-full shadow-lg border border-orange-200">
+            <span
+              class="inline-block w-8 h-1.5 rounded bg-gradient-to-r from-orange-400 to-orange-600 shadow-md"></span>
             <span class="text-xs font-bold text-orange-500 tracking-wider uppercase">Datos de usuario</span>
           </div>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-            <div>              <label for="documento" class="block text-sm font-semibold text-sky-700">Documento: <span class="text-red-500">*</span></label>
+            <div> <label for="documento" class="block text-sm font-semibold text-sky-700">Documento: <span
+                  class="text-red-500">*</span></label>
               <input th:field="*{documento}" type="text" id="documento" name="documento"
-                  class="w-full rounded-2xl border-0 bg-sky-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400 text-sky-800 font-semibold placeholder:text-sky-400"
-                  data-validate="required alphanumeric minLength:5 maxLength:20" placeholder="Ingrese su documento" />
+                class="w-full rounded-2xl border-0 bg-sky-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400 text-sky-800 font-semibold placeholder:text-sky-400"
+                data-validate="required alphanumeric minLength:5 maxLength:20" placeholder="Ingrese su documento" />
             </div>
             <div>
-              <label for="nombre" class="block text-sm font-semibold text-sky-700">Nombre: <span class="text-red-500">*</span></label>
+              <label for="nombre" class="block text-sm font-semibold text-sky-700">Nombre: <span
+                  class="text-red-500">*</span></label>
               <input th:field="*{nombreUsu}" type="text" id="nombre" name="nombre"
-                  class="w-full rounded-2xl border-0 bg-sky-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400 text-sky-800 font-semibold placeholder:text-sky-400"
-                  data-validate="required minLength:3 maxLength:100" placeholder="Ingrese su nombre completo" />
+                class="w-full rounded-2xl border-0 bg-sky-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400 text-sky-800 font-semibold placeholder:text-sky-400"
+                data-validate="required minLength:3 maxLength:100" placeholder="Ingrese su nombre completo" />
             </div>
             <div>
-              <label for="email" class="block text-sm font-semibold text-sky-700">Email: <span class="text-red-500">*</span></label>
+              <label for="email" class="block text-sm font-semibold text-sky-700">Email: <span
+                  class="text-red-500">*</span></label>
               <input th:field="*{emailUsu}" type="email" id="email" name="email"
-                  class="w-full rounded-2xl border-0 bg-sky-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400 text-sky-800 font-semibold placeholder:text-sky-400"
-                  data-validate="required email" placeholder="ejemplo@dominio.com" />
+                class="w-full rounded-2xl border-0 bg-sky-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400 text-sky-800 font-semibold placeholder:text-sky-400"
+                data-validate="required email" placeholder="ejemplo@dominio.com" />
             </div>
             <div>
-              <label for="password" class="block text-sm font-semibold text-sky-700">Contraseña: <span class="text-red-500">*</span></label>
+              <label for="password" class="block text-sm font-semibold text-sky-700">Contraseña: <span
+                  class="text-red-500">*</span></label>
               <input th:field="*{contrasenna}" type="password" id="password" name="password"
-                  class="w-full rounded-2xl border-0 bg-sky-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400 text-sky-800 font-semibold placeholder:text-sky-400"
-                  data-validate="required password" placeholder="Mínimo 8 caracteres" />
+                class="w-full rounded-2xl border-0 bg-sky-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400 text-sky-800 font-semibold placeholder:text-sky-400"
+                data-validate="required password" placeholder="Mínimo 8 caracteres" />
             </div>
             <div>
-              <label for="telefono" class="block text-sm font-semibold text-sky-700">Teléfono: <span class="text-red-500">*</span></label>
+              <label for="telefono" class="block text-sm font-semibold text-sky-700">Teléfono: <span
+                  class="text-red-500">*</span></label>
               <input th:field="*{telefono}" type="tel" id="telefono" name="telefono"
-                  class="w-full rounded-2xl border-0 bg-sky-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400 text-sky-800 font-semibold placeholder:text-sky-400"
-                  data-validate="required phone" placeholder="Ej: 3001234567" />
+                class="w-full rounded-2xl border-0 bg-sky-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400 text-sky-800 font-semibold placeholder:text-sky-400"
+                data-validate="required phone" placeholder="Ej: 3001234567" />
             </div>
           </div>
           <input type="hidden" id="rol" name="rol" th:field="*{rol}" />
@@ -76,9 +85,12 @@
       <!-- Columna derecha: imagen y resumen -->
       <div class="flex flex-col items-center gap-8">
         <div class="bg-[#f5f8fc] rounded-2xl shadow-lg px-6 pt-8 pb-6 w-full max-w-xs relative">
-          <span id="roleBadge" class="absolute -top-4 left-0 bg-[#043A68] text-white px-6 py-2 rounded-full font-semibold text-base shadow-lg" style="border-radius: 2rem 2rem 0 0;">Administrador</span>
+          <span id="roleBadge"
+            class="absolute -top-4 left-0 bg-[#043A68] text-white px-6 py-2 rounded-full font-semibold text-base shadow-lg"
+            style="border-radius: 2rem 2rem 0 0;">Administrador</span>
           <div class="flex flex-col items-center mt-2 mb-4">
-            <img id="preview" src="https://via.placeholder.com/120" alt="Previsualización" class="w-28 h-28 rounded-full object-cover border-4 border-white shadow-lg -mt-4" />
+            <img id="preview" src="https://via.placeholder.com/120" alt="Previsualización"
+              class="w-28 h-28 rounded-full object-cover border-4 border-white shadow-lg -mt-4" />
             <p class="mt-2 text-base text-slate-700 tracking-wide" th:text="*{documento}">10507891362</p>
             <p class="font-extrabold text-xl text-slate-900 mb-1" th:text="*{nombreUsu}">Juan Luis Londoño</p>
             <p class="text-base text-slate-600" th:text="*{emailUsu}">juanluis@gmail.com</p>
@@ -88,16 +100,23 @@
         <div class="bg-[#f5f8fc] rounded-2xl shadow-lg px-6 py-6 w-full max-w-xs flex flex-col items-center">
           <label for="foto" class="block text-base font-semibold text-sky-700 mb-2 text-left w-full">Imagen:</label>
           <label for="foto" class="w-full flex justify-center">
-            <span class="bg-sky-400 hover:bg-sky-500 text-white font-bold py-2 px-6 rounded-full cursor-pointer transition text-base shadow focus:outline-none focus:ring-2 focus:ring-sky-300 border-2 border-sky-400 hover:border-sky-500">Seleccionar Imagen</span>
+            <span
+              class="bg-sky-400 hover:bg-sky-500 text-white font-bold py-2 px-6 rounded-full cursor-pointer transition text-base shadow focus:outline-none focus:ring-2 focus:ring-sky-300 border-2 border-sky-400 hover:border-sky-500">Seleccionar
+              Imagen</span>
             <input type="file" id="foto" name="foto" accept="image/*" class="hidden" />
           </label>
         </div>
-       
+
         <div class="w-full max-w-xs flex flex-col gap-2">
-          
-          <button type="submit" class="bg-sky-400 hover:bg-sky-500 text-white font-extrabold text-xl py-3 rounded-full shadow transition">Guardar</button>
-          <a th:href="@{/usuario}" class="flex items-center justify-center gap-2 border border-orange-500 text-orange-500 bg-white font-semibold text-base py-2 rounded-full shadow-sm transition hover:bg-orange-50 hover:text-orange-600">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+
+          <button type="submit"
+            class="bg-sky-400 hover:bg-sky-500 text-white font-extrabold text-xl py-3 rounded-full shadow transition">Guardar</button>
+          <a th:href="@{/usuario}"
+            class="flex items-center justify-center gap-2 border border-orange-500 text-orange-500 bg-white font-semibold text-base py-2 rounded-full shadow-sm transition hover:bg-orange-50 hover:text-orange-600">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
             Volver
           </a>
         </div>
@@ -154,19 +173,28 @@
         roleBadge.textContent = selectedRoleName;
         roleBadge.className = 'absolute -top-4 left-0 font-semibold text-base shadow-lg px-6 py-2 rounded-full ' +
           (selectedRoleId === '1' ? 'bg-gray-600 text-white' :
-           selectedRoleId === '2' ? 'bg-blue-700 text-white' :
-           'bg-orange-500 text-white');
+            selectedRoleId === '2' ? 'bg-blue-700 text-white' :
+              'bg-orange-500 text-white');
         updateRoleStyles(selectedRoleId);
       });
-    });  </script>
+    });
+
+    // Redirección a crearMentor si se selecciona Mentor
+    document.getElementById('mentorRoleBtn').addEventListener('click', function () {
+      const documento = document.getElementById('documento').value;
+      if (documento && documento.trim() !== '') {
+        window.location.href = '/crearMentor?documento=' + encodeURIComponent(documento);
+      }
+    });
+  </script>
 
   <!-- Form validation script -->
   <script th:src="@{/js/formValidator.js}"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       // Initialize form validation
       FormValidator.init('#formUsuario', {
-        onError: function() {
+        onError: function () {
           Swal.fire({
             icon: 'error',
             title: 'Error de validación',
@@ -179,7 +207,7 @@
       // Validate file input separately
       const fileInput = document.getElementById('foto');
       if (fileInput) {
-        fileInput.addEventListener('change', function() {
+        fileInput.addEventListener('change', function () {
           if (this.files && this.files[0]) {
             // Check file size (max 5MB)
             const fileSizeMB = this.files[0].size / (1024 * 1024);
@@ -193,7 +221,7 @@
               this.value = '';
               return;
             }
-            
+
             // Check file type
             const fileType = this.files[0].type;
             if (!fileType.match('image.*')) {
@@ -212,4 +240,5 @@
     });
   </script>
 </body>
+
 </html>

@@ -21,6 +21,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Comparator;
@@ -126,9 +127,13 @@ public class MentorController {
     }
 
     @GetMapping(value = "/crearMentor")
-    public String crearMentor(Model model) {
+    public String crearMentor(Model model, @RequestParam(value = "documento", required = false) String documento) {
         model.addAttribute("title", "Crear mentor");
-        model.addAttribute("mentor", new MentorEntity());
+        MentorEntity mentor = new MentorEntity();
+        if (documento != null && !documento.isEmpty()) {
+            mentor.setDocumento(documento);
+        }
+        model.addAttribute("mentor", mentor);
         return "/mentor/crearMentor";
     }
 
@@ -194,6 +199,9 @@ public class MentorController {
         MentorEntity mentor = mentorService.findById(id);
         model.addAttribute("title", "Ver Mentor");
         model.addAttribute("mentorDetalle", mentor);
+        // Obtener feedbacks donde el mentor es el actual
+        List<FeedbackEntity> feedbacks = feedbackService.findByMentor(mentor);
+        model.addAttribute("feedbacksMentor", feedbacks);
         return "mentor/detalleMentor";
     }
 
