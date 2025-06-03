@@ -191,7 +191,8 @@
                         class="bg-white text-orange-600 font-semibold border border-orange-300 rounded-full px-3 py-1 text-xs hover:bg-orange-50 transition self-end">
                         Gestionar
                     </a>
-                </div> <!-- Tarjeta Notificaciones - Fila completa derecha --> <!-- Tarjeta Notificaciones -->
+                </div>
+                <!-- Tarjeta Notificaciones - Fila completa derecha --> <!-- Tarjeta Notificaciones -->
                 <div
                     class="md:col-span-2 md:row-span-2 bg-gradient-to-br from-purple-200 to-indigo-100 rounded-xl p-5 shadow-lg min-h-[400px] flex flex-col border border-purple-200">
                     <div class="flex justify-between items-center mb-4">
@@ -217,39 +218,48 @@
                     <div id="usuario-documento" th:attr="data-documento=${documentoUsuario}" style="display:none;">
                     </div>
 
-                    <div id="notificaciones-container" class="flex-1 space-y-3 overflow-y-auto scrollbar-thin p-1">
+                    <div id="notificaciones-container"
+                        class="flex-1 space-y-2 overflow-y-auto scrollbar-thin p-1 max-h-96">
                         <!-- Mostrar notificaciones de la base de datos -->
                         <div th:if="${notificaciones != null && !notificaciones.isEmpty()}">
                             <div th:each="notificacion : ${notificaciones}"
-                                class="bg-white shadow-md hover:shadow-lg p-4 rounded-lg text-sm text-gray-800 transition-all duration-300 border-l-4"
+                                class="bg-white shadow-md hover:shadow-lg p-2 rounded-lg text-sm text-gray-800 transition-all duration-300 border-l-4 flex items-center mb-3"
                                 th:classappend="${notificacion.leido ? 'border-gray-300' : 'border-purple-500'}"
                                 th:data-id="${notificacion.id}">
-                                <div class="flex justify-between items-start">
-                                    <div>
-                                        <div class="flex items-center mb-1">
-                                            <i class="fas fa-circle text-xs mr-2"
-                                                th:classappend="${notificacion.leido ? 'text-gray-300' : 'text-purple-500'}"></i>
-                                            <strong class="text-gray-700"
-                                                th:text="${notificacion.tipoEntidad}">Tipo</strong>
-                                        </div>
-                                        <p class="text-gray-600 ml-4" th:text="${notificacion.mensaje}">Mensaje de
-                                            notificación</p>
-                                    </div>
-                                    <div class="flex items-center space-x-1">
-                                        <span th:if="${notificacion.leido}"
-                                            class="text-xs text-gray-400 bg-gray-100 rounded-full px-2 py-0.5 shadow-sm">Leída</span>
-                                        <span th:unless="${notificacion.leido}"
-                                            class="text-xs text-white bg-purple-500 rounded-full px-2 py-0.5 shadow-sm">Nueva</span>
-                                        <button th:unless="${notificacion.leido}"
-                                            class="marcar-leida ml-1 text-xs bg-white text-purple-600 hover:text-purple-800 rounded-full h-5 w-5 flex items-center justify-center shadow-sm hover:shadow transition-all">
-                                            <i class="fas fa-check"></i>
-                                        </button>
-                                    </div>
+                                <!-- Ícono representativo de la notificación -->
+                                <div class="flex-shrink-0 mr-3">
+                                    <i class="fas fa-info-circle text-purple-500 text-2xl"
+                                        th:classappend="${notificacion.tipoEntidad == 'Alerta' ? 'fa-exclamation-circle text-red-500' : ''}"></i>
                                 </div>
-                                <div class="flex items-center text-xs text-gray-500 mt-2 ml-4">
-                                    <i class="far fa-clock mr-1"></i>
-                                    <span
-                                        th:text="${#dates.format(notificacion.fecha, 'dd/MM/yyyy HH:mm')}">Fecha</span>
+                                <div class="flex-1">
+                                    <div class="flex justify-between items-start">
+                                        <div>
+                                            <div class="flex items-center mb-1">
+                                                <i class="fas fa-circle text-xs mr-2"
+                                                    th:classappend="${notificacion.leido ? 'text-gray-300' : 'text-purple-500'}"></i>
+                                                <strong class="text-gray-700" th:text="${notificacion.tipoEntidad}">Tipo
+                                                </strong>
+                                            </div>
+                                            <p class="text-gray-600 text-xs" th:text="${notificacion.mensaje}">Mensaje
+                                                de
+                                                notificación</p>
+                                        </div>
+                                        <div class="flex items-center space-x-1">
+                                            <span th:if="${notificacion.leido}"
+                                                class="text-xs text-gray-400 bg-gray-100 rounded-full px-2 py-0.5 shadow-sm">Leída</span>
+                                            <span th:unless="${notificacion.leido}"
+                                                class="text-xs text-white bg-purple-500 rounded-full px-2 py-0.5 shadow-sm">Nueva</span>
+                                            <button th:unless="${notificacion.leido}"
+                                                class="marcar-leida ml-1 text-xs bg-white text-purple-600 hover:text-purple-800 rounded-full h-5 w-5 flex items-center justify-center shadow-sm hover:shadow transition-all">
+                                                <i class="fas fa-check"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center text-xs text-gray-500 mt-1">
+                                        <i class="far fa-clock mr-1"></i>
+                                        <span
+                                            th:text="${#dates.format(notificacion.fecha, 'dd/MM/yyyy HH:mm')}">Fecha</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -302,7 +312,8 @@
                             Acceder
                         </a>
                     </div>
-                </div><!-- Tarjeta StartUp AI - Fila inferior derecha -->
+                </div>
+                <!-- Tarjeta StartUp AI - Fila inferior derecha -->
                 <div
                     class="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl p-4 shadow text-white relative overflow-hidden h-48">
                     <div class="absolute top-0 right-0 -mt-4 -mr-4 w-16 h-16 rounded-full bg-blue-400 opacity-20"></div>
@@ -878,28 +889,39 @@
 
             // Crear la nueva tarjeta de notificación
             const tarjeta = document.createElement('div');
-            tarjeta.className = 'bg-white shadow-md hover:shadow-lg p-4 rounded-lg text-sm text-gray-800 transition-all duration-300 border-l-4 border-purple-500';
+            tarjeta.className = 'bg-white shadow-md hover:shadow-lg p-3 rounded-lg text-sm text-gray-800 transition-all duration-300 border-l-4 flex items-center mb-3';
             tarjeta.setAttribute('data-id', notificacion.id || 'new');
 
             tarjeta.innerHTML = `
-                <div class="flex justify-between items-start">
-                    <div>
-                        <div class="flex items-center mb-1">
-                            <i class="fas fa-circle text-xs text-purple-500 mr-2"></i>
-                            <strong class="text-gray-700">${notificacion.tipoEntidad}</strong>
-                        </div>
-                        <p class="text-gray-600 ml-4">${notificacion.mensaje}</p>
-                    </div>
-                    <div class="flex items-center space-x-1">
-                        <span class="text-xs text-white bg-purple-500 rounded-full px-2 py-0.5 shadow-sm">Nueva</span>
-                        <button class="marcar-leida ml-1 text-xs bg-white text-purple-600 hover:text-purple-800 rounded-full h-5 w-5 flex items-center justify-center shadow-sm hover:shadow transition-all">
-                            <i class="fas fa-check"></i>
-                        </button>
-                    </div>
+                <!-- Ícono representativo de la notificación -->
+                <div class="flex-shrink-0 mr-3">
+                    <i class="fas fa-info-circle text-purple-500 text-2xl" th:classappend="${notificacion.tipoEntidad == 'Alerta' ? 'fa-exclamation-circle text-red-500' : ''}"></i>
                 </div>
-                <div class="flex items-center text-xs text-gray-500 mt-2 ml-4">
-                    <i class="far fa-clock mr-1"></i>
-                    <span>${new Date(notificacion.fecha).toLocaleString()}</span>
+                <div class="flex-1">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <div class="flex items-center mb-1">
+                                <i class="fas fa-circle text-xs mr-2"
+                                    th:classappend="${notificacion.leido ? 'text-gray-300' : 'text-purple-500'}"></i>
+                                <strong class="text-gray-700" th:text="${notificacion.tipoEntidad}">Tipo</strong>
+                            </div>
+                            <p class="text-gray-600" th:text="${notificacion.mensaje}">Mensaje de notificación</p>
+                        </div>
+                        <div class="flex items-center space-x-1">
+                            <span th:if="${notificacion.leido}"
+                                class="text-xs text-gray-400 bg-gray-100 rounded-full px-2 py-0.5 shadow-sm">Leída</span>
+                            <span th:unless="${notificacion.leido}"
+                                class="text-xs text-white bg-purple-500 rounded-full px-2 py-0.5 shadow-sm">Nueva</span>
+                            <button th:unless="${notificacion.leido}"
+                                class="marcar-leida ml-1 text-xs bg-white text-purple-600 hover:text-purple-800 rounded-full h-5 w-5 flex items-center justify-center shadow-sm hover:shadow transition-all">
+                                <i class="fas fa-check"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="flex items-center text-xs text-gray-500 mt-1">
+                        <i class="far fa-clock mr-1"></i>
+                        <span>${new Date(notificacion.fecha).toLocaleString()}</span>
+                    </div>
                 </div>
             `;
 

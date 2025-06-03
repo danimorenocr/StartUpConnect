@@ -1,6 +1,5 @@
 package com.usta.startupconnect.models.services;
 
-
 import com.usta.startupconnect.dto.NotificacionDTO;
 import com.usta.startupconnect.entities.NotificacionEntity;
 import com.usta.startupconnect.entities.UsuarioEntity;
@@ -16,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class NotificacionServiceImpl implements NotificacionService {
@@ -31,8 +31,7 @@ public class NotificacionServiceImpl implements NotificacionService {
                 notificacion.getEntidadId(),
                 notificacion.getFecha(),
                 notificacion.getLeido(),
-                notificacion.getUsuario().getDocumento()
-        );
+                notificacion.getUsuario().getDocumento());
 
         messagingTemplate.convertAndSend("/topic/notificaciones/" + notificacion.getUsuario().getDocumento(), dto);
     }
@@ -57,7 +56,9 @@ public class NotificacionServiceImpl implements NotificacionService {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-    }    @Override
+    }
+
+    @Override
     @Async
     public void notificarNuevaConvocatoriaATodosLosEmprendedores(String mensaje) {
         List<UsuarioEntity> emprendedores = usuarioDao.findByRol_Rol("EMPRENDEDOR");
@@ -75,24 +76,24 @@ public class NotificacionServiceImpl implements NotificacionService {
             enviarNotificacionAUsuario(noti);
         }
     }
-    
+
     @Override
     public List<NotificacionEntity> obtenerNotificacionesPorUsuario(String documentoUsuario) {
         return notificacionDAO.findByUsuario_DocumentoOrderByFechaDesc(documentoUsuario);
     }
-    
+
     @Override
     @Transactional
     public void marcarNotificacionComoLeida(Long notificacionId) {
         notificacionDAO.marcarComoLeida(notificacionId);
     }
-    
+
     @Override
     @Transactional
     public void marcarTodasNotificacionesComoLeidas(String documentoUsuario) {
         notificacionDAO.marcarTodasComoLeidas(documentoUsuario);
     }
-    
+
     @Override
     @Transactional(readOnly = true)
     public NotificacionEntity obtenerNotificacionPorId(Long notificacionId) {
