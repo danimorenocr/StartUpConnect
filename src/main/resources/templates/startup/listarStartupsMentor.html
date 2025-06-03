@@ -52,18 +52,22 @@
                         <span th:text="${startup.emprendedor != null && startup.emprendedor.usuario != null ? 
                            startup.emprendedor.usuario.nombreUsu : 'No asignado'}"></span>
                     </p>
-                </div>                <!-- Botones de acción -->                <div class="flex gap-3 mt-4">
+                </div>                <!-- Botones de acción -->                
+                <div class="flex flex-wrap gap-2 mt-4 justify-center">
                     <a th:href="@{/verStartup/{id}(id=${startup.id})}"
-                        class="bg-pink-500 hover:bg-pink-600 text-white font-semibold py-2 px-4 rounded-full shadow transition text-sm">
+                        class="bg-pink-500 hover:bg-pink-600 text-white font-semibold py-2 px-3 rounded-full shadow transition text-xs flex items-center">
+                        <i class="fas fa-eye mr-1"></i>
                         Ver
                     </a>
                     <a th:href="@{'/feedbackStartup/' + ${startup.id}}"
-                        class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-full shadow transition text-sm">
+                        class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-3 rounded-full shadow transition text-xs flex items-center">
+                        <i class="fas fa-comment-dots mr-1"></i>
                         Feedback
                     </a>
                     <a th:href="@{'/crearEtapa?startupId=' + ${startup.id}}"
-                        class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-full shadow transition text-sm">
-                        Crear Etapa
+                        class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-3 rounded-full shadow transition text-xs flex items-center">
+                        <i class="fas fa-plus-circle mr-1"></i>
+                        Etapa
                     </a>
                 </div>
             </div>

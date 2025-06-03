@@ -554,6 +554,13 @@ body {
     font-weight: 500;
 }
 
+/* Rating icon styling in stats */
+.rating-icon {
+    color: #FFD700;
+    margin-right: 8px;
+    font-size: 1.4rem;
+}
+
 .social-links-mini {
     display: flex;
     gap: 10px;
@@ -700,6 +707,25 @@ body {
 .website-info .header-icon {
     background-color: rgba(46, 204, 113, 0.1);
     color: #2ecc71;
+}
+
+.feedback-info .header-icon {
+    background-color: rgba(74, 144, 226, 0.1);
+    color: #4a90e2;
+}
+
+/* Tarjeta de feedback con ancho reducido pero cómodo */
+.feedback-info {
+    width: 80%;
+    max-width: 800px;
+    margin: 0 auto;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.feedback-info:hover {
+    border-top: 4px solid #ffc107;
+    transform: translateY(-2px);
 }
 
 .info-card h3 {

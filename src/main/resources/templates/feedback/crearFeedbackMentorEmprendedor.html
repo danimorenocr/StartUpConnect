@@ -7,90 +7,163 @@
 </head>
 
 <body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen font-['Poppins']">
-    <header th:replace="~{layout/layout :: header}"></header>
-    <div class="max-w-3xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-        <div class="relative w-full max-w-3xl mx-auto rounded-2xl overflow-hidden shadow-2xl mb-8">
-            <img src="/images/bannerMentores.jpg" alt="Banner Feedback"
-                class="w-full h-48 md:h-56 object-cover object-center">
-            <div
-                class="absolute inset-0 bg-gradient-to-br from-blue-600/80 via-indigo-600/70 to-blue-700/60 flex items-center">
-                <div class="px-8 md:px-12">
-                    <h1 class="text-3xl md:text-4xl font-extrabold text-white drop-shadow-lg">
-                        <i class="fas fa-star mr-3"></i>Califica a tu Mentor
-                    </h1>
-                    <p class="text-lg text-white/90 font-medium mt-2">Tu opinión ayuda a mejorar la mentoría en cada
-                        etapa</p>
-                </div>
-            </div>
-        </div>
-        <div class="bg-white/95 backdrop-blur-sm rounded-3xl shadow-2xl border border-white/20 overflow-hidden">
-            <div class="bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 text-white p-8">
-                <h2 class="text-2xl font-bold text-center flex items-center justify-center">
-                    <i class="fas fa-user-tie mr-3"></i>
-                    Evaluación de Mentor
-                </h2>
-                <p class="text-center text-white/90 mt-2">Comparte tu experiencia con el mentor de esta etapa</p>
-            </div>
-            <div class="p-8">
-                <form th:action="@{/feedback/guardarCalificacionMentor}" th:object="${feedback}" method="post"
-                    id="feedbackMentorForm" class="space-y-6">
-                    <input type="hidden" th:field="*{id}" />
-                    <input type="hidden" th:field="*{mentor.documento}" />
-                    <input type="hidden" th:field="*{etapa.id}" />
-                    <input type="hidden" th:field="*{startup.id}" />
-                    <!-- Comentario Section -->
-                    <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-6 border-l-4 border-blue-500">
-                        <label for="comentarioStartup" class="block text-blue-900 font-semibold mb-3 flex items-center">
-                            <i class="fas fa-comment-alt mr-2"></i>
-                            Comentario para el Mentor
-                        </label>
-                        <textarea th:field="*{comentarioStartup}" id="comentarioStartup" rows="4"
-                            class="w-full px-4 py-3 rounded-xl border border-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white/80 backdrop-blur-sm"
-                            placeholder="Escribe aquí tu comentario, sugerencias o recomendaciones para el mentor (mínimo 20 caracteres, máximo 200)"></textarea>
-                        <p th:if="${#fields.hasErrors('comentarioStartup')}" th:errors="*{comentarioStartup}"
-                            class="text-red-500 text-sm mt-1 flex items-center">
-                            <i class="fas fa-exclamation-triangle mr-1"></i>Error
-                        </p>
-                    </div>
-                    <!-- Rating Section -->
-                    <div
-                        class="bg-gradient-to-r from-indigo-50 to-blue-50 rounded-2xl p-6 border-l-4 border-indigo-500">
-                        <label for="calificacionStartup"
-                            class="block text-indigo-900 font-semibold mb-3 flex items-center">
-                            <i class="fas fa-star mr-2"></i>
-                            Calificación (1-5 estrellas)
-                        </label>
-                        <div class="rating-container flex gap-2 justify-center">
-                            <span th:each="star : ${#numbers.sequence(1,5)}">
-                                <input type="radio" th:id="${'star' + star}" th:field="*{calificacionStartup}"
-                                    th:value="${star}" class="hidden" />
-                                <label th:for="${'star' + star}"
-                                    th:classappend="*{calificacionStartup} >= ${star} ? 'text-yellow-400 scale-110' : 'text-gray-300'"
-                                    class="cursor-pointer text-4xl transition-colors duration-200 hover:text-yellow-400 hover:scale-110 transform">★</label>
-                            </span>
-                        </div>
-                        <p th:if="${#fields.hasErrors('calificacionStartup')}" th:errors="*{calificacionStartup}"
-                            class="text-red-500 text-sm mt-1 flex items-center justify-center">
-                            <i class="fas fa-exclamation-triangle mr-1"></i>Error
-                        </p>
-                    </div>
-                    <!-- Action Buttons -->
-                    <div class="flex justify-end gap-4">
-                        <a th:href="@{/misEtapas}"
-                            class="px-6 py-3 rounded-xl border-2 border-gray-300 text-gray-700 font-semibold hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 flex items-center">
-                            <i class="fas fa-times mr-2"></i>
-                            Cancelar
-                        </a>
-                        <button type="submit"
-                            class="px-8 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center">
-                            <i class="fas fa-paper-plane mr-2"></i>
-                            Guardar Feedback
-                        </button>
-                    </div>
-                </form>
+<header th:replace="~{layout/layout :: header}"></header>
+<div class="max-w-3xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+    <div class="relative w-full max-w-3xl mx-auto rounded-2xl overflow-hidden shadow-2xl mb-8">
+        <img src="/images/bannerMentores.jpg" alt="Banner Feedback" class="w-full h-48 md:h-56 object-cover object-center">
+        <div class="absolute inset-0 bg-gradient-to-br from-blue-600/80 via-indigo-600/70 to-blue-700/60 flex items-center">
+            <div class="px-8 md:px-12">
+                <h1 class="text-3xl md:text-4xl font-extrabold text-white drop-shadow-lg">
+                    <i class="fas fa-star mr-3"></i>Califica a tu Mentor
+                </h1>
+                <p class="text-lg text-white/90 font-medium mt-2">Tu opinión ayuda a mejorar la mentoría en cada etapa</p>
             </div>
         </div>
     </div>
+    <div class="bg-white/95 backdrop-blur-sm rounded-3xl shadow-2xl border border-white/20 overflow-hidden">
+        <div class="bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 text-white p-8">
+            <h2 class="text-2xl font-bold text-center flex items-center justify-center">
+                <i class="fas fa-user-tie mr-3"></i>
+                Evaluación de Mentor
+            </h2>
+            <p class="text-center text-white/90 mt-2">Comparte tu experiencia con el mentor de esta etapa</p>
+        </div>
+        <div class="p-8">
+            <form th:action="@{/feedback/guardarCalificacionMentor}" th:object="${feedback}" method="post" id="feedbackMentorForm" class="space-y-6">
+                <input type="hidden" th:field="*{id}" />
+                <input type="hidden" th:field="*{mentor.documento}" />
+                <input type="hidden" th:field="*{etapa.id}" />
+                <input type="hidden" th:field="*{startup.id}" />
+                <!-- Comentario Section -->
+                <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-6 border-l-4 border-blue-500">
+                    <label for="comentarioStartup" class="block text-blue-900 font-semibold mb-3 flex items-center">
+                        <i class="fas fa-comment-alt mr-2"></i>
+                        Comentario para el Mentor
+                    </label>
+                    <textarea th:field="*{comentarioStartup}" id="comentarioStartup" rows="4"
+                              class="w-full px-4 py-3 rounded-xl border border-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white/80 backdrop-blur-sm"
+                              placeholder="Escribe aquí tu comentario, sugerencias o recomendaciones para el mentor (mínimo 20 caracteres, máximo 200)"></textarea>
+                    <p th:if="${#fields.hasErrors('comentarioStartup')}" th:errors="*{comentarioStartup}"
+                       class="text-red-500 text-sm mt-1 flex items-center">
+                       <i class="fas fa-exclamation-triangle mr-1"></i>Error
+                    </p>
+                </div>
+                <!-- Rating Section -->
+                <div class="bg-gradient-to-r from-indigo-50 to-blue-50 rounded-2xl p-6 border-l-4 border-indigo-500">
+                    <label for="calificacionStartup" class="block text-indigo-900 font-semibold mb-3 flex items-center">
+                        <i class="fas fa-star mr-2"></i>
+                        Calificación (1-5 estrellas)
+                    </label>
+                    <div class="rating-container flex gap-2 justify-center">
+                        <div class="flex items-center">
+                            <input type="radio" id="star1" name="calificacionStartup" value="1" th:field="*{calificacionStartup}" class="hidden" />
+                            <label for="star1" class="cursor-pointer text-4xl text-gray-300 hover:text-yellow-400 transition-colors duration-200 hover:scale-110 transform">★</label>
+                        </div>
+                        <div class="flex items-center">
+                            <input type="radio" id="star2" name="calificacionStartup" value="2" th:field="*{calificacionStartup}" class="hidden" />
+                            <label for="star2" class="cursor-pointer text-4xl text-gray-300 hover:text-yellow-400 transition-colors duration-200 hover:scale-110 transform">★</label>
+                        </div>
+                        <div class="flex items-center">
+                            <input type="radio" id="star3" name="calificacionStartup" value="3" th:field="*{calificacionStartup}" class="hidden" />
+                            <label for="star3" class="cursor-pointer text-4xl text-gray-300 hover:text-yellow-400 transition-colors duration-200 hover:scale-110 transform">★</label>
+                        </div>
+                        <div class="flex items-center">
+                            <input type="radio" id="star4" name="calificacionStartup" value="4" th:field="*{calificacionStartup}" class="hidden" />
+                            <label for="star4" class="cursor-pointer text-4xl text-gray-300 hover:text-yellow-400 transition-colors duration-200 hover:scale-110 transform">★</label>
+                        </div>
+                        <div class="flex items-center">
+                            <input type="radio" id="star5" name="calificacionStartup" value="5" th:field="*{calificacionStartup}" class="hidden" />
+                            <label for="star5" class="cursor-pointer text-4xl text-gray-300 hover:text-yellow-400 transition-colors duration-200 hover:scale-110 transform">★</label>
+                        </div>
+                    </div>
+                    <p th:if="${#fields.hasErrors('calificacionStartup')}" th:errors="*{calificacionStartup}"
+                       class="text-red-500 text-sm mt-1 flex items-center justify-center">
+                       <i class="fas fa-exclamation-triangle mr-1"></i>Error
+                    </p>
+                </div>
+                <!-- Action Buttons -->
+                <div class="flex justify-end gap-4">
+                    <a th:href="@{/misEtapas}" class="px-6 py-3 rounded-xl border-2 border-gray-300 text-gray-700 font-semibold hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 flex items-center">
+                        <i class="fas fa-times mr-2"></i>
+                        Cancelar
+                    </a>
+                    <button type="submit" class="px-8 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center">
+                        <i class="fas fa-paper-plane mr-2"></i>
+                        Guardar Feedback
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const stars = document.querySelectorAll('.rating-container input[type="radio"]');
+    const labels = document.querySelectorAll('.rating-container label');
+    
+    // Función para actualizar las estrellas
+    function updateStars(selectedValue) {
+        labels.forEach((label, index) => {
+            if (index < selectedValue) {
+                label.classList.remove('text-gray-300');
+                label.classList.add('text-yellow-400');
+            } else {
+                label.classList.remove('text-yellow-400');
+                label.classList.add('text-gray-300');
+            }
+        });
+    }
+    
+    // Agregar event listeners a cada radio button
+    stars.forEach((star, index) => {
+        star.addEventListener('change', function() {
+            if (this.checked) {
+                updateStars(index + 1);
+            }
+        });
+    });
+    
+    // Hover effect
+    labels.forEach((label, index) => {
+        label.addEventListener('mouseenter', function() {
+            // Mostrar preview del hover
+            labels.forEach((l, i) => {
+                if (i <= index) {
+                    l.classList.add('text-yellow-400');
+                    l.classList.remove('text-gray-300');
+                } else {
+                    l.classList.add('text-gray-300');
+                    l.classList.remove('text-yellow-400');
+                }
+            });
+        });
+        
+        label.addEventListener('mouseleave', function() {
+            // Restaurar al estado seleccionado
+            const checkedStar = document.querySelector('.rating-container input[type="radio"]:checked');
+            if (checkedStar) {
+                const checkedIndex = Array.from(stars).indexOf(checkedStar);
+                updateStars(checkedIndex + 1);
+            } else {
+                // Si no hay ninguna seleccionada, todas grises
+                labels.forEach(l => {
+                    l.classList.add('text-gray-300');
+                    l.classList.remove('text-yellow-400');
+                });
+            }
+        });
+    });
+    
+    // Verificar si hay una estrella ya seleccionada al cargar la página
+    const checkedStar = document.querySelector('.rating-container input[type="radio"]:checked');
+    if (checkedStar) {
+        const checkedIndex = Array.from(stars).indexOf(checkedStar);
+        updateStars(checkedIndex + 1);
+    }
+});
+</script>
+
 </body>
 
 </html>
