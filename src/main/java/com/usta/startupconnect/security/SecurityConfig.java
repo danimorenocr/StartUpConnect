@@ -50,6 +50,9 @@ public class SecurityConfig {
                 // Rutas compartidas
                 .requestMatchers("/convocatoria/**", "/evento/**").hasAnyRole("ADMIN", "MENTOR", "EMPRENDEDOR")
                 
+                // Nueva regla para permitir acceso al endpoint '/api/notificaciones/marcar-todas-leidas' para roles autenticados
+                .requestMatchers("/api/notificaciones/marcar-todas-leidas").hasAnyRole("ADMIN", "EMPRENDEDOR")
+                
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form

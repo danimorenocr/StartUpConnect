@@ -54,7 +54,6 @@ public class ConvocatoriaController {
             return "convocatoria/crearConvocatoria";
         }
         convocatoriaService.save(convocatoria);
-        notificacionService.notificarNuevaConvocatoriaATodosLosEmprendedores("¡Nueva convocatoria disponible!");
         System.out.println("SHDFNKSDKFJSDJFSDJFKSKJDF YS FUNCIONA");
         return "redirect:/convocatoria";
     }

@@ -1030,14 +1030,18 @@
         }
 
         function marcarTodasNotificacionesComoLeidas() {
+            const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+
             fetch('/api/notificaciones/marcar-todas-leidas', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken
                 }
             })
                 .then(response => {
-                    if (response.ok) {                        // Actualizar todas las notificaciones en la UI
+                    if (response.ok) {
+                        // Actualizar todas las notificaciones en la UI
                         document.querySelectorAll('[data-id]').forEach(element => {
                             const statusBadge = element.querySelector('.text-white.bg-purple-500');
                             if (statusBadge) {

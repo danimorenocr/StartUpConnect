@@ -18,4 +18,6 @@ public interface NotificacionService {
     void marcarTodasNotificacionesComoLeidas(String documentoUsuario);
     
     NotificacionEntity obtenerNotificacionPorId(Long notificacionId);
+    
+    void notificarUsuariosPorRol(String rol, String mensaje);
 }

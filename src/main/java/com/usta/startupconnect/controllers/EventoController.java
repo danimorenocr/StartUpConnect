@@ -4,6 +4,7 @@ import com.usta.startupconnect.entities.ConvocatoriaEntity;
 import com.usta.startupconnect.entities.EventoEntity;
 import com.usta.startupconnect.models.services.ConvocatoriaService;
 import com.usta.startupconnect.models.services.EventoService;
+import com.usta.startupconnect.models.services.NotificacionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,6 +28,9 @@ public class EventoController {
 
     @Autowired
     private ConvocatoriaService convocatoriaService;
+
+    @Autowired
+    private NotificacionService notificacionService;
 
     @GetMapping(value = "/evento")
     public String listarEventos(Model model) {
@@ -58,6 +62,11 @@ public class EventoController {
         }
 
         eventoService.save(evento);
+        // Notificar a mentores y emprendedores sobre el nuevo evento
+        String mensaje = "📅 Nuevo evento creado: " + evento.getTitulo();
+        notificacionService.notificarUsuariosPorRol("MENTOR", mensaje);
+        notificacionService.notificarUsuariosPorRol("EMPRENDEDOR", mensaje);
+
         System.out.println("SHDFNKSDKFJSDJFSDJFKSKJDF YS FUNCIONA");
         return "redirect:/evento";
     }

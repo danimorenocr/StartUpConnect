@@ -98,4 +98,23 @@ public class NotificacionServiceImpl implements NotificacionService {
     public NotificacionEntity obtenerNotificacionPorId(Long notificacionId) {
         return notificacionDAO.findById(notificacionId).orElse(null);
     }
+
+    @Override
+    @Async
+    public void notificarUsuariosPorRol(String rol, String mensaje) {
+        List<UsuarioEntity> usuarios = usuarioDao.findByRol_Rol(rol);
+
+        for (UsuarioEntity usuario : usuarios) {
+            NotificacionEntity notificacion = new NotificacionEntity();
+            notificacion.setMensaje(mensaje);
+            notificacion.setTipoEntidad("Evento");
+            notificacion.setEntidadId(null);
+            notificacion.setFecha(new Date());
+            notificacion.setLeido(false);
+            notificacion.setUsuario(usuario);
+
+            notificacionDAO.save(notificacion);
+            enviarNotificacionAUsuario(notificacion);
+        }
+    }
 }
