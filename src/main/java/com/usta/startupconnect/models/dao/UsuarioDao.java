@@ -2,13 +2,15 @@ package com.usta.startupconnect.models.dao;
 
 import com.usta.startupconnect.entities.UsuarioEntity;
 import com.usta.startupconnect.entities.RolEntity;
+
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
+
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-public interface UsuarioDao extends CrudRepository<UsuarioEntity, String> {
+public interface UsuarioDao extends JpaRepository<UsuarioEntity, String> {
 
     @Transactional
     @Query("SELECT u FROM UsuarioEntity u WHERE u.rol = ?1")
@@ -33,5 +35,7 @@ public interface UsuarioDao extends CrudRepository<UsuarioEntity, String> {
     @Transactional
     @Query("SELECT u FROM UsuarioEntity u WHERE u.emailUsu = ?1 AND u.contrasenna = ?2")
     UsuarioEntity findByEmailAndContrasenna(String email, String contrasenna);
+
+    List<UsuarioEntity> findByRol(String rol);
 
 }

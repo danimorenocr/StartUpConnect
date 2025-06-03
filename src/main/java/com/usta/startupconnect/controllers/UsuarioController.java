@@ -89,7 +89,7 @@ public class UsuarioController {
             model.addAttribute("nombreCompleto", "Usuario");
         }
 
-        // Obtener datos para el dashboard
+    
 
         // 1. Total de usuarios
         List<UsuarioEntity> usuarios = usuarioService.findAll();

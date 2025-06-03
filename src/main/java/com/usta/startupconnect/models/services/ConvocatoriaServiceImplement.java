@@ -14,6 +14,9 @@ public class ConvocatoriaServiceImplement implements ConvocatoriaService {
     @Autowired
     private ConvocatoriaDao convocatoriaDao;
 
+    @Autowired
+    private NotificacionService notificacionService;
+
     @Override
     @Transactional()
     public List<ConvocatoriaEntity> findAll() {
@@ -24,6 +27,8 @@ public class ConvocatoriaServiceImplement implements ConvocatoriaService {
     @jakarta.transaction.Transactional
     public void save(ConvocatoriaEntity convocatoria) {
         convocatoriaDao.save(convocatoria);
+        notificacionService.notificarNuevaConvocatoriaATodosLosEmprendedores(
+                "🚀 Nueva convocatoria publicada: " + convocatoria.getTitulo());
     }
 
     @Override

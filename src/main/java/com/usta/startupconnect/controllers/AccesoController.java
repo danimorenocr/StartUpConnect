@@ -13,12 +13,13 @@ import com.usta.startupconnect.security.JpaUserDetailsService;
 
 @Controller
 public class AccesoController {
-    
+
     @Autowired
     private JpaUserDetailsService userDetailsService;
+
     @GetMapping(value = "/login")
     public String login(@RequestParam(value = "error", required = false) String error,
-                        @RequestParam(value = "logout", required = false) String logout, Model model) {
+            @RequestParam(value = "logout", required = false) String logout, Model model) {
 
         model.addAttribute("title", "Iniciar Sesión");
 
@@ -32,10 +33,12 @@ public class AccesoController {
         }
 
         return "login";
-    }    @GetMapping(value = "/dashboard")
+    }
+
+    @GetMapping(value = "/dashboard")
     public String dashboard() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        
+
         if (auth != null && auth.isAuthenticated()) {
             // Redirigir según el rol
             if (auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
@@ -46,7 +49,7 @@ public class AccesoController {
                 return "redirect:/emprendedor/dashboardEmprendedor";
             }
         }
-        
+
         // Por defecto, redirige a la página principal
         return "redirect:/";
     }
