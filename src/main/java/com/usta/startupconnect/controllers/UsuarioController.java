@@ -92,8 +92,6 @@ public class UsuarioController {
             model.addAttribute("nombreCompleto", "Usuario");
         }
 
-    
-
         // 1. Total de usuarios
         List<UsuarioEntity> usuarios = usuarioService.findAll();
         model.addAttribute("totalUsers", usuarios.size());
@@ -328,7 +326,14 @@ public class UsuarioController {
         usuario.setContrasenna(passwordEncoder.encode(usuario.getContrasenna()));
         usuario.setFotoUrl(urlImagen);
         usuario.setFecha_creacion(LocalDate.now());
-        usuarioService.save(usuario); // Redirige según el rol
+        usuarioService.save(usuario);
+
+        // Notificar a los administradores sobre el nuevo registro de usuario
+        String mensajeNotificacion = String.format("Nuevo usuario registrado: %s (Email: %s, Rol: %s)",
+                usuario.getNombreUsu(), usuario.getEmailUsu(), usuario.getRol().getRol());
+        notificacionService.notificarUsuariosPorRol("ADMIN", mensajeNotificacion);
+
+        // Redirige según el rol
         Long rolId = usuario.getRol().getIdRol();
         if (rolId == 2L) {
             return "redirect:/crearMentor?documento=" + usuario.getDocumento();
