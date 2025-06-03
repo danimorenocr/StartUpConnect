@@ -12,6 +12,7 @@ import com.usta.startupconnect.models.services.FeedbackService;
 import com.usta.startupconnect.models.services.TareaService;
 import com.usta.startupconnect.models.services.StartupService;
 import com.usta.startupconnect.models.services.EmprendedorService;
+import com.usta.startupconnect.models.services.NotificacionService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -41,6 +42,9 @@ public class EtapaController {
 
     @Autowired
     private EmprendedorService emprendedorService;
+
+    @Autowired
+    private NotificacionService notificacionService;
 
     @GetMapping(value = "/etapa")
     public String listaEtapas(Model model, org.springframework.security.core.Authentication authentication) {
@@ -173,6 +177,13 @@ public class EtapaController {
             feedback.setEtapa(etapa);
             feedback.setFechaCreacion(new Date());
             feedbackService.save(feedback);
+
+            // Notificar al emprendedor asociado a la startup
+            EmprendedorEntity emprendedor = startup.getEmprendedor();
+            if (emprendedor != null && emprendedor.getUsuario() != null) {
+                String mensaje = "Se ha creado una nueva etapa para tu startup: " + startup.getNombreStartup();
+                notificacionService.notificarUsuario(emprendedor.getUsuario().getDocumento(), mensaje);
+            }
 
             redirectAttributes.addFlashAttribute("mensajeExito", "Etapa creada exitosamente");
             return "redirect:/etapa";

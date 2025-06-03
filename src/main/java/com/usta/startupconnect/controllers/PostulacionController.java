@@ -11,6 +11,7 @@ import com.usta.startupconnect.models.services.ConvocatoriaService;
 import com.usta.startupconnect.models.services.EmprendedorService;
 import com.usta.startupconnect.models.services.FeedbackService;
 import com.usta.startupconnect.models.services.MentorService;
+import com.usta.startupconnect.models.services.NotificacionService;
 import com.usta.startupconnect.models.services.PostulacionService;
 import com.usta.startupconnect.models.services.StartupService;
 import com.usta.startupconnect.security.JpaUserDetailsService;
@@ -56,6 +57,9 @@ public class PostulacionController {
 
     @Autowired
     private JpaUserDetailsService userDetailsService;
+
+    @Autowired
+    private NotificacionService notificacionService;
 
     @GetMapping(value = { "/postulacion", "/postulacion/convocatoria/{idConvocatoria}" })
     public String listarPostulaciones(Model model, @PathVariable(required = false) Long idConvocatoria,
@@ -583,6 +587,11 @@ public class PostulacionController {
 
             // Guardar la relación feedback
             feedbackService.save(feedback);
+
+            // Notificar al mentor sobre la startup asignada
+            String mensajeNotificacion = "Se te ha asignado la startup: " + postulacion.getStartup().getNombreStartup();
+            notificacionService.notificarUsuario(mentor.getUsuario().getDocumento(), mensajeNotificacion);
+
             redirectAttributes.addFlashAttribute("mensajeExito",
                     "Mentor " + mentor.getUsuario().getNombreUsu() +
                             " asignado exitosamente a la startup " + postulacion.getStartup().getNombreStartup());

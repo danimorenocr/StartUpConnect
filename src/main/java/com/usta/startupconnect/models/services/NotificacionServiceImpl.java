@@ -117,4 +117,22 @@ public class NotificacionServiceImpl implements NotificacionService {
             enviarNotificacionAUsuario(notificacion);
         }
     }
+
+    @Override
+    @Async
+    public void notificarUsuario(String documentoUsuario, String mensaje) {
+        UsuarioEntity usuario = usuarioDao.findUsuarioById(documentoUsuario);
+        if (usuario != null) {
+            NotificacionEntity notificacion = new NotificacionEntity();
+            notificacion.setMensaje(mensaje);
+            notificacion.setTipoEntidad("Etapa");
+            notificacion.setEntidadId(null);
+            notificacion.setFecha(new Date());
+            notificacion.setLeido(false);
+            notificacion.setUsuario(usuario);
+
+            notificacionDAO.save(notificacion);
+            enviarNotificacionAUsuario(notificacion);
+        }
+    }
 }

@@ -227,48 +227,14 @@
             </section> <!-- Sección de alertas y notificaciones -->
             <section class="flex-1">
                 <h2 class="text-2xl font-bold mb-4">Notificaciones de la Plataforma</h2>
-                <div class="bg-purple-200 rounded-2xl p-5 shadow min-h-[300px] flex flex-col gap-4 overflow-y-auto">
-
-
-                </div>
-                <!-- Tarjeta CTA para acceder al Chatbot -->
-                <div
-                    class="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl p-5 shadow text-white relative overflow-hidden mt-6">
-                    <div class="absolute top-0 right-0 -mt-6 -mr-6 w-24 h-24 rounded-full bg-blue-400 opacity-20"></div>
-                    <div class="absolute bottom-0 left-0 -mb-6 -ml-6 w-20 h-20 rounded-full bg-indigo-400 opacity-20">
-                    </div>
-                    <div class="relative z-10">
-                        <div class="flex items-center mb-3">
-                            <div class="bg-white bg-opacity-20 rounded-full p-2 mr-3">
-                                <i class="fas fa-robot text-xl"></i>
-                            </div>
-                            <h3 class="text-lg font-bold">StartUp AI</h3>
+                <div id="notificaciones-container" class="bg-purple-200 rounded-2xl p-5 shadow min-h-[300px] flex flex-col gap-4 overflow-y-auto">
+                    <!-- Mensaje cuando no hay notificaciones -->
+                    <div class="flex flex-col items-center justify-center text-center h-full py-8" id="no-notificaciones">
+                        <div class="bg-white rounded-full p-5 mb-4 shadow-md">
+                            <i class="fas fa-bell-slash text-purple-500 text-3xl"></i>
                         </div>
-
-                        <h4 class="text-base font-bold mb-2">Asistente Inteligente</h4>
-                        <p class="text-sm mb-4 opacity-90">Resuelve dudas, genera ideas y obtén recomendaciones
-                            personalizadas para tu equipo con nuestro asistente AI.</p>
-
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-4 text-sm">
-                            <div class="flex items-center">
-                                <i class="fas fa-check-circle mr-2 text-blue-200"></i>
-                                <span>Respuestas instantáneas</span>
-                            </div>
-                            <div class="flex items-center">
-                                <i class="fas fa-check-circle mr-2 text-blue-200"></i>
-                                <span>Generar documentos</span>
-                            </div>
-                            <div class="flex items-center">
-                                <i class="fas fa-check-circle mr-2 text-blue-200"></i>
-                                <span>Asistencia 24/7</span>
-                            </div>
-                        </div>
-
-                        <a href="/chatbot"
-                            class="inline-flex items-center justify-center bg-white text-indigo-600 rounded-full px-5 py-2 font-bold hover:bg-opacity-90 transition transform hover:-translate-y-1 shadow-md w-full text-sm">
-                            <i class="fas fa-comments mr-2"></i>
-                            Iniciar chat ahora
-                        </a>
+                        <p class="text-purple-800 font-medium mb-2">No tienes notificaciones</p>
+                        <p class="text-gray-600 text-sm">Te notificaremos cuando haya novedades</p>
                     </div>
                 </div>
             </section>
@@ -737,6 +703,53 @@
                     }
                 }
             });
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+    <script>
+        let stompClient = null;
+
+        function conectarWebSocket(documentoUsuario) {
+            const socket = new SockJS('/ws');
+            stompClient = Stomp.over(socket);
+
+            stompClient.connect({}, function (frame) {
+                console.log('Conectado: ' + frame);
+
+                stompClient.subscribe('/topic/notificaciones/' + documentoUsuario, function (mensaje) {
+                    const notificacion = JSON.parse(mensaje.body);
+                    mostrarNotificacion(notificacion);
+                });
+            });
+        }
+
+        function mostrarNotificacion(notificacion) {
+            const contenedor = document.getElementById('notificaciones-container');
+            const mensajeVacio = document.getElementById('no-notificaciones');
+            if (mensajeVacio) mensajeVacio.remove();
+
+            const tarjeta = document.createElement('div');
+            tarjeta.className = 'bg-white shadow-md hover:shadow-lg p-4 rounded-lg text-sm text-gray-800 transition-all duration-300 border-l-4 border-purple-500';
+            tarjeta.innerHTML = `
+                <div class="flex justify-between items-start">
+                    <div>
+                        <div class="flex items-center mb-1">
+                            <i class="fas fa-circle text-xs text-purple-500 mr-2"></i>
+                            <strong class="text-gray-700">${notificacion.tipoEntidad}</strong>
+                        </div>
+                        <p class="text-gray-600 ml-4">${notificacion.mensaje}</p>
+                    </div>
+                    <span class="text-xs text-gray-500">${new Date(notificacion.fecha).toLocaleString()}</span>
+                </div>`;
+
+            contenedor.prepend(tarjeta);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const documentoUsuario = document.getElementById('usuario-documento').getAttribute('data-documento');
+            conectarWebSocket(documentoUsuario);
         });
     </script>
 </body>

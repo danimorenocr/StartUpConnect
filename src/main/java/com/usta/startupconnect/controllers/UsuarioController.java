@@ -15,6 +15,7 @@ import com.usta.startupconnect.models.services.RolService;
 import com.usta.startupconnect.models.services.StartupService;
 import com.usta.startupconnect.models.services.UsuarioService;
 import com.usta.startupconnect.models.services.EmprendedorService;
+import com.usta.startupconnect.models.services.NotificacionService;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -73,6 +74,8 @@ public class UsuarioController {
     private com.usta.startupconnect.models.services.FeedbackService feedbackService;
     @Autowired
     private com.usta.startupconnect.models.services.PostulacionService postuService;
+    @Autowired
+    private NotificacionService notificacionService;
 
     @GetMapping(value = "/administrador")
     public String administrador(Model model, org.springframework.security.core.Authentication authentication) {
@@ -402,6 +405,10 @@ public class UsuarioController {
                 return "registro";
             }
         }
+
+        // Notificar a los administradores sobre el nuevo registro
+        String mensaje = "Un nuevo usuario se ha registrado: " + usuario.getNombreUsu();
+        notificacionService.notificarUsuariosPorRol("ADMIN", mensaje);
 
         redirectAttributes.addFlashAttribute("mensajeExito", "Usuario registrado exitosamente");
         return "redirect:/login";

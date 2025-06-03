@@ -12,7 +12,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/notificaciones")
@@ -78,6 +80,39 @@ public class NotificacionController {
             
         } catch (Exception e) {
             response.put("mensaje", "Error al marcar las notificaciones como leídas");
+            response.put("error", e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
+    @GetMapping("/admin")
+    public ResponseEntity<?> obtenerNotificacionesAdmin(Authentication authentication) {
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            String email = authentication.getName();
+            UsuarioEntity usuario = usuarioService.findByEmail(email);
+
+            if (usuario == null || !usuario.getRol().getRol().equals("ADMIN")) {
+                response.put("mensaje", "No tienes permiso para realizar esta acción");
+                return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
+            }
+
+            List<Map<String, Object>> notificaciones = notificacionService.obtenerNotificacionesPorUsuario(usuario.getDocumento())
+                .stream()
+                .map(notificacion -> {
+                    Map<String, Object> dto = new HashMap<>();
+                    dto.put("id", notificacion.getId());
+                    dto.put("titulo", notificacion.getTipoEntidad()); // Usar tipoEntidad como título
+                    dto.put("mensaje", notificacion.getMensaje());
+                    return dto;
+                })
+                .collect(Collectors.toList());
+
+            return new ResponseEntity<>(notificaciones, HttpStatus.OK);
+
+        } catch (Exception e) {
+            response.put("mensaje", "Error al obtener las notificaciones");
             response.put("error", e.getMessage());
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }

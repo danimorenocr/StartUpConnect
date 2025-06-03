@@ -311,48 +311,8 @@
             </section> <!-- Sección de alertas y notificaciones -->
             <section class="flex-1 min-w-[340px]">
                 <h2 class="text-2xl font-bold mb-4">Notificaciones de la Plataforma</h2>
-                <div class="bg-purple-200 rounded-2xl p-5 shadow min-h-[300px] flex flex-col gap-4 overflow-y-auto">
-
-                </div>
-                <!-- Tarjeta CTA para acceder al Chatbot -->
-                <div
-                    class="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl p-5 shadow text-white relative overflow-hidden mt-6">
-                    <div class="absolute top-0 right-0 -mt-6 -mr-6 w-24 h-24 rounded-full bg-blue-400 opacity-20"></div>
-                    <div class="absolute bottom-0 left-0 -mb-6 -ml-6 w-20 h-20 rounded-full bg-indigo-400 opacity-20">
-                    </div>
-                    <div class="relative z-10">
-                        <div class="flex items-center mb-3">
-                            <div class="bg-white bg-opacity-20 rounded-full p-2 mr-3 flex items-center justify-center">
-                                <i class="fa-solid fa-robot text-2xl text-indigo-600"></i>
-                            </div>
-                            <h3 class="text-lg font-bold">StartUp AI</h3>
-                        </div>
-
-                        <h4 class="text-base font-bold mb-2">Asistente Inteligente</h4>
-                        <p class="text-sm mb-4 opacity-90">Resuelve dudas, genera ideas y obtén recomendaciones
-                            personalizadas para tu equipo con nuestro asistente AI.</p>
-
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-4 text-sm">
-                            <div class="flex items-center">
-                                <i class="fas fa-check-circle mr-2 text-blue-200"></i>
-                                <span>Respuestas instantáneas</span>
-                            </div>
-                            <div class="flex items-center">
-                                <i class="fas fa-check-circle mr-2 text-blue-200"></i>
-                                <span>Generar documentos</span>
-                            </div>
-                            <div class="flex items-center">
-                                <i class="fas fa-check-circle mr-2 text-blue-200"></i>
-                                <span>Asistencia 24/7</span>
-                            </div>
-                        </div>
-
-                        <a href="/chatbot"
-                            class="inline-flex items-center justify-center bg-white text-indigo-600 rounded-full px-5 py-2 font-bold hover:bg-opacity-90 transition transform hover:-translate-y-1 shadow-md w-full text-sm">
-                            <i class="fas fa-comments mr-2"></i>
-                            Iniciar chat ahora
-                        </a>
-                    </div>
+                <div id="admin-notifications" class="bg-purple-200 rounded-2xl p-5 shadow min-h-[300px] flex flex-col gap-4 overflow-y-auto">
+                    <!-- Las notificaciones se cargarán dinámicamente aquí -->
                 </div>
             </section>
         </div>
@@ -740,6 +700,63 @@
             if (calendarIframe) {
                 calendarIframe.addEventListener('load', adjustCalendarHeight);
             }
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Función para obtener notificaciones del administrador
+            async function fetchAdminNotifications() {
+                try {
+                    const response = await fetch('/api/notificaciones/admin'); // Endpoint para obtener notificaciones
+                    if (!response.ok) {
+                        throw new Error('Error al obtener las notificaciones');
+                    }
+                    const notifications = await response.json();
+                    renderNotifications(notifications);
+                } catch (error) {
+                    console.error('Error:', error);
+                    document.getElementById('admin-notifications').innerHTML = '<p class="text-red-500">No se pudieron cargar las notificaciones.</p>';
+                }
+            }
+
+            // Función para renderizar notificaciones en el DOM
+            function renderNotifications(notifications) {
+                const container = document.getElementById('admin-notifications');
+                container.innerHTML = '';
+
+                if (notifications.length === 0) {
+                    container.innerHTML = '<p class="text-gray-500">No hay notificaciones nuevas.</p>';
+                    return;
+                }
+
+                notifications.forEach(notification => {
+                    const notificationElement = document.createElement('div');
+                    notificationElement.className = 'bg-white rounded-xl p-4 shadow-md border border-purple-100 hover:shadow-lg transition-all duration-300';
+                    notificationElement.innerHTML = `
+                        <p class="text-gray-800 font-semibold">${notification.titulo}</p>
+                        <p class="text-gray-600 text-sm">${notification.mensaje}</p>
+                        <button class="text-blue-500 text-sm mt-2" onclick="markAsRead(${notification.id})">Marcar como leída</button>
+                    `;
+                    container.appendChild(notificationElement);
+                });
+            }
+
+            // Función para marcar una notificación como leída
+            async function markAsRead(notificationId) {
+                try {
+                    const response = await fetch(`/api/notificaciones/${notificationId}/marcar-leida`, { method: 'POST' });
+                    if (!response.ok) {
+                        throw new Error('Error al marcar la notificación como leída');
+                    }
+                    fetchAdminNotifications(); // Recargar notificaciones
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            }
+
+            // Cargar notificaciones al cargar la página
+            fetchAdminNotifications();
         });
     </script>
 </body>
