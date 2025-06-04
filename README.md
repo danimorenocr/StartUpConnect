@@ -1,5 +1,127 @@
-## Base de datos
-´´´
+# StartUpConnect
+
+<div align="center">
+  <img src="src/main/resources/static/images/logoTexto.png" alt="StartUpConnect Logo" width="400">
+  <p><em>Conectando emprendedores con mentores y oportunidades</em></p>
+</div>
+
+## 📋 Descripción del Proyecto
+
+StartUpConnect es una plataforma integral diseñada para conectar emprendedores con mentores experimentados, inversionistas y oportunidades de crecimiento. La plataforma facilita la gestión de startups, convocatorias, postulaciones y el proceso de mentoría, creando un ecosistema completo para el desarrollo de emprendimientos.
+
+## 🚀 Características Principales
+
+- **Gestión de Startups**: Registro y administración de proyectos emprendedores con toda la información relevante.
+- **Sistema de Convocatorias**: Publicación y gestión de convocatorias para startups con seguimiento completo del proceso.
+- **Mentoría Estructurada**: Proceso de mentoría organizado en etapas y tareas específicas.
+- **Feedback Continuo**: Sistema de retroalimentación entre mentores y emprendedores.
+- **Calendario Integrado**: Integración con Google Calendar para la gestión de eventos y recordatorios.
+- **Vitrina de Startups**: Exposición de proyectos para atraer inversionistas y colaboradores.
+- **Gestión de Entregables**: Sistema para subir, revisar y aprobar documentos relacionados con las tareas.
+- **Chatbot Asistente**: Asistente virtual basado en IA para ayudar a los usuarios con sus consultas.
+
+## 🛠️ Tecnologías Utilizadas
+
+- **Backend**: Java 17 con Spring Boot 3.4.2
+- **Frontend**: Thymeleaf, HTML5, CSS3, JavaScript
+- **Base de Datos**: PostgreSQL
+- **Integración**: Google Calendar API, OpenAI API
+- **Despliegue**: Render Cloud Platform
+- **Herramientas de Construcción**: Maven
+
+## 📦 Estructura del Proyecto
+
+```
+StartUpConnect/
+├── src/
+│   ├── main/
+│   │   ├── java/com/usta/startupconnect/
+│   │   │   ├── controllers/        # Controladores MVC
+│   │   │   ├── entities/           # Entidades JPA
+│   │   │   ├── models/
+│   │   │   │   ├── dao/            # Interfaces DAO para acceso a datos
+│   │   │   │   └── services/       # Servicios de la aplicación
+│   │   │   └── utils/              # Utilidades y clases auxiliares
+│   │   └── resources/
+│   │       ├── static/
+│   │       │   ├── css/            # Hojas de estilo
+│   │       │   ├── images/         # Imágenes y recursos gráficos
+│   │       │   ├── js/             # Scripts JavaScript
+│   │       │   └── sounds/         # Recursos de audio
+│   │       ├── templates/          # Plantillas Thymeleaf
+│   │       └── application.properties  # Configuración de la aplicación
+│   └── test/                       # Pruebas unitarias
+└── pom.xml                         # Configuración de Maven
+```
+
+## 🗄️ Modelo de Base de Datos
+
+La aplicación utiliza un modelo de base de datos relacional con las siguientes entidades principales:
+
+- **Usuarios**: Administradores, mentores, emprendedores e inversionistas
+- **Startups**: Proyectos emprendedores con toda su información
+- **Convocatorias**: Oportunidades para startups
+- **Postulaciones**: Aplicaciones de startups a convocatorias
+- **Etapas y Tareas**: Estructura del proceso de mentoría
+- **Entregables**: Documentos y archivos asociados a las tareas
+- **Eventos y Calendario**: Gestión de fechas importantes
+
+## 🚦 Requisitos Previos
+
+- Java Development Kit (JDK) 17 o superior
+- Maven 3.8+
+- PostgreSQL 13+
+- Cuenta de Google Cloud Platform (para integración con Google Calendar)
+- Cuenta en OpenAI (para el chatbot asistente)
+
+## ⚙️ Configuración del Entorno
+
+1. **Base de Datos PostgreSQL**:
+   - Crear una base de datos para el proyecto
+   - Configurar las credenciales en variables de entorno o application.properties
+
+2. **Variables de Entorno**:
+   ```
+   DB_URL=jdbc:postgresql://localhost:5432/nombre_db
+   DB_USERNAME=usuario_db
+   DB_PASSWORD=contraseña_db
+   GOOGLE_CALENDAR_TIMEZONE=America/Bogota
+   GOOGLE_CALENDAR_CREDENTIALS_PATH=ruta/a/credentials.json
+   OPENAI_API_KEY=tu_api_key_de_openai
+   RENDER_API_KEY=tu_api_key_de_render
+   RENDER_API_URL=https://api.render.com/v1
+   ```
+
+3. **Credenciales de Google Calendar**:
+   - Configurar un proyecto en Google Cloud Platform
+   - Activar la API de Google Calendar
+   - Generar credenciales OAuth 2.0
+   - Guardar el archivo credentials.json en la ruta especificada
+
+## 🔧 Instalación y Ejecución
+
+1. **Clonar el repositorio**:
+   ```bash
+   git clone https://github.com/tuusuario/StartUpConnect.git
+   cd StartUpConnect
+   ```
+
+2. **Compilar el proyecto**:
+   ```bash
+   ./mvnw clean package
+   ```
+
+3. **Ejecutar la aplicación**:
+   ```bash
+   ./mvnw spring-boot:run
+   ```
+
+4. **Acceder a la aplicación**:
+   Abrir un navegador y visitar `http://localhost:8080`
+
+## 📝 Estructura de la Base de Datos
+
+```sql
 -- Tabla: Rol
 CREATE TABLE Rol (
 id SERIAL PRIMARY KEY,
@@ -52,129 +174,17 @@ estado VARCHAR(50),
 cant_likes SMALLINT,
 id_emprendedor VARCHAR(20) REFERENCES Emprendedor(documento)
 );
+```
 
--- Tabla: Feedback
-CREATE TABLE Feedback (
-id SERIAL PRIMARY KEY,
-id_startup INTEGER REFERENCES Startup(id),
-id_mentor VARCHAR(20) REFERENCES Mentor(documento),
-comentario_startup TEXT,
-comentario_mentor TEXT,
-calificacion_startup SMALLINT CHECK (calificacion_startup BETWEEN 1 AND 5),
-calificacion_mentor SMALLINT CHECK (calificacion_mentor BETWEEN 1 AND 5),
-fecha DATE
-);
+### Datos iniciales
 
--- Tabla: Convocatoria
-CREATE TABLE Convocatoria (
-id SERIAL PRIMARY KEY,
-titulo VARCHAR(100),
-descripcion TEXT,
-fecha_inicio DATE,
-fecha_fin DATE,
-requisitos TEXT,
-organizador VARCHAR(100),
-beneficios TEXT,
-contacto VARCHAR(100),
-sector_objetivo VARCHAR(100)
-);
-
--- Tabla: Postulacion
-CREATE TABLE Postulacion (
-id SERIAL PRIMARY KEY,
-id_startup INTEGER REFERENCES Startup(id),
-id_convocatoria INTEGER REFERENCES Convocatoria(id),
-nombre_proyecto VARCHAR(100),
-problema_a_solucionar TEXT,
-solucion TEXT,
-clientes_objetivo TEXT,
-diferenciador TEXT,
-foto_url TEXT,
-enlace_pagina_web TEXT,
-numero_integrantes SMALLINT,
-roles_integrantes TEXT,
-dinero_ventas DECIMAL(10, 2),
-habilidades_equipo TEXT,
-etapa_proyecto VARCHAR(50) CHECK (etapa_proyecto IN ('idea', 'prototipo', 'producto mínimo viable', 'producto comercializado')),
-necesidades_actuales TEXT,
-fecha_postulacion DATE,
-estado VARCHAR(50) CHECK (estado IN ('pendiente', 'aprobada', 'rechazada')),
-pitch TEXT,
-documento_propuesta TEXT,
-video_pitch TEXT,
-enlaces_adicionales TEXT
-);
-
--- Tabla: Calendario
-CREATE TABLE Calendario (
-id SERIAL PRIMARY KEY,
-nombre_evento VARCHAR(100),
-fecha_inicio DATE,
-fecha_fin DATE
-);
-
--- Tabla: Notificacion
-CREATE TABLE Notificacion (
-id SERIAL PRIMARY KEY,
-mensaje TEXT,
-tipo VARCHAR(50) CHECK (tipo IN ('recordatorio', 'alerta', 'informativa')),
-fecha DATE,
-id_calendario INTEGER REFERENCES Calendario(id)
-);
-
--- Tabla: Evento
-CREATE TABLE Evento (
-id SERIAL PRIMARY KEY,
-titulo VARCHAR(100),
-descripcion TEXT,
-fecha DATE,
-color VARCHAR(50),
-id_calendario INTEGER REFERENCES Calendario(id)
-);
-
--- Tabla: Etapa
-CREATE TABLE Etapa (
-id SERIAL PRIMARY KEY,
-titulo VARCHAR(100),
-descripcion TEXT,
-fecha_inicio DATE,
-fecha_fin DATE,
-id_mentor VARCHAR(20) REFERENCES Mentor(documento)
-);
-
--- Tabla: Tarea
-CREATE TABLE Tarea (
-id SERIAL PRIMARY KEY,
-titulo VARCHAR(100),
-descripcion TEXT,
-fecha_entrega DATE,
-id_etapa INTEGER REFERENCES Etapa(id)
-);
-
--- Tabla: Entregables
-CREATE TABLE Archivos (
-id SERIAL PRIMARY KEY,
-id_tarea INTEGER REFERENCES Tarea(id),
-nombre_archivo TEXT,
-ruta_archivo TEXT,
-estado VARCHAR(50) CHECK (estado IN ('pendiente', 'aprobado', 'rechazado'))
-);
--- Tabla: Comentarios
-CREATE TABLE Comentarios (
-id SERIAL PRIMARY KEY,
-comentario TEXT,
-);
-´´´
-
-
-
-##### INSERTS
+```sql
 INSERT INTO ROLES (id, rol)
 VALUES
 (1, 'ADMIN'),
 (2, 'MENTOR'),
 (3, 'EMPRENDEDOR'),
-(4, 'USUARIO');
+(4, 'INVERSIONISTA');
 
 INSERT INTO USUARIOS (documento, nombre, email, contrasenna, fecha_creacion, telefono, foto_url, id_rol)
 VALUES
@@ -183,216 +193,165 @@ VALUES
 ('1122334455', 'Carlos Garcia', 'carlos@example.com', 'qwerty', '2025-03-22', '3201122334', 'https://example.com/carlos.jpg', 3),
 ('5566778899', 'Ana Lopez', 'ana@example.com', 'pass123', '2025-02-10', '3005566778', 'https://example.com/ana.jpg', 3),
 ('6677889900', 'Pedro Martinez', 'pedro@example.com', 'pedro123', '2025-01-20', '3106677889', 'https://example.com/pedro.jpg', 2);
+```
 
-INSERT INTO EMPRENDEDORES (documento, universidad, programa_educativo, id_usuario)
-VALUES
-('1122334455', 'Universidad de Antioquia', 'Administración de Empresas', '1122334455'),
-('5566778899', 'Universidad del Valle', 'Economía', '5566778899'),
+## 🔐 Seguridad
 
+La aplicación implementa medidas de seguridad que incluyen:
+- Autenticación de usuarios con roles específicos
+- Protección de rutas según el rol del usuario
+- Encriptación de contraseñas
+- Manejo seguro de variables de entorno para credenciales
 
-INSERT INTO MENTORES (documento, especialidad, biografia, linkedin, anos_experiencia, id_usuario)
-VALUES
-('1234567890', 'Desarrollo de Software', 'Mentor especializado en proyectos de tecnología e innovación.', 'https://www.linkedin.com/in/mentor1', 5, '1234567890'),
-('0987654321', 'Marketing Digital', 'Experto en estrategias de marketing para startups.', 'https://www.linkedin.com/in/mentor2', 8, '0987654321');
+## 🧪 Pruebas
 
+El proyecto incluye pruebas unitarias y de integración para verificar el correcto funcionamiento de los componentes. Para ejecutar las pruebas:
 
-INSERT INTO STARTUPS (nombre, sector, descripcion, pagina_web, logo_url, pitch_url, video_presentacion, github, linkedin, instagram, fecha_creacion, estado, cant_likes, id_emprendedor)
-VALUES
-('TechHub', 'Tecnología', 'Plataforma para conectar desarrolladores y startups tecnológicas.', 'https://www.techhub.com', 'https://example.com/logo1.png', 'https://example.com/pitch1.pdf', 'https://example.com/video1.mp4', 'https://github.com/techhub', 'https://linkedin.com/company/techhub', 'https://instagram.com/techhub', '2023-01-15', 'Activa', 150, '1122334455'),
-('EcoSmart', 'Energía Renovable', 'Soluciones sostenibles para energía limpia y eficiencia energética.', 'https://www.ecosmart.com', 'https://example.com/logo2.png', 'https://example.com/pitch2.pdf', 'https://example.com/video2.mp4', 'https://github.com/ecosmart', 'https://linkedin.com/company/ecosmart', 'https://instagram.com/ecosmart', '2023-02-10', 'Activa', 300, '5566778899');
+```bash
+./mvnw test
+```
 
-INSERT INTO CONVOCATORIAS (titulo, descripcion, fecha_inicio, fecha_fin, requisitos, organizador, beneficios, contacto, sector_objetivo)
-VALUES
-('Innovación en Tecnología',
-'Convocatoria para startups tecnológicas enfocadas en inteligencia artificial y aprendizaje automático.',
-'2025-06-01',
-'2025-08-01',
-'Experiencia en desarrollo de software, prototipos funcionales, equipo técnico sólido.',
-'Ministerio de Tecnología',
-'Acceso a capital semilla, mentoría especializada, conexiones con inversionistas.',
-'tecnologia@ministerio.com',
-'Tecnología, Innovación'),
+## 🤝 Contribuir al Proyecto
 
-('Crecimiento Sostenible',
-'Convocatoria para proyectos sostenibles y startups ecológicas que buscan impacto positivo.',
-'2025-05-15',
-'2025-09-15',
-'Modelo de negocio sostenible, impacto ambiental medible, compromiso con prácticas ecológicas.',
-'Fundación Verde',
-'Financiamiento, visibilidad en medios, acceso a redes de sostenibilidad.',
-'contacto@fundacionverde.org',
-'Medio Ambiente, Sostenibilidad'),
+Las contribuciones son bienvenidas. Para contribuir:
 
-('Salud y Bienestar',
-'Convocatoria para innovadores en salud digital, biotecnología y bienestar.',
-'2025-04-01',
-'2025-07-01',
-'Tecnologías innovadoras en salud, pruebas clínicas iniciales, equipo interdisciplinario.',
-'Ministerio de Salud',
-'Acceso a laboratorios, pruebas clínicas, conexiones con hospitales.',
-'salud@ministerio.com',
-'Salud, Bienestar'),
+1. Haz un fork del proyecto
+2. Crea una rama para tu feature (`git checkout -b feature/amazing-feature`)
+3. Haz commit de tus cambios (`git commit -m 'Add some amazing feature'`)
+4. Haz push a la rama (`git push origin feature/amazing-feature`)
+5. Abre un Pull Request
 
-('Educación y Tecnología',
-'Convocatoria para startups que están revolucionando la educación a través de tecnología.',
-'2025-03-01',
-'2025-06-01',
-'Enfoque en tecnología educativa, impacto en aprendizaje, modelo de negocio escalable.',
-'Fundación para la Educación',
-'Acceso a plataformas educativas, mentoría, participación en ferias tecnológicas.',
-'educacion@fundacion.org',
-'Educación, Tecnología'),
+## 👥 Equipo de Desarrollo
 
-('Agricultura Inteligente',
-'Convocatoria para soluciones tecnológicas en agricultura de precisión y sostenibilidad rural.',
-'2025-07-01',
-'2025-10-01',
-'Innovaciones tecnológicas, impacto en productividad agrícola, uso eficiente de recursos.',
-'Ministerio de Agricultura',
-'Acceso a redes rurales, subsidios, mentoría especializada.',
-'agricultura@ministerio.com',
-'Agricultura, Tecnología');
+- **Desarrolladores** - Daniela Moreno - Sofia Torres
+- **Supervisores** - Docentes del área de Desarrollo Empresarial
 
-INSERT INTO EVENTOS (titulo, descripcion, fecha, color, id_convocatoria) VALUES
-('Demo Day Innovación',
-'Presentación final de startups tecnológicas para inversionistas y aceleradoras.',
-'2025-06-15',
-'#1e3a8a',
-1),
+## 📄 Licencia
 
-('Taller de Crecimiento Sostenible',
-'Capacitación para startups verdes sobre modelos de negocio sostenibles y financiamiento.',
-'2025-07-10',
-'#10b981',
-2),
+Este proyecto está licenciado bajo la Licencia MIT - ver el archivo LICENSE.md para más detalles.
 
-('Foro de Salud Digital',
-'Discusión sobre las últimas tendencias en salud digital y bienestar tecnológico.',
-'2025-06-20',
-'#dc2626',
-3),
+## 🙏 Agradecimientos
 
-('Encuentro de Innovadores Educativos',
-'Networking y charlas para startups enfocadas en tecnología educativa.',
-'2025-06-25',
-'#f59e0b',
-4),
-
-('Cumbre de Agricultura Inteligente',
-'Evento para conectar innovadores en agricultura con líderes de la industria.',
-'2025-08-05',
-'#854d0e',
-5);
+- Universidad Santo Tomás
+- Profesores y mentores que apoyaron el desarrollo
+- Comunidad de emprendedores que participó en las pruebas
 
 
-INSERT INTO ETAPAS (titulo, descripcion, fecha_inicio, fecha_fin, id_mentor) VALUES
-('Definición de Objetivos',
-'Primera fase del proyecto, enfocada en establecer metas claras y medibles para el desarrollo del negocio.',
-'2025-05-15',
-'2025-06-15',
-'0987654321'),
+## 🐳 Docker
 
-('Desarrollo del Producto',
-'Etapa dedicada a la creación y perfeccionamiento del producto mínimo viable (MVP).',
-'2025-06-16',
-'2025-08-15',
-'1234567890'),
+Esta sección explica cómo desplegar la aplicación utilizando Docker para crear un entorno aislado y reproducible.
 
-('Pruebas de Mercado',
-'Validación del producto a través de pruebas con usuarios reales para obtener retroalimentación.',
-'2025-08-16',
-'2025-09-15',
-'0987654321'),
+### Requisitos previos
+- Docker y Docker Compose instalados en tu sistema
+- Acceso a terminal con permisos para ejecutar comandos Docker
 
-('Estrategia de Escalamiento',
-'Desarrollo de estrategias para escalar las operaciones y ampliar la base de clientes.',
-'2025-09-16',
-'2025-11-15',
-'1234567890'),
+### Pasos para el despliegue
 
-('Presentación a Inversionistas',
-'Preparación de presentaciones y pitches para atraer inversores y socios estratégicos.',
-'2025-11-16',
-'2025-12-15',
-'0987654321');
+1. **Navegar al directorio del proyecto**:
+   ```bash
+   cd C:\Users\danim\OneDrive\Documentos\U\Desarrollo Empresarial\StartUpConnect
+   ```
 
-INSERT INTO EVENTOS (titulo, descripcion, fecha, color, id_convocatoria) VALUES
-('Demo Day Innovación',
-'Presentación final de startups tecnológicas para inversionistas y aceleradoras.',
-'2025-06-15',
-'#1e3a8a',
-1),
+2. **Compilar el proyecto sin ejecutar pruebas**:
+   ```bash
+   ./mvnw clean package -DskipTests
+   ```
 
-('Taller de Crecimiento Sostenible',
-'Capacitación para startups verdes sobre modelos de negocio sostenibles y financiamiento.',
-'2025-07-10',
-'#10b981',
-2),
+3. **Crear la imagen Docker**:
+   ```bash
+   docker build --no-cache -t startupconnect-app .
+   ```
 
-('Foro de Salud Digital',
-'Discusión sobre las últimas tendencias en salud digital y bienestar tecnológico.',
-'2025-06-20',
-'#dc2626',
-3),
+4. **Levantar los contenedores con Docker Compose**:
+   ```bash
+   docker-compose up -d
+   ```
 
-('Encuentro de Innovadores Educativos',
-'Networking y charlas para startups enfocadas en tecnología educativa.',
-'2025-06-25',
-'#f59e0b',
-4),
+5. **Inicializar la base de datos con datos iniciales**:
+   ```bash
+   docker exec -it postgres_startup psql -U user_java -d db_startup
+   ```
+   
+   Dentro de PostgreSQL, ejecutar:
+   ```sql
+   INSERT INTO ROLES (id, rol)
+   VALUES
+   (1, 'ADMIN'),
+   (2, 'MENTOR'),
+   (3, 'EMPRENDEDOR'),
+   (4, 'INVERSIONISTA');
+   
+   SELECT * FROM roles;
+   ```
 
-('Cumbre de Agricultura Inteligente',
-'Evento para conectar innovadores en agricultura con líderes de la industria.',
-'2025-08-05',
-'#854d0e',
-5);
+### Gestión del contenedor
 
+- **Eliminar el contenedor de la aplicación**:
+  ```bash
+  docker rm -f springboot_startup_app
+  ```
 
-INSERT INTO TAREAS (titulo, descripcion, fecha_entrega, id_etapa) VALUES
-('Definir misión y visión',
-'Redactar la misión y visión del proyecto para establecer una dirección clara.',
-'2025-05-20',
-1),
+- **Verificar los volúmenes persistentes**:
+  ```bash
+  docker volume ls
+  ```
+  Deberías ver un volumen llamado `nombre_proyecto_postgres_data`
 
-('Investigación de mercado',
-'Realizar un análisis del mercado para identificar necesidades y oportunidades.',
-'2025-06-10',
-1),
+### Actualizar la aplicación
 
-('Desarrollo del prototipo',
-'Crear el primer prototipo del producto para validar la viabilidad técnica.',
-'2025-06-30',
-2),
+Si realizas cambios en el código o la configuración:
 
-('Pruebas iniciales',
-'Realizar pruebas de funcionalidad y rendimiento del producto con un grupo pequeño de usuarios.',
-'2025-07-15',
-2),
+1. **Recompilar el proyecto**:
+   ```bash
+   ./mvnw clean package -DskipTests
+   ```
 
-('Análisis de resultados',
-'Evaluar los resultados de las pruebas iniciales y ajustar el producto según el feedback.',
-'2025-08-01',
-3),
+2. **Reconstruir la imagen Docker**:
+   ```bash
+   docker build --no-cache -t startupconnect-app .
+   ```
 
-('Desarrollo de estrategias de marketing',
-'Crear un plan de marketing para atraer clientes y aumentar la visibilidad.',
-'2025-09-01',
-4),
+3. **Reiniciar los contenedores**:
+   ```bash
+   docker compose up -d
+   ```
 
-('Pitch para inversores',
-'Preparar una presentación para buscar financiamiento y socios estratégicos.',
-'2025-10-01',
-5),
+### Configuración para Docker
 
-('Documentación y reporte final',
-'Preparar el informe final del proyecto para presentar a los inversionistas.',
-'2025-12-01',
-5);
+Para ejecutar correctamente la aplicación en Docker, es necesario configurar adecuadamente el archivo `application.properties`. A continuación se muestra un ejemplo de configuración para entorno Docker:
+
+```properties
+#Conexion a la base de datos (use es para seguridad)
+spring.datasource.url=${SPRING_DATASOURCE_URL}
+spring.datasource.username=${SPRING_DATASOURCE_USERNAME}
+spring.datasource.password=${SPRING_DATASOURCE_PASSWORD}
 
 
-INSERT INTO ENTREGABLES (nombre_archivo, ruta_archivo, estado, id_tarea) VALUES
-('MisionVision.pdf', '/uploads/entregables/MisionVision.pdf', 'En revisión', 1),
-('AnalisisMercado.xlsx', '/uploads/entregables/AnalisisMercado.xlsx', 'Aprobado', 2),
-('PrototipoV1.zip', '/uploads/entregables/PrototipoV1.zip', 'En revisión', 3),
-('ResultadosPruebas.pdf', '/uploads/entregables/ResultadosPruebas.pdf', 'Rechazado', 4),
-('ReporteFinal.docx', '/uploads/entregables/ReporteFinal.docx', 'Pendiente', 5);
+#motor de base de datos
+spring.datasource.driver-class-name=org.postgresql.Driver
+spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
+
+#mostrar errores en consultas
+spring.jpa.show-sql=true
+
+#Generar mapeo BD
+spring.jpa.hibernate.ddl-auto=update
+
+#tamaño de almacenamiento
+spring.servlet.multipart.max-file-size=2MB
+spring.servlet.multipart.max-request-size=2MB
+
+# Google Calendar API settings
+google.calendar.timezone=${GOOGLE_CALENDAR_TIMEZONE:America/Bogota}
+google.calendar.credentials.path=${GOOGLE_CALENDAR_CREDENTIALS_PATH:src/main/resources/credentials/credentials.json}
+
+#Creedenciales api de OpenAI
+openai.api.key=${OPENAI_API_KEY}
+
+# ApiKey para render
+render.api.key=${RENDER_API_KEY}
+render.api.url=${RENDER_API_URL:https://api.render.com/v1}
+
+```
+
+> **Nota importante**: Observa que la URL de la base de datos utiliza `postgres_startup` como host, que es el nombre del servicio definido en el archivo `docker-compose.yml`, en lugar de `localhost`.
