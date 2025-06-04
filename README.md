@@ -282,6 +282,17 @@ Esta sección explica cómo desplegar la aplicación utilizando Docker para crea
    (4, 'INVERSIONISTA');
    
    SELECT * FROM roles;
+   INSERT INTO usuarios (documento, nombre, email, "contrasenna", fecha_creacion, telefono, foto_url, id_rol) 
+    VALUES (
+      '1234567890', 
+      'Administrador', 
+      'administrador@gmail.com', 
+      '$2a$10$4pCHZ3x2Ig1eijTzaQTJfulKo7kb/tduYnq.UKiM0BnIA3KHtPCFi', 
+      '2025-05-01', 
+      '3001234567', 
+      'https://example.com/maria.jpg', 
+      1
+    );
    ```
 
 ### Gestión del contenedor
