@@ -235,3 +235,135 @@ Este proyecto está licenciado bajo la Licencia MIT - ver el archivo LICENSE.md 
 - Universidad Santo Tomás
 - Profesores y mentores que apoyaron el desarrollo
 - Comunidad de emprendedores que participó en las pruebas
+
+
+## 🐳 Docker
+
+Esta sección explica cómo desplegar la aplicación utilizando Docker para crear un entorno aislado y reproducible.
+
+### Requisitos previos
+- Docker y Docker Compose instalados en tu sistema
+- Acceso a terminal con permisos para ejecutar comandos Docker
+
+### Pasos para el despliegue
+
+1. **Navegar al directorio del proyecto**:
+   ```bash
+   cd C:\Users\danim\OneDrive\Documentos\U\Desarrollo Empresarial\StartUpConnect
+   ```
+
+2. **Compilar el proyecto sin ejecutar pruebas**:
+   ```bash
+   ./mvnw clean package -DskipTests
+   ```
+
+3. **Crear la imagen Docker**:
+   ```bash
+   docker build --no-cache -t startupconnect-app .
+   ```
+
+4. **Levantar los contenedores con Docker Compose**:
+   ```bash
+   docker-compose up -d
+   ```
+
+5. **Inicializar la base de datos con datos iniciales**:
+   ```bash
+   docker exec -it postgres_startup psql -U user_java -d db_startup
+   ```
+   
+   Dentro de PostgreSQL, ejecutar:
+   ```sql
+   INSERT INTO ROLES (id, rol)
+   VALUES
+   (1, 'ADMIN'),
+   (2, 'MENTOR'),
+   (3, 'EMPRENDEDOR'),
+   (4, 'INVERSIONISTA');
+   
+   SELECT * FROM roles;
+
+   INSERT INTO usuarios (documento, nombre, email, "contrasenna", fecha_creacion, telefono, foto_url, id_rol) 
+   VALUES (
+   '1234567890', 
+   'Administrador', 
+   'administrador@gmail.com', 
+   '$2a$10$4pCHZ3x2Ig1eijTzaQTJfulKo7kb/tduYnq.UKiM0BnIA3KHtPCFi', 
+   '2025-05-01', 
+   '3001234567', 
+   'https://example.com/maria.jpg', 
+   1
+   );
+   ```
+
+### Gestión del contenedor
+
+- **Eliminar el contenedor de la aplicación**:
+  ```bash
+  docker rm -f springboot_startup_app
+  ```
+
+- **Verificar los volúmenes persistentes**:
+  ```bash
+  docker volume ls
+  ```
+  Deberías ver un volumen llamado `nombre_proyecto_postgres_data`
+
+### Actualizar la aplicación
+
+Si realizas cambios en el código o la configuración:
+
+1. **Recompilar el proyecto**:
+   ```bash
+   ./mvnw clean package -DskipTests
+   ```
+
+2. **Reconstruir la imagen Docker**:
+   ```bash
+   docker build --no-cache -t startupconnect-app .
+   ```
+
+3. **Reiniciar los contenedores**:
+   ```bash
+   docker compose up -d
+   ```
+
+### Configuración para Docker
+
+Para ejecutar correctamente la aplicación en Docker, es necesario configurar adecuadamente el archivo `application.properties`. A continuación se muestra un ejemplo de configuración para entorno Docker:
+
+```properties
+#Conexion a la base de datos (use es para seguridad)
+spring.datasource.url=${SPRING_DATASOURCE_URL}
+spring.datasource.username=${SPRING_DATASOURCE_USERNAME}
+spring.datasource.password=${SPRING_DATASOURCE_PASSWORD}
+
+
+#motor de base de datos
+spring.datasource.driver-class-name=org.postgresql.Driver
+spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
+
+#mostrar errores en consultas
+spring.jpa.show-sql=true
+
+#Generar mapeo BD
+spring.jpa.hibernate.ddl-auto=update
+
+#tamaño de almacenamiento
+spring.servlet.multipart.max-file-size=2MB
+spring.servlet.multipart.max-request-size=2MB
+
+# Google Calendar API settings
+google.calendar.timezone=${GOOGLE_CALENDAR_TIMEZONE:America/Bogota}
+google.calendar.credentials.path=${GOOGLE_CALENDAR_CREDENTIALS_PATH:src/main/resources/credentials/credentials.json}
+
+#Creedenciales api de OpenAI
+openai.api.key=${OPENAI_API_KEY}
+
+# ApiKey para render
+render.api.key=${RENDER_API_KEY}
+render.api.url=${RENDER_API_URL:https://api.render.com/v1}
+
+```
+
+> **Nota importante**: Observa que la URL de la base de datos utiliza `postgres_startup` como host, que es el nombre del servicio definido en el archivo `docker-compose.yml`, en lugar de `localhost`.
