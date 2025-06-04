@@ -157,9 +157,21 @@
             const mm = String(today.getMonth() + 1).padStart(2, '0');
             const yyyy = today.getFullYear();
             const todayFormatted = yyyy + '-' + mm + '-' + dd;
-            document.getElementById('fechaEntrega').min = todayFormatted;
+            // Asegura que la fecha de entrega no pueda ser anterior a la fecha actual
+            const fechaEntregaInput = document.getElementById('fechaEntrega');
+            fechaEntregaInput.min = todayFormatted;
+            // Asegura que la fecha y hora de la reunión no puedan ser anteriores a la actual
             if (document.getElementById('fechaReunion')) {
-                document.getElementById('fechaReunion').min = todayFormatted;
+                const fechaReunionInput = document.getElementById('fechaReunion');
+                fechaReunionInput.min = todayFormatted;
+            }
+
+            if (document.getElementById('horaReunion')) {
+                const horaReunionInput = document.getElementById('horaReunion');
+                const now = new Date();
+                const currentHour = String(now.getHours()).padStart(2, '0');
+                const currentMinutes = String(now.getMinutes()).padStart(2, '0');
+                horaReunionInput.min = `${currentHour}:${currentMinutes}`;
             }
             // Mostrar/ocultar detalles de la reunión según el checkbox
             const crearReunionCheckbox = document.getElementById('crearReunion');

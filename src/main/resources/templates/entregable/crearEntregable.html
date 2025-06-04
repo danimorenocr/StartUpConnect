@@ -56,7 +56,7 @@
           </div>
           <small class="text-gray-500">Seleccione un archivo para subir</small>
         </div>
-       
+
         <div th:if="${param.idTarea == null}">
           <label for="tarea" class="block font-bold text-sky-700 mb-1">
             Tarea asociada:
@@ -92,6 +92,7 @@
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script>
     // Mostrar nombre del archivo seleccionado automáticamente y botón personalizado
     document.getElementById("archivo")?.addEventListener("change", function () {
@@ -103,6 +104,21 @@
       }
       if (archivoNombre) {
         archivoNombre.textContent = fileName;
+      }
+      // Validar tamaño máximo (5MB)
+      if (this.files && this.files[0]) {
+        const fileSizeMB = this.files[0].size / (1024 * 1024);
+        if (fileSizeMB > 3) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Archivo demasiado grande',
+            text: 'El archivo seleccionado supera el tamaño máximo permitido (3MB).',
+            confirmButtonColor: '#0284c7'
+          });
+          this.value = '';
+          if (fileNameField) fileNameField.value = '';
+          if (archivoNombre) archivoNombre.textContent = '';
+        }
       }
     });
   </script>

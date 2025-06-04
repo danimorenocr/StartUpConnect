@@ -14,9 +14,9 @@
             <!-- Encabezado de la tarjeta -->
             <div
                 class="absolute -top-5 left-6 flex items-center gap-2 bg-white/90 px-4 py-1 rounded-full shadow-lg border border-blue-200">
-                <span class="inline-block w-8 h-1.5 rounded bg-gradient-to-r from-blue-400 to-blue-600 shadow-md"></span>
                 <span
-                    class="text-xs font-bold text-blue-500 tracking-wider uppercase">Datos de la convocatoria</span>
+                    class="inline-block w-8 h-1.5 rounded bg-gradient-to-r from-blue-400 to-blue-600 shadow-md"></span>
+                <span class="text-xs font-bold text-blue-500 tracking-wider uppercase">Datos de la convocatoria</span>
             </div>
 
             <!-- Contenido del formulario -->
@@ -63,7 +63,7 @@
 
                 <div>
                     <label for="contacto" class="block text-sm font-semibold text-sky-700">Contacto:</label>
-                    <input th:field="*{contacto}" type="text" id="contacto" name="contacto" required
+                    <input th:field="*{contacto}" type="email" id="contacto" name="contacto" required
                         class="w-full rounded-2xl border-0 bg-sky-100 px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400 text-sky-800 font-semibold placeholder:text-sky-400" />
                 </div>
 
@@ -101,6 +101,55 @@
             </div>
         </form>
     </div>
+
+    <script>
+        const fechaInicioInput = document.getElementById('fechaInicio');
+        const fechaFinInput = document.getElementById('fechaFin');
+
+        // Establecer la fecha mínima de inicio como hoy
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        const dd = String(today.getDate()).padStart(2, '0');
+        const minDate = `${yyyy}-${mm}-${dd}`;
+        fechaInicioInput.min = minDate;
+
+        fechaInicioInput.addEventListener('change', function () {
+            if (fechaInicioInput.value) {
+                fechaFinInput.min = fechaInicioInput.value;
+                if (fechaFinInput.value && fechaFinInput.value < fechaInicioInput.value) {
+                    fechaFinInput.value = '';
+                }
+            } else {
+                fechaFinInput.min = '';
+            }
+        });
+
+        document.querySelector('form').addEventListener('submit', function (e) {
+            // Validar fechas
+            const fechaInicio = fechaInicioInput.value;
+            const fechaFin = fechaFinInput.value;
+            if (fechaInicio && fechaFin && fechaFin < fechaInicio) {
+                alert('La fecha de fin debe ser posterior a la fecha de inicio.');
+                e.preventDefault();
+                return false;
+            }
+            // Validar que la fecha de inicio no sea anterior a hoy
+            if (fechaInicio && fechaInicio < minDate) {
+                alert('La fecha de inicio no puede ser anterior a hoy.');
+                e.preventDefault();
+                return false;
+            }
+            // Validar tipo de dato para contacto (email)
+            const contacto = document.getElementById('contacto').value;
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(contacto)) {
+                alert('Por favor, ingresa un correo electrónico válido en el campo de contacto.');
+                e.preventDefault();
+                return false;
+            }
+        });
+    </script>
 </body>
 
 </html>

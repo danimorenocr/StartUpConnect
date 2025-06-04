@@ -8,58 +8,81 @@
     <header th:replace="~{layout/layout :: header}"></header>
     <!-- Banner igual a listarPostulaciones -->
     <div class="relative w-full max-w-5xl mx-auto rounded-2xl overflow-hidden shadow mb-10 mt-8">
-        <img src="/images/bannerListar.jpg" alt="Banner Postulaciones" class="w-full h-48 md:h-56 object-cover object-center">
-        <div class="absolute inset-0 bg-gradient-to-br from-violet-400/70 via-purple-300/60 to-fuchsia-300/50 flex items-center min-h-[10rem] md:min-h-[13rem]">
+        <img src="/images/bannerListar.jpg" alt="Banner Postulaciones"
+            class="w-full h-48 md:h-56 object-cover object-center">
+        <div
+            class="absolute inset-0 bg-gradient-to-br from-violet-400/70 via-purple-300/60 to-fuchsia-300/50 flex items-center min-h-[10rem] md:min-h-[13rem]">
             <div class="px-10 w-full text-center">
                 <h1 class="text-4xl md:text-5xl font-extrabold text-white drop-shadow-lg">Postular mi Startup</h1>
-                <p class="text-lg text-white/90 font-medium mt-2">Completa los pasos para postular tu proyecto a la convocatoria seleccionada.</p>
+                <p class="text-lg text-white/90 font-medium mt-2">Completa los pasos para postular tu proyecto a la
+                    convocatoria seleccionada.</p>
             </div>
         </div>
     </div>
     <main>
-        <div class="form-container max-w-5xl w-full mx-auto bg-white rounded-b-[18px] shadow-2xl p-8 pb-16 border-2.5 border-[#2376ad] mt-0">
+        <div
+            class="form-container max-w-5xl w-full mx-auto bg-white rounded-b-[18px] shadow-2xl p-8 pb-16 border-2.5 border-[#2376ad] mt-0">
             <div class="progress-container mb-10">
                 <div class="progress h-2 bg-gray-200 rounded mb-6 overflow-hidden">
-                    <div class="progress-bar bg-gradient-to-r from-[#2376ad] to-[#6366f1] h-full transition-all duration-500" style="width: 20%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
+                    <div class="progress-bar bg-gradient-to-r from-[#2376ad] to-[#6366f1] h-full transition-all duration-500"
+                        style="width: 20%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
                 <div class="steps-container flex justify-between mt-[-10px]">
-                    <div class="step active w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center font-semibold text-indigo-500 border-2 border-indigo-100 text-lg relative transition-all duration-300 bg-gradient-to-r from-[#2376ad] to-[#6366f1] text-white border-[#6366f1]">
+                    <div
+                        class="step active w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center font-semibold text-indigo-500 border-2 border-indigo-100 text-lg relative transition-all duration-300 bg-gradient-to-r from-[#2376ad] to-[#6366f1] text-white border-[#6366f1]">
                         1
-                        <span class="step-label absolute top-11 left-1/2 -translate-x-1/2 text-xs font-medium text-[#2376ad] font-semibold">Convocatoria</span>
+                        <span
+                            class="step-label absolute top-11 left-1/2 -translate-x-1/2 text-xs font-medium text-[#2376ad] font-semibold">Convocatoria</span>
                     </div>
-                    <div class="step w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center font-semibold text-indigo-500 border-2 border-indigo-100 text-lg relative transition-all duration-300">
+                    <div
+                        class="step w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center font-semibold text-indigo-500 border-2 border-indigo-100 text-lg relative transition-all duration-300">
                         2
-                        <span class="step-label absolute top-11 left-1/2 -translate-x-1/2 text-xs font-medium text-indigo-500">Proyecto</span>
+                        <span
+                            class="step-label absolute top-11 left-1/2 -translate-x-1/2 text-xs font-medium text-indigo-500">Proyecto</span>
                     </div>
-                    <div class="step w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center font-semibold text-indigo-500 border-2 border-indigo-100 text-lg relative transition-all duration-300">
+                    <div
+                        class="step w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center font-semibold text-indigo-500 border-2 border-indigo-100 text-lg relative transition-all duration-300">
                         3
-                        <span class="step-label absolute top-11 left-1/2 -translate-x-1/2 text-xs font-medium text-indigo-500">Equipo</span>
+                        <span
+                            class="step-label absolute top-11 left-1/2 -translate-x-1/2 text-xs font-medium text-indigo-500">Equipo</span>
                     </div>
-                    <div class="step w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center font-semibold text-indigo-500 border-2 border-indigo-100 text-lg relative transition-all duration-300">
+                    <div
+                        class="step w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center font-semibold text-indigo-500 border-2 border-indigo-100 text-lg relative transition-all duration-300">
                         4
-                        <span class="step-label absolute top-11 left-1/2 -translate-x-1/2 text-xs font-medium text-indigo-500">Estado</span>
+                        <span
+                            class="step-label absolute top-11 left-1/2 -translate-x-1/2 text-xs font-medium text-indigo-500">Estado</span>
                     </div>
-                    <div class="step w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center font-semibold text-indigo-500 border-2 border-indigo-100 text-lg relative transition-all duration-300">
+                    <div
+                        class="step w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center font-semibold text-indigo-500 border-2 border-indigo-100 text-lg relative transition-all duration-300">
                         5
-                        <span class="step-label absolute top-11 left-1/2 -translate-x-1/2 text-xs font-medium text-indigo-500">Documentos</span>
+                        <span
+                            class="step-label absolute top-11 left-1/2 -translate-x-1/2 text-xs font-medium text-indigo-500">Documentos</span>
                     </div>
                 </div>
             </div>
 
-            <form th:action="@{/crearPostulacion}" th:object="${postulacion}" method="post" class="needs-validation" novalidate>
+            <form th:action="@{/crearPostulacion}" th:object="${postulacion}" method="post" class="needs-validation"
+                novalidate>
                 <input type="hidden" th:field="*{id}" />
                 <!-- Sección 1: Información de la convocatoria -->
                 <div class="section-card active" data-section="1" style="display: none;">
-                    <h3 class="section-title text-2xl text-[#2376ad] font-semibold mb-6 pb-2 border-b-2 border-gray-200">Información de la Convocatoria</h3>
+                    <h3
+                        class="section-title text-2xl text-[#2376ad] font-semibold mb-6 pb-2 border-b-2 border-gray-200">
+                        Información de la Convocatoria</h3>
                     <div class="convocatoria-card bg-gray-100 rounded-lg p-6 mb-8 border-l-4 border-[#2376ad]">
-                        <h4 class="convocatoria-title text-[#2376ad] mb-4 text-lg font-semibold" th:text="${convocatoriaSeleccionada.titulo}"></h4>
-                        <p class="convocatoria-description text-gray-700 mb-6 leading-relaxed" th:text="${convocatoriaSeleccionada.descripcion}"></p>
+                        <h4 class="convocatoria-title text-[#2376ad] mb-4 text-lg font-semibold"
+                            th:text="${convocatoriaSeleccionada.titulo}"></h4>
+                        <p class="convocatoria-description text-gray-700 mb-6 leading-relaxed"
+                            th:text="${convocatoriaSeleccionada.descripcion}"></p>
                         <div class="convocatoria-meta flex flex-wrap gap-4">
-                            <span class="meta-tag inline-flex items-center bg-gray-200 px-4 py-2 rounded-full text-sm text-gray-700">
+                            <span
+                                class="meta-tag inline-flex items-center bg-gray-200 px-4 py-2 rounded-full text-sm text-gray-700">
                                 <i class="fas fa-calendar mr-2 text-[#2376ad]"></i>
-                                <span th:text="${#dates.format(convocatoriaSeleccionada.fechaFin, 'dd/MM/yyyy')}"></span>
+                                <span
+                                    th:text="${#dates.format(convocatoriaSeleccionada.fechaFin, 'dd/MM/yyyy')}"></span>
                             </span>
-                            <span class="meta-tag inline-flex items-center bg-gray-200 px-4 py-2 rounded-full text-sm text-gray-700">
+                            <span
+                                class="meta-tag inline-flex items-center bg-gray-200 px-4 py-2 rounded-full text-sm text-gray-700">
                                 <i class="fas fa-tag mr-2 text-[#2376ad]"></i>
                                 <span th:text="${convocatoriaSeleccionada.sectorObjetivo}"></span>
                             </span>
@@ -68,191 +91,285 @@
                     <input type="hidden" th:field="*{convocatoria.id}" th:value="${convocatoriaSeleccionada?.id}" />
                     <div class="form-navigation flex flex-row justify-end gap-4 mt-10">
                         <!-- Botón atrás oculto en la primera sección -->
-                        <button type="button" class="btn btn-secondary btn-prev flex items-center gap-2 px-6 py-3 rounded-full font-semibold bg-gray-500 text-white shadow-md hover:bg-gray-600 transition hidden"><i class="fas fa-arrow-left"></i> Anterior</button>
-                        <button type="button" class="btn btn-primary btn-next flex items-center gap-2 px-6 py-3 rounded-full font-semibold bg-gradient-to-r from-[#2376ad] to-[#6366f1] text-white shadow-md hover:from-[#1c5c8a] hover:to-[#6366f1] transition">Siguiente <i class="fas fa-arrow-right"></i></button>
+                        <button type="button"
+                            class="btn btn-secondary btn-prev flex items-center gap-2 px-6 py-3 rounded-full font-semibold bg-gray-500 text-white shadow-md hover:bg-gray-600 transition hidden"><i
+                                class="fas fa-arrow-left"></i> Anterior</button>
+                        <button type="button"
+                            class="btn btn-primary btn-next flex items-center gap-2 px-6 py-3 rounded-full font-semibold bg-gradient-to-r from-[#2376ad] to-[#6366f1] text-white shadow-md hover:from-[#1c5c8a] hover:to-[#6366f1] transition">Siguiente
+                            <i class="fas fa-arrow-right"></i></button>
                     </div>
                 </div>
                 <!-- Sección 2: Información del Proyecto -->
                 <div class="section-card" data-section="2" style="display: none;">
-                    <h3 class="section-title text-2xl text-[#2376ad] font-semibold mb-6 pb-2 border-b-2 border-gray-200">Información del Proyecto</h3>
+                    <h3
+                        class="section-title text-2xl text-[#2376ad] font-semibold mb-6 pb-2 border-b-2 border-gray-200">
+                        Información del Proyecto</h3>
                     <div class="form-group mb-6">
-                        <label for="nombreProyecto" class="form-label block mb-2 font-medium text-[#2376ad]">Nombre del Proyecto</label>
-                        <input type="text" class="form-control w-full px-4 py-3 rounded-lg border-2 border-[#2376ad] bg-indigo-50 text-gray-800 focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition" id="nombreProyecto" th:field="*{nombreProyecto}" required maxlength="100">
-                        <div class="invalid-feedback text-red-600 text-sm mt-1 hidden">Por favor ingresa el nombre del proyecto.</div>
+                        <label for="nombreProyecto" class="form-label block mb-2 font-medium text-[#2376ad]">Nombre del
+                            Proyecto</label>
+                        <input type="text"
+                            class="form-control w-full px-4 py-3 rounded-lg border-2 border-[#2376ad] bg-indigo-50 text-gray-800 focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition"
+                            id="nombreProyecto" th:field="*{nombreProyecto}" required maxlength="100">
+                        <div class="invalid-feedback text-red-600 text-sm mt-1 hidden">Por favor ingresa el nombre del
+                            proyecto.</div>
                     </div>
                     <div class="form-group mb-6">
                         <label for="startup" class="form-label block mb-2 font-medium text-[#2376ad]">Tu Startup</label>
-                        <select class="form-select w-full px-4 py-3 rounded-lg border-2 border-[#2376ad] bg-indigo-50 text-gray-800 focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition" id="startup" th:field="*{startup}" required>
+                        <select
+                            class="form-select w-full px-4 py-3 rounded-lg border-2 border-[#2376ad] bg-indigo-50 text-gray-800 focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition"
+                            id="startup" th:field="*{startup}" required>
                             <option value="">Selecciona tu startup</option>
-                            <option th:each="startup : ${startups}" th:value="${startup.id}" th:text="${startup.nombreStartup}"></option>
+                            <option th:each="startup : ${startups}" th:value="${startup.id}"
+                                th:text="${startup.nombreStartup}"></option>
                         </select>
-                        <div class="invalid-feedback text-red-600 text-sm mt-1 hidden">Por favor selecciona tu startup.</div>
+                        <div class="invalid-feedback text-red-600 text-sm mt-1 hidden">Por favor selecciona tu startup.
+                        </div>
                     </div>
                     <div class="form-group mb-6">
-                        <label for="problemaASolucionar" class="form-label block mb-2 font-medium text-[#2376ad]">¿Qué problema soluciona tu proyecto?</label>
-                        <textarea class="form-control w-full px-4 py-3 rounded-lg border-2 border-[#2376ad] bg-indigo-50 text-gray-800 focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition min-h-[100px] resize-y" id="problemaASolucionar" th:field="*{problemaASolucionar}" required></textarea>
-                        <div class="invalid-feedback text-red-600 text-sm mt-1 hidden">Por favor describe el problema que soluciona tu proyecto.</div>
+                        <label for="problemaASolucionar" class="form-label block mb-2 font-medium text-[#2376ad]">¿Qué
+                            problema soluciona tu proyecto?</label>
+                        <textarea
+                            class="form-control w-full px-4 py-3 rounded-lg border-2 border-[#2376ad] bg-indigo-50 text-gray-800 focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition min-h-[100px] resize-y"
+                            id="problemaASolucionar" th:field="*{problemaASolucionar}" required></textarea>
+                        <div class="invalid-feedback text-red-600 text-sm mt-1 hidden">Por favor describe el problema
+                            que soluciona tu proyecto.</div>
                     </div>
                     <div class="form-group mb-6">
-                        <label for="solucion" class="form-label block mb-2 font-medium text-[#2376ad]">¿Cuál es tu solución?</label>
-                        <textarea class="form-control w-full px-4 py-3 rounded-lg border-2 border-[#2376ad] bg-indigo-50 text-gray-800 focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition min-h-[100px] resize-y" id="solucion" th:field="*{solucion}" required></textarea>
-                        <div class="invalid-feedback text-red-600 text-sm mt-1 hidden">Por favor describe la solución propuesta.</div>
+                        <label for="solucion" class="form-label block mb-2 font-medium text-[#2376ad]">¿Cuál es tu
+                            solución?</label>
+                        <textarea
+                            class="form-control w-full px-4 py-3 rounded-lg border-2 border-[#2376ad] bg-indigo-50 text-gray-800 focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition min-h-[100px] resize-y"
+                            id="solucion" th:field="*{solucion}" required></textarea>
+                        <div class="invalid-feedback text-red-600 text-sm mt-1 hidden">Por favor describe la solución
+                            propuesta.</div>
                     </div>
                     <div class="form-group mb-6">
-                        <label for="clientesObjetivo" class="form-label block mb-2 font-medium text-[#2376ad]">¿Quiénes son tus clientes objetivo?</label>
-                        <textarea class="form-control w-full px-4 py-3 rounded-lg border-2 border-[#2376ad] bg-indigo-50 text-gray-800 focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition min-h-[100px] resize-y" id="clientesObjetivo" th:field="*{clientesObjetivo}" required></textarea>
-                        <div class="invalid-feedback text-red-600 text-sm mt-1 hidden">Por favor describe tus clientes objetivo.</div>
+                        <label for="clientesObjetivo" class="form-label block mb-2 font-medium text-[#2376ad]">¿Quiénes
+                            son tus clientes objetivo?</label>
+                        <textarea
+                            class="form-control w-full px-4 py-3 rounded-lg border-2 border-[#2376ad] bg-indigo-50 text-gray-800 focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition min-h-[100px] resize-y"
+                            id="clientesObjetivo" th:field="*{clientesObjetivo}" required></textarea>
+                        <div class="invalid-feedback text-red-600 text-sm mt-1 hidden">Por favor describe tus clientes
+                            objetivo.</div>
                     </div>
                     <div class="form-group mb-6">
-                        <label for="diferenciador" class="form-label block mb-2 font-medium text-[#2376ad]">¿Qué hace diferente tu solución?</label>
-                        <textarea class="form-control w-full px-4 py-3 rounded-lg border-2 border-[#2376ad] bg-indigo-50 text-gray-800 focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition min-h-[100px] resize-y" id="diferenciador" th:field="*{diferenciador}" required></textarea>
-                        <div class="invalid-feedback text-red-600 text-sm mt-1 hidden">Por favor describe qué hace diferente tu solución.</div>
+                        <label for="diferenciador" class="form-label block mb-2 font-medium text-[#2376ad]">¿Qué hace
+                            diferente tu solución?</label>
+                        <textarea
+                            class="form-control w-full px-4 py-3 rounded-lg border-2 border-[#2376ad] bg-indigo-50 text-gray-800 focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition min-h-[100px] resize-y"
+                            id="diferenciador" th:field="*{diferenciador}" required></textarea>
+                        <div class="invalid-feedback text-red-600 text-sm mt-1 hidden">Por favor describe qué hace
+                            diferente tu solución.</div>
                     </div>
-<div class="form-navigation flex flex-row justify-start items-center gap-60 mt-10">
-    <!-- Botón anterior alineado a la izquierda -->
-    <div>
-        <button type="button" class="btn btn-secondary btn-prev flex items-center gap-2 px-6 py-3 rounded-full font-semibold bg-gray-500 text-white shadow-md hover:bg-gray-600 transition">
-            <i class="fas fa-arrow-left"></i> Anterior
-        </button>
-    </div>
+                    <div class="form-navigation flex flex-row justify-start items-center gap-60 mt-10">
+                        <!-- Botón anterior alineado a la izquierda -->
+                        <div>
+                            <button type="button"
+                                class="btn btn-secondary btn-prev flex items-center gap-2 px-6 py-3 rounded-full font-semibold bg-gray-500 text-white shadow-md hover:bg-gray-600 transition">
+                                <i class="fas fa-arrow-left"></i> Anterior
+                            </button>
+                        </div>
 
-    <!-- Botón siguiente alineado a la derecha -->
-    <div>
-        <button type="button" class="btn btn-primary btn-next flex items-center gap-2 px-6 py-3 rounded-full font-semibold bg-gradient-to-r from-[#2376ad] to-[#6366f1] text-white shadow-md hover:from-[#1c5c8a] hover:to-[#6366f1] transition">
-            Siguiente <i class="fas fa-arrow-right"></i>
-        </button>
-    </div>
-</div>
+                        <!-- Botón siguiente alineado a la derecha -->
+                        <div>
+                            <button type="button"
+                                class="btn btn-primary btn-next flex items-center gap-2 px-6 py-3 rounded-full font-semibold bg-gradient-to-r from-[#2376ad] to-[#6366f1] text-white shadow-md hover:from-[#1c5c8a] hover:to-[#6366f1] transition">
+                                Siguiente <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
 
-                </div> <!-- Sección 3: Información del Equipo -->                <div class="section-card" data-section="3" style="display: none;">
-                    <h3 class="section-title text-2xl text-[#2376ad] font-semibold mb-6 pb-2 border-b-2 border-gray-200">Información del Equipo</h3>
+                </div> <!-- Sección 3: Información del Equipo -->
+                <div class="section-card" data-section="3" style="display: none;">
+                    <h3
+                        class="section-title text-2xl text-[#2376ad] font-semibold mb-6 pb-2 border-b-2 border-gray-200">
+                        Información del Equipo</h3>
                     <div class="form-group mb-6">
-                        <label for="numeroIntegrantes" class="form-label block mb-2 font-medium text-[#2376ad]">Número de Integrantes <span class="text-red-500">*</span></label>
-                        <input type="number" class="form-control w-full px-4 py-3 rounded-lg border-2 border-[#2376ad] bg-indigo-50 text-gray-800 focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition" 
-                               id="numeroIntegrantes" th:field="*{numeroIntegrantes}" required min="1" max="100" 
-                               data-validate="required number min:1 max:100" placeholder="Ej: 5">
-                        <div class="invalid-feedback text-red-600 text-sm mt-1 hidden">Por favor ingresa el número de integrantes.</div>
+                        <label for="numeroIntegrantes" class="form-label block mb-2 font-medium text-[#2376ad]">Número
+                            de Integrantes <span class="text-red-500">*</span></label>
+                        <input type="number"
+                            class="form-control w-full px-4 py-3 rounded-lg border-2 border-[#2376ad] bg-indigo-50 text-gray-800 focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition"
+                            id="numeroIntegrantes" th:field="*{numeroIntegrantes}" required min="1" max="100"
+                            data-validate="required number min:1 max:100" placeholder="Ej: 5">
+                        <div class="invalid-feedback text-red-600 text-sm mt-1 hidden">Por favor ingresa el número de
+                            integrantes.</div>
                     </div>
                     <div class="form-group mb-6">
-                        <label for="dineroVentas" class="form-label block mb-2 font-medium text-[#2376ad]">Dinero en Ventas (USD) <span class="text-red-500">*</span></label>
-                        <input type="number" class="form-control w-full px-4 py-3 rounded-lg border-2 border-[#2376ad] bg-indigo-50 text-gray-800 focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition" 
-                               id="dineroVentas" th:field="*{dineroVentas}" required step="0.01" min="0" max="1000000000"
-                               data-validate="required number min:0" placeholder="Ej: 10000.50">
-                        <div class="invalid-feedback text-red-600 text-sm mt-1 hidden">Por favor ingresa el monto de ventas.</div>
+                        <label for="dineroVentas" class="form-label block mb-2 font-medium text-[#2376ad]">Dinero en
+                            Ventas (USD) <span class="text-red-500">*</span></label>
+                        <input type="number"
+                            class="form-control w-full px-4 py-3 rounded-lg border-2 border-[#2376ad] bg-indigo-50 text-gray-800 focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition"
+                            id="dineroVentas" th:field="*{dineroVentas}" required step="0.01" min="0" max="1000000000"
+                            data-validate="required number min:0" placeholder="Ej: 10000.50">
+                        <div class="invalid-feedback text-red-600 text-sm mt-1 hidden">Por favor ingresa el monto de
+                            ventas.</div>
                     </div>
                     <div class="form-group mb-6">
-                        <label for="rolesIntegrantes" class="form-label block mb-2 font-medium text-[#2376ad]">Roles de los Integrantes</label>
-                        <textarea class="form-control w-full px-4 py-3 rounded-lg border-2 border-[#2376ad] bg-indigo-50 text-gray-800 focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition min-h-[100px] resize-y" id="rolesIntegrantes" th:field="*{rolesIntegrantes}" required placeholder="Ej: CEO, CTO, CMO, Desarrollador, Diseñador, etc."></textarea>
-                        <div class="invalid-feedback text-red-600 text-sm mt-1 hidden">Por favor describe los roles de los integrantes.</div>
+                        <label for="rolesIntegrantes" class="form-label block mb-2 font-medium text-[#2376ad]">Roles de
+                            los Integrantes</label>
+                        <textarea
+                            class="form-control w-full px-4 py-3 rounded-lg border-2 border-[#2376ad] bg-indigo-50 text-gray-800 focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition min-h-[100px] resize-y"
+                            id="rolesIntegrantes" th:field="*{rolesIntegrantes}" required
+                            placeholder="Ej: CEO, CTO, CMO, Desarrollador, Diseñador, etc."></textarea>
+                        <div class="invalid-feedback text-red-600 text-sm mt-1 hidden">Por favor describe los roles de
+                            los integrantes.</div>
                     </div>
                     <div class="form-group mb-6">
-                        <label for="habilidadesEquipo" class="form-label block mb-2 font-medium text-[#2376ad]">Habilidades del Equipo</label>
-                        <textarea class="form-control w-full px-4 py-3 rounded-lg border-2 border-[#2376ad] bg-indigo-50 text-gray-800 focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition min-h-[100px] resize-y" id="habilidadesEquipo" th:field="*{habilidadesEquipo}" required></textarea>
-                        <div class="invalid-feedback text-red-600 text-sm mt-1 hidden">Por favor describe las habilidades del equipo.</div>
+                        <label for="habilidadesEquipo"
+                            class="form-label block mb-2 font-medium text-[#2376ad]">Habilidades del Equipo</label>
+                        <textarea
+                            class="form-control w-full px-4 py-3 rounded-lg border-2 border-[#2376ad] bg-indigo-50 text-gray-800 focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition min-h-[100px] resize-y"
+                            id="habilidadesEquipo" th:field="*{habilidadesEquipo}" required></textarea>
+                        <div class="invalid-feedback text-red-600 text-sm mt-1 hidden">Por favor describe las
+                            habilidades del equipo.</div>
                     </div>
-<div class="form-navigation flex flex-row justify-start items-center gap-60 mt-10">
-    <!-- Botón anterior alineado a la izquierda -->
-    <div>
-        <button type="button" class="btn btn-secondary btn-prev flex items-center gap-2 px-6 py-3 rounded-full font-semibold bg-gray-500 text-white shadow-md hover:bg-gray-600 transition">
-            <i class="fas fa-arrow-left"></i> Anterior
-        </button>
-    </div>
+                    <div class="form-navigation flex flex-row justify-start items-center gap-60 mt-10">
+                        <!-- Botón anterior alineado a la izquierda -->
+                        <div>
+                            <button type="button"
+                                class="btn btn-secondary btn-prev flex items-center gap-2 px-6 py-3 rounded-full font-semibold bg-gray-500 text-white shadow-md hover:bg-gray-600 transition">
+                                <i class="fas fa-arrow-left"></i> Anterior
+                            </button>
+                        </div>
 
-    <!-- Botón siguiente alineado a la derecha -->
-    <div>
-        <button type="button" class="btn btn-primary btn-next flex items-center gap-2 px-6 py-3 rounded-full font-semibold bg-gradient-to-r from-[#2376ad] to-[#6366f1] text-white shadow-md hover:from-[#1c5c8a] hover:to-[#6366f1] transition">
-            Siguiente <i class="fas fa-arrow-right"></i>
-        </button>
-    </div>
-</div>
+                        <!-- Botón siguiente alineado a la derecha -->
+                        <div>
+                            <button type="button"
+                                class="btn btn-primary btn-next flex items-center gap-2 px-6 py-3 rounded-full font-semibold bg-gradient-to-r from-[#2376ad] to-[#6366f1] text-white shadow-md hover:from-[#1c5c8a] hover:to-[#6366f1] transition">
+                                Siguiente <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
                 </div> <!-- Sección 4: Estado del Proyecto -->
                 <div class="section-card" data-section="4" style="display: none;">
-                    <h3 class="section-title text-2xl text-[#2376ad] font-semibold mb-6 pb-2 border-b-2 border-gray-200">Estado del Proyecto</h3>
+                    <h3
+                        class="section-title text-2xl text-[#2376ad] font-semibold mb-6 pb-2 border-b-2 border-gray-200">
+                        Estado del Proyecto</h3>
                     <div class="form-group mb-6">
-                        <label for="etapaProyecto" class="form-label block mb-2 font-medium text-[#2376ad]">Etapa del Proyecto</label>
-                        <select class="form-select w-full px-4 py-3 rounded-lg border-2 border-[#2376ad] bg-indigo-50 text-gray-800 focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition" id="etapaProyecto" th:field="*{etapaProyecto}" required>
+                        <label for="etapaProyecto" class="form-label block mb-2 font-medium text-[#2376ad]">Etapa del
+                            Proyecto</label>
+                        <select
+                            class="form-select w-full px-4 py-3 rounded-lg border-2 border-[#2376ad] bg-indigo-50 text-gray-800 focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition"
+                            id="etapaProyecto" th:field="*{etapaProyecto}" required>
                             <option value="">Selecciona una etapa</option>
                             <option value="Idea">Ideación</option>
                             <option value="Prototipo">Prototipo</option>
                             <option value="MVP">MVP</option>
                             <option value="Tracción Inicial">Tracción Inicial</option>
                             <option value="Crecimiento">Crecimiento</option>
-                            <option value="Expansión">Expansión</option>                        </select>
-                        <div class="invalid-feedback text-red-600 text-sm mt-1 hidden">Por favor selecciona la etapa del proyecto.</div>
+                            <option value="Expansión">Expansión</option>
+                        </select>
+                        <div class="invalid-feedback text-red-600 text-sm mt-1 hidden">Por favor selecciona la etapa del
+                            proyecto.</div>
                     </div>
                     <div class="form-group mb-6">
-                        <label for="fechaPostulacion" class="form-label block mb-2 font-medium text-[#2376ad]">Fecha de Postulación <span class="text-red-500">*</span></label>
-                        <input type="date" class="form-control w-full px-4 py-3 rounded-lg border-2 border-[#2376ad] bg-indigo-50 text-gray-800 focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition" 
-                               id="fechaPostulacion" th:field="*{fechaPostulacion}" required data-validate="required date" placeholder="yyyy-mm-dd">
-                        <div class="invalid-feedback text-red-600 text-sm mt-1 hidden">Por favor selecciona la fecha de postulación.</div>
+                        <label for="fechaPostulacion" class="form-label block mb-2 font-medium text-[#2376ad]">Fecha de
+                            Postulación <span class="text-red-500">*</span></label>
+                        <input type="date"
+                            class="form-control w-full px-4 py-3 rounded-lg border-2 border-[#2376ad] bg-indigo-50 text-gray-800 focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition"
+                            id="fechaPostulacion" th:field="*{fechaPostulacion}" required data-validate="required date"
+                            placeholder="yyyy-mm-dd">
+                        <div class="invalid-feedback text-red-600 text-sm mt-1 hidden">Por favor selecciona la fecha de
+                            postulación.</div>
                     </div>
                     <div class="form-group mb-6">
-                        <label for="necesidadesActuales" class="form-label block mb-2 font-medium text-[#2376ad]">Necesidades Actuales <span class="text-red-500">*</span></label>
-                        <textarea class="form-control w-full px-4 py-3 rounded-lg border-2 border-[#2376ad] bg-indigo-50 text-gray-800 focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition min-h-[100px] resize-y" 
-                                  id="necesidadesActuales" th:field="*{necesidadesActuales}" rows="3" required data-validate="required minLength:10 maxLength:500" 
-                                  placeholder="Ej: financiamiento, mentorías, conexiones, etc."></textarea>
-                        <div class="invalid-feedback text-red-600 text-sm mt-1 hidden">Por favor describe las necesidades actuales.</div>
+                        <label for="necesidadesActuales"
+                            class="form-label block mb-2 font-medium text-[#2376ad]">Necesidades Actuales <span
+                                class="text-red-500">*</span></label>
+                        <textarea
+                            class="form-control w-full px-4 py-3 rounded-lg border-2 border-[#2376ad] bg-indigo-50 text-gray-800 focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition min-h-[100px] resize-y"
+                            id="necesidadesActuales" th:field="*{necesidadesActuales}" rows="3" required
+                            data-validate="required minLength:10 maxLength:500"
+                            placeholder="Ej: financiamiento, mentorías, conexiones, etc."></textarea>
+                        <div class="invalid-feedback text-red-600 text-sm mt-1 hidden">Por favor describe las
+                            necesidades actuales.</div>
                     </div>
-<div class="form-navigation flex flex-row justify-start items-center gap-60 mt-10">
-    <!-- Botón anterior alineado a la izquierda -->
-    <div>
-        <button type="button" class="btn btn-secondary btn-prev flex items-center gap-2 px-6 py-3 rounded-full font-semibold bg-gray-500 text-white shadow-md hover:bg-gray-600 transition">
-            <i class="fas fa-arrow-left"></i> Anterior
-        </button>
-    </div>
+                    <div class="form-navigation flex flex-row justify-start items-center gap-60 mt-10">
+                        <!-- Botón anterior alineado a la izquierda -->
+                        <div>
+                            <button type="button"
+                                class="btn btn-secondary btn-prev flex items-center gap-2 px-6 py-3 rounded-full font-semibold bg-gray-500 text-white shadow-md hover:bg-gray-600 transition">
+                                <i class="fas fa-arrow-left"></i> Anterior
+                            </button>
+                        </div>
 
-    <!-- Botón siguiente alineado a la derecha -->
-    <div>
-        <button type="button" class="btn btn-primary btn-next flex items-center gap-2 px-6 py-3 rounded-full font-semibold bg-gradient-to-r from-[#2376ad] to-[#6366f1] text-white shadow-md hover:from-[#1c5c8a] hover:to-[#6366f1] transition">
-            Siguiente <i class="fas fa-arrow-right"></i>
-        </button>
-    </div>
-</div>
+                        <!-- Botón siguiente alineado a la derecha -->
+                        <div>
+                            <button type="button"
+                                class="btn btn-primary btn-next flex items-center gap-2 px-6 py-3 rounded-full font-semibold bg-gradient-to-r from-[#2376ad] to-[#6366f1] text-white shadow-md hover:from-[#1c5c8a] hover:to-[#6366f1] transition">
+                                Siguiente <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
                 </div> <!-- Sección 5: Enlaces y Documentos -->
                 <div class="section-card" data-section="5" style="display: none;">
-                    <h3 class="section-title text-2xl text-[#2376ad] font-semibold mb-6 pb-2 border-b-2 border-gray-200">Enlaces y Documentos</h3>
+                    <h3
+                        class="section-title text-2xl text-[#2376ad] font-semibold mb-6 pb-2 border-b-2 border-gray-200">
+                        Enlaces y Documentos</h3>
                     <div class="form-group mb-6">
-                        <label for="fotoUrl" class="form-label block mb-2 font-medium text-[#2376ad]">URL de la Foto</label>
-                        <input type="url" class="form-control w-full px-4 py-3 rounded-lg border-2 border-[#2376ad] bg-indigo-50 text-gray-800 focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition" id="fotoUrl" th:field="*{fotoUrl}" readonly>
-                        <small class="form-text block mt-1 text-gray-500 text-xs">La URL de la foto se cargará automáticamente según la Startup seleccionada.</small>
+                        <label for="fotoUrl" class="form-label block mb-2 font-medium text-[#2376ad]">URL de la
+                            Foto</label>
+                        <input type="url"
+                            class="form-control w-full px-4 py-3 rounded-lg border-2 border-[#2376ad] bg-indigo-50 text-gray-800 focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition"
+                            id="fotoUrl" th:field="*{fotoUrl}" readonly>
+                        <small class="form-text block mt-1 text-gray-500 text-xs">La URL de la foto se cargará
+                            automáticamente según la Startup seleccionada.</small>
                     </div>
-                    <div class="form-group mb-6">                        <label for="enlacePaginaWeb" class="form-label block mb-2 font-medium text-[#2376ad]">Enlace a Página Web</label>
-                        <input type="url" class="form-control w-full px-4 py-3 rounded-lg border-2 border-[#2376ad] bg-indigo-50 text-gray-800 focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition" 
-                               id="enlacePaginaWeb" th:field="*{enlacePaginaWeb}" data-validate="url" 
-                               placeholder="https://www.ejemplo.com">
-                        <small class="form-text block mt-1 text-gray-500 text-xs">Ingrese la URL completa incluyendo https://</small>
+                    <div class="form-group mb-6"> <label for="enlacePaginaWeb"
+                            class="form-label block mb-2 font-medium text-[#2376ad]">Enlace a Página Web</label>
+                        <input type="url"
+                            class="form-control w-full px-4 py-3 rounded-lg border-2 border-[#2376ad] bg-indigo-50 text-gray-800 focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition"
+                            id="enlacePaginaWeb" th:field="*{enlacePaginaWeb}" data-validate="url"
+                            placeholder="https://www.ejemplo.com">
+                        <small class="form-text block mt-1 text-gray-500 text-xs">Ingrese la URL completa incluyendo
+                            https://</small>
                     </div>
                     <div class="form-group mb-6">
                         <label for="pitch" class="form-label block mb-2 font-medium text-[#2376ad]">Pitch (URL)</label>
-                        <input type="url" class="form-control w-full px-4 py-3 rounded-lg border-2 border-[#2376ad] bg-indigo-50 text-gray-800 focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition" 
-                               id="pitch" th:field="*{pitch}" data-validate="url" 
-                               placeholder="https://docs.google.com/presentation/...">
+                        <input type="url"
+                            class="form-control w-full px-4 py-3 rounded-lg border-2 border-[#2376ad] bg-indigo-50 text-gray-800 focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition"
+                            id="pitch" th:field="*{pitch}" data-validate="url"
+                            placeholder="https://docs.google.com/presentation/...">
                     </div>
                     <div class="form-group mb-6">
-                        <label for="documentoPropuesta" class="form-label block mb-2 font-medium text-[#2376ad]">Documento de Propuesta (URL)</label>
-                        <input type="url" class="form-control w-full px-4 py-3 rounded-lg border-2 border-[#2376ad] bg-indigo-50 text-gray-800 focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition" 
-                               id="documentoPropuesta" th:field="*{documentoPropuesta}" data-validate="url" 
-                               placeholder="https://docs.google.com/document/...">
+                        <label for="documentoPropuesta"
+                            class="form-label block mb-2 font-medium text-[#2376ad]">Documento de Propuesta
+                            (URL)</label>
+                        <input type="url"
+                            class="form-control w-full px-4 py-3 rounded-lg border-2 border-[#2376ad] bg-indigo-50 text-gray-800 focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition"
+                            id="documentoPropuesta" th:field="*{documentoPropuesta}" data-validate="url"
+                            placeholder="https://docs.google.com/document/...">
                     </div>
                     <div class="form-group mb-6">
-                        <label for="videoPitch" class="form-label block mb-2 font-medium text-[#2376ad]">Video Pitch (URL)</label>
-                        <input type="url" class="form-control w-full px-4 py-3 rounded-lg border-2 border-[#2376ad] bg-indigo-50 text-gray-800 focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition" 
-                               id="videoPitch" th:field="*{videoPitch}" data-validate="url" 
-                               placeholder="https://www.youtube.com/...">
+                        <label for="videoPitch" class="form-label block mb-2 font-medium text-[#2376ad]">Video Pitch
+                            (URL)</label>
+                        <input type="url"
+                            class="form-control w-full px-4 py-3 rounded-lg border-2 border-[#2376ad] bg-indigo-50 text-gray-800 focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition"
+                            id="videoPitch" th:field="*{videoPitch}" data-validate="url"
+                            placeholder="https://www.youtube.com/...">
                     </div>
                     <div class="form-group mb-6">
-                        <label for="enlacesAdicionales" class="form-label block mb-2 font-medium text-[#2376ad]">Enlaces Adicionales</label>
-                        <textarea class="form-control w-full px-4 py-3 rounded-lg border-2 border-[#2376ad] bg-indigo-50 text-gray-800 focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition min-h-[100px] resize-y" id="enlacesAdicionales" th:field="*{enlacesAdicionales}" rows="3" placeholder="Ej: GitHub, LinkedIn, presentaciones, etc."></textarea>
+                        <label for="enlacesAdicionales" class="form-label block mb-2 font-medium text-[#2376ad]">Enlaces
+                            Adicionales</label>
+                        <textarea
+                            class="form-control w-full px-4 py-3 rounded-lg border-2 border-[#2376ad] bg-indigo-50 text-gray-800 focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20 transition min-h-[100px] resize-y"
+                            id="enlacesAdicionales" th:field="*{enlacesAdicionales}" rows="3"
+                            placeholder="Ej: GitHub, LinkedIn, presentaciones, etc."></textarea>
                     </div>
                     <div class="form-navigation flex flex-row justify-end gap-4 mt-10">
-                        <button type="button" class="btn btn-secondary btn-prev flex items-center gap-2 px-6 py-3 rounded-full font-semibold bg-gray-500 text-white shadow-md hover:bg-gray-600 transition"><i class="fas fa-arrow-left"></i> Anterior</button>
-                        <button type="submit" class="btn btn-success flex items-center gap-2 px-6 py-3 rounded-full font-semibold bg-gradient-to-r from-[#10b981] to-[#22d3ee] text-white shadow-md hover:from-[#059669] hover:to-[#22d3ee] transition"><i class="fas fa-check"></i> Enviar Postulación</button>
+                        <button type="button"
+                            class="btn btn-secondary btn-prev flex items-center gap-2 px-6 py-3 rounded-full font-semibold bg-gray-500 text-white shadow-md hover:bg-gray-600 transition"><i
+                                class="fas fa-arrow-left"></i> Anterior</button>
+                        <button type="submit"
+                            class="btn btn-success flex items-center gap-2 px-6 py-3 rounded-full font-semibold bg-gradient-to-r from-[#10b981] to-[#22d3ee] text-white shadow-md hover:from-[#059669] hover:to-[#22d3ee] transition"><i
+                                class="fas fa-check"></i> Enviar Postulación</button>
                     </div>
                 </div>
             </form>
             <!-- Botón Cancelar separado y centrado -->
             <div class="mt-16 mb-8 flex justify-center">
-                <a th:href="@{'/verConvocatoria/' + ${convocatoriaSeleccionada.id}}" class="btn btn-cancelar-suave inline-block rounded-full font-semibold px-9 py-2 text-base tracking-wide border-2 border-[#2376ad] text-[#2376ad] bg-white transition hover:bg-indigo-100 hover:text-[#17416b] hover:border-[#6366f1]">
+                <a th:href="@{'/verConvocatoria/' + ${convocatoriaSeleccionada.id}}"
+                    class="btn btn-cancelar-suave inline-block rounded-full font-semibold px-9 py-2 text-base tracking-wide border-2 border-[#2376ad] text-[#2376ad] bg-white transition hover:bg-indigo-100 hover:text-[#17416b] hover:border-[#6366f1]">
                     <i class="fas fa-times-circle me-1"></i> Cancelar
                 </a>
             </div>
@@ -260,205 +377,232 @@
     </main>
 
     <script>
-document.addEventListener('DOMContentLoaded', function () {
-    const form = document.querySelector('.needs-validation');
-    const steps = document.querySelectorAll('.step');
-    const sections = document.querySelectorAll('.section-card');
-    const nextButtons = document.querySelectorAll('.btn-next');
-    const prevButtons = document.querySelectorAll('.btn-prev');
-    const progressBar = document.querySelector('.progress-bar');
-    let currentStep = 0;
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.querySelector('.needs-validation');
+            const steps = document.querySelectorAll('.step');
+            const sections = document.querySelectorAll('.section-card');
+            const nextButtons = document.querySelectorAll('.btn-next');
+            const prevButtons = document.querySelectorAll('.btn-prev');
+            const progressBar = document.querySelector('.progress-bar');
+            let currentStep = 0;
 
-    function initializeSections() {
-        sections.forEach((section, index) => {
-            if (index === 0) {
-                section.style.display = 'block';
-                section.classList.add('active');
-            } else {
-                section.style.display = 'none';
-                section.classList.remove('active');
-            }
-        });
-        updateProgress();
-        updateSteps();
-        updatePrevButton();
-    }
-
-    function updateProgress() {
-        const progress = ((currentStep + 1) / sections.length) * 100;
-        progressBar.style.width = `${progress}%`;
-    }
-
-    function updateSteps() {
-        steps.forEach((step, idx) => {
-            step.classList.remove('active', 'bg-gradient-to-r', 'from-[#2376ad]', 'to-[#6366f1]', 'text-white', 'border-[#6366f1]');
-            step.classList.add('bg-indigo-100', 'text-indigo-500', 'border-indigo-100');
-            if (idx === currentStep) {
-                step.classList.add('active', 'bg-gradient-to-r', 'from-[#2376ad]', 'to-[#6366f1]', 'text-white', 'border-[#6366f1]');
-                step.classList.remove('bg-indigo-100', 'text-indigo-500', 'border-indigo-100');
-            }
-        });
-    }
-function updatePrevButton() {
-    const currentSection = sections[currentStep];
-    const prevBtn = currentSection.querySelector('.btn-prev');
-    if (prevBtn) {
-        prevBtn.classList.remove('hidden');
-    }
-}
-
-
-    function validateSection(sectionIndex) {
-        const inputs = sections[sectionIndex].querySelectorAll('input, select, textarea');
-        let isValid = true;
-        inputs.forEach(input => {
-            const errorDiv = input.parentElement.querySelector('.invalid-feedback');
-            if (input.required && !input.value) {
-                isValid = false;
-                input.classList.add('border-red-500', 'focus:border-red-500', 'focus:ring-red-200');
-                if (errorDiv) errorDiv.classList.remove('hidden');
-            } else {
-                input.classList.remove('border-red-500', 'focus:border-red-500', 'focus:ring-red-200');
-                if (errorDiv) errorDiv.classList.add('hidden');
-            }
-        });
-        return isValid;
-    }
-
-    function goToStep(step) {
-        if (step >= 0 && step < sections.length) {
-            sections[currentStep].style.display = 'none';
-            sections[currentStep].classList.remove('active');
-            currentStep = step;
-            sections[currentStep].style.display = 'block';
-            sections[currentStep].classList.add('active');
-            updateProgress();
-            updateSteps();
-            updatePrevButton();
-        }
-    }
-
-    nextButtons.forEach(button => {
-        button.addEventListener('click', (e) => {
-            e.preventDefault();
-            if (validateSection(currentStep)) {
-                goToStep(currentStep + 1);
-            }
-        });
-    });
-
-    prevButtons.forEach(button => {
-        button.addEventListener('click', (e) => {
-            e.preventDefault();
-            goToStep(currentStep - 1);
-        });
-    });
-
-    form.addEventListener('submit', function (event) {
-        let valid = true;
-        sections.forEach((section, idx) => {
-            if (!validateSection(idx)) valid = false;
-        });
-        if (!valid || !form.checkValidity()) {
-            event.preventDefault();
-            event.stopPropagation();
-        }
-        form.classList.add('was-validated');
-    }, false);
-
-    // Cargar la URL de la foto de la startup seleccionada
-    const startupSelect = document.getElementById('startup');
-    const fotoUrlInput = document.getElementById('fotoUrl');
-    if (startupSelect && fotoUrlInput) {
-        startupSelect.addEventListener('change', function() {
-            const selectedOption = startupSelect.options[startupSelect.selectedIndex];
-            if (selectedOption && selectedOption.value) {
-                fetch(`/api/startup/${selectedOption.value}/foto`)
-                    .then(response => response.text())
-                    .then(fotoUrl => {
-                        if (fotoUrl) {
-                            fotoUrlInput.value = fotoUrl;
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error al obtener la URL de la foto:', error);
-                    });
-            }
-        });
-    }
-    
-    // Cargar el validador de formularios
-    const script = document.createElement('script');
-    script.src = '/js/formValidator.js';
-    script.onload = function() {
-        // Inicializar validación de formulario
-        FormValidator.init('#postulacion-form', {
-            onError: function() {
-                // Asegurarse de que la sección con errores esté visible
-                const invalidFields = document.querySelectorAll('.validation-error');
-                if (invalidFields.length > 0) {
-                    // Encontrar la sección que contiene el primer campo con error
-                    let sectionWithError = null;
-                    invalidFields.forEach(field => {
-                        const section = field.closest('.section-card');
-                        if (section && !sectionWithError) {
-                            sectionWithError = section;
-                        }
-                    });
-                    
-                    // Mostrar la sección con el error
-                    if (sectionWithError) {
-                        // Ocultar todas las secciones
-                        document.querySelectorAll('.section-card').forEach(section => {
-                            section.style.display = 'none';
-                        });
-                        
-                        // Mostrar la sección con error
-                        sectionWithError.style.display = 'block';
-                        
-                        // Actualizar la navegación
-                        const sectionId = sectionWithError.getAttribute('data-section');
-                        updateProgressBar(sectionId);
-                        
-                        // Mostrar alerta
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error de validación',
-                            text: 'Por favor corrija los campos marcados en rojo',
-                            confirmButtonColor: '#2376ad'
-                        });
+            function initializeSections() {
+                sections.forEach((section, index) => {
+                    if (index === 0) {
+                        section.style.display = 'block';
+                        section.classList.add('active');
+                    } else {
+                        section.style.display = 'none';
+                        section.classList.remove('active');
                     }
+                });
+                updateProgress();
+                updateSteps();
+                updatePrevButton();
+            }
+
+            function updateProgress() {
+                const progress = ((currentStep + 1) / sections.length) * 100;
+                progressBar.style.width = `${progress}%`;
+            }
+
+            function updateSteps() {
+                steps.forEach((step, idx) => {
+                    step.classList.remove('active', 'bg-gradient-to-r', 'from-[#2376ad]', 'to-[#6366f1]', 'text-white', 'border-[#6366f1]');
+                    step.classList.add('bg-indigo-100', 'text-indigo-500', 'border-indigo-100');
+                    if (idx === currentStep) {
+                        step.classList.add('active', 'bg-gradient-to-r', 'from-[#2376ad]', 'to-[#6366f1]', 'text-white', 'border-[#6366f1]');
+                        step.classList.remove('bg-indigo-100', 'text-indigo-500', 'border-indigo-100');
+                    }
+                });
+            }
+            function updatePrevButton() {
+                const currentSection = sections[currentStep];
+                const prevBtn = currentSection.querySelector('.btn-prev');
+                if (prevBtn) {
+                    prevBtn.classList.remove('hidden');
                 }
             }
-        });
-        
-        // Inicializar validación de fechas
-        const fechaPostulacionInput = document.getElementById('fechaPostulacion');
-        if (fechaPostulacionInput) {
-            // Establecer fecha mínima y máxima
-            const today = new Date();
-            const maxDate = new Date();
-            maxDate.setDate(today.getDate() + 30); // Permitir hasta 30 días en el futuro
-            
-            const yyyy = today.getFullYear();
-            const mm = String(today.getMonth() + 1).padStart(2, '0');
-            const dd = String(today.getDate()).padStart(2, '0');
-            const todayFormatted = `${yyyy}-${mm}-${dd}`;
-            
-            const maxYyyy = maxDate.getFullYear();
-            const maxMm = String(maxDate.getMonth() + 1).padStart(2, '0');
-            const maxDd = String(maxDate.getDate()).padStart(2, '0');
-            const maxDateFormatted = `${maxYyyy}-${maxMm}-${maxDd}`;
-            
-            fechaPostulacionInput.min = todayFormatted;
-            fechaPostulacionInput.max = maxDateFormatted;
-        }
-    };
-    document.head.appendChild(script);
 
-    initializeSections();
-});
-</script>
+
+            function validateSection(sectionIndex) {
+                const inputs = sections[sectionIndex].querySelectorAll('input, select, textarea');
+                let isValid = true;
+                inputs.forEach(input => {
+                    const errorDiv = input.parentElement.querySelector('.invalid-feedback');
+                    if (input.required && !input.value) {
+                        isValid = false;
+                        input.classList.add('border-red-500', 'focus:border-red-500', 'focus:ring-red-200');
+                        if (errorDiv) errorDiv.classList.remove('hidden');
+                    } else {
+                        input.classList.remove('border-red-500', 'focus:border-red-500', 'focus:ring-red-200');
+                        if (errorDiv) errorDiv.classList.add('hidden');
+                    }
+                });
+                return isValid;
+            }
+
+            function goToStep(step) {
+                if (step >= 0 && step < sections.length) {
+                    sections[currentStep].style.display = 'none';
+                    sections[currentStep].classList.remove('active');
+                    currentStep = step;
+                    sections[currentStep].style.display = 'block';
+                    sections[currentStep].classList.add('active');
+                    updateProgress();
+                    updateSteps();
+                    updatePrevButton();
+                }
+            }
+
+            nextButtons.forEach(button => {
+                button.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (validateSection(currentStep)) {
+                        goToStep(currentStep + 1);
+                    }
+                });
+            });
+
+            prevButtons.forEach(button => {
+                button.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    goToStep(currentStep - 1);
+                });
+            });
+
+            form.addEventListener('submit', function (event) {
+                let valid = true;
+                sections.forEach((section, idx) => {
+                    if (!validateSection(idx)) valid = false;
+                });
+                if (!valid || !form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+
+            // Cargar la URL de la foto de la startup seleccionada
+            const startupSelect = document.getElementById('startup');
+            const fotoUrlInput = document.getElementById('fotoUrl');
+            if (startupSelect && fotoUrlInput) {
+                startupSelect.addEventListener('change', function () {
+                    const selectedOption = startupSelect.options[startupSelect.selectedIndex];
+                    if (selectedOption && selectedOption.value) {
+                        fetch(`/api/startup/${selectedOption.value}/foto`)
+                            .then(response => response.text())
+                            .then(fotoUrl => {
+                                if (fotoUrl) {
+                                    fotoUrlInput.value = fotoUrl;
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error al obtener la URL de la foto:', error);
+                            });
+                    }
+                });
+            }
+
+            // Cargar el validador de formularios
+            const script = document.createElement('script');
+            script.src = '/js/formValidator.js';
+            script.onload = function () {
+                // Inicializar validación de formulario
+                FormValidator.init('#postulacion-form', {
+                    onError: function () {
+                        // Asegurarse de que la sección con errores esté visible
+                        const invalidFields = document.querySelectorAll('.validation-error');
+                        if (invalidFields.length > 0) {
+                            // Encontrar la sección que contiene el primer campo con error
+                            let sectionWithError = null;
+                            invalidFields.forEach(field => {
+                                const section = field.closest('.section-card');
+                                if (section && !sectionWithError) {
+                                    sectionWithError = section;
+                                }
+                            });
+
+                            // Mostrar la sección con el error
+                            if (sectionWithError) {
+                                // Ocultar todas las secciones
+                                document.querySelectorAll('.section-card').forEach(section => {
+                                    section.style.display = 'none';
+                                });
+
+                                // Mostrar la sección con error
+                                sectionWithError.style.display = 'block';
+
+                                // Actualizar la navegación
+                                const sectionId = sectionWithError.getAttribute('data-section');
+                                updateProgressBar(sectionId);
+
+                                // Mostrar alerta
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error de validación',
+                                    text: 'Por favor corrija los campos marcados en rojo',
+                                    confirmButtonColor: '#2376ad'
+                                });
+                            }
+                        }
+                    }
+                });
+
+                // Inicializar validación de fechas
+                const fechaPostulacionInput = document.getElementById('fechaPostulacion');
+                if (fechaPostulacionInput) {
+                    // Establecer fecha mínima y máxima
+                    const today = new Date();
+                    const maxDate = new Date();
+                    maxDate.setDate(today.getDate() + 30); // Permitir hasta 30 días en el futuro
+
+                    const yyyy = today.getFullYear();
+                    const mm = String(today.getMonth() + 1).padStart(2, '0');
+                    const dd = String(today.getDate()).padStart(2, '0');
+                    const todayFormatted = `${yyyy}-${mm}-${dd}`;
+
+                    const maxYyyy = maxDate.getFullYear();
+                    const maxMm = String(maxDate.getMonth() + 1).padStart(2, '0');
+                    const maxDd = String(maxDate.getDate()).padStart(2, '0');
+                    const maxDateFormatted = `${maxYyyy}-${maxMm}-${maxDd}`;
+
+                    fechaPostulacionInput.min = todayFormatted;
+                    fechaPostulacionInput.max = maxDateFormatted;
+                }
+
+                // Configurar la fecha de postulación como la fecha actual
+                if (fechaPostulacionInput) {
+                    const today = new Date();
+                    const yyyy = today.getFullYear();
+                    const mm = String(today.getMonth() + 1).padStart(2, '0');
+                    const dd = String(today.getDate()).padStart(2, '0');
+                    const todayFormatted = `${yyyy}-${mm}-${dd}`;
+
+                    fechaPostulacionInput.value = todayFormatted;
+                    fechaPostulacionInput.min = todayFormatted;
+                    fechaPostulacionInput.max = todayFormatted;
+                }
+            };
+            document.head.appendChild(script);
+
+            // Validación del campo de dinero en ventas
+            const dineroVentasInput = document.getElementById('dineroVentas');
+            const invalidFeedback = dineroVentasInput.nextElementSibling;
+
+            dineroVentasInput.addEventListener('input', function () {
+                const value = parseFloat(dineroVentasInput.value);
+                if (isNaN(value) || value < 0 || value > 1000000000) {
+                    invalidFeedback.textContent = 'El valor debe ser un número entre 0 y 1,000,000,000.';
+                    invalidFeedback.classList.remove('hidden');
+                } else {
+                    invalidFeedback.classList.add('hidden');
+                }
+            });
+
+            initializeSections();
+        });
+    </script>
 </body>
 
 </html>

@@ -110,6 +110,10 @@
             const fechaInicioInput = document.getElementById('fechaInicio');
             const fechaFinInput = document.getElementById('fechaFin');
 
+            // Establece la fecha mínima inicial para la fecha de inicio al cargar la página
+            const today = new Date().toISOString().split('T')[0];
+            fechaInicioInput.min = today;
+
             // Al cambiar la fecha de inicio, actualiza la fecha mínima para la fecha de fin
             fechaInicioInput.addEventListener('change', function () {
                 fechaFinInput.min = fechaInicioInput.value;
@@ -120,7 +124,7 @@
                 }
             });
 
-            // Establece la fecha mínima inicial al cargar la página
+            // Establece la fecha mínima inicial para la fecha de fin si ya hay un valor en fecha de inicio
             if (fechaInicioInput.value) {
                 fechaFinInput.min = fechaInicioInput.value;
             }

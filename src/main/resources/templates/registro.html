@@ -47,7 +47,7 @@
 
                     <div>
                         <label for="documento" class="block font-semibold">Documento:</label>
-                        <input th:field="*{documento}" type="text" id="documento" name="documento"
+                        <input th:field="*{documento}" type="number" id="documento" name="documento"
                             placeholder="Ingrese su documento"
                             class="w-full mt-2 p-2 border-b border-sky-400 focus:outline-none focus:border-sky-500 bg-transparent transition" />
                     </div>
@@ -70,6 +70,7 @@
                         <label for="password" class="block font-semibold">Contraseña:</label>
                         <input th:field="*{contrasenna}" type="password" id="password" name="password"
                             placeholder="Ingrese su contraseña"
+                            minlength="8"
                             class="w-full mt-2 p-2 border-b border-sky-400 focus:outline-none focus:border-sky-500 bg-transparent transition" />
                     </div> <!-- Confirmación de contraseña -->
                     <div>
@@ -78,15 +79,23 @@
                             placeholder="Confirme su contraseña"
                             class="w-full mt-2 p-2 border-b border-sky-400 focus:outline-none focus:border-sky-500 bg-transparent transition"
                             required>
-                        <div id="password-error" class="text-red-500 text-sm mt-1 hidden">Las contraseñas no coinciden
+                        <div id="password-error" class="text-red-500 text-sm mt-1 hidden bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded relative" role="alert">
+                            <strong class="font-bold">Error:</strong>
+                            <span class="block sm:inline">Las contraseñas no coinciden o no cumplen con los requisitos.</span>
                         </div>
                     </div>
 
                     <div>
                         <label for="telefono" class="block font-semibold">Teléfono:</label>
-                        <input th:field="*{telefono}" type="tel" id="telefono" name="telefono"
+                        <input th:field="*{telefono}" type="text" id="telefono" name="telefono"
                             placeholder="Ingrese su teléfono"
-                            class="w-full mt-2 p-2 border-b border-sky-400 focus:outline-none focus:border-sky-500 bg-transparent transition" />
+                            pattern="\d{10}"
+                            title="El número de teléfono debe tener exactamente 10 dígitos."
+                            class="w-full mt-2 p-2 border-b border-sky-400 focus:outline-none focus:border-sky-500 bg-transparent transition" required />
+                        <div id="telefono-error" class="text-red-500 text-sm mt-1 hidden bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded relative" role="alert">
+                            <strong class="font-bold">Error:</strong>
+                            <span class="block sm:inline">El número de teléfono debe tener exactamente 10 dígitos.</span>
+                        </div>
                     </div>                    <div>                        <label for="rol" class="block font-semibold">Rol:</label>
                         <select id="rol" name="rol" onchange="mostrarCamposPorRol(this.value)"
                             class="w-full mt-2 p-2 border-b border-sky-400 focus:   outline-none focus:border-sky-500 bg-transparent transition">
@@ -194,6 +203,15 @@
         imagenInput.addEventListener('change', function () {
             const file = this.files[0];
             if (file) {
+                // Validar tamaño del archivo
+                if (file.size > 3 * 1024 * 1024) { // 3MB en bytes
+                    alert('El tamaño de la imagen no debe superar los 3MB.');
+                    this.value = ''; // Limpiar el input
+                    preview.src = '';
+                    preview.classList.add('hidden');
+                    return;
+                }
+
                 const reader = new FileReader();
                 reader.onload = function (e) {
                     preview.src = e.target.result;
@@ -284,6 +302,33 @@
             }
         });
 
+    </script>
+    <script>
+        const MAX_IMAGE_SIZE_MB = 3;
+        const MAX_IMAGE_SIZE_BYTES = MAX_IMAGE_SIZE_MB * 1024 * 1024;
+
+        imagenInput.addEventListener('change', function () {
+            const file = this.files[0];
+            if (file) {
+                if (file.size > MAX_IMAGE_SIZE_BYTES) {
+                    alert(`La imagen no debe superar los ${MAX_IMAGE_SIZE_MB}MB.`);
+                    this.value = ""; // Clear the input
+                    preview.src = "";
+                    preview.classList.add('hidden');
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    preview.src = e.target.result;
+                    preview.classList.remove('hidden');
+                };
+                reader.readAsDataURL(file);
+            } else {
+                preview.src = '';
+                preview.classList.add('hidden');
+            }
+        });
     </script>
 
 </body>

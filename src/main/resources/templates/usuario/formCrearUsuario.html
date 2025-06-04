@@ -204,31 +204,50 @@
         }
       });
 
-      // Validate file input separately
+      // Validación personalizada para teléfono, contraseña e imagen
+      document.getElementById('formUsuario').addEventListener('submit', function (e) {
+        let errorMsg = '';
+        // Teléfono: exactamente 10 dígitos
+        const telefono = document.getElementById('telefono').value.trim();
+        if (!/^\d{10}$/.test(telefono)) {
+          errorMsg = '📞 El teléfono debe tener exactamente 10 dígitos. Por favor verifica tu número.';
+        }
+        // Contraseña: mínimo 8 caracteres
+        const password = document.getElementById('password').value;
+        if (!errorMsg && password.length < 8) {
+          errorMsg = '🔒 La contraseña debe tener al menos 8 caracteres. ¡Hazla segura!';
+        }
+        // Imagen: debe estar cargada y no exceder 3MB
+        const foto = document.getElementById('foto');
+        if (!errorMsg && (!foto.files || foto.files.length === 0)) {
+          errorMsg = '🖼️ Debes seleccionar una imagen de perfil para continuar.';
+        } else if (!errorMsg && foto.files[0].size > 3 * 1024 * 1024) {
+          errorMsg = '📂 El tamaño de la imagen no debe superar los 3MB. Por favor selecciona otra.';
+        }
+        if (errorMsg) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error de validación',
+            text: errorMsg,
+            confirmButtonColor: '#0284c7'
+          });
+          e.preventDefault();
+          return false;
+        }
+      });
+
+      // Validación de tamaño de archivo al cambiar la imagen
       const fileInput = document.getElementById('foto');
       if (fileInput) {
         fileInput.addEventListener('change', function () {
           if (this.files && this.files[0]) {
-            // Check file size (max 5MB)
+            // Verificar tamaño del archivo (máximo 3MB)
             const fileSizeMB = this.files[0].size / (1024 * 1024);
-            if (fileSizeMB > 5) {
+            if (fileSizeMB > 3) {
               Swal.fire({
                 icon: 'error',
                 title: 'Archivo demasiado grande',
-                text: 'La imagen no debe exceder los 5MB',
-                confirmButtonColor: '#0284c7'
-              });
-              this.value = '';
-              return;
-            }
-
-            // Check file type
-            const fileType = this.files[0].type;
-            if (!fileType.match('image.*')) {
-              Swal.fire({
-                icon: 'error',
-                title: 'Tipo de archivo no válido',
-                text: 'Por favor seleccione una imagen (JPG, PNG, GIF)',
+                text: '📂 La imagen no debe exceder los 3MB. Por favor selecciona otra.',
                 confirmButtonColor: '#0284c7'
               });
               this.value = '';
